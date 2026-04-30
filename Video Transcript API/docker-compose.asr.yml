@@ -1,0 +1,35 @@
+services:
+  funasr-paraformer:
+    image: ${FUNASR_IMAGE:-registry.cn-hangzhou.aliyuncs.com/funasr_repo/funasr:funasr-runtime-sdk-cpu-0.4.1}
+    container_name: video-transcript-funasr-paraformer
+    ports:
+      - "${FUNASR_HOST_PORT:-10095}:10095"
+    volumes:
+      - ./funasr-runtime-resources/models:/workspace/models
+    environment:
+      OMP_NUM_THREADS: "${FUNASR_MODEL_THREAD_NUM:-1}"
+      MKL_NUM_THREADS: "${FUNASR_MODEL_THREAD_NUM:-1}"
+      OPENBLAS_NUM_THREADS: "${FUNASR_MODEL_THREAD_NUM:-1}"
+    cpus: "${FUNASR_CPUS:-2.0}"
+    command:
+      - bash
+      - -lc
+      - |
+        set -e
+        mkdir -p /workspace/models
+        touch /workspace/models/hotwords.txt
+        cd /workspace/FunASR/runtime
+        bash run_server.sh \
+          --download-model-dir /workspace/models \
+          --vad-dir damo/speech_fsmn_vad_zh-cn-16k-common-onnx \
+          --model-dir damo/speech_paraformer-large-vad-punc_asr_nat-zh-cn-16k-common-vocab8404-onnx \
+          --punc-dir damo/punc_ct-transformer_cn-en-common-vocab471067-large-onnx \
+          --lm-dir damo/speech_ngram_lm_zh-cn-ai-wesp-fst \
+          --itn-dir thuduj12/fst_itn_zh \
+          --hotword /workspace/models/hotwords.txt \
+          --certfile 0 \
+          --port 10095 \
+          --decoder-thread-num ${FUNASR_DECODER_THREAD_NUM:-1} \
+          --io-thread-num ${FUNASR_IO_THREAD_NUM:-1} \
+          --model-thread-num ${FUNASR_MODEL_THREAD_NUM:-1}
+        tail -F log.txt

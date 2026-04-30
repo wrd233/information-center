@@ -1,0 +1,58 @@
+services:
+  rsshub:
+    image: ${RSSHUB_IMAGE:-diygod/rsshub}
+    container_name: rsshub
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${RSSHUB_BIND:-127.0.0.1}:${RSSHUB_PORT:-1200}:1200"
+    environment:
+      NODE_ENV: production
+      CACHE_TYPE: redis
+      REDIS_URL: redis://redis:6379/
+      PUPPETEER_WS_ENDPOINT: ws://browserless:3000
+      CACHE_EXPIRE: ${CACHE_EXPIRE:-300}
+      GITHUB_ACCESS_TOKEN: ${GITHUB_ACCESS_TOKEN:-}
+      PROXY_URI: ${PROXY_URI:-}
+      ALLOW_ORIGIN: ${ALLOW_ORIGIN:-*}
+    depends_on:
+      redis:
+        condition: service_healthy
+      browserless:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1200/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: redis:alpine
+    container_name: rsshub-redis
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 5s
+
+  browserless:
+    image: browserless/chrome
+    container_name: rsshub-browserless
+    restart: unless-stopped
+    ulimits:
+      core:
+        hard: 0
+        soft: 0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/pressure"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  redis-data:

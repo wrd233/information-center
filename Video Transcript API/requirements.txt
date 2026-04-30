@@ -1,0 +1,2 @@
+websockets>=12,<16
+silero-vad[onnx-cpu]>=6.2,<7
