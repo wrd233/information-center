@@ -11,15 +11,7 @@ LOCAL_OPML="exports/myrss(本机用).opml"
 REMOTE_HTTP_OPML="exports/myrss(远程备用-HTTP).opml"
 
 python3 scripts/excel_to_opml.py rss_sources.csv "$REMOTE_OPML" --title "My RSS"
-
-node - "$REMOTE_OPML" "$LOCAL_OPML" "$REMOTE_BASE" "$LOCAL_BASE" <<'NODE'
-const fs = require('fs');
-
-const [, , input, output, remoteBase, localBase] = process.argv;
-const content = fs.readFileSync(input, 'utf8').replaceAll(remoteBase, localBase);
-
-fs.writeFileSync(output, content);
-NODE
+python3 scripts/excel_to_opml.py rss_sources.csv "$LOCAL_OPML" --title "My RSS" --xml-url-column local_xml_url
 
 node - "$REMOTE_OPML" "$REMOTE_HTTP_OPML" "$REMOTE_BASE" "$REMOTE_HTTP_BASE" <<'NODE'
 const fs = require('fs');

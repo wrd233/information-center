@@ -17,7 +17,8 @@
 | enabled | 是 | `Y` 导出，`N` 不导出 |
 | category_path | 是 | `top_category` 下的二级/三级分类，例如 `个人博客-人生`、`开发运维/数据库` |
 | title | 是 | 阅读器中显示的名称 |
-| xml_url | 是 | RSS/Atom 地址，必填 |
+| xml_url | 是 | 远程使用的 RSS/Atom 地址，必填 |
+| local_xml_url | 是 | 本机使用的 RSSHub 地址；普通外部源可留空，导出本机版 OPML 时会回退到 `xml_url` |
 | html_url | 是 | 网站主页，可选 |
 | type | 是 | 通常为 `rss`，少数为 `atom` |
 | priority | 否 | 信息价值，建议 `P0/P1/P2/P3` |

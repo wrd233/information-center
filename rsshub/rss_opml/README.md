@@ -55,7 +55,8 @@ macOS 也可以尝试直接双击 `export_opml.command`。
 - `enabled`：`Y` 导出，`N` 不导出。
 - `category_path`：只写 `top_category` 下的子分类，例如 `个人博客-人生`、`AI观察`、`开发运维/数据库`。
 - `title`：阅读器里显示的名称。
-- `xml_url`：RSS/Atom 订阅地址，必须填写。
+- `xml_url`：远程使用的 RSS/Atom 订阅地址，必须填写。
+- `local_xml_url`：本机使用的 RSSHub 地址。只有 `xml_url` 是 Mac mini RSSHub 远程地址时填写，普通外部源可以留空。
 - `html_url`：网站主页，可选。
 - `type`：通常为 `rss`，少数可写 `atom`。
 - `priority`：建议用 `P0/P1/P2/P3` 表达信息价值。
@@ -75,6 +76,7 @@ https://macmini-rsshub.tail99ecfa.ts.net/bilibili/user/video/:uid
 维护规则：
 
 - `xml_url` 使用 `/bilibili/user/video/:uid`，不要使用 `/bilibili/user/dynamic/:uid`。
+- `local_xml_url` 使用 `http://127.0.0.1:1200/bilibili/user/video/:uid`，方便在 Mac mini 本机直接访问。
 - `html_url` 使用 UP 主主页，例如 `https://space.bilibili.com/1366786686`，不要带 `/dynamic`。
 - 如果需要关闭 RSS 内容中的视频内嵌，可以把 `xml_url` 改成 `/bilibili/user/video/:uid/1`。
 - B 站风控相关参数维护在 `rsshub/.env`，不要写进 CSV 或 OPML。

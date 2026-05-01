@@ -171,7 +171,7 @@ def read_sheet_rows(rows: list[list[str]], sheet_name: str, export_all: bool, se
     return result
 
 
-def read_csv_sources(csv_path: Path, export_all: bool) -> list[dict[str, str]]:
+def read_csv_sources(csv_path: Path, export_all: bool, xml_url_column: str) -> list[dict[str, str]]:
     result = []
     seen_xml_urls: set[str] = set()
     with csv_path.open(encoding="utf-8-sig", newline="") as file:
@@ -184,7 +184,8 @@ def read_csv_sources(csv_path: Path, export_all: bool) -> list[dict[str, str]]:
                 continue
             if not is_enabled(pick(row, "enabled"), export_all=export_all):
                 continue
-            xml_url = pick(row, "xml_url", "xmlurl", "feed_url", "rss_url")
+            requested_xml_column = normalize_header(xml_url_column)
+            xml_url = pick(row, requested_xml_column, "xml_url", "xmlurl", "feed_url", "rss_url")
             if not xml_url:
                 print(f"[skip] {csv_path.name}!{idx}: missing xml_url", file=sys.stderr)
                 continue
@@ -207,9 +208,9 @@ def read_csv_sources(csv_path: Path, export_all: bool) -> list[dict[str, str]]:
     return result
 
 
-def read_sources(xlsx_path: Path, sheets: list[str], export_all: bool) -> list[dict[str, str]]:
+def read_sources(xlsx_path: Path, sheets: list[str], export_all: bool, xml_url_column: str) -> list[dict[str, str]]:
     if xlsx_path.suffix.lower() == ".csv":
-        return read_csv_sources(xlsx_path, export_all)
+        return read_csv_sources(xlsx_path, export_all, xml_url_column)
     with zipfile.ZipFile(xlsx_path) as zf:
         shared_strings = read_shared_strings(zf)
         paths = sheet_paths(zf)
@@ -266,10 +267,11 @@ def main() -> int:
     parser.add_argument("opml", type=Path, help="Output OPML path")
     parser.add_argument("--sheets", default=",".join(DEFAULT_SHEETS), help="XLSX only: comma-separated sheet names to export, default: Articles,SocialMedia,Pictures,Videos")
     parser.add_argument("--title", default="My RSS", help="OPML title")
+    parser.add_argument("--xml-url-column", default="xml_url", help="CSV only: preferred XML URL column, falling back to xml_url when blank")
     parser.add_argument("--all", action="store_true", help="Export all rows with xml_url, ignoring enabled")
     args = parser.parse_args()
     sheets = parse_sheets(args.sheets)
-    sources = read_sources(args.source, sheets, export_all=args.all)
+    sources = read_sources(args.source, sheets, export_all=args.all, xml_url_column=args.xml_url_column)
     if not sources:
         raise SystemExit("No sources to export. Check enabled column and xml_url values.")
     args.opml.parent.mkdir(parents=True, exist_ok=True)
