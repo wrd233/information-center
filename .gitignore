@@ -1,0 +1,7 @@
+# Local environment files with secrets.
+.env
+.env.*
+!.env.example
+
+rsshub/.env
+!rsshub/.env.example

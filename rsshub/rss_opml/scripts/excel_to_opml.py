@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Convert rss_sources.xlsx into an OPML 2.0 file.
+"""Convert RSS source CSV/XLSX into an OPML 2.0 file.
 
 Default layout:
-  The workbook contains four source sheets: Articles, SocialMedia, Pictures, Videos.
-  Each sheet name becomes the OPML top-level category.
-  The category_path column only stores custom subcategories inside that sheet.
+  rss_sources.csv uses top_category as the OPML top-level category.
+  The category_path column only stores custom subcategories inside top_category.
 
 Usage:
+  python3 scripts/excel_to_opml.py rss_sources.csv exports/myrss.generated.opml --title "My RSS"
   python3 scripts/excel_to_opml.py rss_sources.xlsx exports/myrss.generated.opml --title "My RSS"
   python3 scripts/excel_to_opml.py rss_sources.xlsx exports/articles.opml --sheets Articles --title "Articles"
 
@@ -16,6 +16,7 @@ This script uses only the Python standard library.
 from __future__ import annotations
 
 import argparse
+import csv
 import re
 import sys
 import zipfile
@@ -170,7 +171,45 @@ def read_sheet_rows(rows: list[list[str]], sheet_name: str, export_all: bool, se
     return result
 
 
+def read_csv_sources(csv_path: Path, export_all: bool) -> list[dict[str, str]]:
+    result = []
+    seen_xml_urls: set[str] = set()
+    with csv_path.open(encoding="utf-8-sig", newline="") as file:
+        reader = csv.DictReader(file)
+        if not reader.fieldnames:
+            raise SystemExit(f"CSV has no header row: {csv_path}")
+        for idx, raw_row in enumerate(reader, start=2):
+            row = {normalize_header(key): (value or "").strip() for key, value in raw_row.items() if key is not None}
+            if not any(row.values()):
+                continue
+            if not is_enabled(pick(row, "enabled"), export_all=export_all):
+                continue
+            xml_url = pick(row, "xml_url", "xmlurl", "feed_url", "rss_url")
+            if not xml_url:
+                print(f"[skip] {csv_path.name}!{idx}: missing xml_url", file=sys.stderr)
+                continue
+            if xml_url in seen_xml_urls:
+                print(f"[skip] {csv_path.name}!{idx}: duplicate xml_url: {xml_url}", file=sys.stderr)
+                continue
+            top_category = pick(row, "top_category", "sheet", "section", "category_root")
+            if not top_category:
+                print(f"[skip] {csv_path.name}!{idx}: missing top_category", file=sys.stderr)
+                continue
+            seen_xml_urls.add(xml_url)
+            subcategory = pick(row, "category_path", "category", "folder")
+            result.append({
+                "category_path": join_category(top_category, subcategory),
+                "title": pick(row, "title", "text", default=xml_url),
+                "xml_url": xml_url,
+                "html_url": pick(row, "html_url", "htmlurl", "site_url", "homepage"),
+                "type": pick(row, "type", default="rss"),
+            })
+    return result
+
+
 def read_sources(xlsx_path: Path, sheets: list[str], export_all: bool) -> list[dict[str, str]]:
+    if xlsx_path.suffix.lower() == ".csv":
+        return read_csv_sources(xlsx_path, export_all)
     with zipfile.ZipFile(xlsx_path) as zf:
         shared_strings = read_shared_strings(zf)
         paths = sheet_paths(zf)
@@ -222,20 +261,20 @@ def build_opml(sources: list[dict[str, str]], title: str) -> ET.ElementTree:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Convert RSS source Excel to OPML.")
-    parser.add_argument("xlsx", type=Path, help="Path to rss_sources.xlsx")
+    parser = argparse.ArgumentParser(description="Convert RSS source CSV/XLSX to OPML.")
+    parser.add_argument("source", type=Path, help="Path to rss_sources.csv or rss_sources.xlsx")
     parser.add_argument("opml", type=Path, help="Output OPML path")
-    parser.add_argument("--sheets", default=",".join(DEFAULT_SHEETS), help="Comma-separated sheet names to export, default: Articles,SocialMedia,Pictures,Videos")
+    parser.add_argument("--sheets", default=",".join(DEFAULT_SHEETS), help="XLSX only: comma-separated sheet names to export, default: Articles,SocialMedia,Pictures,Videos")
     parser.add_argument("--title", default="My RSS", help="OPML title")
     parser.add_argument("--all", action="store_true", help="Export all rows with xml_url, ignoring enabled")
     args = parser.parse_args()
     sheets = parse_sheets(args.sheets)
-    sources = read_sources(args.xlsx, sheets, export_all=args.all)
+    sources = read_sources(args.source, sheets, export_all=args.all)
     if not sources:
         raise SystemExit("No sources to export. Check enabled column and xml_url values.")
     args.opml.parent.mkdir(parents=True, exist_ok=True)
     build_opml(sources, args.title).write(args.opml, encoding="utf-8", xml_declaration=True)
-    print(f"Exported {len(sources)} RSS sources from {', '.join(sheets)} to {args.opml}")
+    print(f"Exported {len(sources)} RSS sources from {args.source} to {args.opml}")
     return 0
 
 

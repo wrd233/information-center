@@ -1,20 +1,21 @@
-# rss_sources.xlsx 字段说明
+# rss_sources.csv 字段说明
 
-当前工作簿包含 4 个信息源页：
+当前 CSV 使用单表结构，每一行是一条订阅源。`top_category` 字段对应 OPML 的一级分类：
 
 - Articles
 - SocialMedia
 - Pictures
 - Videos
 
-每个工作表对应 OPML 的一级分类。`category_path` 字段只填写该一级分类下面的自定义子分类，不再重复填写一级分类名。
+`category_path` 字段只填写该一级分类下面的自定义子分类，不再重复填写一级分类名。
 
 ## 字段
 
 | 字段 | 是否影响导出 | 说明 |
 |---|---:|---|
+| top_category | 是 | OPML 一级分类，当前使用 `Articles/SocialMedia/Pictures/Videos` |
 | enabled | 是 | `Y` 导出，`N` 不导出 |
-| category_path | 是 | 当前工作表下的二级/三级分类，例如 `个人博客-人生`、`开发运维/数据库` |
+| category_path | 是 | `top_category` 下的二级/三级分类，例如 `个人博客-人生`、`开发运维/数据库` |
 | title | 是 | 阅读器中显示的名称 |
 | xml_url | 是 | RSS/Atom 地址，必填 |
 | html_url | 是 | 网站主页，可选 |
@@ -31,9 +32,10 @@
 
 ## OPML 分类规则
 
-在 `Articles` 表中：
+例如：
 
 ```text
+top_category = Articles
 category_path = 个人博客-人生
 ```
 
@@ -43,4 +45,4 @@ category_path = 个人博客-人生
 Articles/个人博客-人生
 ```
 
-如果 `category_path` 留空，则该源会直接挂在当前工作表对应的一级分类下。
+如果 `category_path` 留空，则该源会直接挂在 `top_category` 对应的一级分类下。

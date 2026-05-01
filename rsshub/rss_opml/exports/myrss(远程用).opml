@@ -2,7 +2,7 @@
 <opml version="2.0">
     <head>
         <title>My RSS</title>
-        <dateCreated>2026-05-01T05:08:12+00:00</dateCreated>
+        <dateCreated>2026-05-01T13:27:28+00:00</dateCreated>
     </head>
     <body>
         <outline text="Articles">
@@ -91,6 +91,13 @@
                 <outline text="- 求是网" title="- 求是网" xmlUrl="https://plink.anyfeeder.com/qstheory" type="rss" htmlUrl="http://www.qstheory.cn/v9zhuanqu/toutiao/index.htm" />
             </outline>
             <outline text="学习一下订阅源" title="学习一下订阅源" xmlUrl="https://macmini-rsshub.tail99ecfa.ts.net/follow/profile/158883963341209600" type="rss" htmlUrl="https://app.follow.is/share/users/158883963341209600" />
+            <outline text="Lex Fridman Podcast" title="Lex Fridman Podcast" xmlUrl="https://lexfridman.com/feed/podcast/" type="rss" htmlUrl="https://lexfridman.com/" />
+            <outline text="Podnews Daily - podcast industry news" title="Podnews Daily - podcast industry news" xmlUrl="https://podnews.net/rss" type="rss" htmlUrl="https://podnews.net/" />
+            <outline text="新智元" title="新智元" xmlUrl="https://raw.githubusercontent.com/osnsyc/Wechat-Scholar/main/channels/gh_108f2a2a27f4.xml" type="rss" htmlUrl="https://mp.weixin.qq.com/" />
+            <outline text="机器之心" title="机器之心" xmlUrl="https://www.jiqizhixin.com/rss" type="rss" htmlUrl="https://www.jiqizhixin.com/" />
+            <outline text="腾讯研究院" title="腾讯研究院" xmlUrl="https://wechat2rss.bestblogs.dev/feed/6152301e0978bffb0a8284cab339262b9764dcfb.xml" type="rss" htmlUrl="https://wechat2rss.bestblogs.dev/feed/6152301e0978bffb0a8284cab339262b9764dcfb.xml" />
+            <outline text="极客公园" title="极客公园" xmlUrl="https://www.geekpark.net/rss" type="rss" htmlUrl="http://mainssl.geekpark.net/rss.rss" />
+            <outline text="极客公园" title="极客公园" xmlUrl="https://wechat2rss.xlab.app/feed/1a5aec98e71c707c8ca092bc2c255b9d4bac477d.xml" type="rss" htmlUrl="https://wechat2rss.xlab.app/feed/1a5aec98e71c707c8ca092bc2c255b9d4bac477d.xml" />
         </outline>
         <outline text="SocialMedia">
             <outline text="图书推荐 – 书伴" title="图书推荐 – 书伴" xmlUrl="https://macmini-rsshub.tail99ecfa.ts.net/bookfere/books" type="rss" htmlUrl="https://bookfere.com/category/books" />
@@ -249,6 +256,12 @@
             <outline text="Dify(@dify_ai)" title="Dify(@dify_ai)" xmlUrl="https://api.xgo.ing/rss/user/0be252fedbe84ad7bea21be44b18da89" type="rss" htmlUrl="https://x.com/dify_ai" />
             <outline text="Eric Jing(@ericjing_ai)" title="Eric Jing(@ericjing_ai)" xmlUrl="https://api.xgo.ing/rss/user/ddfdcdd4e390495c942f0b5da62af0fb" type="rss" htmlUrl="https://x.com/ericjing_ai" />
             <outline text="Naval(@naval)" title="Naval(@naval)" xmlUrl="https://api.xgo.ing/rss/user/b43bc203409e4c5a9c3ae86fe1ac00c9" type="rss" htmlUrl="https://x.com/naval" />
+            <outline text="Twitter @Tom Huang" title="Twitter @Tom Huang" xmlUrl="https://macmini-rsshub.tail99ecfa.ts.net/twitter/user/tuturetom" type="rss" htmlUrl="https://x.com/tuturetom" />
+            <outline text="Twitter @Tw93" title="Twitter @Tw93" xmlUrl="https://macmini-rsshub.tail99ecfa.ts.net/twitter/user/HiTw93" type="rss" htmlUrl="https://x.com/HiTw93" />
+            <outline text="Twitter @ginobefun" title="Twitter @ginobefun" xmlUrl="https://macmini-rsshub.tail99ecfa.ts.net/twitter/user/hongming731" type="rss" htmlUrl="https://x.com/hongming731" />
+            <outline text="Twitter @Theo - t3.gg" title="Twitter @Theo - t3.gg" xmlUrl="https://macmini-rsshub.tail99ecfa.ts.net/twitter/user/theo" type="rss" htmlUrl="https://x.com/theo" />
+            <outline text="Lee Robinson(@leerob)" title="Lee Robinson(@leerob)" xmlUrl="https://api.xgo.ing/rss/user/dc2426bc8348495189b45451d1707a1c" type="rss" htmlUrl="https://x.com/leerob" />
+            <outline text="Twitter @Pietro Schirano" title="Twitter @Pietro Schirano" xmlUrl="https://macmini-rsshub.tail99ecfa.ts.net/twitter/user/skirano" type="rss" htmlUrl="https://x.com/skirano" />
         </outline>
         <outline text="Pictures">
             <outline text="星空">
@@ -383,6 +396,8 @@
             <outline text="AI Foundations" title="AI Foundations" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g" type="rss" htmlUrl="https://www.youtube.com/channel/UCWZwfV3ICOt3uEPpW6hYK4g" />
             <outline text="司机社综合周排行榜" title="司机社综合周排行榜" xmlUrl="https://macmini-rsshub.tail99ecfa.ts.net/xsijishe/rank/weekly" type="rss" htmlUrl="https://xsijishe.com/portal.php" />
             <outline text="司机社综合月排行榜" title="司机社综合月排行榜" xmlUrl="https://macmini-rsshub.tail99ecfa.ts.net/xsijishe/rank/monthly" type="rss" htmlUrl="https://xsijishe.com/portal.php" />
+            <outline text="Andrej Karpathy - YouTube" title="Andrej Karpathy - YouTube" xmlUrl="https://macmini-rsshub.tail99ecfa.ts.net/youtube/user/@AndrejKarpathy" type="rss" htmlUrl="https://www.youtube.com/channel/UCXUPKJO5MZQN11PqgIvyuvQ" />
+            <outline text="Lex Fridman - YouTube" title="Lex Fridman - YouTube" xmlUrl="https://macmini-rsshub.tail99ecfa.ts.net/youtube/user/%40lexfridman" type="rss" htmlUrl="https://www.youtube.com/channel/UCSHZKyawb77ixDdsGog4iWA" />
         </outline>
     </body>
 </opml>

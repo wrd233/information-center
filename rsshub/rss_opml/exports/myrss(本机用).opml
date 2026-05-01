@@ -2,7 +2,7 @@
 <opml version="2.0">
     <head>
         <title>My RSS</title>
-        <dateCreated>2026-05-01T05:08:12+00:00</dateCreated>
+        <dateCreated>2026-05-01T13:27:28+00:00</dateCreated>
     </head>
     <body>
         <outline text="Articles">
@@ -18,16 +18,16 @@
             </outline>
             <outline text="Paradise Lost" title="Paradise Lost" xmlUrl="https://2890.ltd/feed/" type="rss" htmlUrl="https://2890.ltd/" />
             <outline text="笨方法学写作" title="笨方法学写作" xmlUrl="https://www.cnfeat.com/feed.xml" type="rss" htmlUrl="https://cnfeat.com/" />
-            <outline text="豆瓣小组-无用美学" title="豆瓣小组-无用美学" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/douban/group/699356/essence" type="rss" htmlUrl="https://www.douban.com/group/699356/?type=essence" />
+            <outline text="豆瓣小组-无用美学" title="豆瓣小组-无用美学" xmlUrl="http://127.0.0.1:1200/douban/group/699356/essence" type="rss" htmlUrl="https://www.douban.com/group/699356/?type=essence" />
             <outline text="StarYuhen" title="StarYuhen" xmlUrl="https://www.yuhenm.top/feed/" type="rss" htmlUrl="https://www.yuhenm.top/" />
             <outline text="优质信息源">
-                <outline text="少数派" title="少数派" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/sspai/index" type="rss" htmlUrl="https://sspai.com/" />
-                <outline text="少数派 -- Matrix" title="少数派 -- Matrix" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/sspai/matrix" type="rss" htmlUrl="https://sspai.com/matrix" />
+                <outline text="少数派" title="少数派" xmlUrl="http://127.0.0.1:1200/sspai/index" type="rss" htmlUrl="https://sspai.com/" />
+                <outline text="少数派 -- Matrix" title="少数派 -- Matrix" xmlUrl="http://127.0.0.1:1200/sspai/matrix" type="rss" htmlUrl="https://sspai.com/matrix" />
             </outline>
             <outline text="Experimental History" title="Experimental History" xmlUrl="https://www.experimental-history.com/feed" type="rss" htmlUrl="https://www.experimental-history.com/" />
             <outline text="Blog - Remote Work Prep" title="Blog - Remote Work Prep" xmlUrl="https://www.remoteworkprep.com/blog?format=rss" type="rss" htmlUrl="https://www.remoteworkprep.com/blog/" />
             <outline text="EVANGELION:ALL" title="EVANGELION:ALL" xmlUrl="https://www.eva-all.com/news/feed/" type="rss" htmlUrl="https://www.eva-all.com/news" />
-            <outline text="纵横四海" title="纵横四海" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/xiaoyuzhou/podcast/62694abdb221dd5908417d1e" type="rss" htmlUrl="https://www.xiaoyuzhoufm.com/podcast/62694abdb221dd5908417d1e" />
+            <outline text="纵横四海" title="纵横四海" xmlUrl="http://127.0.0.1:1200/xiaoyuzhou/podcast/62694abdb221dd5908417d1e" type="rss" htmlUrl="https://www.xiaoyuzhoufm.com/podcast/62694abdb221dd5908417d1e" />
             <outline text="其他">
                 <outline text="51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台" title="51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台" xmlUrl="https://51cg1.com/feed/" type="rss" htmlUrl="https://51cg1.com/" />
             </outline>
@@ -36,7 +36,7 @@
             <outline text="老T博客" title="老T博客" xmlUrl="https://lawtee.com/index.xml" type="rss" htmlUrl="https://lawtee.com/" />
             <outline text="科技与编程">
                 <outline text="小众软件" title="小众软件" xmlUrl="https://www.appinn.com/feed/" type="rss" htmlUrl="https://www.appinn.com/" />
-                <outline text="HelloGithub - 月刊" title="HelloGithub - 月刊" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/hellogithub/volume" type="rss" htmlUrl="https://hellogithub.com/periodical" />
+                <outline text="HelloGithub - 月刊" title="HelloGithub - 月刊" xmlUrl="http://127.0.0.1:1200/hellogithub/volume" type="rss" htmlUrl="https://hellogithub.com/periodical" />
                 <outline text="宝玉的分享" title="宝玉的分享" xmlUrl="https://s.baoyu.io/feed.xml" type="rss" htmlUrl="https://baoyu.io/" />
                 <outline text="阮一峰的网络日志" title="阮一峰的网络日志" xmlUrl="https://feeds.feedburner.com/ruanyifeng" type="rss" htmlUrl="http://www.ruanyifeng.com/blog/" />
                 <outline text="龙爪槐守望者" title="龙爪槐守望者" xmlUrl="https://www.ftium4.com/rss.xml" type="rss" htmlUrl="https://www.ftium4.com/rss.xml" />
@@ -61,19 +61,19 @@
                 <outline text="Tinyfool的个人网站" title="Tinyfool的个人网站" xmlUrl="https://codechina.org/feed/" type="rss" htmlUrl="https://codechina.org/" />
                 <outline text="刘夙的科技世界" title="刘夙的科技世界" xmlUrl="https://wewe-rss.jerrylf.uk/feeds/MP_WXS_3002603832.json" type="rss" htmlUrl="https://wewe-rss.jerrylf.uk/feeds/MP_WXS_3002603832.json" />
                 <outline text="三联生活周刊 Lifeweek" title="三联生活周刊 Lifeweek" xmlUrl="https://the.bi/s/rawbbyu2zgmy32" type="rss" htmlUrl="https://the.bi/s" />
-                <outline text="时代观察 - 乌有之乡网刊" title="时代观察 - 乌有之乡网刊" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/wyzxwk/article" type="rss" htmlUrl="http://www.wyzxwk.com/Article/shidai" />
+                <outline text="时代观察 - 乌有之乡网刊" title="时代观察 - 乌有之乡网刊" xmlUrl="http://127.0.0.1:1200/wyzxwk/article" type="rss" htmlUrl="http://www.wyzxwk.com/Article/shidai" />
             </outline>
             <outline text="国内外资讯">
-                <outline text="一觉醒来发生了什么 - 即刻圈子" title="一觉醒来发生了什么 - 即刻圈子" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/jike/topic/553870e8e4b0cafb0a1bef68" type="rss" htmlUrl="https://m.okjike.com/topics/553870e8e4b0cafb0a1bef68" />
-                <outline text="东西智库 – 专注中国制造业高质量发展" title="东西智库 – 专注中国制造业高质量发展" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/dx2025" type="rss" htmlUrl="https://www.dx2025.com/" />
+                <outline text="一觉醒来发生了什么 - 即刻圈子" title="一觉醒来发生了什么 - 即刻圈子" xmlUrl="http://127.0.0.1:1200/jike/topic/553870e8e4b0cafb0a1bef68" type="rss" htmlUrl="https://m.okjike.com/topics/553870e8e4b0cafb0a1bef68" />
+                <outline text="东西智库 – 专注中国制造业高质量发展" title="东西智库 – 专注中国制造业高质量发展" xmlUrl="http://127.0.0.1:1200/dx2025" type="rss" htmlUrl="https://www.dx2025.com/" />
             </outline>
             <outline text="国内政策">
-                <outline text="中国政府网 - 最新政策" title="中国政府网 - 最新政策" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/gov/zhengce/zuixin" type="rss" htmlUrl="https://www.gov.cn/zhengce/zuixin/" />
-                <outline text="- 政府文件库" title="- 政府文件库" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/gov/zhengce/zhengceku/bmwj" type="rss" htmlUrl="http://www.gov.cn/zhengce/zhengceku/bmwj/" />
+                <outline text="中国政府网 - 最新政策" title="中国政府网 - 最新政策" xmlUrl="http://127.0.0.1:1200/gov/zhengce/zuixin" type="rss" htmlUrl="https://www.gov.cn/zhengce/zuixin/" />
+                <outline text="- 政府文件库" title="- 政府文件库" xmlUrl="http://127.0.0.1:1200/gov/zhengce/zhengceku/bmwj" type="rss" htmlUrl="http://www.gov.cn/zhengce/zhengceku/bmwj/" />
             </outline>
             <outline text="不如读书" title="不如读书" xmlUrl="https://wuyagege.substack.com/feed" type="rss" htmlUrl="https://wuyagege.substack.com/" />
             <outline text="Lukas Petersson’s blog" title="Lukas Petersson’s blog" xmlUrl="https://lukaspetersson.com/feed.xml" type="rss" htmlUrl="https://lukaspetersson.github.io/" />
-            <outline text="一亩三分地 - 日本热门帖子" title="一亩三分地 - 日本热门帖子" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/1point3acres/category/%E6%97%A5%E6%9C%AC" type="rss" htmlUrl="https://instant.1point3acres.com/category/%E6%97%A5%E6%9C%AC" />
+            <outline text="一亩三分地 - 日本热门帖子" title="一亩三分地 - 日本热门帖子" xmlUrl="http://127.0.0.1:1200/1point3acres/category/%E6%97%A5%E6%9C%AC" type="rss" htmlUrl="https://instant.1point3acres.com/category/%E6%97%A5%E6%9C%AC" />
             <outline text="偷懒爱好者周刊" title="偷懒爱好者周刊" xmlUrl="https://toolight.cn/open/p/weekly/atom.xml" type="rss" htmlUrl="https://echosoar.github.io/weekly/" />
             <outline text="GeekPlux Letters" title="GeekPlux Letters" xmlUrl="https://letters.geekplux.com/rss/" type="rss" htmlUrl="https://letters.geekplux.com/" />
             <outline text="信息差——独立开发者出海周刊" title="信息差——独立开发者出海周刊" xmlUrl="https://gapis.money/rss.xml" type="rss" htmlUrl="https://gapis.money/" />
@@ -85,19 +85,26 @@
             <outline text="Kubernetes Blog" title="Kubernetes Blog" xmlUrl="https://kubernetes.io/feed.xml" type="rss" htmlUrl="https://kubernetes.io/" />
             <outline text="AI洞察日报 RSS Feed" title="AI洞察日报 RSS Feed" xmlUrl="https://justlovemaki.github.io/CloudFlare-AI-Insight-Daily/rss.xml" type="rss" htmlUrl="https://ai.hubtoday.app/" />
             <outline text="党政信息">
-                <outline text="最新发布_共产党员网" title="最新发布_共产党员网" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/12371/zxfb" type="rss" htmlUrl="https://www.12371.cn/zxfb/" />
+                <outline text="最新发布_共产党员网" title="最新发布_共产党员网" xmlUrl="http://127.0.0.1:1200/12371/zxfb" type="rss" htmlUrl="https://www.12371.cn/zxfb/" />
                 <outline text="新华社新闻_新华网" title="新华社新闻_新华网" xmlUrl="https://plink.anyfeeder.com/newscn/whxw" type="rss" htmlUrl="http://www.news.cn/xhsxw.htm" />
                 <outline text="半月谈快报" title="半月谈快报" xmlUrl="https://data.getpodcast.xyz/data/ximalaya/9604235.xml" type="rss" htmlUrl="https://www.ximalaya.com/album/9604235/" />
                 <outline text="- 求是网" title="- 求是网" xmlUrl="https://plink.anyfeeder.com/qstheory" type="rss" htmlUrl="http://www.qstheory.cn/v9zhuanqu/toutiao/index.htm" />
             </outline>
-            <outline text="学习一下订阅源" title="学习一下订阅源" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/follow/profile/158883963341209600" type="rss" htmlUrl="https://app.follow.is/share/users/158883963341209600" />
+            <outline text="学习一下订阅源" title="学习一下订阅源" xmlUrl="http://127.0.0.1:1200/follow/profile/158883963341209600" type="rss" htmlUrl="https://app.follow.is/share/users/158883963341209600" />
+            <outline text="Lex Fridman Podcast" title="Lex Fridman Podcast" xmlUrl="https://lexfridman.com/feed/podcast/" type="rss" htmlUrl="https://lexfridman.com/" />
+            <outline text="Podnews Daily - podcast industry news" title="Podnews Daily - podcast industry news" xmlUrl="https://podnews.net/rss" type="rss" htmlUrl="https://podnews.net/" />
+            <outline text="新智元" title="新智元" xmlUrl="https://raw.githubusercontent.com/osnsyc/Wechat-Scholar/main/channels/gh_108f2a2a27f4.xml" type="rss" htmlUrl="https://mp.weixin.qq.com/" />
+            <outline text="机器之心" title="机器之心" xmlUrl="https://www.jiqizhixin.com/rss" type="rss" htmlUrl="https://www.jiqizhixin.com/" />
+            <outline text="腾讯研究院" title="腾讯研究院" xmlUrl="https://wechat2rss.bestblogs.dev/feed/6152301e0978bffb0a8284cab339262b9764dcfb.xml" type="rss" htmlUrl="https://wechat2rss.bestblogs.dev/feed/6152301e0978bffb0a8284cab339262b9764dcfb.xml" />
+            <outline text="极客公园" title="极客公园" xmlUrl="https://www.geekpark.net/rss" type="rss" htmlUrl="http://mainssl.geekpark.net/rss.rss" />
+            <outline text="极客公园" title="极客公园" xmlUrl="https://wechat2rss.xlab.app/feed/1a5aec98e71c707c8ca092bc2c255b9d4bac477d.xml" type="rss" htmlUrl="https://wechat2rss.xlab.app/feed/1a5aec98e71c707c8ca092bc2c255b9d4bac477d.xml" />
         </outline>
         <outline text="SocialMedia">
-            <outline text="图书推荐 – 书伴" title="图书推荐 – 书伴" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bookfere/books" type="rss" htmlUrl="https://bookfere.com/category/books" />
-            <outline text="每周一书 – 书伴" title="每周一书 – 书伴" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bookfere/weekly" type="rss" htmlUrl="https://bookfere.com/category/weekly" />
-            <outline text="笔记交流站 - 即刻圈子" title="笔记交流站 - 即刻圈子" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/jike/topic/660165c504703c909c6d8b2e" type="rss" htmlUrl="https://m.okjike.com/topics/660165c504703c909c6d8b2e" />
+            <outline text="图书推荐 – 书伴" title="图书推荐 – 书伴" xmlUrl="http://127.0.0.1:1200/bookfere/books" type="rss" htmlUrl="https://bookfere.com/category/books" />
+            <outline text="每周一书 – 书伴" title="每周一书 – 书伴" xmlUrl="http://127.0.0.1:1200/bookfere/weekly" type="rss" htmlUrl="https://bookfere.com/category/weekly" />
+            <outline text="笔记交流站 - 即刻圈子" title="笔记交流站 - 即刻圈子" xmlUrl="http://127.0.0.1:1200/jike/topic/660165c504703c909c6d8b2e" type="rss" htmlUrl="https://m.okjike.com/topics/660165c504703c909c6d8b2e" />
             <outline text="资讯">
-                <outline text="你不知道的行业内幕 - 即刻圈子" title="你不知道的行业内幕 - 即刻圈子" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/jike/topic/5699f451d3e8351200bffdc8" type="rss" htmlUrl="https://m.okjike.com/topics/5699f451d3e8351200bffdc8" />
+                <outline text="你不知道的行业内幕 - 即刻圈子" title="你不知道的行业内幕 - 即刻圈子" xmlUrl="http://127.0.0.1:1200/jike/topic/5699f451d3e8351200bffdc8" type="rss" htmlUrl="https://m.okjike.com/topics/5699f451d3e8351200bffdc8" />
             </outline>
             <outline text="Mike Krieger(@mikeyk)" title="Mike Krieger(@mikeyk)" xmlUrl="https://api.xgo.ing/rss/user/78d7b99318b04b309b04000f7e24da29" type="rss" htmlUrl="https://x.com/mikeyk" />
             <outline text="Richard Socher(@RichardSocher)" title="Richard Socher(@RichardSocher)" xmlUrl="https://api.xgo.ing/rss/user/4d2d4165a7524217a08d3f57f27fa190" type="rss" htmlUrl="https://x.com/RichardSocher" />
@@ -249,140 +256,148 @@
             <outline text="Dify(@dify_ai)" title="Dify(@dify_ai)" xmlUrl="https://api.xgo.ing/rss/user/0be252fedbe84ad7bea21be44b18da89" type="rss" htmlUrl="https://x.com/dify_ai" />
             <outline text="Eric Jing(@ericjing_ai)" title="Eric Jing(@ericjing_ai)" xmlUrl="https://api.xgo.ing/rss/user/ddfdcdd4e390495c942f0b5da62af0fb" type="rss" htmlUrl="https://x.com/ericjing_ai" />
             <outline text="Naval(@naval)" title="Naval(@naval)" xmlUrl="https://api.xgo.ing/rss/user/b43bc203409e4c5a9c3ae86fe1ac00c9" type="rss" htmlUrl="https://x.com/naval" />
+            <outline text="Twitter @Tom Huang" title="Twitter @Tom Huang" xmlUrl="http://127.0.0.1:1200/twitter/user/tuturetom" type="rss" htmlUrl="https://x.com/tuturetom" />
+            <outline text="Twitter @Tw93" title="Twitter @Tw93" xmlUrl="http://127.0.0.1:1200/twitter/user/HiTw93" type="rss" htmlUrl="https://x.com/HiTw93" />
+            <outline text="Twitter @ginobefun" title="Twitter @ginobefun" xmlUrl="http://127.0.0.1:1200/twitter/user/hongming731" type="rss" htmlUrl="https://x.com/hongming731" />
+            <outline text="Twitter @Theo - t3.gg" title="Twitter @Theo - t3.gg" xmlUrl="http://127.0.0.1:1200/twitter/user/theo" type="rss" htmlUrl="https://x.com/theo" />
+            <outline text="Lee Robinson(@leerob)" title="Lee Robinson(@leerob)" xmlUrl="https://api.xgo.ing/rss/user/dc2426bc8348495189b45451d1707a1c" type="rss" htmlUrl="https://x.com/leerob" />
+            <outline text="Twitter @Pietro Schirano" title="Twitter @Pietro Schirano" xmlUrl="http://127.0.0.1:1200/twitter/user/skirano" type="rss" htmlUrl="https://x.com/skirano" />
         </outline>
         <outline text="Pictures">
             <outline text="星空">
-                <outline text="每日一图-北京天文馆" title="每日一图-北京天文馆" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bjp/apod" type="rss" htmlUrl="https://www.bjp.org.cn/APOD/list.shtml" />
-                <outline text="NASA中文 - 天文·每日一图" title="NASA中文 - 天文·每日一图" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/nasa/apod-cn" type="rss" htmlUrl="https://www.nasachina.cn/nasa-image-of-the-day" />
+                <outline text="每日一图-北京天文馆" title="每日一图-北京天文馆" xmlUrl="http://127.0.0.1:1200/bjp/apod" type="rss" htmlUrl="https://www.bjp.org.cn/APOD/list.shtml" />
+                <outline text="NASA中文 - 天文·每日一图" title="NASA中文 - 天文·每日一图" xmlUrl="http://127.0.0.1:1200/nasa/apod-cn" type="rss" htmlUrl="https://www.nasachina.cn/nasa-image-of-the-day" />
             </outline>
         </outline>
         <outline text="Videos">
             <outline text="长知识">
-                <outline text="AliAbdaal" title="AliAbdaal" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/3546581580122806" type="rss" htmlUrl="https://space.bilibili.com/3546581580122806" />
-                <outline text="食事史馆" title="食事史馆" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/53737196" type="rss" htmlUrl="https://space.bilibili.com/53737196" />
-                <outline text="毕导" title="毕导" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/254463269" type="rss" htmlUrl="https://space.bilibili.com/254463269" />
-                <outline text="CoCoVii" title="CoCoVii" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/9142182" type="rss" htmlUrl="https://space.bilibili.com/9142182" />
-                <outline text="下班的三爷" title="下班的三爷" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/589388395" type="rss" htmlUrl="https://space.bilibili.com/589388395" />
-                <outline text="本子在隔壁" title="本子在隔壁" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/593251783" type="rss" htmlUrl="https://space.bilibili.com/593251783" />
-                <outline text="岱川博士" title="岱川博士" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/584630077" type="rss" htmlUrl="https://space.bilibili.com/584630077" />
-                <outline text="退役编辑雨上" title="退役编辑雨上" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/1105429038" type="rss" htmlUrl="https://space.bilibili.com/1105429038" />
-                <outline text="与书籍度过漫长岁月" title="与书籍度过漫长岁月" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/252099076" type="rss" htmlUrl="https://space.bilibili.com/252099076" />
-                <outline text="智能路障" title="智能路障" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/79577853" type="rss" htmlUrl="https://space.bilibili.com/79577853" />
-                <outline text="Nenly同学" title="Nenly同学" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/1814756990" type="rss" htmlUrl="https://space.bilibili.com/1814756990" />
-                <outline text="大问题Dialectic" title="大问题Dialectic" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/1871365234" type="rss" htmlUrl="https://space.bilibili.com/1871365234" />
-                <outline text="英语播客狗" title="英语播客狗" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/7671890" type="rss" htmlUrl="https://space.bilibili.com/7671890" />
-                <outline text="林川登罗" title="林川登罗" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/3798056" type="rss" htmlUrl="https://space.bilibili.com/3798056" />
-                <outline text="人间自习室" title="人间自习室" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/29240784" type="rss" htmlUrl="https://space.bilibili.com/29240784" />
-                <outline text="漫士沉思录" title="漫士沉思录" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/266765166" type="rss" htmlUrl="https://space.bilibili.com/266765166" />
-                <outline text="银屏系漫游指南" title="银屏系漫游指南" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/674180538" type="rss" htmlUrl="https://space.bilibili.com/674180538" />
-                <outline text="浮世叁千问" title="浮世叁千问" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/435061656" type="rss" htmlUrl="https://space.bilibili.com/435061656" />
-                <outline text="LunaticMosfet" title="LunaticMosfet" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/1297592012" type="rss" htmlUrl="https://space.bilibili.com/1297592012" />
-                <outline text="歌白说Geslook" title="歌白说Geslook" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/315846984" type="rss" htmlUrl="https://space.bilibili.com/315846984" />
-                <outline text="Larry想做技术大佬" title="Larry想做技术大佬" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/19873195" type="rss" htmlUrl="https://space.bilibili.com/19873195" />
-                <outline text="赏味不足" title="赏味不足" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/44497027" type="rss" htmlUrl="https://space.bilibili.com/44497027" />
-                <outline text="西山在何许" title="西山在何许" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/2515311" type="rss" htmlUrl="https://space.bilibili.com/2515311" />
-                <outline text="坚果熊说博弈" title="坚果熊说博弈" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/388394328" type="rss" htmlUrl="https://space.bilibili.com/388394328" />
-                <outline text="罗明落ny" title="罗明落ny" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/405303082" type="rss" htmlUrl="https://space.bilibili.com/405303082" />
-                <outline text="汤质看本质" title="汤质看本质" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/362588980" type="rss" htmlUrl="https://space.bilibili.com/362588980" />
-                <outline text="要素分析" title="要素分析" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/14262056" type="rss" htmlUrl="https://space.bilibili.com/14262056" />
-                <outline text="蒙克MK_" title="蒙克MK_" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/1060986358" type="rss" htmlUrl="https://space.bilibili.com/1060986358" />
-                <outline text="Morpheus红丸主义" title="Morpheus红丸主义" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/445634559" type="rss" htmlUrl="https://space.bilibili.com/445634559" />
-                <outline text="慢慢学的四饼" title="慢慢学的四饼" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/95240876" type="rss" htmlUrl="https://space.bilibili.com/95240876" />
-                <outline text="辰星杂谈" title="辰星杂谈" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/41018196" type="rss" htmlUrl="https://space.bilibili.com/41018196" />
-                <outline text="非卿漫谈" title="非卿漫谈" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/2690044" type="rss" htmlUrl="https://space.bilibili.com/2690044" />
-                <outline text="拣尽南枝" title="拣尽南枝" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/39597640" type="rss" htmlUrl="https://space.bilibili.com/39597640" />
-                <outline text="硬核学长2077" title="硬核学长2077" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/1195497797" type="rss" htmlUrl="https://space.bilibili.com/1195497797" />
-                <outline text="海林A读书" title="海林A读书" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/3494374304385046" type="rss" htmlUrl="https://space.bilibili.com/3494374304385046" />
-                <outline text="机器人夏先生1号" title="机器人夏先生1号" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/31656484" type="rss" htmlUrl="https://space.bilibili.com/31656484" />
-                <outline text="知识共享者" title="知识共享者" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/406068046" type="rss" htmlUrl="https://space.bilibili.com/406068046" />
-                <outline text="Maki的完美算术教室" title="Maki的完美算术教室" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/391930545" type="rss" htmlUrl="https://space.bilibili.com/391930545" />
-                <outline text="心河摆渡" title="心河摆渡" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/230983435" type="rss" htmlUrl="https://space.bilibili.com/230983435" />
-                <outline text="猴猴说话" title="猴猴说话" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/31728620" type="rss" htmlUrl="https://space.bilibili.com/31728620" />
-                <outline text="3Blue1Brown" title="3Blue1Brown" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/88461692" type="rss" htmlUrl="https://space.bilibili.com/88461692" />
-                <outline text="思维实验室" title="思维实验室" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/14583962" type="rss" htmlUrl="https://space.bilibili.com/14583962" />
-                <outline text="是落拓呀" title="是落拓呀" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/43276908" type="rss" htmlUrl="https://space.bilibili.com/43276908" />
-                <outline text="学院派Academia" title="学院派Academia" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/96639395" type="rss" htmlUrl="https://space.bilibili.com/96639395" />
-                <outline text="和张程一起学习吧" title="和张程一起学习吧" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/631899631" type="rss" htmlUrl="https://space.bilibili.com/631899631" />
-                <outline text="读书的Harry" title="读书的Harry" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/611092306" type="rss" htmlUrl="https://space.bilibili.com/611092306" />
-                <outline text="小波心理" title="小波心理" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/1033890839" type="rss" htmlUrl="https://space.bilibili.com/1033890839" />
-                <outline text="科幻视界" title="科幻视界" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/25073738" type="rss" htmlUrl="https://space.bilibili.com/25073738" />
-                <outline text="差评君" title="差评君" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/19319172" type="rss" htmlUrl="https://space.bilibili.com/19319172" />
-                <outline text="迷因水母" title="迷因水母" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/1858861103" type="rss" htmlUrl="https://space.bilibili.com/1858861103" />
-                <outline text="努力戒咕的coco锤" title="努力戒咕的coco锤" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/470585121" type="rss" htmlUrl="https://space.bilibili.com/470585121" />
-                <outline text="河口超人Aper" title="河口超人Aper" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/1288663494" type="rss" htmlUrl="https://space.bilibili.com/1288663494" />
-                <outline text="荒野初研园" title="荒野初研园" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/252411834" type="rss" htmlUrl="https://space.bilibili.com/252411834" />
-                <outline text="二次元的Datawhale" title="二次元的Datawhale" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/431850986" type="rss" htmlUrl="https://space.bilibili.com/431850986" />
-                <outline text="白染one" title="白染one" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/476051104" type="rss" htmlUrl="https://space.bilibili.com/476051104" />
-                <outline text="卡纸大寨主" title="卡纸大寨主" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/17780825" type="rss" htmlUrl="https://space.bilibili.com/17780825" />
-                <outline text="向杨Alan君" title="向杨Alan君" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/495979610" type="rss" htmlUrl="https://space.bilibili.com/495979610" />
-                <outline text="奥德修斯的绳索" title="奥德修斯的绳索" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/14004258" type="rss" htmlUrl="https://space.bilibili.com/14004258" />
-                <outline text="岺玖贰叁" title="岺玖贰叁" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/521296768" type="rss" htmlUrl="https://space.bilibili.com/521296768" />
-                <outline text="新石器公园" title="新石器公园" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/489640651" type="rss" htmlUrl="https://space.bilibili.com/489640651" />
-                <outline text="载脑体" title="载脑体" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/1850874570" type="rss" htmlUrl="https://space.bilibili.com/1850874570" />
-                <outline text="YouTube深度访谈" title="YouTube深度访谈" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/3493286931073848" type="rss" htmlUrl="https://space.bilibili.com/3493286931073848" />
-                <outline text="天才简史" title="天才简史" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/213845897" type="rss" htmlUrl="https://space.bilibili.com/213845897" />
-                <outline text="这是个令人疑惑的星球" title="这是个令人疑惑的星球" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/409842788" type="rss" htmlUrl="https://space.bilibili.com/409842788" />
-                <outline text="周侃侃plus" title="周侃侃plus" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/600428973" type="rss" htmlUrl="https://space.bilibili.com/600428973" />
-                <outline text="focus2flow" title="focus2flow" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/17549684" type="rss" htmlUrl="https://space.bilibili.com/17549684" />
+                <outline text="AliAbdaal" title="AliAbdaal" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/3546581580122806" type="rss" htmlUrl="https://space.bilibili.com/3546581580122806" />
+                <outline text="食事史馆" title="食事史馆" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/53737196" type="rss" htmlUrl="https://space.bilibili.com/53737196" />
+                <outline text="毕导" title="毕导" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/254463269" type="rss" htmlUrl="https://space.bilibili.com/254463269" />
+                <outline text="CoCoVii" title="CoCoVii" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/9142182" type="rss" htmlUrl="https://space.bilibili.com/9142182" />
+                <outline text="下班的三爷" title="下班的三爷" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/589388395" type="rss" htmlUrl="https://space.bilibili.com/589388395" />
+                <outline text="本子在隔壁" title="本子在隔壁" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/593251783" type="rss" htmlUrl="https://space.bilibili.com/593251783" />
+                <outline text="岱川博士" title="岱川博士" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/584630077" type="rss" htmlUrl="https://space.bilibili.com/584630077" />
+                <outline text="退役编辑雨上" title="退役编辑雨上" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/1105429038" type="rss" htmlUrl="https://space.bilibili.com/1105429038" />
+                <outline text="与书籍度过漫长岁月" title="与书籍度过漫长岁月" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/252099076" type="rss" htmlUrl="https://space.bilibili.com/252099076" />
+                <outline text="智能路障" title="智能路障" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/79577853" type="rss" htmlUrl="https://space.bilibili.com/79577853" />
+                <outline text="Nenly同学" title="Nenly同学" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/1814756990" type="rss" htmlUrl="https://space.bilibili.com/1814756990" />
+                <outline text="大问题Dialectic" title="大问题Dialectic" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/1871365234" type="rss" htmlUrl="https://space.bilibili.com/1871365234" />
+                <outline text="英语播客狗" title="英语播客狗" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/7671890" type="rss" htmlUrl="https://space.bilibili.com/7671890" />
+                <outline text="林川登罗" title="林川登罗" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/3798056" type="rss" htmlUrl="https://space.bilibili.com/3798056" />
+                <outline text="人间自习室" title="人间自习室" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/29240784" type="rss" htmlUrl="https://space.bilibili.com/29240784" />
+                <outline text="漫士沉思录" title="漫士沉思录" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/266765166" type="rss" htmlUrl="https://space.bilibili.com/266765166" />
+                <outline text="银屏系漫游指南" title="银屏系漫游指南" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/674180538" type="rss" htmlUrl="https://space.bilibili.com/674180538" />
+                <outline text="浮世叁千问" title="浮世叁千问" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/435061656" type="rss" htmlUrl="https://space.bilibili.com/435061656" />
+                <outline text="LunaticMosfet" title="LunaticMosfet" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/1297592012" type="rss" htmlUrl="https://space.bilibili.com/1297592012" />
+                <outline text="歌白说Geslook" title="歌白说Geslook" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/315846984" type="rss" htmlUrl="https://space.bilibili.com/315846984" />
+                <outline text="Larry想做技术大佬" title="Larry想做技术大佬" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/19873195" type="rss" htmlUrl="https://space.bilibili.com/19873195" />
+                <outline text="赏味不足" title="赏味不足" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/44497027" type="rss" htmlUrl="https://space.bilibili.com/44497027" />
+                <outline text="西山在何许" title="西山在何许" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/2515311" type="rss" htmlUrl="https://space.bilibili.com/2515311" />
+                <outline text="坚果熊说博弈" title="坚果熊说博弈" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/388394328" type="rss" htmlUrl="https://space.bilibili.com/388394328" />
+                <outline text="罗明落ny" title="罗明落ny" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/405303082" type="rss" htmlUrl="https://space.bilibili.com/405303082" />
+                <outline text="汤质看本质" title="汤质看本质" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/362588980" type="rss" htmlUrl="https://space.bilibili.com/362588980" />
+                <outline text="要素分析" title="要素分析" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/14262056" type="rss" htmlUrl="https://space.bilibili.com/14262056" />
+                <outline text="蒙克MK_" title="蒙克MK_" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/1060986358" type="rss" htmlUrl="https://space.bilibili.com/1060986358" />
+                <outline text="Morpheus红丸主义" title="Morpheus红丸主义" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/445634559" type="rss" htmlUrl="https://space.bilibili.com/445634559" />
+                <outline text="慢慢学的四饼" title="慢慢学的四饼" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/95240876" type="rss" htmlUrl="https://space.bilibili.com/95240876" />
+                <outline text="辰星杂谈" title="辰星杂谈" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/41018196" type="rss" htmlUrl="https://space.bilibili.com/41018196" />
+                <outline text="非卿漫谈" title="非卿漫谈" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/2690044" type="rss" htmlUrl="https://space.bilibili.com/2690044" />
+                <outline text="拣尽南枝" title="拣尽南枝" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/39597640" type="rss" htmlUrl="https://space.bilibili.com/39597640" />
+                <outline text="硬核学长2077" title="硬核学长2077" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/1195497797" type="rss" htmlUrl="https://space.bilibili.com/1195497797" />
+                <outline text="海林A读书" title="海林A读书" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/3494374304385046" type="rss" htmlUrl="https://space.bilibili.com/3494374304385046" />
+                <outline text="机器人夏先生1号" title="机器人夏先生1号" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/31656484" type="rss" htmlUrl="https://space.bilibili.com/31656484" />
+                <outline text="知识共享者" title="知识共享者" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/406068046" type="rss" htmlUrl="https://space.bilibili.com/406068046" />
+                <outline text="Maki的完美算术教室" title="Maki的完美算术教室" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/391930545" type="rss" htmlUrl="https://space.bilibili.com/391930545" />
+                <outline text="心河摆渡" title="心河摆渡" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/230983435" type="rss" htmlUrl="https://space.bilibili.com/230983435" />
+                <outline text="猴猴说话" title="猴猴说话" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/31728620" type="rss" htmlUrl="https://space.bilibili.com/31728620" />
+                <outline text="3Blue1Brown" title="3Blue1Brown" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/88461692" type="rss" htmlUrl="https://space.bilibili.com/88461692" />
+                <outline text="思维实验室" title="思维实验室" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/14583962" type="rss" htmlUrl="https://space.bilibili.com/14583962" />
+                <outline text="是落拓呀" title="是落拓呀" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/43276908" type="rss" htmlUrl="https://space.bilibili.com/43276908" />
+                <outline text="学院派Academia" title="学院派Academia" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/96639395" type="rss" htmlUrl="https://space.bilibili.com/96639395" />
+                <outline text="和张程一起学习吧" title="和张程一起学习吧" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/631899631" type="rss" htmlUrl="https://space.bilibili.com/631899631" />
+                <outline text="读书的Harry" title="读书的Harry" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/611092306" type="rss" htmlUrl="https://space.bilibili.com/611092306" />
+                <outline text="小波心理" title="小波心理" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/1033890839" type="rss" htmlUrl="https://space.bilibili.com/1033890839" />
+                <outline text="科幻视界" title="科幻视界" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/25073738" type="rss" htmlUrl="https://space.bilibili.com/25073738" />
+                <outline text="差评君" title="差评君" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/19319172" type="rss" htmlUrl="https://space.bilibili.com/19319172" />
+                <outline text="迷因水母" title="迷因水母" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/1858861103" type="rss" htmlUrl="https://space.bilibili.com/1858861103" />
+                <outline text="努力戒咕的coco锤" title="努力戒咕的coco锤" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/470585121" type="rss" htmlUrl="https://space.bilibili.com/470585121" />
+                <outline text="河口超人Aper" title="河口超人Aper" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/1288663494" type="rss" htmlUrl="https://space.bilibili.com/1288663494" />
+                <outline text="荒野初研园" title="荒野初研园" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/252411834" type="rss" htmlUrl="https://space.bilibili.com/252411834" />
+                <outline text="二次元的Datawhale" title="二次元的Datawhale" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/431850986" type="rss" htmlUrl="https://space.bilibili.com/431850986" />
+                <outline text="白染one" title="白染one" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/476051104" type="rss" htmlUrl="https://space.bilibili.com/476051104" />
+                <outline text="卡纸大寨主" title="卡纸大寨主" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/17780825" type="rss" htmlUrl="https://space.bilibili.com/17780825" />
+                <outline text="向杨Alan君" title="向杨Alan君" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/495979610" type="rss" htmlUrl="https://space.bilibili.com/495979610" />
+                <outline text="奥德修斯的绳索" title="奥德修斯的绳索" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/14004258" type="rss" htmlUrl="https://space.bilibili.com/14004258" />
+                <outline text="岺玖贰叁" title="岺玖贰叁" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/521296768" type="rss" htmlUrl="https://space.bilibili.com/521296768" />
+                <outline text="新石器公园" title="新石器公园" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/489640651" type="rss" htmlUrl="https://space.bilibili.com/489640651" />
+                <outline text="载脑体" title="载脑体" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/1850874570" type="rss" htmlUrl="https://space.bilibili.com/1850874570" />
+                <outline text="YouTube深度访谈" title="YouTube深度访谈" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/3493286931073848" type="rss" htmlUrl="https://space.bilibili.com/3493286931073848" />
+                <outline text="天才简史" title="天才简史" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/213845897" type="rss" htmlUrl="https://space.bilibili.com/213845897" />
+                <outline text="这是个令人疑惑的星球" title="这是个令人疑惑的星球" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/409842788" type="rss" htmlUrl="https://space.bilibili.com/409842788" />
+                <outline text="周侃侃plus" title="周侃侃plus" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/600428973" type="rss" htmlUrl="https://space.bilibili.com/600428973" />
+                <outline text="focus2flow" title="focus2flow" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/17549684" type="rss" htmlUrl="https://space.bilibili.com/17549684" />
             </outline>
             <outline text="短知识">
-                <outline text="飞鸟手札" title="飞鸟手札" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/1366786686" type="rss" htmlUrl="https://space.bilibili.com/1366786686" />
-                <outline text="英语播客党" title="英语播客党" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/3537109151386355" type="rss" htmlUrl="https://space.bilibili.com/3537109151386355" />
+                <outline text="飞鸟手札" title="飞鸟手札" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/1366786686" type="rss" htmlUrl="https://space.bilibili.com/1366786686" />
+                <outline text="英语播客党" title="英语播客党" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/3537109151386355" type="rss" htmlUrl="https://space.bilibili.com/3537109151386355" />
             </outline>
             <outline text="最娱乐">
-                <outline text="波士顿圆脸" title="波士顿圆脸" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/346563107" type="rss" htmlUrl="https://space.bilibili.com/346563107" />
-                <outline text="瓶子君152" title="瓶子君152" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/730732" type="rss" htmlUrl="https://space.bilibili.com/730732" />
-                <outline text="Super也好君" title="Super也好君" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/1372433" type="rss" htmlUrl="https://space.bilibili.com/1372433" />
-                <outline text="负面能量转换器" title="负面能量转换器" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/281127303" type="rss" htmlUrl="https://space.bilibili.com/281127303" />
-                <outline text="靠谱电竞" title="靠谱电竞" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/279991456" type="rss" htmlUrl="https://space.bilibili.com/279991456" />
-                <outline text="火兰朋克" title="火兰朋克" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/508215481" type="rss" htmlUrl="https://space.bilibili.com/508215481" />
-                <outline text="馆长刘下饭_环球档案" title="馆长刘下饭_环球档案" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/369564778" type="rss" htmlUrl="https://space.bilibili.com/369564778" />
-                <outline text="老实憨厚的笑笑" title="老实憨厚的笑笑" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/8739477" type="rss" htmlUrl="https://space.bilibili.com/8739477" />
-                <outline text="冲击波工作室" title="冲击波工作室" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/1567045834" type="rss" htmlUrl="https://space.bilibili.com/1567045834" />
-                <outline text="邵艾伦Alan" title="邵艾伦Alan" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/4029133" type="rss" htmlUrl="https://space.bilibili.com/4029133" />
-                <outline text="柯洁" title="柯洁" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/525952604" type="rss" htmlUrl="https://space.bilibili.com/525952604" />
-                <outline text="逗比的雀巢" title="逗比的雀巢" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/5294454" type="rss" htmlUrl="https://space.bilibili.com/5294454" />
-                <outline text="大祥哥来了" title="大祥哥来了" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/2920960" type="rss" htmlUrl="https://space.bilibili.com/2920960" />
-                <outline text="Norah脱口秀" title="Norah脱口秀" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/29404012" type="rss" htmlUrl="https://space.bilibili.com/29404012" />
-                <outline text="巅峰球迷汇" title="巅峰球迷汇" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/365372809" type="rss" htmlUrl="https://space.bilibili.com/365372809" />
-                <outline text="MrBeast官方账号" title="MrBeast官方账号" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/1027737427" type="rss" htmlUrl="https://space.bilibili.com/1027737427" />
-                <outline text="泛式" title="泛式" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/63231" type="rss" htmlUrl="https://space.bilibili.com/63231" />
-                <outline text="贝拉kira" title="贝拉kira" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/672353429" type="rss" htmlUrl="https://space.bilibili.com/672353429" />
-                <outline text="-LKs-" title="-LKs-" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/125526" type="rss" htmlUrl="https://space.bilibili.com/125526" />
-                <outline text="真实球迷汇" title="真实球迷汇" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/108618052" type="rss" htmlUrl="https://space.bilibili.com/108618052" />
-                <outline text="李滇滇" title="李滇滇" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/3546676667091128" type="rss" htmlUrl="https://space.bilibili.com/3546676667091128" />
-                <outline text="影视飓风" title="影视飓风" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/946974" type="rss" htmlUrl="https://space.bilibili.com/946974" />
+                <outline text="波士顿圆脸" title="波士顿圆脸" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/346563107" type="rss" htmlUrl="https://space.bilibili.com/346563107" />
+                <outline text="瓶子君152" title="瓶子君152" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/730732" type="rss" htmlUrl="https://space.bilibili.com/730732" />
+                <outline text="Super也好君" title="Super也好君" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/1372433" type="rss" htmlUrl="https://space.bilibili.com/1372433" />
+                <outline text="负面能量转换器" title="负面能量转换器" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/281127303" type="rss" htmlUrl="https://space.bilibili.com/281127303" />
+                <outline text="靠谱电竞" title="靠谱电竞" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/279991456" type="rss" htmlUrl="https://space.bilibili.com/279991456" />
+                <outline text="火兰朋克" title="火兰朋克" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/508215481" type="rss" htmlUrl="https://space.bilibili.com/508215481" />
+                <outline text="馆长刘下饭_环球档案" title="馆长刘下饭_环球档案" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/369564778" type="rss" htmlUrl="https://space.bilibili.com/369564778" />
+                <outline text="老实憨厚的笑笑" title="老实憨厚的笑笑" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/8739477" type="rss" htmlUrl="https://space.bilibili.com/8739477" />
+                <outline text="冲击波工作室" title="冲击波工作室" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/1567045834" type="rss" htmlUrl="https://space.bilibili.com/1567045834" />
+                <outline text="邵艾伦Alan" title="邵艾伦Alan" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/4029133" type="rss" htmlUrl="https://space.bilibili.com/4029133" />
+                <outline text="柯洁" title="柯洁" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/525952604" type="rss" htmlUrl="https://space.bilibili.com/525952604" />
+                <outline text="逗比的雀巢" title="逗比的雀巢" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/5294454" type="rss" htmlUrl="https://space.bilibili.com/5294454" />
+                <outline text="大祥哥来了" title="大祥哥来了" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/2920960" type="rss" htmlUrl="https://space.bilibili.com/2920960" />
+                <outline text="Norah脱口秀" title="Norah脱口秀" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/29404012" type="rss" htmlUrl="https://space.bilibili.com/29404012" />
+                <outline text="巅峰球迷汇" title="巅峰球迷汇" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/365372809" type="rss" htmlUrl="https://space.bilibili.com/365372809" />
+                <outline text="MrBeast官方账号" title="MrBeast官方账号" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/1027737427" type="rss" htmlUrl="https://space.bilibili.com/1027737427" />
+                <outline text="泛式" title="泛式" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/63231" type="rss" htmlUrl="https://space.bilibili.com/63231" />
+                <outline text="贝拉kira" title="贝拉kira" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/672353429" type="rss" htmlUrl="https://space.bilibili.com/672353429" />
+                <outline text="-LKs-" title="-LKs-" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/125526" type="rss" htmlUrl="https://space.bilibili.com/125526" />
+                <outline text="真实球迷汇" title="真实球迷汇" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/108618052" type="rss" htmlUrl="https://space.bilibili.com/108618052" />
+                <outline text="李滇滇" title="李滇滇" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/3546676667091128" type="rss" htmlUrl="https://space.bilibili.com/3546676667091128" />
+                <outline text="影视飓风" title="影视飓风" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/946974" type="rss" htmlUrl="https://space.bilibili.com/946974" />
             </outline>
             <outline text="绝活娱乐">
-                <outline text="猫眼看足球" title="猫眼看足球" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/456249922" type="rss" htmlUrl="https://space.bilibili.com/456249922" />
-                <outline text="陈大东瓜" title="陈大东瓜" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/269288799" type="rss" htmlUrl="https://space.bilibili.com/269288799" />
-                <outline text="司马尘" title="司马尘" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/334932680" type="rss" htmlUrl="https://space.bilibili.com/334932680" />
-                <outline text="是啤酒鸭-梗图" title="是啤酒鸭-梗图" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/1073153713" type="rss" htmlUrl="https://space.bilibili.com/1073153713" />
-                <outline text="MOJi辞書" title="MOJi辞書" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/6697975" type="rss" htmlUrl="https://space.bilibili.com/6697975" />
-                <outline text="Gray格雷老师" title="Gray格雷老师" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/591610354" type="rss" htmlUrl="https://space.bilibili.com/591610354" />
-                <outline text="你是想气死1酱么" title="你是想气死1酱么" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/375040863" type="rss" htmlUrl="https://space.bilibili.com/375040863" />
-                <outline text="Boo布姐自译" title="Boo布姐自译" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/3493128048740395" type="rss" htmlUrl="https://space.bilibili.com/3493128048740395" />
-                <outline text="冲男阿凉" title="冲男阿凉" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/239060440" type="rss" htmlUrl="https://space.bilibili.com/239060440" />
-                <outline text="杰克森Jackson_" title="杰克森Jackson_" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/13174980" type="rss" htmlUrl="https://space.bilibili.com/13174980" />
-                <outline text="半只笨猪" title="半只笨猪" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/498505577" type="rss" htmlUrl="https://space.bilibili.com/498505577" />
-                <outline text="脱口秀_Talk_Show" title="脱口秀_Talk_Show" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/514207628" type="rss" htmlUrl="https://space.bilibili.com/514207628" />
-                <outline text="罗翔说刑法" title="罗翔说刑法" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/517327498" type="rss" htmlUrl="https://space.bilibili.com/517327498" />
-                <outline text="付航脱口秀精选" title="付航脱口秀精选" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/3493286857673111" type="rss" htmlUrl="https://space.bilibili.com/3493286857673111" />
-                <outline text="戴建业老师" title="戴建业老师" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/532741557" type="rss" htmlUrl="https://space.bilibili.com/532741557" />
-                <outline text="听泉赏宝" title="听泉赏宝" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/3546592976046554" type="rss" htmlUrl="https://space.bilibili.com/3546592976046554" />
-                <outline text="灯果" title="灯果" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/4748646" type="rss" htmlUrl="https://space.bilibili.com/4748646" />
-                <outline text="隔壁红魔" title="隔壁红魔" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/432174249" type="rss" htmlUrl="https://space.bilibili.com/432174249" />
-                <outline text="管泽元" title="管泽元" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/271338616" type="rss" htmlUrl="https://space.bilibili.com/271338616" />
-                <outline text="白马繁华" title="白马繁华" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/251054248" type="rss" htmlUrl="https://space.bilibili.com/251054248" />
-                <outline text="咖啡醉足球" title="咖啡醉足球" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/436553623" type="rss" htmlUrl="https://space.bilibili.com/436553623" />
-                <outline text="单弦震脉" title="单弦震脉" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/5316213" type="rss" htmlUrl="https://space.bilibili.com/5316213" />
-                <outline text="米国脱口秀" title="米国脱口秀" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/142371069" type="rss" htmlUrl="https://space.bilibili.com/142371069" />
-                <outline text="付航脱口秀" title="付航脱口秀" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/57592895" type="rss" htmlUrl="https://space.bilibili.com/57592895" />
-                <outline text="峡谷玄学家" title="峡谷玄学家" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/bilibili/user/video/3493128455587886" type="rss" htmlUrl="https://space.bilibili.com/3493128455587886" />
+                <outline text="猫眼看足球" title="猫眼看足球" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/456249922" type="rss" htmlUrl="https://space.bilibili.com/456249922" />
+                <outline text="陈大东瓜" title="陈大东瓜" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/269288799" type="rss" htmlUrl="https://space.bilibili.com/269288799" />
+                <outline text="司马尘" title="司马尘" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/334932680" type="rss" htmlUrl="https://space.bilibili.com/334932680" />
+                <outline text="是啤酒鸭-梗图" title="是啤酒鸭-梗图" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/1073153713" type="rss" htmlUrl="https://space.bilibili.com/1073153713" />
+                <outline text="MOJi辞書" title="MOJi辞書" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/6697975" type="rss" htmlUrl="https://space.bilibili.com/6697975" />
+                <outline text="Gray格雷老师" title="Gray格雷老师" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/591610354" type="rss" htmlUrl="https://space.bilibili.com/591610354" />
+                <outline text="你是想气死1酱么" title="你是想气死1酱么" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/375040863" type="rss" htmlUrl="https://space.bilibili.com/375040863" />
+                <outline text="Boo布姐自译" title="Boo布姐自译" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/3493128048740395" type="rss" htmlUrl="https://space.bilibili.com/3493128048740395" />
+                <outline text="冲男阿凉" title="冲男阿凉" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/239060440" type="rss" htmlUrl="https://space.bilibili.com/239060440" />
+                <outline text="杰克森Jackson_" title="杰克森Jackson_" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/13174980" type="rss" htmlUrl="https://space.bilibili.com/13174980" />
+                <outline text="半只笨猪" title="半只笨猪" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/498505577" type="rss" htmlUrl="https://space.bilibili.com/498505577" />
+                <outline text="脱口秀_Talk_Show" title="脱口秀_Talk_Show" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/514207628" type="rss" htmlUrl="https://space.bilibili.com/514207628" />
+                <outline text="罗翔说刑法" title="罗翔说刑法" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/517327498" type="rss" htmlUrl="https://space.bilibili.com/517327498" />
+                <outline text="付航脱口秀精选" title="付航脱口秀精选" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/3493286857673111" type="rss" htmlUrl="https://space.bilibili.com/3493286857673111" />
+                <outline text="戴建业老师" title="戴建业老师" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/532741557" type="rss" htmlUrl="https://space.bilibili.com/532741557" />
+                <outline text="听泉赏宝" title="听泉赏宝" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/3546592976046554" type="rss" htmlUrl="https://space.bilibili.com/3546592976046554" />
+                <outline text="灯果" title="灯果" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/4748646" type="rss" htmlUrl="https://space.bilibili.com/4748646" />
+                <outline text="隔壁红魔" title="隔壁红魔" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/432174249" type="rss" htmlUrl="https://space.bilibili.com/432174249" />
+                <outline text="管泽元" title="管泽元" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/271338616" type="rss" htmlUrl="https://space.bilibili.com/271338616" />
+                <outline text="白马繁华" title="白马繁华" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/251054248" type="rss" htmlUrl="https://space.bilibili.com/251054248" />
+                <outline text="咖啡醉足球" title="咖啡醉足球" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/436553623" type="rss" htmlUrl="https://space.bilibili.com/436553623" />
+                <outline text="单弦震脉" title="单弦震脉" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/5316213" type="rss" htmlUrl="https://space.bilibili.com/5316213" />
+                <outline text="米国脱口秀" title="米国脱口秀" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/142371069" type="rss" htmlUrl="https://space.bilibili.com/142371069" />
+                <outline text="付航脱口秀" title="付航脱口秀" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/57592895" type="rss" htmlUrl="https://space.bilibili.com/57592895" />
+                <outline text="峡谷玄学家" title="峡谷玄学家" xmlUrl="http://127.0.0.1:1200/bilibili/user/video/3493128455587886" type="rss" htmlUrl="https://space.bilibili.com/3493128455587886" />
             </outline>
             <outline text="AI Foundations" title="AI Foundations" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g" type="rss" htmlUrl="https://www.youtube.com/channel/UCWZwfV3ICOt3uEPpW6hYK4g" />
-            <outline text="司机社综合周排行榜" title="司机社综合周排行榜" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/xsijishe/rank/weekly" type="rss" htmlUrl="https://xsijishe.com/portal.php" />
-            <outline text="司机社综合月排行榜" title="司机社综合月排行榜" xmlUrl="http://macmini-rsshub.tail99ecfa.ts.net:1200/xsijishe/rank/monthly" type="rss" htmlUrl="https://xsijishe.com/portal.php" />
+            <outline text="司机社综合周排行榜" title="司机社综合周排行榜" xmlUrl="http://127.0.0.1:1200/xsijishe/rank/weekly" type="rss" htmlUrl="https://xsijishe.com/portal.php" />
+            <outline text="司机社综合月排行榜" title="司机社综合月排行榜" xmlUrl="http://127.0.0.1:1200/xsijishe/rank/monthly" type="rss" htmlUrl="https://xsijishe.com/portal.php" />
+            <outline text="Andrej Karpathy - YouTube" title="Andrej Karpathy - YouTube" xmlUrl="http://127.0.0.1:1200/youtube/user/@AndrejKarpathy" type="rss" htmlUrl="https://www.youtube.com/channel/UCXUPKJO5MZQN11PqgIvyuvQ" />
+            <outline text="Lex Fridman - YouTube" title="Lex Fridman - YouTube" xmlUrl="http://127.0.0.1:1200/youtube/user/%40lexfridman" type="rss" htmlUrl="https://www.youtube.com/channel/UCSHZKyawb77ixDdsGog4iWA" />
         </outline>
     </body>
 </opml>
