@@ -1,0 +1,98 @@
+title	mp_id	valid	probe_status	last_update	latest_titles
+猴猴说话	MP_WXS_3279284299	True	200	1天前	如果你也在“演”一个大人，一定要知道这个心理学概念丨次级皮肤 | 从SBTI、群体性自嘲，聊聊现代人的疲惫与压抑 | 我36岁，没啥出息，但我还能继续活着【人文十问】
+潦草学者	MP_WXS_3239649460	True	200	3天前	不是写代码：普通人每天能用上的 Agent 自动化清单 | DeepseekV4实测体验 三大惊喜与遗憾 | 姚顺雨的第一份答卷：混元 Hy3 preview
+L先生说	MP_WXS_3015646136	True	200	1天前	2026年五一假期能做的5件小事 | 前额叶使用和保养指南 | 只需10分钟，就能让你感觉更好的小事
+常青说	MP_WXS_3944297233	True	200	318天前	老常第二本AI新书上市！《成为AI高手》系统学习掌握AI技能！ | 无需邀请码！免费马上用上Manus级Agent！ | 老常的AI新书终于上市！《AI效率手册：从ChatGTP开启高效能》这一次系统掌握AI技能！
+啊桂实验室	MP_WXS_3097885397	True	200	38天前	2025年度总结（2） | 2025年度总结（1） | 最近常问自己的三个问题
+大问题Dialectic	MP_WXS_2391461928	True	200	2天前	大问题：如何克服人的异化？ | 大问题：真爱必须是无私的吗？ | 大问题：爱一个人需要理由吗？
+ONE字幕组	MP_WXS_3220087653	True	200	14天前	比单身更可怕的，是和一个人反复拉扯 | 强烈建议：不要掉入自证陷阱 | 幸福的关键，从来不是过度寻找“对的人”
+everystep	MP_WXS_2396013984	True	200	16天前	什么是事件循环：为什么 exec() 一跑，Qt 程序就“活”了 | 用纯 C++ 手写一个迷你信号/槽系统 | QPointer 和传统指针有什么区别：为什么 Qt 需要“会自动变空”的指针
+走路	MP_WXS_3097360004	True	200	32天前	超越百岁丨长寿不是“活多久”，而是“健康活多久” | 看世界丨中午只吃三片面包，荷兰饮食让我震惊 | 注意力问题的本质是人的存在问题
+数字生命卡兹克	MP_WXS_3223096120	True	200	2天前	分享一下2026我最常用的AI产品。 | 开源「洁癖.skill」，让你的Agent越用越聪明。 | 这个51K星标的开源神器，让任何Agent都能一键切换所有模型。
+AGI Hunt	MP_WXS_3087832081	True	200	6小时前	Codex 宠物上线，一键即可唤醒 | Codex 推出 /goal 功能，不达目标，不罢休 | 你的ChatGPT 长什么样？
+卡尔的AI沃茨	MP_WXS_3871977637	True	200	1天前	千元横测GPT、DeepSeek、Xiaomi、MiniMax的最强模型，我找到了跟Agent们的绝配 | 实测千问新出的PPT Agent，可算不用为了风格化牺牲二次编辑了。 | 实测Hy3 preview后我发现小看腾讯做大模型决心了
+赛博禅心	MP_WXS_3934419561	True	200	1天前	CS：非遗传承 | Agent 可开 Cloudflare 账户了：自主买付钱、买域名、做部署 | 「生物信息学」评测，Claude 反超人类专家
+AI产品黄叔	MP_WXS_2398553439	True	200	5天前	AI时代人最大的幻觉 | 送了三个 1800 块的 CC Max，被打击了三次 | Skill 和 CLI：经验指导能力，能力丰富经验
+网罗灯下黑	MP_WXS_3565037632	True	200	2天前	今天，给这个image2提示词大佬出篇个人专辑 | GPT Image 2 的骚玩法简直层出不穷 | 薅到了混元新模型免费token，让两只虾互相修理太爽了
+苍何	MP_WXS_3585152880	True	200	2天前	WPS多维表格，给开发者铺了条新路！ | 我用 Tabbit 浏览器搭了一套内容创作全自动流水线，太香了！ | 用 Agent 团队来做知识管理，非常顶！
+饼干哥哥AGI	MP_WXS_2394281674	True	200	16小时前	ChatGPT会员掉了，代充黑幕藏不住了 | 最强视频创作工作流：Image2 + Seedance 2.0，Topview一键闭环｜跨境电商版 | 月入百万的 AI中转站，钱到底从哪来？
+刘聪NLP	MP_WXS_3891555159	True	200	21小时前	"DeepSeek官方发布Agent接入手册
+
+ https://github.com/deepseek-ai/awesome-deepseek-agent
+
+我前两天分享过一篇内容，就是也许大家用的都还不是满血的DeepSee...,
+
+核心是其实你在用DeepSeek-Pro的时候，可能没有触发max思考，
+然后现在官方给了一份agent接入文档，
+
+编程IDE和主流Agent都有，涉及，
+Claude Code、GitHub Copilot、GitHub Copilot CLI、Kilo Code、OpenCode、Deep Code、Crush、Pi、Reasonix、Langcli
+
+比如CC要配置，
+$env:ANTHROPIC_BASE_URL=""https://api.deepseek.com/anthropic"" 
+$env:ANTHROPIC_AUTH_TOKEN=""<你的 DeepSeek API Key>"" 
+$env:ANTHROPIC_MODEL=""deepseek-v4-pro[1m]"" 
+$env:ANTHROPIC_DEFAULT_OPUS_MODEL=""deepseek-v4-pro[1m]"" 
+$env:ANTHROPIC_DEFAULT_SONNET_MODEL=""deepseek-v4-pro[1m]"" 
+$env:ANTHROPIC_DEFAULT_HAIKU_MODEL=""deepseek-v4-flash"" 
+$env:CLAUDE_CODE_SUBAGENT_MODEL=""deepseek-v4-flash"" 
+$env:CLAUDE_CODE_EFFORT_LEVEL=""max""
+
+[1m]这个不是写错，是100w上下文的支持，
+EFFORT_LEVEL要设置成max，
+等等，详细见文档吧。
+
+然后今天刷到牙医的一篇blog：
+https://weibo.com/2169039837/QDgUgCYrr
+就是用 DeepSeek 的时候偶尔会遇到报错:
+HTTP 400
+{""error"":{""message"":""The reasoning_content in the thinking mode must be passed back to the API."",""type"":""invalid_request_error"",""param"":null,""code"":""invalid_request_error""}}
+
+核心是请求 DeepSeek API 必须在 tool_call 的时候回传 reasoning_content 这个字段，
+很合理，但有时候返回结果就是没有，是个小bug？
+详细可以看源blog。
+
+现在还是preview版本，期望更好。
+
+最近其他DeepSeek内容，
+解读DeepSeek最新多模态技术报告，要用视觉基本单元思考，看这一篇就够了
+DeepSeek开眼了，更新多模态，实测过后发现。。。
+也许大家用的都还不是满血的DeepSee...
+DeepSeek-V4开源，附论文细节解读&实测对比 | 解读DeepSeek最新多模态技术报告，要用视觉基本单元思考，看这一篇就够了 | 4月模型汇总，心心念念的DeepSeek开了，国内头部模型比御三家还差多少？"
+AI产品阿颖	MP_WXS_3892772220	True	200	2天前	第一次来深圳办 AI 大会，有点忐忑 | 一个小众模型突然火了，可能代表新的范式。 | 测完腾讯混元新模型，发现很多人没看懂它的思路
+01Founder	MP_WXS_3927644787	True	200	18小时前	GPT-Image-2爆火半个月后，我采访了10个普通人 | OpenAI承认：他们最近最头疼的，不是马斯克，而是哥布林、浣熊和鸽子 | DeepSeek-V4对普通人到底意味着什么？
+AI故事计划	MP_WXS_3917501995	True	200	3天前	10后，开始用AI给自己编黄冈密卷了 | 一本DeepSeek操作书卖出2300万，AI图书疯狂造富 | Claude实名风暴72小时
+十字路口Crossing	MP_WXS_3010319264	True	200	1天前	入局，2026！十字路口AI开放麦：13位分享者实录 | 具身智能的下一步：边部署，边进化 | Claude Design 大战 GPT Image-2：谁代表着下个时代的设计范式？
+沃垠AI	MP_WXS_3201599457	True	200	6小时前	最值得推荐的20个宝藏Skills，小众但真香 | DeepSeek「开眼」了，但你可能想多了 | 这次，我可能真的把自己蒸馏出来了
+阿伦AI学习笔记	MP_WXS_3957475902	True	200	3天前	一站式实测欢乐马Happy Horse视频新模型，Seedance2.0稳了吗？ | Image2+Seedance2.0八大爆火玩法全公开，每一个都是王炸 | 大爆又能赚！AI水果“狗血”短剧条条几十万赞，多种变现方式真让人眼红
+胡说成理	MP_WXS_3297021519	True	200	3天前	DeepSeek V4在前，美团LongCat跟进，中国AI迈过算力门槛 | 问界上榜，第一和唯一 | 万字深度：鸿蒙的1000天
+云中江树	MP_WXS_3016599109	True	200	25天前	让AI 更懂人话，取消AI自作主张的隐含假设 | 小说：模具 | 带着AI员工上了字节火山大会，顺便开源我的“御用文案”提示词
+秋芝2046	MP_WXS_3930567871	True	200	4天前	DeepSeek V4好用吗？【秋芝的AI开箱】 | 剪映Agent终于来了！AI自动剪辑~【小白必备】 | Openclaw养龙虾秘籍大公开！【安全+省钱】
+AI产品银海	MP_WXS_3913528478	True	200	1天前	LMArena 国内文本模型排行榜第一，竟然是它 | 这个AI接入微信后，帮我戒掉了盯盘的习惯。 | 昨晚亚马逊云科技放了个大招，但最大的不是 OpenAI。
+哥飞	MP_WXS_2399233620	True	200	2天前	Google 在 2026 年 3 月底的算法更新到底更新了哪些东西？对我们有什么影响？ | 养网站如种果树，浇水施肥除草，然后等待它慢慢成长 | 设计圈的 Claude Code 时刻来了
+探索AGI	MP_WXS_3916725964	True	200	2天前	Google开源DESIGN.md。玩AI，今年最该知道的Markdown！ | Anthropic最新博客：MCP没有死，我们又救活了。 | K2.6、GPT 5.5、DS v4 扎堆上线了。评测看完也白看，群聊里倒是吵翻了。
+新智元	MP_WXS_3271041950	True	200	5小时前	苹果官方APP惊现Claude.md，24小时秒删！4万亿帝国AI底裤被扒光 | 8岁读完高中，15岁拿下物理博士！「小爱因斯坦」下一站：AI+永生 | GPT-5.6现身后，下一个Claude Sonnet 4.8又曝光了！
+量子位	MP_WXS_3236757533	True	200	4小时前	Meta收购华农校友机器人AI公司，团队并入超级智能实验室 | 量子位编辑作者招聘 | 腾讯混元最新开源：440M翻译模型手机离线就能用，翻译质量超谷歌
+APPSO	MP_WXS_2392024520	True	200	6小时前	等 DeepSeek 回复的 30 秒，是手机最好玩的半小时 | 每月涌入 200 万首 AI 歌曲，Spotify 被逼得发「活人证」了 | 我让 Claude 做「代购」，结果它给自己买了一堆乒乓球
+智东西	MP_WXS_3081486433	True	200	1天前	DeepSeek“开眼”背后的技术，公开了！ | 追觅发手机，把苹果联合创始人请来了 | 拒绝“出厂即巅峰”！具身训练系统再进化：LWD让机器人自主开启“打怪练级”
+雷峰网	MP_WXS_1368348621	True	200	1天前	预埋L3硬件、配「满血」版华为乾崑，启境GT7能让年轻人买单吗？ | 爱芯元智的双轮驱动：车载放量，边缘爆发 | 愿景2036丨一场关于未来10年AI技术主权争夺战，追觅打了头阵
+PaperWeekly	MP_WXS_3201788143	True	200	1天前	直播预告 | 香港城市大学李皓亮教授：大模型自适应、推理与泛化研究 | ACL 2026 | 强模型越听话越危险？VIGIL重塑Agent工具流安全 | Harness开始自己进化了：复旦×北大让Agent实现自改，10轮跑赢Codex
+甲子光年	MP_WXS_3599245772	True	200	1天前	既要安全⼜要弹性，理想汽车如何解开企业 OpenClaw 落地死结｜甲子光年 | 14.9g颠覆行业，AI眼镜终于实现无感日常佩戴｜甲子光年 | 监管叫停外资收购Manus背后，有一个被忽视的关键问题｜甲子光年
+逛逛GitHub	MP_WXS_3516884134	True	200	5小时前	快瞧瞧 4 月 GitHub 上哪些开源项目最火火火火？ | GitHub 上狂揽 4.6 万 Star！这款 AI 终端神器终于开源了。 | 推荐 3 个 GitHub 画图 Skill，一句话生成流程图、架构图。
+开源AI项目落地	MP_WXS_3921606804	True	200	2天前	3.3k星星爆火！Claude Design开源升级版，中文本地化，支持DeepSeek V4 | 8.8k星星！开源的211个专家级Agent，一键接入，一个人就是一个团队 | 万字长文梳理「罗福莉」三个半小时的访谈：2026年不是Agent元年，是生产力爆发年
+夕小瑶科技说	MP_WXS_3207765945	True	200	2天前	首次大规模真实世界验证：机器人边部署边进化，8项任务全面碾压基线 | DeepSeek多模态要来了，「识图模式」开启灰度 | GenFlow4.0，让通用智能体走进办公现场
+Datawhale	MP_WXS_3226363426	True	200	18小时前	22年的提示词技巧过时了！刚刚，吴恩达新课来了 | 刚刚，DeepSeek最新成果，节前发布！ | Agent 超级应用：ChatGPT 用来聊，Codex 干活的时代来了！
+极客公园	MP_WXS_1304308441	True	200	7小时前	iPhone Air 销量疲软，安卓厂商集体叫停超薄旗舰；佳能或将推出 Pocket 相机；腾讯增持游戏科学，持股达 24% | 极客早知道 | DeepSeek 发布多模态模型及技术报告；小红书官宣组织调整：柯南出任总裁；宇树发布双臂人形机器人，2.69万元起售 | 极客早知道 | 实测纳逗 Pro：能做专业影视级内容的智能平台长啥样
+AIGC开放社区	MP_WXS_3873892677	True	200	2天前	让Agent真正“行动”起来，Agent Skill开发者大赛火热报名中！ | 热门 Skill 精选介绍 | ICLR最佳论文：Transformer天生简洁
+AI前线	MP_WXS_3554086560	True	200	3小时前	“如果你不用更多Token，就永远逃不出底层”：AI竞赛开始变成资源战争 | “我可能不再建议学计算机”！图灵奖得主炮轰半个行业，并断言：AI Agent最后全是数据库问题 | 15小时3.5万Star！Altman投资的AI终端开源炸圈：曾经没人用，如今靠Agent翻身
+AI科技评论	MP_WXS_3098132220	True	200	4小时前	为什么它石陈亦伦踏入具身河流 | 独家｜前蔚来AI平台负责人白宇利创立「补天石科技」，聚焦具身数据 Infra 方向 | 重新审视SFT的泛化能力：优化动态、数据与模型能力的条件性分析
+脑极体	MP_WXS_3515522183	True	200	2小时前	养蛊：AI员工的某种真相 | 龙虾爆发那几天，79%的用户去了同一个地方 | 霸州x华为：立一个存力支点，撬动华北平原的数据富矿
+硅星人Pro	MP_WXS_3926568365	True	200	5小时前	"10后，开始用AI给自己编黄冈密卷了 | 对话EverMind：4个月做到SOTA，要给所有Agent装上长期记忆 | 视频生成从""能生成""到""能卖钱""，差的是什么？"
+特工宇宙	MP_WXS_3621654047	True	200	20小时前	五一假期，花半天装个 Claude Code 玩玩？ | JoyInside 创新大赛现场，我看到 AI 硬件长出了灵魂 | 没绷住...美团竟然做了个这？
+光子星球	MP_WXS_3082518302	True	200	1天前	蚂蚁阿福，开辟AI新战场 | 科大讯飞，AI教育的长坡与窄门 | 跑出首个万亿级大模型后，国产算力通过第一场大考
+CVer	MP_WXS_3516712416	True	200	16小时前	不予受理1134项！2026国自然初审结果公布 | 【人形机器人】微信群成立！ | ICML 2026 中稿！开会群成立！
+Z Potentials	MP_WXS_3285810954	True	200	2天前	速递｜红杉、英伟达押注前DeepMind核心研究员，Ineffable种子轮估值51亿美元 | 速递｜2026年OpenAI多月销售目标未达成，企业端被Anthropic反超，CFO内部预警1.4万亿算力承诺 | Z Tech｜世界模型真正的壁垒，可能是表征压缩，对话李智昊、王雨飞
+Z Finance	MP_WXS_3077513391	True	200	1天前	深度｜对话a16z：当Bot比真人还多，互联网必须重建「人籍」认证系统 | 深度｜对话红杉资本：SEO 已死，未来三年不懂 Agent 的营销人将被淘汰 | 速递｜DeepSeek 多模态功能开始灰度内测，北大校友陈小康带队
+晚点LatePost	MP_WXS_3572959446	True	200	1天前	中国车企涌入南美，欧美同行的旧工厂是加速器 | 对话传祺 BU 总裁黄坚：改革要上下同欲，积小胜为大胜 | 特锐德的两张王牌，为何撑不起更高估值？
+InfoQ	MP_WXS_2390142780	True	200	6小时前	王兴兴亲测后点赞！这家AI公司提前半年把“龙虾”能力带上车，还管住了Token黑洞 | 在大厂，token用少了不“健康” | 当国产模型追上闭源旗舰，企业 AI 编程的真正障碍才浮出水面
+机器之心	MP_WXS_3073282833	True	200	162天前	超越 VTM-RA！快手双向智能视频编码器BRHVC亮相NeurIPS2025 | Meta超级智能实验室又发论文，模型混一混，性能直接SOTA | 别问树模型了！死磕结构化数据，清华团队把大模型表格理解推到极限
