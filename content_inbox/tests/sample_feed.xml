@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Sample AI Feed</title>
+    <link>https://example.com/</link>
+    <description>Test feed</description>
+    <item>
+      <title>用 RSS 和 AI 建立个人信息流</title>
+      <link>https://example.com/rss-ai</link>
+      <guid>rss-ai-1</guid>
+      <pubDate>Sat, 02 May 2026 08:00:00 GMT</pubDate>
+      <description>这篇文章讨论如何用 RSS、LLM 和自动化工具整理信息。</description>
+    </item>
+    <item>
+      <title>周末随手记录</title>
+      <link>https://example.com/weekend-note</link>
+      <guid>weekend-note-1</guid>
+      <pubDate>Sat, 02 May 2026 09:00:00 GMT</pubDate>
+      <description>轻量生活记录。</description>
+    </item>
+  </channel>
+</rss>
+
