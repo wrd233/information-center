@@ -88,6 +88,16 @@ export CONTENT_INBOX_DEEPSEEK_BASE_URL="https://api.deepseek.com"
 export CONTENT_INBOX_DEEPSEEK_MODEL="deepseek-v4-flash"
 ```
 
+Embedding 使用独立的 OpenAI-compatible 中转站配置：
+
+```bash
+export CONTENT_INBOX_EMBEDDING_API_KEY="..."
+export CONTENT_INBOX_EMBEDDING_BASE_URL="https://yunwu.apifox.cn/v1"
+export CONTENT_INBOX_EMBEDDING_MODEL="text-embedding-3-small"
+```
+
+可调参数集中在 [config/content_inbox.yaml](/Users/wangrundong/work/infomation-center/content_inbox/config/content_inbox.yaml)。
+
 ## 测试
 
 ```bash

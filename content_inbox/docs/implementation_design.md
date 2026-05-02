@@ -16,7 +16,9 @@
 app/server.py     FastAPI 路由和请求参数解析
 app/rss.py        RSS/Atom 拉取与 item 提取
 app/processor.py  统一处理流程：标准化、去重、粗筛、保存
-app/screener.py   DeepSeek/OpenAI-compatible 粗筛客户端
+app/screener.py   DeepSeek/OpenAI-compatible 打分过滤和增量摘要客户端
+app/embedding.py  OpenAI-compatible embedding 客户端
+app/clusterer.py  事件聚类、实体重合、通知降噪决策
 app/storage.py    SQLite schema、写入、去重更新、查询过滤
 app/models.py     Pydantic 请求、标准化内容、筛选结果模型
 ```
@@ -30,6 +32,7 @@ RSS URL 或单条内容
   -> build_dedupe_key
   -> SQLite 查重
   -> screen_content，screen=true 时调用 DeepSeek/OpenAI-compatible API
+  -> cluster_content，按配置生成 embedding 并匹配 active event_clusters
   -> SQLite 保存
   -> API 返回 / inbox 查询
 ```
@@ -79,7 +82,22 @@ base_url=https://api.deepseek.com
 model=deepseek-v4-flash
 ```
 
-没有 API key、AI 被禁用或模型调用失败时，接口返回错误，不做本地粗筛，也不伪造筛选结果。
+没有 API key、AI 被禁用或模型调用失败时，不伪造模型判断；内容会保存为 `screening_status=failed`、`suggested_action=review`、`followup_type=manual_review`。
+
+模型输出会先通过 Pydantic schema 校验，再经过 `config/content_inbox.yaml` 中的 `score_policy` 二次校正。
+
+## 事件聚类
+
+打分过滤后，如果内容达到 `cluster_min_value_score` 和 `cluster_min_personal_relevance`，系统会构造 `embedding_text`，调用 OpenAI-compatible embeddings API，并用 SQLite + sqlite-vec 检索 active event_clusters。
+
+聚类关系：
+
+- `new_event`：新建事件簇，`notification_decision=full_push`
+- `incremental_update`：加入已有簇，调用 DeepSeek 生成 `incremental_summary`
+- `duplicate`：高相似且实体高度重合，`notification_decision=silent`
+- `uncertain`：高相似但实体不重合，进入人工复核
+- `embedding_failed`：embedding 或 sqlite-vec 失败，内容仍保存
+- `skipped_low_value`：低价值内容不进入聚类
 
 ## 环境变量
 

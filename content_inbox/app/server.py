@@ -27,6 +27,13 @@ def health() -> dict[str, Any]:
         "ok": True,
         "database_path": str(settings.database_path),
         "ai_configured": bool(settings.openai_api_key and settings.ai_enabled),
+        "embedding_configured": bool(settings.embedding_api_key()),
+        "sqlite_vec_available": store.vec_available,
+        "config": {
+            "llm_model": settings.llm.get("model"),
+            "embedding_model": settings.embedding.get("model"),
+            "prompt_version": settings.llm.get("prompt_version"),
+        },
     }
 
 
@@ -34,10 +41,7 @@ def health() -> dict[str, Any]:
 def analyze_content(
     payload: ContentAnalyzeRequest, inbox_store: Annotated[InboxStore, Depends(get_store)]
 ) -> dict[str, Any]:
-    try:
-        result = process_content(inbox_store, payload, raw=payload.model_dump())
-    except RuntimeError as exc:
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
+    result = process_content(inbox_store, payload, raw=payload.model_dump())
     return {"ok": True, **result.model_dump()}
 
 
@@ -60,6 +64,9 @@ def analyze_rss(
     duplicate_items = 0
     screened_items = 0
     recommended_items = 0
+    new_event_items = 0
+    incremental_items = 0
+    silent_items = 0
     failed_items = 0
     item_results = []
 
@@ -76,6 +83,12 @@ def analyze_rss(
                     screened_items += 1
             if result.screening.suggested_action in {"read", "save", "transcribe", "review"}:
                 recommended_items += 1
+            if result.cluster_relation == "new_event":
+                new_event_items += 1
+            if result.cluster_relation == "incremental_update":
+                incremental_items += 1
+            if result.notification_decision == "silent":
+                silent_items += 1
         except Exception as exc:
             failed_items += 1
             item_results.append({"ok": False, "error": str(exc), "title": entry.title})
@@ -88,6 +101,9 @@ def analyze_rss(
         "new_items": new_items,
         "duplicate_items": duplicate_items,
         "screened_items": screened_items,
+        "new_event_items": new_event_items,
+        "incremental_items": incremental_items,
+        "silent_items": silent_items,
         "recommended_items": recommended_items,
         "failed_items": failed_items,
         "items": item_results,
@@ -107,6 +123,13 @@ def get_inbox(
     min_relevance: int | None = Query(default=None, ge=1, le=5),
     suggested_action: str | None = None,
     followup_type: str | None = None,
+    cluster_id: str | None = None,
+    cluster_relation: str | None = None,
+    notification_decision: str | None = None,
+    min_similarity: float | None = Query(default=None, ge=0.0, le=1.0),
+    include_silent: bool | None = None,
+    only_new_events: bool = False,
+    only_incremental: bool = False,
     tag: str | None = None,
     keyword: str | None = None,
     include_ignored: bool = False,
@@ -123,6 +146,15 @@ def get_inbox(
         "min_relevance": min_relevance,
         "suggested_action": split_csv(suggested_action),
         "followup_type": followup_type,
+        "cluster_id": cluster_id,
+        "cluster_relation": cluster_relation,
+        "notification_decision": split_csv(notification_decision),
+        "min_similarity": min_similarity,
+        "include_silent": include_silent
+        if include_silent is not None
+        else settings.notification.get("include_silent_in_default_inbox", False),
+        "only_new_events": only_new_events,
+        "only_incremental": only_incremental,
         "tag": tag,
         "keyword": keyword,
         "include_ignored": include_ignored,
@@ -164,11 +196,33 @@ def split_csv(value: str | None) -> list[str]:
 
 
 def build_stats(items: list[dict[str, Any]]) -> dict[str, int]:
-    stats = {"ignore": 0, "skim": 0, "read": 0, "save": 0, "transcribe": 0, "review": 0}
+    stats = {
+        "ignore": 0,
+        "skim": 0,
+        "read": 0,
+        "save": 0,
+        "transcribe": 0,
+        "review": 0,
+        "full_push": 0,
+        "incremental_push": 0,
+        "silent": 0,
+        "manual_review": 0,
+        "new_event": 0,
+        "incremental_update": 0,
+        "duplicate": 0,
+        "uncertain": 0,
+        "embedding_failed": 0,
+    }
     for item in items:
         action = item["screening"].get("suggested_action")
         if action in stats:
             stats[action] += 1
+        decision = item.get("notification_decision")
+        if decision in stats:
+            stats[decision] += 1
+        relation = item.get("cluster_relation")
+        if relation in stats:
+            stats[relation] += 1
     return stats
 
 

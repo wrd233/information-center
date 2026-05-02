@@ -5,6 +5,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from app.app_config import load_yaml_config
+
 BASE_DIR = Path(__file__).resolve().parents[1]
 load_dotenv(BASE_DIR / ".env")
 
@@ -38,6 +40,21 @@ class Settings:
             "False",
             "no",
         }
+        self.config = load_yaml_config(BASE_DIR)
+        self.llm = self.config["llm"]
+        self.screening = self.config["screening"]
+        self.score_policy = self.config["score_policy"]
+        self.embedding = self.config["embedding"]
+        self.clustering = self.config["clustering"]
+        self.notification = self.config["notification"]
+
+    def llm_api_key(self) -> str:
+        env_name = self.llm.get("api_key_env", "CONTENT_INBOX_DEEPSEEK_API_KEY")
+        return os.getenv(env_name) or self.openai_api_key
+
+    def embedding_api_key(self) -> str:
+        env_name = self.embedding.get("api_key_env", "CONTENT_INBOX_EMBEDDING_API_KEY")
+        return os.getenv(env_name, "")
 
 
 settings = Settings()

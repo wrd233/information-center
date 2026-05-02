@@ -3,7 +3,8 @@ from __future__ import annotations
 from typing import Any
 
 from app.config import settings
-from app.models import ContentAnalyzeRequest, NormalizedContent, ProcessResult
+from app.clusterer import cluster_content
+from app.models import ClusteringResult, ContentAnalyzeRequest, NormalizedContent, ProcessResult
 from app.screener import screen_content
 from app.storage import InboxStore
 from app.utils import clean_text, normalize_url, stable_hash, truncate
@@ -59,14 +60,30 @@ def process_content(
                 guid=updated["guid"],
             ),
             screening=updated["screening"],
+            clustering=updated.get("clustering") or ClusteringResult(),
+            notification_decision=(updated.get("clustering") or {}).get(
+                "notification_decision", "manual_review"
+            ),
+            cluster_relation=(updated.get("clustering") or {}).get("cluster_relation", "disabled"),
+            incremental_summary=(updated.get("clustering") or {}).get("incremental_summary", ""),
         )
 
     screening = screen_content(normalized, use_ai=payload.screen)
     inserted = store.insert(dedupe_key, normalized, screening, raw=raw)
-    return ProcessResult(
+    clustering = cluster_content(
+        store,
         item_id=inserted["item_id"],
-        is_duplicate=False,
         normalized=normalized,
         screening=screening,
     )
-
+    updated = store.update_item_clustering(inserted["item_id"], clustering)
+    return ProcessResult(
+        item_id=updated["item_id"],
+        is_duplicate=False,
+        normalized=normalized,
+        screening=screening,
+        clustering=clustering,
+        notification_decision=clustering.notification_decision,
+        cluster_relation=clustering.cluster_relation,
+        incremental_summary=clustering.incremental_summary,
+    )

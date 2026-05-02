@@ -5,6 +5,9 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from app.config import settings
+from app.clusterer import cluster_content
+from app.models import NormalizedContent, ScreeningResult
+from app.screener import apply_score_policy
 from app.server import app, get_store
 from app.storage import InboxStore
 
@@ -58,7 +61,7 @@ def test_rss_analyze_and_query_inbox(tmp_path: Path) -> None:
     assert body["total_items"] == 2
     assert body["new_items"] == 2
 
-    inbox = client.get("/api/inbox?min_score=3&limit=10")
+    inbox = client.get("/api/inbox?min_score=3&include_silent=true&limit=10")
     assert inbox.status_code == 200
     inbox_body = inbox.json()
     assert inbox_body["ok"] is True
@@ -66,9 +69,11 @@ def test_rss_analyze_and_query_inbox(tmp_path: Path) -> None:
     assert inbox_body["items"][0]["screening"]["suggested_action"] == "review"
 
 
-def test_screen_true_requires_model_key(tmp_path: Path) -> None:
+def test_screen_true_without_key_is_saved_for_manual_review(tmp_path: Path) -> None:
     client = make_client(tmp_path)
     old_key = settings.openai_api_key
+    old_env = settings.llm["api_key_env"]
+    settings.llm["api_key_env"] = "__MISSING_CONTENT_INBOX_TEST_KEY__"
     settings.openai_api_key = ""
     try:
         response = client.post(
@@ -81,5 +86,83 @@ def test_screen_true_requires_model_key(tmp_path: Path) -> None:
         )
     finally:
         settings.openai_api_key = old_key
-    assert response.status_code == 502
-    assert "requires" in response.json()["detail"]
+        settings.llm["api_key_env"] = old_env
+    assert response.status_code == 200
+    body = response.json()
+    assert body["screening"]["screening_status"] == "failed"
+    assert body["screening"]["suggested_action"] == "review"
+    assert body["screening"]["followup_type"] == "manual_review"
+    assert body["clustering"]["cluster_relation"] == "skipped_low_value"
+
+
+def test_score_policy_corrects_model_action() -> None:
+    screening = ScreeningResult(
+        summary="重要工具发布",
+        category="AI工具",
+        value_score=5,
+        personal_relevance=5,
+        novelty_score=5,
+        source_quality=4,
+        actionability=4,
+        hidden_signals=["工具链正在 API 化"],
+        entities=["Cursor"],
+        event_hint="Cursor 发布新的 Agent SDK",
+        suggested_action="skim",
+        followup_type="none",
+        reason="模型先给了轻量建议",
+        tags=["Cursor"],
+        confidence=0.9,
+        screening_method="ai",
+        screening_status="ok",
+    )
+    corrected = apply_score_policy(
+        screening,
+        NormalizedContent(
+            title="Cursor SDK",
+            source_name="Test",
+            source_category="AI",
+            content_type="article",
+        ),
+    )
+    assert corrected.suggested_action == "save"
+    assert corrected.followup_type == "archive"
+
+
+def test_cluster_content_creates_new_event(tmp_path: Path, monkeypatch) -> None:
+    store = InboxStore(tmp_path / "cluster.sqlite3")
+    normalized = NormalizedContent(
+        title="OpenAI 发布 Agent SDK",
+        source_name="Test",
+        source_category="Articles/AI",
+        content_type="article",
+        summary="OpenAI 发布面向开发者的 Agent SDK。",
+    )
+    screening = ScreeningResult(
+        summary="OpenAI 发布面向开发者的 Agent SDK。",
+        category="AI工具",
+        value_score=4,
+        personal_relevance=4,
+        novelty_score=4,
+        source_quality=4,
+        actionability=4,
+        hidden_signals=["Agent 工具链继续 API 化"],
+        entities=["OpenAI", "Agent SDK"],
+        event_hint="OpenAI 发布 Agent SDK",
+        suggested_action="save",
+        followup_type="archive",
+        reason="值得跟进",
+        tags=["OpenAI", "Agent"],
+        confidence=0.9,
+        screening_method="ai",
+        screening_status="ok",
+    )
+    inserted = store.insert("dedupe:test", normalized, screening)
+    monkeypatch.setattr("app.clusterer.embed_text", lambda text: [0.1, 0.2, 0.3])
+    monkeypatch.setattr(store, "search_active_clusters", lambda vector, top_k: [])
+
+    clustering = cluster_content(store, inserted["item_id"], normalized, screening)
+
+    assert clustering.cluster_relation == "new_event"
+    assert clustering.notification_decision == "full_push"
+    assert clustering.cluster_id
+    assert clustering.embedding_text
