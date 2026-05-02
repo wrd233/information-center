@@ -1,0 +1,511 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260502_230534
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 501
+[INFO] Selected sources: 501
+[INFO] Pending sources this invocation: 501
+[INFO] URL mode: docker-host
+[INFO] Screen enabled: True
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": true, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "screening_v1"}, "_status": 200}
+[INFO] Selected source preview:
+  001. [Articles] Hi, DIYgod (xml_url) -> https://diygod.cc/feed
+  002. [Articles] tanscp (xml_url) -> https://tanscp.com/feed/
+  003. [Articles] Airing 的博客 (xml_url) -> https://ursb.me/blog/feed.xml
+  004. [个人博客-人生] Rolen's Blog (xml_url) -> https://rolen.wiki/feed/
+  005. [个人博客-人生] Ben's Love (xml_url) -> https://bens.love/feed
+  006. [个人博客-人生] 莫比乌斯 (xml_url) -> https://mobius.blog/feed/
+  007. [个人博客-人生] 白熊阿丸的小屋 (xml_url) -> https://blog.bxaw.name/feed/
+  008. [个人博客-人生] 草稿拾遗 (xml_url) -> https://kill-the-newsletter.com/feeds/t87xbbj6p4iwfhsi.xml
+  009. [Articles] Paradise Lost (xml_url) -> https://2890.ltd/feed/
+  010. [Articles] 笨方法学写作 (xml_url) -> https://www.cnfeat.com/feed.xml
+  011. [Articles] 豆瓣小组-无用美学 (local_xml_url) -> http://host.docker.internal:1200/douban/group/699356/essence
+  012. [Articles] StarYuhen (xml_url) -> https://www.yuhenm.top/feed/
+  013. [优质信息源] 少数派 (local_xml_url) -> http://host.docker.internal:1200/sspai/index
+  014. [优质信息源] 少数派 -- Matrix (local_xml_url) -> http://host.docker.internal:1200/sspai/matrix
+  015. [Articles] Experimental History (xml_url) -> https://www.experimental-history.com/feed
+  016. [Articles] Blog - Remote Work Prep (xml_url) -> https://www.remoteworkprep.com/blog?format=rss
+  017. [Articles] EVANGELION:ALL (xml_url) -> https://www.eva-all.com/news/feed/
+  018. [Articles] 纵横四海 (local_xml_url) -> http://host.docker.internal:1200/xiaoyuzhou/podcast/62694abdb221dd5908417d1e
+  019. [其他] 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台 (xml_url) -> https://51cg1.com/feed/
+  020. [Articles] 今日热榜 (xml_url) -> https://web2rss.cc/feed/rebang.today?preview=true
+  021. [Articles] 安全代码 (xml_url) -> https://www.usmacd.com/atom.xml
+  022. [Articles] 老T博客 (xml_url) -> https://lawtee.com/index.xml
+  023. [科技与编程] 小众软件 (xml_url) -> https://www.appinn.com/feed/
+  024. [科技与编程] HelloGithub - 月刊 (local_xml_url) -> http://host.docker.internal:1200/hellogithub/volume
+  025. [科技与编程] 宝玉的分享 (xml_url) -> https://s.baoyu.io/feed.xml
+  026. [科技与编程] 阮一峰的网络日志 (xml_url) -> https://feeds.feedburner.com/ruanyifeng
+  027. [科技与编程] 龙爪槐守望者 (xml_url) -> https://www.ftium4.com/rss.xml
+  028. [科技与编程] 十年之约聚合订阅 (xml_url) -> https://tool.bcrjl.com/snzy-rss/
+  029. [科技与编程] #UNTAG (xml_url) -> https://rss.utgd.net/feed/
+  030. [科技与编程] 混沌周刊 (xml_url) -> https://weekly.love/feed/atom
+  031. [科技与编程] 🔔科技频道[奇诺分享-ccino.org]⚡️ (xml_url) -> https://channel.ccino.org/rss.xml
+  032. [微信公众号] 猴猴说话 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3279284299.atom
+  033. [微信公众号] 潦草学者 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3239649460.atom
+  034. [微信公众号] L先生说 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3015646136.atom
+  035. [微信公众号] 常青说 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3944297233.atom
+  036. [微信公众号] 啊桂实验室 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3097885397.atom
+  037. [微信公众号] 大问题Dialectic (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_2391461928.atom
+  038. [微信公众号] ONE字幕组 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3220087653.atom
+  039. [微信公众号] everystep (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_2396013984.atom
+  040. [微信公众号] 走路 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3097360004.atom
+  041. [社评] Vista看天下 (xml_url) -> https://plink.anyfeeder.com/weixin/vistaweek
+  042. [社评] Tinyfool的个人网站 (xml_url) -> https://codechina.org/feed/
+  043. [社评] 刘夙的科技世界 (xml_url) -> https://wewe-rss.jerrylf.uk/feeds/MP_WXS_3002603832.json
+  044. [社评] 三联生活周刊 Lifeweek (xml_url) -> https://the.bi/s/rawbbyu2zgmy32
+  045. [社评] 时代观察 - 乌有之乡网刊 (local_xml_url) -> http://host.docker.internal:1200/wyzxwk/article
+  046. [国内外资讯] 一觉醒来发生了什么 - 即刻圈子 (local_xml_url) -> http://host.docker.internal:1200/jike/topic/553870e8e4b0cafb0a1bef68
+  047. [国内外资讯] 东西智库 – 专注中国制造业高质量发展 (local_xml_url) -> http://host.docker.internal:1200/dx2025
+  048. [国内政策] 中国政府网 - 最新政策 (local_xml_url) -> http://host.docker.internal:1200/gov/zhengce/zuixin
+  049. [国内政策] - 政府文件库 (local_xml_url) -> http://host.docker.internal:1200/gov/zhengce/zhengceku/bmwj
+  050. [Articles] 不如读书 (xml_url) -> https://wuyagege.substack.com/feed
+  051. [Articles] Lukas Petersson’s blog (xml_url) -> https://lukaspetersson.com/feed.xml
+  052. [Articles] 一亩三分地 - 日本热门帖子 (local_xml_url) -> http://host.docker.internal:1200/1point3acres/category/%E6%97%A5%E6%9C%AC
+  053. [Articles] 偷懒爱好者周刊 (xml_url) -> https://toolight.cn/open/p/weekly/atom.xml
+  054. [Articles] GeekPlux Letters (xml_url) -> https://letters.geekplux.com/rss/
+  055. [Articles] 信息差——独立开发者出海周刊 (xml_url) -> https://gapis.money/rss.xml
+  056. [Articles] joojen Zhou 的网站 (xml_url) -> https://joojen.com/feed
+  057. [Articles] 周刊 归档 - 酷口家数字花园 (xml_url) -> https://weqoocu.com/feed
+  058. [Articles] 莫尔索随笔 (xml_url) -> https://liduos.com/atom.xml
+  059. [Articles] Ahead of AI (xml_url) -> https://magazine.sebastianraschka.com/feed
+  060. [Articles] 歸藏的AI工具箱 (xml_url) -> https://wechat2rss.bestblogs.dev/feed/1fc32fedbf5da37e8e819a9298ae80724c12cb03.xml
+  061. [Articles] Kubernetes Blog (xml_url) -> https://kubernetes.io/feed.xml
+  062. [Articles] AI洞察日报 RSS Feed (xml_url) -> https://justlovemaki.github.io/CloudFlare-AI-Insight-Daily/rss.xml
+  063. [党政信息] 最新发布_共产党员网 (local_xml_url) -> http://host.docker.internal:1200/12371/zxfb
+  064. [党政信息] 新华社新闻_新华网 (xml_url) -> https://plink.anyfeeder.com/newscn/whxw
+  065. [党政信息] 半月谈快报 (xml_url) -> https://data.getpodcast.xyz/data/ximalaya/9604235.xml
+  066. [党政信息] - 求是网 (xml_url) -> https://plink.anyfeeder.com/qstheory
+  067. [Articles] 学习一下订阅源 (local_xml_url) -> http://host.docker.internal:1200/follow/profile/158883963341209600
+  068. [Articles] Lex Fridman Podcast (xml_url) -> https://lexfridman.com/feed/podcast/
+  069. [Articles] Podnews Daily - podcast industry news (xml_url) -> https://podnews.net/rss
+  070. [Articles] 新智元 (xml_url) -> https://raw.githubusercontent.com/osnsyc/Wechat-Scholar/main/channels/gh_108f2a2a27f4.xml
+  071. [Articles] 机器之心 (xml_url) -> https://www.jiqizhixin.com/rss
+  072. [Articles] 腾讯研究院 (xml_url) -> https://wechat2rss.bestblogs.dev/feed/6152301e0978bffb0a8284cab339262b9764dcfb.xml
+  073. [Articles] 极客公园 (xml_url) -> https://www.geekpark.net/rss
+  074. [Articles] 极客公园 (xml_url) -> https://wechat2rss.xlab.app/feed/1a5aec98e71c707c8ca092bc2c255b9d4bac477d.xml
+  075. [SocialMedia] 图书推荐 – 书伴 (local_xml_url) -> http://host.docker.internal:1200/bookfere/books
+  076. [SocialMedia] 每周一书 – 书伴 (local_xml_url) -> http://host.docker.internal:1200/bookfere/weekly
+  077. [SocialMedia] 笔记交流站 - 即刻圈子 (local_xml_url) -> http://host.docker.internal:1200/jike/topic/660165c504703c909c6d8b2e
+  078. [资讯] 你不知道的行业内幕 - 即刻圈子 (local_xml_url) -> http://host.docker.internal:1200/jike/topic/5699f451d3e8351200bffdc8
+  079. [SocialMedia] Mike Krieger(@mikeyk) (xml_url) -> https://api.xgo.ing/rss/user/78d7b99318b04b309b04000f7e24da29
+  080. [SocialMedia] Richard Socher(@RichardSocher) (xml_url) -> https://api.xgo.ing/rss/user/4d2d4165a7524217a08d3f57f27fa190
+  081. [SocialMedia] Hugging Face(@huggingface) (xml_url) -> https://api.xgo.ing/rss/user/fc16750ce50741f1b1f05ea1fb29436f
+  082. [SocialMedia] 小互(@imxiaohu) (xml_url) -> https://api.xgo.ing/rss/user/74e542992cf7441390c708f5601071d4
+  083. [SocialMedia] AI at Meta(@AIatMeta) (xml_url) -> https://api.xgo.ing/rss/user/ef7c70f9568d45f4915169fef4ce90b4
+  084. [SocialMedia] Mistral AI(@MistralAI) (xml_url) -> https://api.xgo.ing/rss/user/8d2d03aea8af49818096da4ea00409d1
+  085. [SocialMedia] xAI(@xai) (xml_url) -> https://api.xgo.ing/rss/user/3953aa71e87a422eb9d7bf6ff1c7c43e
+  086. [SocialMedia] Dia(@diabrowser) (xml_url) -> https://api.xgo.ing/rss/user/6384ee3c656c48fea5e8b3cdacece4d0
+  087. [SocialMedia] AI Breakfast(@AiBreakfast) (xml_url) -> https://api.xgo.ing/rss/user/0e3ebaf288014c45b0d24b71fe37312b
+  088. [SocialMedia] DeepSeek(@deepseek_ai) (xml_url) -> https://api.xgo.ing/rss/user/68b610deb24b47ae9a236811563cda86
+  089. [SocialMedia] Jim Fan(@DrJimFan) (xml_url) -> https://api.xgo.ing/rss/user/c6cfe7c0d6b74849997073233fdea840
+  090. [SocialMedia] Akshay Kothari(@akothari) (xml_url) -> https://api.xgo.ing/rss/user/3434c0d56ee0446f991fb6af42bfac4b
+  091. [SocialMedia] 歸藏(guizang.ai)(@op7418) (xml_url) -> https://api.xgo.ing/rss/user/831fac36aa0a49a9af79f35dc1c9b5d9
+  092. [SocialMedia] Notion(@NotionHQ) (xml_url) -> https://api.xgo.ing/rss/user/f97a26863aec4425b021720d4f8e4ede
+  093. [SocialMedia] Replicate(@replicate) (xml_url) -> https://api.xgo.ing/rss/user/12eba9c3db4940c5ab2a72bd00f9ff2c
+  094. [SocialMedia] lmarena.ai(@lmarena_ai) (xml_url) -> https://api.xgo.ing/rss/user/f01b088d5a39473e854b07143df77ec5
+  095. [SocialMedia] Poe(@poe_platform) (xml_url) -> https://api.xgo.ing/rss/user/17687b1051204b2dbaed4ea4c9178f28
+  096. [SocialMedia] Ray Dalio(@RayDalio) (xml_url) -> https://api.xgo.ing/rss/user/4838204097ed422eac24ad48e68dc3ff
+  097. [SocialMedia] Arthur Mensch(@arthurmensch) (xml_url) -> https://api.xgo.ing/rss/user/d8121d969fb34c7daad2dd2aac4ba270
+  098. [SocialMedia] Paul Graham(@paulg) (xml_url) -> https://api.xgo.ing/rss/user/900549ddadf04e839d3f7a17ebaba3fc
+  099. [SocialMedia] Browser Use(@browser_use) (xml_url) -> https://api.xgo.ing/rss/user/b8d7530f0b294405825013bbc1cc198f
+  100. [SocialMedia] The Rundown AI(@TheRundownAI) (xml_url) -> https://api.xgo.ing/rss/user/83b1ea38940b4a1d81ea57d1ffb12ad7
+  101. [SocialMedia] AI Will(@FinanceYF5) (xml_url) -> https://api.xgo.ing/rss/user/aa74321087f9405a872fd9a76b743bf8
+  102. [SocialMedia] Guillermo Rauch(@rauchg) (xml_url) -> https://api.xgo.ing/rss/user/e8750659b8154dbfa0489f451e044af1
+  103. [SocialMedia] 向阳乔木(@vista8) (xml_url) -> https://api.xgo.ing/rss/user/9de19c78f7454ad08c956c1a00d237fe
+  104. [SocialMedia] Nick St. Pierre(@nickfloats) (xml_url) -> https://api.xgo.ing/rss/user/6ebdf0d91eef4c149acd0ef110635866
+  105. [SocialMedia] Sahil Lavingia(@shl) (xml_url) -> https://api.xgo.ing/rss/user/baad3713defe4182844d2756b4c2c9ed
+  106. [SocialMedia] Jan Leike(@janleike) (xml_url) -> https://api.xgo.ing/rss/user/dceb5cd131b34c72a8376cba8ea5d864
+  107. [SocialMedia] Gary Marcus(@GaryMarcus) (xml_url) -> https://api.xgo.ing/rss/user/35a38c5646d946fb894d8c30c1d9629e
+  108. [SocialMedia] Monica_IM(@hey_im_monica) (xml_url) -> https://api.xgo.ing/rss/user/5d749cc613ec4069bb2a47334739e1b6
+  109. [SocialMedia] Lenny Rachitsky(@lennysan) (xml_url) -> https://api.xgo.ing/rss/user/77d5ce4736854b0ebae603e4b54d3095
+  110. [SocialMedia] Kling AI(@Kling_ai) (xml_url) -> https://api.xgo.ing/rss/user/564237c3de274d58a04f064920817888
+  111. [SocialMedia] Lilian Weng(@lilianweng) (xml_url) -> https://api.xgo.ing/rss/user/a8f7e2238039461cbc8bf55f5f194498
+  112. [SocialMedia] Aadit Sheth(@aaditsh) (xml_url) -> https://api.xgo.ing/rss/user/179bcc4b8e5d4274b6e9e935f9fd4434
+  113. [SocialMedia] Augment Code(@augmentcode) (xml_url) -> https://api.xgo.ing/rss/user/e153fdd077df458b8298d975c060dcc3
+  114. [SocialMedia] Skywork(@Skywork_ai) (xml_url) -> https://api.xgo.ing/rss/user/6d7d398dd80b48d79669c92745d32cf6
+  115. [SocialMedia] Firecrawl(@firecrawl_dev) (xml_url) -> https://api.xgo.ing/rss/user/c04abb206bbf4f91b22795024d6c0614
+  116. [SocialMedia] Adam D'Angelo(@adamdangelo) (xml_url) -> https://api.xgo.ing/rss/user/3042b6f912b24f64982cc23f7bd59681
+  117. [SocialMedia] Suhail(@Suhail) (xml_url) -> https://api.xgo.ing/rss/user/c961547e08df4396b3ab69367a07a1cd
+  118. [SocialMedia] Sualeh Asif(@sualehasif996) (xml_url) -> https://api.xgo.ing/rss/user/fafa6df3c67644b1a367a177240e0173
+  119. [SocialMedia] Anthropic(@AnthropicAI) (xml_url) -> https://api.xgo.ing/rss/user/fc28a211471b496682feff329ec616e5
+  120. [SocialMedia] AI Engineer(@aiDotEngineer) (xml_url) -> https://api.xgo.ing/rss/user/7d19a619a1cc4a9896129211269d2c85
+  121. [SocialMedia] Hailuo AI (MiniMax)(@Hailuo_AI) (xml_url) -> https://api.xgo.ing/rss/user/e65b5e59fcb544918c1ba17f5758f0f8
+  122. [SocialMedia] Fireworks AI(@FireworksAI_HQ) (xml_url) -> https://api.xgo.ing/rss/user/9f35c76341554bd78c2b9e63dc4fa5d8
+  123. [SocialMedia] Justine Moore(@venturetwins) (xml_url) -> https://api.xgo.ing/rss/user/c61046471f174d86bc0eb76cb44a21c3
+  124. [SocialMedia] OpenAI Developers(@OpenAIDevs) (xml_url) -> https://api.xgo.ing/rss/user/971dc1fc90da449bac23e5fad8a33d55
+  125. [SocialMedia] bolt.new(@boltdotnew) (xml_url) -> https://api.xgo.ing/rss/user/760ab7cd9708452c9ce1f9144b92a430
+  126. [SocialMedia] Midjourney(@midjourney) (xml_url) -> https://api.xgo.ing/rss/user/72dd496bfd9d44c5a5761a974630376d
+  127. [SocialMedia] eric zakariasson(@ericzakariasson) (xml_url) -> https://api.xgo.ing/rss/user/65f321be670b4ffba7f40d0afd38c94d
+  128. [SocialMedia] Sam Altman(@sama) (xml_url) -> https://api.xgo.ing/rss/user/e30d4cd223f44bed9d404807105c8927
+  129. [SocialMedia] clem &#129303;(@ClementDelangue) (xml_url) -> https://api.xgo.ing/rss/user/5dbd038a8f5140938d0877511571797b
+  130. [SocialMedia] LangChain(@LangChainAI) (xml_url) -> https://api.xgo.ing/rss/user/862fee50a745423c87e2633b274caf1d
+  131. [SocialMedia] orange.ai(@oran_ge) (xml_url) -> https://api.xgo.ing/rss/user/0277b0bbefd54df7bc6b7880122da8f7
+  132. [SocialMedia] Dario Amodei(@DarioAmodei) (xml_url) -> https://api.xgo.ing/rss/user/49666ce6fe3e4cb786c6574684542ec5
+  133. [SocialMedia] Geoffrey Hinton(@geoffreyhinton) (xml_url) -> https://api.xgo.ing/rss/user/cb6169815e2e447e8e6148a4af3f9686
+  134. [SocialMedia] Harrison Chase(@hwchase17) (xml_url) -> https://api.xgo.ing/rss/user/f299207df53745bca04a03db8d11c5aa
+  135. [SocialMedia] Kevin Weil &#127482;&#127480;(@kevinweil) (xml_url) -> https://api.xgo.ing/rss/user/3ca3c7698fd04611a0e7d14fae93c84c
+  136. [SocialMedia] Jeff Dean(@JeffDean) (xml_url) -> https://api.xgo.ing/rss/user/b1013166769c49f8aa3fbdc222867054
+  137. [SocialMedia] Perplexity(@perplexity_ai) (xml_url) -> https://api.xgo.ing/rss/user/fdd601ea751949e7bec9e4cdad7c8e6c
+  138. [SocialMedia] ChatGPT(@ChatGPTapp) (xml_url) -> https://api.xgo.ing/rss/user/f7992687b8d74b14bf2341eb3a0a5ec4
+  139. [SocialMedia] Berkeley AI Research(@berkeley_ai) (xml_url) -> https://api.xgo.ing/rss/user/6bbf31cac345443585c3280320ba9009
+  140. [SocialMedia] Paul Couvert(@itsPaulAi) (xml_url) -> https://api.xgo.ing/rss/user/b9912ac9a29042cf8c834419dc44cb1f
+  141. [SocialMedia] Barsee &#128054;(@heyBarsee) (xml_url) -> https://api.xgo.ing/rss/user/244eb9fa77ce4fa3b7fa5ceba80027a4
+  142. [SocialMedia] OpenAI(@OpenAI) (xml_url) -> https://api.xgo.ing/rss/user/0c0856a69f9f49cf961018c32a0b0049
+  143. [SocialMedia] Binyuan Hui(@huybery) (xml_url) -> https://api.xgo.ing/rss/user/f54b2b40185943ce8f48a880110b7bc2
+  144. [SocialMedia] cohere(@cohere) (xml_url) -> https://api.xgo.ing/rss/user/462aa134ed914f98b3491680ad9b36ed
+  145. [SocialMedia] Aman Sanger(@amanrsanger) (xml_url) -> https://api.xgo.ing/rss/user/a02496979a0e4d86baf2b72c24db52a4
+  146. [SocialMedia] Simon Willison(@simonw) (xml_url) -> https://api.xgo.ing/rss/user/30ad80be93c84e44acc37d5ddf31db57
+  147. [SocialMedia] Microsoft Research(@MSFTResearch) (xml_url) -> https://api.xgo.ing/rss/user/61f4b78554fb4b8fa5653ec5d924d15a
+  148. [SocialMedia] Yann LeCun(@ylecun) (xml_url) -> https://api.xgo.ing/rss/user/f5f4f928dede472ea55053672ad27ab6
+  149. [SocialMedia] Junyang Lin(@JustinLin610) (xml_url) -> https://api.xgo.ing/rss/user/082097117b4543e9a741cd2580f936d3
+  150. [SocialMedia] Alex Albert(@alexalbert__) (xml_url) -> https://api.xgo.ing/rss/user/524525de0d69407b80f0a7d891fdc8df
+  151. [SocialMedia] Aravind Srinivas(@AravSrinivas) (xml_url) -> https://api.xgo.ing/rss/user/59e6b63ae9684d11be0ae13d9e7420f2
+  152. [SocialMedia] Genspark(@genspark_ai) (xml_url) -> https://api.xgo.ing/rss/user/71ffd342cb5d478185ef7d55bdfca011
+  153. [SocialMedia] Greg Brockman(@gdb) (xml_url) -> https://api.xgo.ing/rss/user/af19d054e26a49129f23abfa82d9e268
+  154. [SocialMedia] elvis(@omarsar0) (xml_url) -> https://api.xgo.ing/rss/user/931d6e88e067496cac6bf23f69d60f33
+  155. [SocialMedia] Google AI(@GoogleAI) (xml_url) -> https://api.xgo.ing/rss/user/4de0bd2d5cef4333a0260dc8157054a7
+  156. [SocialMedia] LlamaIndex &#129433;(@llama_index) (xml_url) -> https://api.xgo.ing/rss/user/67e259bd5be544ce84bbc867eace54c2
+  157. [SocialMedia] Jerry Liu(@jerryjliu0) (xml_url) -> https://api.xgo.ing/rss/user/b3d904c0d7c446558ef3a1e7f2eb362b
+  158. [SocialMedia] Marc Andreessen &#127482;&#127480;(@pmarca) (xml_url) -> https://api.xgo.ing/rss/user/63316630d94543f5a6480f230f483008
+  159. [SocialMedia] Justin Welsh(@thejustinwelsh) (xml_url) -> https://api.xgo.ing/rss/user/58894bf2934a426ca833c682da2bc810
+  160. [SocialMedia] Pika(@pika_labs) (xml_url) -> https://api.xgo.ing/rss/user/3306d8b253ec4e03aca3c2e9967e7119
+  161. [SocialMedia] Sundar Pichai(@sundarpichai) (xml_url) -> https://api.xgo.ing/rss/user/8324d65a63dc42c584a8c08cc8323c9f
+  162. [SocialMedia] Lovable(@lovable_dev) (xml_url) -> https://api.xgo.ing/rss/user/639cd13d44284e10ac89fbd1c5399767
+  163. [SocialMedia] cat(@_catwu) (xml_url) -> https://api.xgo.ing/rss/user/66a6b39ddcfa42e39621e0ab293c1bdd
+  164. [SocialMedia] Anton Osika – eu/acc(@antonosika) (xml_url) -> https://api.xgo.ing/rss/user/5f13b32b124a41cfb659f903a84032b1
+  165. [SocialMedia] Replit ⠕(@Replit) (xml_url) -> https://api.xgo.ing/rss/user/613f859e4bc440c5a28f40732840f5cf
+  166. [SocialMedia] FlowiseAI(@FlowiseAI) (xml_url) -> https://api.xgo.ing/rss/user/be74da51698d4cefb12b39830d6cd201
+  167. [SocialMedia] a16z(@a16z) (xml_url) -> https://api.xgo.ing/rss/user/f3fedf817599470dbf8d8d11f0872475
+  168. [SocialMedia] 李继刚(@lijigang_com) (xml_url) -> https://api.xgo.ing/rss/user/ca2fa444b6ea4b8b974fe148056e497a
+  169. [SocialMedia] Jina AI(@JinaAI_) (xml_url) -> https://api.xgo.ing/rss/user/f510f6e7eecf456ca7e2895a46752888
+  170. [SocialMedia] v0(@v0) (xml_url) -> https://api.xgo.ing/rss/user/dbf37973e6fc4eae91d4be9669a78fc7
+  171. [SocialMedia] Andrej Karpathy(@karpathy) (xml_url) -> https://api.xgo.ing/rss/user/edf707b5c0b248579085f66d7a3c5524
+  172. [SocialMedia] Fei-Fei Li(@drfeifei) (xml_url) -> https://api.xgo.ing/rss/user/a4bfe44bfc0d4c949da21ebd3f5f42a5
+  173. [SocialMedia] DeepLearning.AI(@DeepLearningAI) (xml_url) -> https://api.xgo.ing/rss/user/42e6b4901b97498eab2ab64c07d56177
+  174. [SocialMedia] Rowan Cheung(@rowancheung) (xml_url) -> https://api.xgo.ing/rss/user/a636de3cbda0495daabd15b9fd298614
+  175. [SocialMedia] Latent.Space(@latentspacepod) (xml_url) -> https://api.xgo.ing/rss/user/a7be8b61a1264ea7984abfaea3eff686
+  176. [SocialMedia] Ideogram(@ideogram_ai) (xml_url) -> https://api.xgo.ing/rss/user/a719880fe66e4156a111187f50dae91b
+  177. [SocialMedia] Demis Hassabis(@demishassabis) (xml_url) -> https://api.xgo.ing/rss/user/4a884d5e2f3740c5a26c9c093de6388a
+  178. [SocialMedia] Cognition(@cognition_labs) (xml_url) -> https://api.xgo.ing/rss/user/4cc14cbd15c74e189d537c415369e1a7
+  179. [SocialMedia] andrew chen(@andrewchen) (xml_url) -> https://api.xgo.ing/rss/user/a3eb6beb2d894da3a9b7ab6d2e46790e
+  180. [SocialMedia] NVIDIA AI(@NVIDIAAI) (xml_url) -> https://api.xgo.ing/rss/user/05f1492e43514dc3862a076d3697c390
+  181. [SocialMedia] Stanford AI Lab(@StanfordAILab) (xml_url) -> https://api.xgo.ing/rss/user/d5fc365556e641cba2278f501e8c6f92
+  182. [SocialMedia] Varun Mohan(@_mohansolo) (xml_url) -> https://api.xgo.ing/rss/user/7794c4268a504019a94af1778857a703
+  183. [SocialMedia] Logan Kilpatrick(@OfficialLoganK) (xml_url) -> https://api.xgo.ing/rss/user/4f63d960de644aeebd0aa97e4994dafe
+  184. [SocialMedia] Qdrant(@qdrant_engine) (xml_url) -> https://api.xgo.ing/rss/user/a55f6e33dd224235aabaabaaf9d58a06
+  185. [SocialMedia] OpenRouter(@OpenRouterAI) (xml_url) -> https://api.xgo.ing/rss/user/e503a90c035c4b1d8f8dd34907d15bf4
+  186. [SocialMedia] Thomas Wolf(@Thom_Wolf) (xml_url) -> https://api.xgo.ing/rss/user/4918efb13c47459b8dcaa79cfdf72d09
+  187. [SocialMedia] mem0(@mem0ai) (xml_url) -> https://api.xgo.ing/rss/user/94bb691baeff461686326af619beb116
+  188. [SocialMedia] Scott Wu(@ScottWu46) (xml_url) -> https://api.xgo.ing/rss/user/5fca8ccd87344d388bc863304ed6fd86
+  189. [SocialMedia] Recraft(@recraftai) (xml_url) -> https://api.xgo.ing/rss/user/acc648327c614d9b985b9fc3d737165b
+  190. [SocialMedia] Hunyuan(@TXhunyuan) (xml_url) -> https://api.xgo.ing/rss/user/6e8e7b42cb434818810f87bcf77d86fb
+  191. [SocialMedia] Google DeepMind(@GoogleDeepMind) (xml_url) -> https://api.xgo.ing/rss/user/a99538443a484fcc846bdcc8f50745ec
+  192. [SocialMedia] Mustafa Suleyman(@mustafasuleyman) (xml_url) -> https://api.xgo.ing/rss/user/394acfaff8c44e09936f5bc0b8504f2c
+  193. [SocialMedia] Y Combinator(@ycombinator) (xml_url) -> https://api.xgo.ing/rss/user/b1ab109f6afd42ab8ea32e17a19a3a3e
+  194. [SocialMedia] Lex Fridman(@lexfridman) (xml_url) -> https://api.xgo.ing/rss/user/adf65931519340f795e2336910b4cd15
+  195. [SocialMedia] Fellou(@FellouAI) (xml_url) -> https://api.xgo.ing/rss/user/326763c2f6154826babcfd71c5ab0f70
+  196. [SocialMedia] Runway(@runwayml) (xml_url) -> https://api.xgo.ing/rss/user/e6bb4f612dd24db5bc1a6811e6dd5820
+  197. [SocialMedia] Julien Chaumond(@julien_c) (xml_url) -> https://api.xgo.ing/rss/user/44d9fa384087448a94d3c8595f8d535e
+  198. [SocialMedia] 宝玉(@dotey) (xml_url) -> https://api.xgo.ing/rss/user/97f1484ae48c430fbbf3438099743674
+  199. [SocialMedia] Milvus(@milvusio) (xml_url) -> https://api.xgo.ing/rss/user/424e67b19eed4500b7a440976bbd2ade
+  200. [SocialMedia] Ian Goodfellow(@goodfellow_ian) (xml_url) -> https://api.xgo.ing/rss/user/57831559d22440debbfb2f2528e4ba84
+  201. [SocialMedia] Taranjeet(@taranjeetio) (xml_url) -> https://api.xgo.ing/rss/user/2de92402f4a24c90bb27e7580b93a878
+  202. [SocialMedia] Figma(@figma) (xml_url) -> https://api.xgo.ing/rss/user/f8a106a09a7d404fb8de7eb0c5ddd2a2
+  203. [SocialMedia] Patrick Loeber(@patloeber) (xml_url) -> https://api.xgo.ing/rss/user/c65c68f3713747bba863f92d6b5e996f
+  204. [SocialMedia] Windsurf(@windsurf_ai) (xml_url) -> https://api.xgo.ing/rss/user/4a8273800ed34a069eecdb6c5c1b9ccf
+  205. [SocialMedia] Google AI Developers(@googleaidevs) (xml_url) -> https://api.xgo.ing/rss/user/69d925d4a8d44221b03eecbe07bd0f74
+  206. [SocialMedia] Qwen(@Alibaba_Qwen) (xml_url) -> https://api.xgo.ing/rss/user/80032d016d654eb4afe741ff34b7643d
+  207. [SocialMedia] Satya Nadella(@satyanadella) (xml_url) -> https://api.xgo.ing/rss/user/baa68dbd9a9e461a96fd9b2e3f35dcbf
+  208. [SocialMedia] Andrew Ng(@AndrewYNg) (xml_url) -> https://api.xgo.ing/rss/user/08b5488b20bc437c8bfc317a52e5c26d
+  209. [SocialMedia] AI SDK(@aisdk) (xml_url) -> https://api.xgo.ing/rss/user/22af005b21ec45b1a4503acca777b7f0
+  210. [SocialMedia] HeyGen(@HeyGen_Official) (xml_url) -> https://api.xgo.ing/rss/user/a9aff6b016c143ed8728dd86eb70d7db
+  211. [SocialMedia] Fish Audio(@FishAudio) (xml_url) -> https://api.xgo.ing/rss/user/4900b3dcd592424687582ff9e0f148ea
+  212. [SocialMedia] ElevenLabs(@elevenlabsio) (xml_url) -> https://api.xgo.ing/rss/user/1897eed387064dfab443764d6da50bc6
+  213. [SocialMedia] ollama(@ollama) (xml_url) -> https://api.xgo.ing/rss/user/6326c63a2dfa445bbde88bea0c3112c2
+  214. [SocialMedia] Philipp Schmid(@_philschmid) (xml_url) -> https://api.xgo.ing/rss/user/ce352bbf72e44033985bc756db2ee0e2
+  215. [SocialMedia] Cursor(@cursor_ai) (xml_url) -> https://api.xgo.ing/rss/user/5287b4e0e13a4ab7ab7b1d56f9d88960
+  216. [SocialMedia] Google Gemini App(@GeminiApp) (xml_url) -> https://api.xgo.ing/rss/user/6fb337feeec44ca38b79491b971d868d
+  217. [SocialMedia] Amjad Masad(@amasad) (xml_url) -> https://api.xgo.ing/rss/user/5fb1814c610c4af2911caa98c5c5ef82
+  218. [SocialMedia] AK(@_akhaliq) (xml_url) -> https://api.xgo.ing/rss/user/341f7b9f8d9b477e8bb200caa7f32c6e
+  219. [SocialMedia] Groq Inc(@GroqInc) (xml_url) -> https://api.xgo.ing/rss/user/771b32075fe54a83bdb6966de9647b4f
+  220. [SocialMedia] ManusAI(@ManusAI_HQ) (xml_url) -> https://api.xgo.ing/rss/user/320181c4651a41a08015946b55f704ab
+  221. [SocialMedia] meng shao(@shao__meng) (xml_url) -> https://api.xgo.ing/rss/user/48aae530e0bf413aa7d44380f418e2e3
+  222. [SocialMedia] Weaviate • vector database(@weaviate_io) (xml_url) -> https://api.xgo.ing/rss/user/2f1035ec6b28475987af06b600e1d04c
+  223. [SocialMedia] LovartAI(@lovart_ai) (xml_url) -> https://api.xgo.ing/rss/user/db648e4d4eae4822aa0d34f0faef7ad2
+  224. [SocialMedia] Character.AI(@character_ai) (xml_url) -> https://api.xgo.ing/rss/user/3877c31cdb554cffb750b3b683c98c4d
+  225. [SocialMedia] NotebookLM(@NotebookLM) (xml_url) -> https://api.xgo.ing/rss/user/221a88341acb475db221a12fed8208d0
+  226. [SocialMedia] Dify(@dify_ai) (xml_url) -> https://api.xgo.ing/rss/user/0be252fedbe84ad7bea21be44b18da89
+  227. [SocialMedia] Eric Jing(@ericjing_ai) (xml_url) -> https://api.xgo.ing/rss/user/ddfdcdd4e390495c942f0b5da62af0fb
+  228. [SocialMedia] Naval(@naval) (xml_url) -> https://api.xgo.ing/rss/user/b43bc203409e4c5a9c3ae86fe1ac00c9
+  229. [SocialMedia] Twitter @Tom Huang (local_xml_url) -> http://host.docker.internal:1200/twitter/user/tuturetom
+  230. [SocialMedia] Twitter @Tw93 (local_xml_url) -> http://host.docker.internal:1200/twitter/user/HiTw93
+  231. [SocialMedia] Twitter @ginobefun (local_xml_url) -> http://host.docker.internal:1200/twitter/user/hongming731
+  232. [SocialMedia] Twitter @Theo - t3.gg (local_xml_url) -> http://host.docker.internal:1200/twitter/user/theo
+  233. [SocialMedia] Lee Robinson(@leerob) (xml_url) -> https://api.xgo.ing/rss/user/dc2426bc8348495189b45451d1707a1c
+  234. [SocialMedia] Twitter @Pietro Schirano (local_xml_url) -> http://host.docker.internal:1200/twitter/user/skirano
+  235. [星空] 每日一图-北京天文馆 (local_xml_url) -> http://host.docker.internal:1200/bjp/apod
+  236. [星空] NASA中文 - 天文·每日一图 (local_xml_url) -> http://host.docker.internal:1200/nasa/apod-cn
+  237. [长知识] AliAbdaal (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/3546581580122806
+  238. [长知识] 食事史馆 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/53737196
+  239. [长知识] 毕导 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/254463269
+  240. [长知识] CoCoVii (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/9142182
+  241. [长知识] 下班的三爷 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/589388395
+  242. [长知识] 本子在隔壁 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/593251783
+  243. [长知识] 岱川博士 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/584630077
+  244. [长知识] 退役编辑雨上 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/1105429038
+  245. [长知识] 与书籍度过漫长岁月 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/252099076
+  246. [长知识] 智能路障 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/79577853
+  247. [长知识] Nenly同学 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/1814756990
+  248. [长知识] 大问题Dialectic (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/1871365234
+  249. [长知识] 英语播客狗 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/7671890
+  250. [长知识] 林川登罗 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/3798056
+  251. [长知识] 人间自习室 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/29240784
+  252. [长知识] 漫士沉思录 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/266765166
+  253. [长知识] 银屏系漫游指南 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/674180538
+  254. [长知识] 浮世叁千问 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/435061656
+  255. [长知识] LunaticMosfet (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/1297592012
+  256. [长知识] 歌白说Geslook (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/315846984
+  257. [长知识] Larry想做技术大佬 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/19873195
+  258. [长知识] 赏味不足 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/44497027
+  259. [长知识] 西山在何许 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/2515311
+  260. [长知识] 坚果熊说博弈 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/388394328
+  261. [长知识] 罗明落ny (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/405303082
+  262. [长知识] 汤质看本质 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/362588980
+  263. [长知识] 要素分析 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/14262056
+  264. [长知识] 蒙克MK_ (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/1060986358
+  265. [长知识] Morpheus红丸主义 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/445634559
+  266. [长知识] 慢慢学的四饼 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/95240876
+  267. [长知识] 辰星杂谈 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/41018196
+  268. [长知识] 非卿漫谈 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/2690044
+  269. [长知识] 拣尽南枝 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/39597640
+  270. [长知识] 硬核学长2077 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/1195497797
+  271. [长知识] 海林A读书 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/3494374304385046
+  272. [长知识] 机器人夏先生1号 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/31656484
+  273. [长知识] 知识共享者 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/406068046
+  274. [长知识] Maki的完美算术教室 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/391930545
+  275. [长知识] 心河摆渡 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/230983435
+  276. [长知识] 猴猴说话 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/31728620
+  277. [长知识] 3Blue1Brown (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/88461692
+  278. [长知识] 思维实验室 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/14583962
+  279. [长知识] 是落拓呀 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/43276908
+  280. [长知识] 学院派Academia (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/96639395
+  281. [长知识] 和张程一起学习吧 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/631899631
+  282. [长知识] 读书的Harry (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/611092306
+  283. [长知识] 小波心理 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/1033890839
+  284. [长知识] 科幻视界 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/25073738
+  285. [长知识] 差评君 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/19319172
+  286. [长知识] 迷因水母 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/1858861103
+  287. [长知识] 努力戒咕的coco锤 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/470585121
+  288. [长知识] 河口超人Aper (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/1288663494
+  289. [长知识] 荒野初研园 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/252411834
+  290. [长知识] 二次元的Datawhale (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/431850986
+  291. [长知识] 白染one (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/476051104
+  292. [长知识] 卡纸大寨主 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/17780825
+  293. [长知识] 向杨Alan君 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/495979610
+  294. [长知识] 奥德修斯的绳索 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/14004258
+  295. [长知识] 岺玖贰叁 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/521296768
+  296. [长知识] 新石器公园 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/489640651
+  297. [长知识] 载脑体 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/1850874570
+  298. [长知识] YouTube深度访谈 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/3493286931073848
+  299. [长知识] 天才简史 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/213845897
+  300. [长知识] 这是个令人疑惑的星球 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/409842788
+  301. [长知识] 周侃侃plus (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/600428973
+  302. [长知识] focus2flow (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/17549684
+  303. [短知识] 飞鸟手札 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/1366786686
+  304. [短知识] 英语播客党 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/3537109151386355
+  305. [最娱乐] 波士顿圆脸 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/346563107
+  306. [最娱乐] 瓶子君152 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/730732
+  307. [最娱乐] Super也好君 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/1372433
+  308. [最娱乐] 负面能量转换器 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/281127303
+  309. [最娱乐] 靠谱电竞 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/279991456
+  310. [最娱乐] 火兰朋克 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/508215481
+  311. [最娱乐] 馆长刘下饭_环球档案 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/369564778
+  312. [最娱乐] 老实憨厚的笑笑 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/8739477
+  313. [最娱乐] 冲击波工作室 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/1567045834
+  314. [最娱乐] 邵艾伦Alan (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/4029133
+  315. [最娱乐] 柯洁 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/525952604
+  316. [最娱乐] 逗比的雀巢 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/5294454
+  317. [最娱乐] 大祥哥来了 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/2920960
+  318. [最娱乐] Norah脱口秀 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/29404012
+  319. [最娱乐] 巅峰球迷汇 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/365372809
+  320. [最娱乐] MrBeast官方账号 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/1027737427
+  321. [最娱乐] 泛式 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/63231
+  322. [最娱乐] 贝拉kira (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/672353429
+  323. [最娱乐] -LKs- (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/125526
+  324. [最娱乐] 真实球迷汇 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/108618052
+  325. [最娱乐] 李滇滇 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/3546676667091128
+  326. [最娱乐] 影视飓风 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/946974
+  327. [绝活娱乐] 猫眼看足球 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/456249922
+  328. [绝活娱乐] 陈大东瓜 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/269288799
+  329. [绝活娱乐] 司马尘 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/334932680
+  330. [绝活娱乐] 是啤酒鸭-梗图 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/1073153713
+  331. [绝活娱乐] MOJi辞書 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/6697975
+  332. [绝活娱乐] Gray格雷老师 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/591610354
+  333. [绝活娱乐] 你是想气死1酱么 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/375040863
+  334. [绝活娱乐] Boo布姐自译 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/3493128048740395
+  335. [绝活娱乐] 冲男阿凉 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/239060440
+  336. [绝活娱乐] 杰克森Jackson_ (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/13174980
+  337. [绝活娱乐] 半只笨猪 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/498505577
+  338. [绝活娱乐] 脱口秀_Talk_Show (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/514207628
+  339. [绝活娱乐] 罗翔说刑法 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/517327498
+  340. [绝活娱乐] 付航脱口秀精选 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/3493286857673111
+  341. [绝活娱乐] 戴建业老师 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/532741557
+  342. [绝活娱乐] 听泉赏宝 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/3546592976046554
+  343. [绝活娱乐] 灯果 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/4748646
+  344. [绝活娱乐] 隔壁红魔 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/432174249
+  345. [绝活娱乐] 管泽元 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/271338616
+  346. [绝活娱乐] 白马繁华 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/251054248
+  347. [绝活娱乐] 咖啡醉足球 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/436553623
+  348. [绝活娱乐] 单弦震脉 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/5316213
+  349. [绝活娱乐] 米国脱口秀 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/142371069
+  350. [绝活娱乐] 付航脱口秀 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/57592895
+  351. [绝活娱乐] 峡谷玄学家 (local_xml_url) -> http://host.docker.internal:1200/bilibili/user/video/3493128455587886
+  352. [Videos] AI Foundations (xml_url) -> https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g
+  353. [Videos] 司机社综合周排行榜 (local_xml_url) -> http://host.docker.internal:1200/xsijishe/rank/weekly
+  354. [Videos] 司机社综合月排行榜 (local_xml_url) -> http://host.docker.internal:1200/xsijishe/rank/monthly
+  355. [Videos] Andrej Karpathy - YouTube (local_xml_url) -> http://host.docker.internal:1200/youtube/user/@AndrejKarpathy
+  356. [Videos] Lex Fridman - YouTube (local_xml_url) -> http://host.docker.internal:1200/youtube/user/%40lexfridman
+  357. [英文博客] simonwillison.net (xml_url) -> https://simonwillison.net/atom/everything/
+  358. [英文博客] jeffgeerling.com (xml_url) -> https://www.jeffgeerling.com/blog.xml
+  359. [英文博客] seangoedecke.com (xml_url) -> https://www.seangoedecke.com/rss.xml
+  360. [英文博客] krebsonsecurity.com (xml_url) -> https://krebsonsecurity.com/feed/
+  361. [英文博客] daringfireball.net (xml_url) -> https://daringfireball.net/feeds/main
+  362. [英文博客] ericmigi.com (xml_url) -> https://ericmigi.com/rss.xml
+  363. [英文博客] antirez.com (xml_url) -> http://antirez.com/rss
+  364. [英文博客] idiallo.com (xml_url) -> https://idiallo.com/feed.rss
+  365. [英文博客] maurycyz.com (xml_url) -> https://maurycyz.com/index.xml
+  366. [英文博客] pluralistic.net (xml_url) -> https://pluralistic.net/feed/
+  367. [英文博客] shkspr.mobi (xml_url) -> https://shkspr.mobi/blog/feed/
+  368. [英文博客] lcamtuf.substack.com (xml_url) -> https://lcamtuf.substack.com/feed
+  369. [英文博客] mitchellh.com (xml_url) -> https://mitchellh.com/feed.xml
+  370. [英文博客] dynomight.net (xml_url) -> https://dynomight.net/feed.xml
+  371. [英文博客] utcc.utoronto.ca/~cks (xml_url) -> https://utcc.utoronto.ca/~cks/space/blog/?atom
+  372. [英文博客] xeiaso.net (xml_url) -> https://xeiaso.net/blog.rss
+  373. [英文博客] devblogs.microsoft.com/oldnewthing (xml_url) -> https://devblogs.microsoft.com/oldnewthing/feed
+  374. [英文博客] righto.com (xml_url) -> https://www.righto.com/feeds/posts/default
+  375. [英文博客] lucumr.pocoo.org (xml_url) -> https://lucumr.pocoo.org/feed.atom
+  376. [英文博客] skyfall.dev (xml_url) -> https://skyfall.dev/rss.xml
+  377. [英文博客] garymarcus.substack.com (xml_url) -> https://garymarcus.substack.com/feed
+  378. [英文博客] rachelbythebay.com (xml_url) -> https://rachelbythebay.com/w/atom.xml
+  379. [英文博客] overreacted.io (xml_url) -> https://overreacted.io/rss.xml
+  380. [英文博客] timsh.org (xml_url) -> https://timsh.org/rss/
+  381. [英文博客] johndcook.com (xml_url) -> https://www.johndcook.com/blog/feed/
+  382. [英文博客] gilesthomas.com (xml_url) -> https://gilesthomas.com/feed/rss.xml
+  383. [英文博客] matklad.github.io (xml_url) -> https://matklad.github.io/feed.xml
+  384. [英文博客] derekthompson.org (xml_url) -> https://www.theatlantic.com/feed/author/derek-thompson/
+  385. [英文博客] evanhahn.com (xml_url) -> https://evanhahn.com/feed.xml
+  386. [英文博客] terriblesoftware.org (xml_url) -> https://terriblesoftware.org/feed/
+  387. [英文博客] rakhim.exotext.com (xml_url) -> https://rakhim.exotext.com/rss.xml
+  388. [英文博客] joanwestenberg.com (xml_url) -> https://joanwestenberg.com/rss
+  389. [英文博客] xania.org (xml_url) -> https://xania.org/feed
+  390. [英文博客] micahflee.com (xml_url) -> https://micahflee.com/feed/
+  391. [英文博客] nesbitt.io (xml_url) -> https://nesbitt.io/feed.xml
+  392. [英文博客] construction-physics.com (xml_url) -> https://www.construction-physics.com/feed
+  393. [英文博客] tedium.co (xml_url) -> https://feed.tedium.co/
+  394. [英文博客] susam.net (xml_url) -> https://susam.net/feed.xml
+  395. [英文博客] entropicthoughts.com (xml_url) -> https://entropicthoughts.com/feed.xml
+  396. [英文博客] buttondown.com/hillelwayne (xml_url) -> https://buttondown.com/hillelwayne/rss
+  397. [英文博客] dwarkesh.com (xml_url) -> https://www.dwarkeshpatel.com/feed
+  398. [英文博客] borretti.me (xml_url) -> https://borretti.me/feed.xml
+  399. [英文博客] wheresyoured.at (xml_url) -> https://www.wheresyoured.at/rss/
+  400. [英文博客] jayd.ml (xml_url) -> https://jayd.ml/feed.xml
+  401. [英文博客] minimaxir.com (xml_url) -> https://minimaxir.com/index.xml
+  402. [英文博客] geohot.github.io (xml_url) -> https://geohot.github.io/blog/feed.xml
+  403. [英文博客] paulgraham.com (xml_url) -> http://www.aaronsw.com/2002/feeds/pgessays.rss
+  404. [英文博客] filfre.net (xml_url) -> https://www.filfre.net/feed/
+  405. [英文博客] blog.jim-nielsen.com (xml_url) -> https://blog.jim-nielsen.com/feed.xml
+  406. [英文博客] dfarq.homeip.net (xml_url) -> https://dfarq.homeip.net/feed/
+  407. [英文博客] jyn.dev (xml_url) -> https://jyn.dev/atom.xml
+  408. [英文博客] geoffreylitt.com (xml_url) -> https://www.geoffreylitt.com/feed.xml
+  409. [英文博客] downtowndougbrown.com (xml_url) -> https://www.downtowndougbrown.com/feed/
+  410. [英文博客] brutecat.com (xml_url) -> https://brutecat.com/rss.xml
+  411. [英文博客] eli.thegreenplace.net (xml_url) -> https://eli.thegreenplace.net/feeds/all.atom.xml
+  412. [英文博客] abortretry.fail (xml_url) -> https://www.abortretry.fail/feed
+  413. [英文博客] fabiensanglard.net (xml_url) -> https://fabiensanglard.net/rss.xml
+  414. [英文博客] oldvcr.blogspot.com (xml_url) -> https://oldvcr.blogspot.com/feeds/posts/default
+  415. [英文博客] bogdanthegeek.github.io (xml_url) -> https://bogdanthegeek.github.io/blog/index.xml
+  416. [英文博客] hugotunius.se (xml_url) -> https://hugotunius.se/feed.xml
+  417. [英文博客] gwern.net (xml_url) -> https://gwern.substack.com/feed
+  418. [英文博客] berthub.eu (xml_url) -> https://berthub.eu/articles/index.xml
+  419. [英文博客] chadnauseam.com (xml_url) -> https://chadnauseam.com/rss.xml
+  420. [英文博客] simone.org (xml_url) -> https://simone.org/feed/
+  421. [英文博客] it-notes.dragas.net (xml_url) -> https://it-notes.dragas.net/feed/
+  422. [英文博客] beej.us (xml_url) -> https://beej.us/blog/rss.xml
+  423. [英文博客] hey.paris (xml_url) -> https://hey.paris/index.xml
+  424. [英文博客] danielwirtz.com (xml_url) -> https://danielwirtz.com/rss.xml
+  425. [英文博客] matduggan.com (xml_url) -> https://matduggan.com/rss/
+  426. [英文博客] refactoringenglish.com (xml_url) -> https://refactoringenglish.com/index.xml
+  427. [英文博客] worksonmymachine.substack.com (xml_url) -> https://worksonmymachine.substack.com/feed
+  428. [英文博客] philiplaine.com (xml_url) -> https://philiplaine.com/index.xml
+  429. [英文博客] steveblank.com (xml_url) -> https://steveblank.com/feed/
+  430. [英文博客] bernsteinbear.com (xml_url) -> https://bernsteinbear.com/feed.xml
+  431. [英文博客] danieldelaney.net (xml_url) -> https://danieldelaney.net/feed
+  432. [英文博客] troyhunt.com (xml_url) -> https://www.troyhunt.com/rss/
+  433. [英文博客] herman.bearblog.dev (xml_url) -> https://herman.bearblog.dev/feed/
+  434. [英文博客] tomrenner.com (xml_url) -> https://tomrenner.com/index.xml
+  435. [英文博客] blog.pixelmelt.dev (xml_url) -> https://blog.pixelmelt.dev/rss/
+  436. [英文博客] martinalderson.com (xml_url) -> https://martinalderson.com/feed.xml
+  437. [英文博客] danielchasehooper.com (xml_url) -> https://danielchasehooper.com/feed.xml
+  438. [英文博客] chiark.greenend.org.uk/~sgtatham (xml_url) -> https://www.chiark.greenend.org.uk/~sgtatham/quasiblog/feed.xml
+  439. [英文博客] grantslatton.com (xml_url) -> https://grantslatton.com/rss.xml
+  440. [英文博客] anildash.com (xml_url) -> https://anildash.com/feed.xml
+  441. [英文博客] aresluna.org (xml_url) -> https://aresluna.org/main.rss
+  442. [英文博客] michael.stapelberg.ch (xml_url) -> https://michael.stapelberg.ch/feed.xml
+  443. [英文博客] miguelgrinberg.com (xml_url) -> https://blog.miguelgrinberg.com/feed
+  444. [英文博客] keygen.sh (xml_url) -> https://keygen.sh/blog/feed.xml
+  445. [英文博客] mjg59.dreamwidth.org (xml_url) -> https://mjg59.dreamwidth.org/data/rss
+  446. [英文博客] computer.rip (xml_url) -> https://computer.rip/rss.xml
+  447. [英文博客] tedunangst.com (xml_url) -> https://www.tedunangst.com/flak/rss
+  448. [播客] 小宇宙 Podcast 643928f99361a4e7c38a9555 (local_xml_url) -> http://host.docker.internal:1200/xiaoyuzhou/podcast/643928f99361a4e7c38a9555
+  449. [播客] 小宇宙 Podcast 61cbaac48bb4cd867fcabe22 (local_xml_url) -> http://host.docker.internal:1200/xiaoyuzhou/podcast/61cbaac48bb4cd867fcabe22
+  450. [播客] 小宇宙 Podcast 648b0b641c48983391a63f98 (local_xml_url) -> http://host.docker.internal:1200/xiaoyuzhou/podcast/648b0b641c48983391a63f98
+  451. [播客] 小宇宙 Podcast 5e5c52c9418a84a04625e6cc (local_xml_url) -> http://host.docker.internal:1200/xiaoyuzhou/podcast/5e5c52c9418a84a04625e6cc
+  452. [播客] 小宇宙 Podcast 63b7dd49289d2739647d9587 (local_xml_url) -> http://host.docker.internal:1200/xiaoyuzhou/podcast/63b7dd49289d2739647d9587
+  453. [播客] 小宇宙 Podcast 6507bc165c88d2412626b401 (local_xml_url) -> http://host.docker.internal:1200/xiaoyuzhou/podcast/6507bc165c88d2412626b401
+  454. [英文博客] Lil'Log (xml_url) -> https://lilianweng.github.io/index.xml
+  455. [英文博客] Very Small Woods (xml_url) -> https://www.verysmallwoods.com/feed.xml
+  456. [微信公众号] 数字生命卡兹克 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3223096120.atom
+  457. [微信公众号] AGI Hunt (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3087832081.atom
+  458. [微信公众号] 卡尔的AI沃茨 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3871977637.atom
+  459. [微信公众号] 赛博禅心 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3934419561.atom
+  460. [微信公众号] AI产品黄叔 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_2398553439.atom
+  461. [微信公众号] 网罗灯下黑 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3565037632.atom
+  462. [微信公众号] 苍何 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3585152880.atom
+  463. [微信公众号] 饼干哥哥AGI (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_2394281674.atom
+  464. [微信公众号] 刘聪NLP (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3891555159.atom
+  465. [微信公众号] AI产品阿颖 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3892772220.atom
+  466. [微信公众号] 01Founder (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3927644787.atom
+  467. [微信公众号] AI故事计划 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3917501995.atom
+  468. [微信公众号] 十字路口Crossing (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3010319264.atom
+  469. [微信公众号] 沃垠AI (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3201599457.atom
+  470. [微信公众号] 阿伦AI学习笔记 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3957475902.atom
+  471. [微信公众号] 胡说成理 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3297021519.atom
+  472. [微信公众号] 云中江树 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3016599109.atom
+  473. [微信公众号] 秋芝2046 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3930567871.atom
+  474. [微信公众号] AI产品银海 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3913528478.atom
+  475. [微信公众号] 哥飞 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_2399233620.atom
+  476. [微信公众号] 探索AGI (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3916725964.atom
+  477. [微信公众号] 新智元 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3271041950.atom
+  478. [微信公众号] 量子位 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3236757533.atom
+  479. [微信公众号] APPSO (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_2392024520.atom
+  480. [微信公众号] 智东西 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3081486433.atom
+  481. [微信公众号] 雷峰网 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_1368348621.atom
+  482. [微信公众号] PaperWeekly (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3201788143.atom
+  483. [微信公众号] 甲子光年 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3599245772.atom
+  484. [微信公众号] 逛逛GitHub (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3516884134.atom
+  485. [微信公众号] 开源AI项目落地 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3921606804.atom
+  486. [微信公众号] 夕小瑶科技说 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3207765945.atom
+  487. [微信公众号] Datawhale (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3226363426.atom
+  488. [微信公众号] 极客公园 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_1304308441.atom
+  489. [微信公众号] AIGC开放社区 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3873892677.atom
+  490. [微信公众号] AI前线 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3554086560.atom
+  491. [微信公众号] AI科技评论 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3098132220.atom
+  492. [微信公众号] 脑极体 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3515522183.atom
+  493. [微信公众号] 硅星人Pro (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3926568365.atom
+  494. [微信公众号] 特工宇宙 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3621654047.atom
+  495. [微信公众号] 光子星球 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3082518302.atom
+  496. [微信公众号] CVer (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3516712416.atom
+  497. [微信公众号] Z Potentials (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3285810954.atom
+  498. [微信公众号] Z Finance (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3077513391.atom
+  499. [微信公众号] 晚点LatePost (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3572959446.atom
+  500. [微信公众号] InfoQ (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_2390142780.atom
+  501. [微信公众号] 机器之心 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3073282833.atom
+[INFO] Dry run finished. No API calls were made. Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260502_230534/report.md

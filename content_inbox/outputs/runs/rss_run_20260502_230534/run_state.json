@@ -1,0 +1,32 @@
+{
+  "status": "dry_run",
+  "started_at": "2026-05-02T15:05:34+00:00",
+  "updated_at": "2026-05-02T15:05:34+00:00",
+  "args": {
+    "api_base": "http://127.0.0.1:8787",
+    "csv": "/Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv",
+    "count": "50",
+    "all": true,
+    "max_sources": null,
+    "limit_per_source": 20,
+    "screen": true,
+    "sleep": 1.0,
+    "timeout": 180,
+    "inbox_limit": 100,
+    "url_mode": "docker-host",
+    "rsshub_service_name": "rsshub",
+    "dry_run": true,
+    "resume": false,
+    "skip_known_failed": false,
+    "max_consecutive_failures": 20
+  },
+  "url_mode": "docker-host",
+  "selected_count": 501,
+  "completed_count": 0,
+  "successful_count": 0,
+  "failed_count": 0,
+  "consecutive_failures": 0,
+  "completed_source_ids": [],
+  "successful_source_ids": [],
+  "notes": []
+}

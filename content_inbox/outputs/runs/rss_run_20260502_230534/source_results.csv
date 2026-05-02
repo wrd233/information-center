@@ -1,0 +1,1 @@
+source_id,sequence,source_name,source_category,local_xml_url,xml_url,feed_url,url_mode,screen,status,total_items,new_items,duplicate_items,screened_items,recommended_items_from_api_response,new_items_recommended,new_event_items,incremental_items,silent_items,failed_items,error_type,error_message

@@ -70,6 +70,10 @@ DEFAULT_CONFIG: dict[str, Any] = {
     },
     "notification": {
         "full_push_for_new_event": True,
+        "full_push_min_value_score": 4,
+        "full_push_min_personal_relevance": 3,
+        "incremental_push_min_value_score": 4,
+        "include_score_3_in_full_push": False,
         "incremental_push_when_has_new_info": True,
         "silent_duplicates": True,
         "include_silent_in_default_inbox": False,
@@ -119,4 +123,3 @@ def apply_env_overrides(config: dict[str, Any]) -> None:
     embedding["timeout_seconds"] = float(
         os.getenv("CONTENT_INBOX_EMBEDDING_TIMEOUT", str(embedding["timeout_seconds"]))
     )
-

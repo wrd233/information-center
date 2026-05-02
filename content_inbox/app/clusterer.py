@@ -60,7 +60,7 @@ def cluster_content(
             cluster_relation="new_event",
             max_similarity=best["similarity"] if best else None,
             entity_overlap_ratio=0.0,
-            notification_decision="full_push",
+            notification_decision=notification_for_new_event(screening),
             incremental_summary="",
             embedding_text=embedding_text,
             embedding_model=settings.embedding.get("model"),
@@ -142,7 +142,7 @@ def handle_incremental(
     embedding_text: str,
     overlap: float,
 ) -> ClusteringResult:
-    notification = "incremental_push"
+    notification = notification_for_incremental(screening)
     incremental_summary = ""
     updated_summary = None
     update_vector = vector_for_cluster_update(best, vector)
@@ -186,6 +186,34 @@ def handle_incremental(
     )
 
 
+def notification_for_new_event(screening: ScreeningResult) -> str:
+    if not settings.notification.get("full_push_for_new_event", True):
+        return "silent"
+    if not meets_full_push_threshold(screening):
+        return "silent"
+    return "full_push"
+
+
+def notification_for_incremental(screening: ScreeningResult) -> str:
+    if not settings.notification.get("incremental_push_when_has_new_info", True):
+        return "silent"
+    min_score = int(settings.notification.get("incremental_push_min_value_score", 4))
+    if screening.value_score < min_score:
+        return "silent"
+    return "incremental_push"
+
+
+def meets_full_push_threshold(screening: ScreeningResult) -> bool:
+    min_score = int(settings.notification.get("full_push_min_value_score", 4))
+    min_relevance = int(settings.notification.get("full_push_min_personal_relevance", 3))
+    include_score_3 = bool(settings.notification.get("include_score_3_in_full_push", False))
+
+    if screening.value_score < min_score:
+        if not include_score_3 or screening.value_score != 3:
+            return False
+    return screening.personal_relevance >= min_relevance
+
+
 def vector_for_cluster_update(best: dict, new_vector: list[float]) -> list[float] | None:
     strategy = settings.clustering.get("cluster_vector_strategy", "summary_embedding")
     if strategy == "representative_item":
@@ -218,4 +246,3 @@ def cosine_similarity(left: list[float], right: list[float]) -> float:
     if not left_norm or not right_norm:
         return 0.0
     return numerator / (left_norm * right_norm)
-

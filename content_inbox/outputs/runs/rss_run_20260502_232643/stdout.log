@@ -1,0 +1,179 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260502_232643
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 501
+[INFO] Selected sources: 20
+[INFO] Pending sources this invocation: 20
+[INFO] URL mode: docker-host
+[INFO] Screen enabled: True
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": true, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "screening_v1"}, "_status": 200}
+[RUN] 1/20 Hi, DIYgod
+       category:      Articles
+       local_xml_url: -
+       xml_url:       https://diygod.cc/feed
+       feed_url:      https://diygod.cc/feed
+       url_mode:      docker-host (xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=2, new_event_items=2, incremental_items=0, silent_items=1, failed_items=0, error_message=
+[RUN] 2/20 图书推荐 – 书伴
+       category:      SocialMedia
+       local_xml_url: http://127.0.0.1:1200/bookfere/books
+       xml_url:       https://macmini-rsshub.tail99ecfa.ts.net/bookfere/books
+       feed_url:      http://host.docker.internal:1200/bookfere/books
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=3, new_event_items=0, incremental_items=0, silent_items=3, failed_items=0, error_message=
+[RUN] 3/20 AI Foundations
+       category:      Videos
+       local_xml_url: -
+       xml_url:       https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g
+       feed_url:      https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g
+       url_mode:      docker-host (xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=3, new_event_items=3, incremental_items=0, silent_items=0, failed_items=0, error_message=
+[RUN] 4/20 Rolen's Blog
+       category:      个人博客-人生
+       local_xml_url: -
+       xml_url:       https://rolen.wiki/feed/
+       feed_url:      https://rolen.wiki/feed/
+       url_mode:      docker-host (xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=0, new_event_items=1, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 5/20 最新发布_共产党员网
+       category:      党政信息
+       local_xml_url: http://127.0.0.1:1200/12371/zxfb
+       xml_url:       https://macmini-rsshub.tail99ecfa.ts.net/12371/zxfb
+       feed_url:      http://host.docker.internal:1200/12371/zxfb
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=0, new_event_items=0, incremental_items=0, silent_items=3, failed_items=0, error_message=
+[RUN] 6/20 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台
+       category:      其他
+       local_xml_url: -
+       xml_url:       https://51cg1.com/feed/
+       feed_url:      https://51cg1.com/feed/
+       url_mode:      docker-host (xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=0, new_event_items=0, incremental_items=0, silent_items=3, failed_items=0, error_message=
+[RUN] 7/20 一觉醒来发生了什么 - 即刻圈子
+       category:      国内外资讯
+       local_xml_url: http://127.0.0.1:1200/jike/topic/553870e8e4b0cafb0a1bef68
+       xml_url:       https://macmini-rsshub.tail99ecfa.ts.net/jike/topic/553870e8e4b0cafb0a1bef68
+       feed_url:      http://host.docker.internal:1200/jike/topic/553870e8e4b0cafb0a1bef68
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=0, new_event_items=2, incremental_items=0, silent_items=1, failed_items=0, error_message=
+[RUN] 8/20 - 政府文件库
+       category:      国内政策
+       local_xml_url: http://127.0.0.1:1200/gov/zhengce/zhengceku/bmwj
+       xml_url:       https://macmini-rsshub.tail99ecfa.ts.net/gov/zhengce/zhengceku/bmwj
+       feed_url:      http://host.docker.internal:1200/gov/zhengce/zhengceku/bmwj
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=0, new_event_items=0, incremental_items=0, silent_items=3, failed_items=0, error_message=
+[RUN] 9/20 猴猴说话
+       category:      微信公众号
+       local_xml_url: http://127.0.0.1:8003/feed/MP_WXS_3279284299.atom
+       xml_url:       http://192.168.1.6:8003/feed/MP_WXS_3279284299.atom
+       feed_url:      http://host.docker.internal:8003/feed/MP_WXS_3279284299.atom
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=0, new_event_items=1, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 10/20 小宇宙 Podcast 643928f99361a4e7c38a9555
+       category:      播客
+       local_xml_url: http://127.0.0.1:1200/xiaoyuzhou/podcast/643928f99361a4e7c38a9555
+       xml_url:       https://macmini-rsshub.tail99ecfa.ts.net/xiaoyuzhou/podcast/643928f99361a4e7c38a9555
+       feed_url:      http://host.docker.internal:1200/xiaoyuzhou/podcast/643928f99361a4e7c38a9555
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=3, new_event_items=3, incremental_items=0, silent_items=0, failed_items=0, error_message=
+[RUN] 11/20 波士顿圆脸
+       category:      最娱乐
+       local_xml_url: http://127.0.0.1:1200/bilibili/user/video/346563107
+       xml_url:       https://macmini-rsshub.tail99ecfa.ts.net/bilibili/user/video/346563107
+       feed_url:      http://host.docker.internal:1200/bilibili/user/video/346563107
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=0, new_event_items=0, incremental_items=0, silent_items=3, failed_items=0, error_message=
+[RUN] 12/20 飞鸟手札
+       category:      短知识
+       local_xml_url: http://127.0.0.1:1200/bilibili/user/video/1366786686
+       xml_url:       https://macmini-rsshub.tail99ecfa.ts.net/bilibili/user/video/1366786686
+       feed_url:      http://host.docker.internal:1200/bilibili/user/video/1366786686
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=1, new_event_items=3, incremental_items=0, silent_items=0, failed_items=0, error_message=
+[RUN] 13/20 Vista看天下
+       category:      社评
+       local_xml_url: -
+       xml_url:       https://plink.anyfeeder.com/weixin/vistaweek
+       feed_url:      https://plink.anyfeeder.com/weixin/vistaweek
+       url_mode:      docker-host (xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=1, new_event_items=1, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 14/20 小众软件
+       category:      科技与编程
+       local_xml_url: -
+       xml_url:       https://www.appinn.com/feed/
+       feed_url:      https://www.appinn.com/feed/
+       url_mode:      docker-host (xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=1, new_event_items=1, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 15/20 猫眼看足球
+       category:      绝活娱乐
+       local_xml_url: http://127.0.0.1:1200/bilibili/user/video/456249922
+       xml_url:       https://macmini-rsshub.tail99ecfa.ts.net/bilibili/user/video/456249922
+       feed_url:      http://host.docker.internal:1200/bilibili/user/video/456249922
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=0, new_event_items=0, incremental_items=0, silent_items=3, failed_items=0, error_message=
+[RUN] 16/20 simonwillison.net
+       category:      英文博客
+       local_xml_url: -
+       xml_url:       https://simonwillison.net/atom/everything/
+       feed_url:      https://simonwillison.net/atom/everything/
+       url_mode:      docker-host (xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=3, new_event_items=3, incremental_items=0, silent_items=0, failed_items=0, error_message=
+[RUN] 17/20 你不知道的行业内幕 - 即刻圈子
+       category:      资讯
+       local_xml_url: http://127.0.0.1:1200/jike/topic/5699f451d3e8351200bffdc8
+       xml_url:       https://macmini-rsshub.tail99ecfa.ts.net/jike/topic/5699f451d3e8351200bffdc8
+       feed_url:      http://host.docker.internal:1200/jike/topic/5699f451d3e8351200bffdc8
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=1, new_event_items=0, incremental_items=0, silent_items=3, failed_items=0, error_message=
+[RUN] 18/20 AliAbdaal
+       category:      长知识
+       local_xml_url: http://127.0.0.1:1200/bilibili/user/video/3546581580122806
+       xml_url:       https://macmini-rsshub.tail99ecfa.ts.net/bilibili/user/video/3546581580122806
+       feed_url:      http://host.docker.internal:1200/bilibili/user/video/3546581580122806
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=0, new_event_items=1, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 19/20 少数派
+       category:      优质信息源
+       local_xml_url: http://127.0.0.1:1200/sspai/index
+       xml_url:       https://macmini-rsshub.tail99ecfa.ts.net/sspai/index
+       feed_url:      http://host.docker.internal:1200/sspai/index
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=0, new_event_items=0, incremental_items=0, silent_items=3, failed_items=0, error_message=
+[RUN] 20/20 每日一图-北京天文馆
+       category:      星空
+       local_xml_url: http://127.0.0.1:1200/bjp/apod
+       xml_url:       https://macmini-rsshub.tail99ecfa.ts.net/bjp/apod
+       feed_url:      http://host.docker.internal:1200/bjp/apod
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=3, new_items=0, duplicate_items=3, screened_items=0, recommended_items=0, new_event_items=0, incremental_items=0, silent_items=3, failed_items=0, error_message=
+
+[SUMMARY]
+Processed sources: 20
+Successful sources: 20
+Failed sources: 0
+Skipped known failed sources: 0
+New items: 0
+Recommended items from API responses: 18
+Final inbox items from this run: 0
+Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260502_232643/report.md
+Run state path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260502_232643/run_state.json

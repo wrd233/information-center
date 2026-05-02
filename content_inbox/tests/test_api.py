@@ -166,3 +166,41 @@ def test_cluster_content_creates_new_event(tmp_path: Path, monkeypatch) -> None:
     assert clustering.notification_decision == "full_push"
     assert clustering.cluster_id
     assert clustering.embedding_text
+
+
+def test_cluster_content_new_event_score_three_defaults_to_silent(tmp_path: Path, monkeypatch) -> None:
+    store = InboxStore(tmp_path / "cluster_score3.sqlite3")
+    normalized = NormalizedContent(
+        title="普通但相关的新事件",
+        source_name="Test",
+        source_category="Articles/AI",
+        content_type="article",
+        summary="这是一个分数为 3 的新事件。",
+    )
+    screening = ScreeningResult(
+        summary="这是一个分数为 3 的新事件。",
+        category="AI工具",
+        value_score=3,
+        personal_relevance=3,
+        novelty_score=3,
+        source_quality=3,
+        actionability=3,
+        hidden_signals=[],
+        entities=["Example"],
+        event_hint="一个分数为3的新事件",
+        suggested_action="skim",
+        followup_type="none",
+        reason="中等价值",
+        tags=["Example"],
+        confidence=0.9,
+        screening_method="ai",
+        screening_status="ok",
+    )
+    inserted = store.insert("dedupe:test:score3", normalized, screening)
+    monkeypatch.setattr("app.clusterer.embed_text", lambda text: [0.1, 0.2, 0.3])
+    monkeypatch.setattr(store, "search_active_clusters", lambda vector, top_k: [])
+
+    clustering = cluster_content(store, inserted["item_id"], normalized, screening)
+
+    assert clustering.cluster_relation == "new_event"
+    assert clustering.notification_decision == "silent"

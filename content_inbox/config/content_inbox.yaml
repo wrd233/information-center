@@ -58,6 +58,10 @@ clustering:
 
 notification:
   full_push_for_new_event: true
+  full_push_min_value_score: 4
+  full_push_min_personal_relevance: 3
+  incremental_push_min_value_score: 4
+  include_score_3_in_full_push: false
   incremental_push_when_has_new_info: true
   silent_duplicates: true
   include_silent_in_default_inbox: false
