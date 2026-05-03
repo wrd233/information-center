@@ -101,6 +101,42 @@ curl -s http://127.0.0.1:8787/api/rss/analyze-batch \
 curl -s 'http://127.0.0.1:8787/api/inbox?min_score=3&suggested_action=read,save&limit=20'
 ```
 
+## 性能 Profiling
+
+通过 `CONTENT_INBOX_PROFILE=1` 环境变量或 `--profile` 脚本标志启用逐源耗时记录。启用后 `source_results.csv` 会额外记录每个源各阶段的墙钟时间。
+
+**开启方式：**
+
+```bash
+# 方式1: 服务端环境变量（所有请求自动记录）
+CONTENT_INBOX_PROFILE=1 PYTHONPATH=. python3 -m app.server
+
+# 方式2: 脚本 --profile 标志（通过 API payload 传递）
+python3 scripts/run_rss_sources_to_content_inbox.py --all --profile ...
+```
+
+**记录的字段（`source_results.csv` 新增列）：**
+
+| 字段 | 说明 |
+|------|------|
+| `fetch_feed_seconds` | RSS/Atom 源抓取耗时 |
+| `llm_basic_screening_seconds` | 粗筛 LLM 调用耗时（basic_screening） |
+| `llm_need_matching_seconds` | 需求匹配 LLM 调用耗时（need_matching） |
+| `embedding_seconds` | 文本向量化 API 调用耗时 |
+| `lock_wait_seconds` | 等待全局内容处理锁的时间（串行化程度指标） |
+| `lock_held_seconds` | 持有全局锁的时间（锁内实际处理耗时） |
+| `source_total_seconds` | 单个 RSS 源从抓取到完成的总墙钟时间 |
+
+**API 单次调用也可开启（profile 字段）：**
+
+```bash
+curl -s http://127.0.0.1:8787/api/rss/analyze \
+  -H 'content-type: application/json' \
+  -d '{"feed_url":"https://example.com/feed.xml","limit":5,"screen":true,"profile":true}'
+```
+
+响应中会额外包含 `"profile": {...}` 字典。
+
 ## DeepSeek 配置
 
 默认使用 DeepSeek 的 OpenAI-compatible Chat Completions API。`screen=true` 必须配置 API key；没有 key 时接口会返回错误，不做本地粗筛。

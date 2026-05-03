@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import threading
+import time
 from typing import Any
 
 from app.config import settings
 from app.clusterer import cluster_content
 from app.models import ClusteringResult, ContentAnalyzeRequest, NormalizedContent, ProcessResult
+from app.profiler import profiler
 from app.screener import screen_content
 from app.storage import InboxStore
 from app.utils import clean_text, normalize_url, stable_hash, truncate
@@ -95,5 +97,11 @@ def process_content(
 def process_content_thread_safe(
     store: InboxStore, payload: ContentAnalyzeRequest, raw: dict[str, Any] | None = None
 ) -> ProcessResult:
+    t_wait = time.monotonic()
     with CONTENT_STATE_LOCK:
-        return process_content(store, payload, raw=raw)
+        t_acquired = time.monotonic()
+        result = process_content(store, payload, raw=raw)
+        t_done = time.monotonic()
+        profiler.record("lock_wait_seconds", t_acquired - t_wait)
+        profiler.record("lock_held_seconds", t_done - t_acquired)
+        return result

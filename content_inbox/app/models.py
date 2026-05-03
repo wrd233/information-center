@@ -28,6 +28,7 @@ class RSSAnalyzeRequest(BaseModel):
     source_category: str | None = None
     limit: int | None = Field(default=20, ge=1, le=200)
     screen: bool = True
+    profile: bool = False
 
 
 class RSSSourceSpec(BaseModel):

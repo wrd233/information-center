@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import time
 from datetime import datetime
 from typing import Any
 
 from app.models import ContentAnalyzeRequest, RSSAnalyzeRequest
 from app.processor import process_content_thread_safe
+from app.profiler import profiler
 from app.rss import parse_feed
 from app.storage import InboxStore
 
@@ -31,6 +33,10 @@ def analyze_one_rss_source(
     include_items: bool = True,
     preserve_source_entry_order: bool = True,
 ) -> dict[str, Any]:
+    t_source = time.monotonic()
+    if payload.profile:
+        profiler.enable_for_request()
+    profiler.reset()
     meta, entries = parse_feed(
         payload.feed_url,
         source_name=payload.source_name,
@@ -93,6 +99,10 @@ def analyze_one_rss_source(
     }
     if include_items:
         response["items"] = item_results
+    source_total = time.monotonic() - t_source
+    profiler.record("source_total_seconds", source_total)
+    if profiler.enabled:
+        response["profile"] = profiler.collect()
     return response
 
 

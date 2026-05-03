@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+import time
 import urllib.error
 import urllib.request
 
 from app.config import settings
+from app.profiler import profiler
 from app.utils import truncate
 
 
@@ -32,6 +34,7 @@ def embed_text(text: str) -> list[float]:
         },
         method="POST",
     )
+    t0 = time.monotonic()
     try:
         with urllib.request.urlopen(
             req, timeout=float(settings.embedding.get("timeout_seconds", 60))
@@ -46,4 +49,5 @@ def embed_text(text: str) -> list[float]:
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace")
         raise RuntimeError(f"embedding API returned {exc.code}: {detail}") from exc
+    profiler.record("embedding_seconds", time.monotonic() - t0)
     return [float(value) for value in payload["data"][0]["embedding"]]

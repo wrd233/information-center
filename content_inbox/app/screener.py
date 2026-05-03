@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+import time
 import urllib.error
 import urllib.request
 from typing import Any
 
 from app.config import settings
 from app.models import NormalizedContent, ScreeningResult
+from app.profiler import profiler
 from app.utils import truncate
 
 
@@ -33,6 +35,7 @@ def ai_screen(content: NormalizedContent) -> ScreeningResult:
         int(settings.screening.get("max_input_chars", 4000)),
     )
 
+    t0 = time.monotonic()
     basic_contract = prompt_output_contract("basic_screening")
     basic_input = {
         "content": content_payload,
@@ -45,7 +48,9 @@ def ai_screen(content: NormalizedContent) -> ScreeningResult:
         temperature=settings.llm.get("temperature", 0.2),
         max_tokens=settings.llm.get("max_tokens", 1200),
     )
+    profiler.record("llm_basic_screening_seconds", time.monotonic() - t0)
 
+    t1 = time.monotonic()
     matching_input = {
         "content": content_payload,
         "basic_screening": basic_data,
@@ -59,6 +64,7 @@ def ai_screen(content: NormalizedContent) -> ScreeningResult:
         temperature=settings.llm.get("temperature", 0.2),
         max_tokens=settings.llm.get("max_tokens", 1200),
     )
+    profiler.record("llm_need_matching_seconds", time.monotonic() - t1)
 
     basic_raw = basic_data.pop("_raw_response", None)
     matching_raw = matching_data.pop("_raw_response", None)

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import time
 from email.utils import parsedate_to_datetime
 from typing import Any
 import urllib.request
@@ -8,6 +9,7 @@ import feedparser
 
 from app.config import settings
 from app.models import ContentAnalyzeRequest
+from app.profiler import profiler
 from app.utils import clean_text
 
 
@@ -19,8 +21,11 @@ def fetch_feed(feed_url: str) -> bytes:
             "accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*",
         },
     )
+    t0 = time.monotonic()
     with urllib.request.urlopen(req, timeout=settings.request_timeout_seconds) as response:
-        return response.read()
+        raw = response.read()
+    profiler.record("fetch_feed_seconds", time.monotonic() - t0)
+    return raw
 
 
 def parse_feed(

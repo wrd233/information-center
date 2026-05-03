@@ -333,6 +333,7 @@ def analyze_rss_source(
     screen: bool,
     timeout: int,
     api_key: Optional[str],
+    profile: bool = False,
 ) -> Dict[str, Any]:
     payload = {
         "feed_url": feed_url,
@@ -341,6 +342,8 @@ def analyze_rss_source(
         "limit": limit_per_source,
         "screen": screen,
     }
+    if profile:
+        payload["profile"] = True
     return request_json("POST", f"{api_base.rstrip('/')}/api/rss/analyze", payload=payload, timeout=timeout, api_key=api_key)
 
 
@@ -353,6 +356,7 @@ def run_one_plan(plan: SourcePlan, args: argparse.Namespace, api_key: Optional[s
         screen=plan.screen,
         timeout=args.timeout,
         api_key=api_key,
+        profile=args.profile,
     )
     return summarize_result_for_source(plan, response)
 
@@ -558,6 +562,17 @@ def summarize_result_for_source(plan: SourcePlan, response: Dict[str, Any]) -> D
     status_code = response.get("_status")
     failed_by_http = status_code is not None and int(status_code) >= 400
 
+    profile = response.get("profile") or {}
+    profile_fields = {
+        "fetch_feed_seconds": profile.get("fetch_feed_seconds", ""),
+        "llm_basic_screening_seconds": profile.get("llm_basic_screening_seconds", ""),
+        "llm_need_matching_seconds": profile.get("llm_need_matching_seconds", ""),
+        "embedding_seconds": profile.get("embedding_seconds", ""),
+        "lock_wait_seconds": profile.get("lock_wait_seconds", ""),
+        "lock_held_seconds": profile.get("lock_held_seconds", ""),
+        "source_total_seconds": profile.get("source_total_seconds", ""),
+    }
+
     base = {
         "source_id": plan.source_id,
         "sequence": plan.sequence,
@@ -568,6 +583,7 @@ def summarize_result_for_source(plan: SourcePlan, response: Dict[str, Any]) -> D
         "feed_url": plan.feed_url,
         "url_mode": plan.url_mode,
         "screen": plan.screen,
+        **profile_fields,
     }
 
     if ok is False or failed_by_http:
@@ -632,6 +648,13 @@ def results_csv_headers() -> List[str]:
         "failed_items",
         "error_type",
         "error_message",
+        "fetch_feed_seconds",
+        "llm_basic_screening_seconds",
+        "llm_need_matching_seconds",
+        "embedding_seconds",
+        "lock_wait_seconds",
+        "lock_held_seconds",
+        "source_total_seconds",
     ]
 
 
@@ -1028,6 +1051,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-sources", type=int, default=None, help="Maximum number of selected sources to process.")
     parser.add_argument("--limit-per-source", type=int, default=20, help="Item limit for each RSS source.")
     parser.add_argument("--screen", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--profile", action="store_true", help="Enable per-source profiling in source_results.csv.")
     parser.add_argument("--sleep", type=float, default=1.0, help="Sleep seconds between sources.")
     parser.add_argument(
         "--concurrency",
