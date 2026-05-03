@@ -72,6 +72,29 @@ curl -s http://127.0.0.1:8787/api/rss/analyze \
   -d '{"feed_url":"https://example.com/feed.xml","limit":5,"screen":true}'
 ```
 
+批量分析 RSS：
+
+```bash
+curl -s http://127.0.0.1:8787/api/rss/analyze-batch \
+  -H 'content-type: application/json' \
+  -d '{
+    "sources":[
+      {"source_id":"s1","feed_url":"https://example.com/feed1.xml","source_name":"source 1"},
+      {"source_id":"s2","feed_url":"https://example.com/feed2.xml","source_name":"source 2"}
+    ],
+    "limit_per_source":5,
+    "screen":true,
+    "max_concurrent_sources":3
+  }'
+```
+
+说明：
+
+- 并发粒度是 RSS 源，不是条目。
+- 同一个 RSS 源内部条目仍然顺序处理。
+- `max_concurrent_sources` 默认是 `3`。
+- 建议本地测试先从 `2` 或 `3` 开始。
+
 查询 inbox：
 
 ```bash

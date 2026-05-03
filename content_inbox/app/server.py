@@ -6,10 +6,11 @@ from typing import Annotated, Any
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 
+from app.batch_runner import RSSBatchRunner
 from app.config import settings
-from app.models import ContentAnalyzeRequest, RSSAnalyzeRequest
-from app.processor import process_content
-from app.rss import parse_feed
+from app.models import ContentAnalyzeRequest, RSSAnalyzeRequest, RSSBatchAnalyzeRequest
+from app.processor import process_content_thread_safe
+from app.rss_runner import analyze_one_rss_source
 from app.storage import InboxStore
 
 
@@ -41,7 +42,7 @@ def health() -> dict[str, Any]:
 def analyze_content(
     payload: ContentAnalyzeRequest, inbox_store: Annotated[InboxStore, Depends(get_store)]
 ) -> dict[str, Any]:
-    result = process_content(inbox_store, payload, raw=payload.model_dump())
+    result = process_content_thread_safe(inbox_store, payload, raw=payload.model_dump())
     return {"ok": True, **result.model_dump()}
 
 
@@ -50,64 +51,21 @@ def analyze_rss(
     payload: RSSAnalyzeRequest, inbox_store: Annotated[InboxStore, Depends(get_store)]
 ) -> dict[str, Any]:
     try:
-        meta, entries = parse_feed(
-            payload.feed_url,
-            source_name=payload.source_name,
-            source_category=payload.source_category,
-            limit=payload.limit,
+        return analyze_one_rss_source(
+            inbox_store,
+            payload,
+            include_items=True,
+            preserve_source_entry_order=True,
         )
     except Exception as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
-    total = len(entries)
-    new_items = 0
-    duplicate_items = 0
-    screened_items = 0
-    recommended_items = 0
-    new_event_items = 0
-    incremental_items = 0
-    silent_items = 0
-    failed_items = 0
-    item_results = []
-
-    for entry in entries:
-        try:
-            entry.screen = payload.screen
-            result = process_content(inbox_store, entry, raw=entry.model_dump())
-            item_results.append(result.model_dump())
-            if result.is_duplicate:
-                duplicate_items += 1
-            else:
-                new_items += 1
-                if payload.screen:
-                    screened_items += 1
-            if result.screening.suggested_action in {"read", "save", "transcribe", "review"}:
-                recommended_items += 1
-            if result.cluster_relation == "new_event":
-                new_event_items += 1
-            if result.cluster_relation == "incremental_update":
-                incremental_items += 1
-            if result.notification_decision == "silent":
-                silent_items += 1
-        except Exception as exc:
-            failed_items += 1
-            item_results.append({"ok": False, "error": str(exc), "title": entry.title})
-
-    return {
-        "ok": failed_items == 0,
-        "feed_url": payload.feed_url,
-        "source_name": meta["source_name"],
-        "total_items": total,
-        "new_items": new_items,
-        "duplicate_items": duplicate_items,
-        "screened_items": screened_items,
-        "new_event_items": new_event_items,
-        "incremental_items": incremental_items,
-        "silent_items": silent_items,
-        "recommended_items": recommended_items,
-        "failed_items": failed_items,
-        "items": item_results,
-    }
+@app.post("/api/rss/analyze-batch")
+def analyze_rss_batch(
+    payload: RSSBatchAnalyzeRequest, inbox_store: Annotated[InboxStore, Depends(get_store)]
+) -> dict[str, Any]:
+    runner = RSSBatchRunner(inbox_store)
+    return runner.run(payload)
 
 
 @app.get("/api/inbox")

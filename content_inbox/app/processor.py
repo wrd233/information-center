@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import threading
 from typing import Any
 
 from app.config import settings
@@ -8,6 +9,8 @@ from app.models import ClusteringResult, ContentAnalyzeRequest, NormalizedConten
 from app.screener import screen_content
 from app.storage import InboxStore
 from app.utils import clean_text, normalize_url, stable_hash, truncate
+
+CONTENT_STATE_LOCK = threading.RLock()
 
 
 def normalize_content(payload: ContentAnalyzeRequest) -> NormalizedContent:
@@ -87,3 +90,10 @@ def process_content(
         cluster_relation=clustering.cluster_relation,
         incremental_summary=clustering.incremental_summary,
     )
+
+
+def process_content_thread_safe(
+    store: InboxStore, payload: ContentAnalyzeRequest, raw: dict[str, Any] | None = None
+) -> ProcessResult:
+    with CONTENT_STATE_LOCK:
+        return process_content(store, payload, raw=raw)

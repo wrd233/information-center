@@ -1,13 +1,16 @@
 from __future__ import annotations
 
+import threading
+import time
 from pathlib import Path
 
 from fastapi.testclient import TestClient
 
 from app.config import settings
 from app.clusterer import cluster_content
-from app.models import NormalizedContent, ScreeningResult
+from app.models import ContentAnalyzeRequest, NormalizedContent, ProcessResult, ScreeningResult
 from app.screener import apply_score_policy
+from app.rss_runner import sort_entries_for_processing
 from app.server import app, get_store
 from app.storage import InboxStore
 
@@ -67,6 +70,318 @@ def test_rss_analyze_and_query_inbox(tmp_path: Path) -> None:
     assert inbox_body["ok"] is True
     assert len(inbox_body["items"]) == 2
     assert inbox_body["items"][0]["screening"]["suggested_action"] == "review"
+
+
+def test_rss_analyze_batch_processes_multiple_sources(tmp_path: Path, monkeypatch) -> None:
+    client = make_client(tmp_path)
+
+    def fake_parse_feed(feed_url: str, source_name: str | None = None, **_: object):
+        entries = [
+            ContentAnalyzeRequest(
+                url=f"{feed_url}/1",
+                title=f"{feed_url}-1",
+                source_name=source_name or feed_url,
+                summary="summary",
+                published_at="2024-01-01T00:00:00+00:00",
+                screen=False,
+            ),
+            ContentAnalyzeRequest(
+                url=f"{feed_url}/2",
+                title=f"{feed_url}-2",
+                source_name=source_name or feed_url,
+                summary="summary",
+                published_at="2024-01-02T00:00:00+00:00",
+                screen=False,
+            ),
+        ]
+        return {"source_name": source_name or feed_url}, entries
+
+    monkeypatch.setattr("app.rss_runner.parse_feed", fake_parse_feed)
+
+    response = client.post(
+        "/api/rss/analyze-batch",
+        json={
+            "sources": [
+                {"source_id": "s1", "feed_url": "feed-a", "source_name": "A"},
+                {"source_id": "s2", "feed_url": "feed-b", "source_name": "B"},
+            ],
+            "limit_per_source": 2,
+            "screen": False,
+            "max_concurrent_sources": 2,
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["total_sources"] == 2
+    assert body["successful_sources"] == 2
+    assert body["failed_sources"] == 0
+    assert body["partial_failed_sources"] == 0
+    assert body["total_items"] == 4
+    assert body["new_items"] == 4
+    assert [item["source_id"] for item in body["source_results"]] == ["s1", "s2"]
+    assert [item["feed_url"] for item in body["source_results"]] == ["feed-a", "feed-b"]
+
+
+def test_rss_batch_honors_max_concurrent_sources_serial(tmp_path: Path, monkeypatch) -> None:
+    client = make_client(tmp_path)
+    active = 0
+    max_active = 0
+    lock = threading.Lock()
+
+    def fake_parse_feed(feed_url: str, source_name: str | None = None, **_: object):
+        return {"source_name": source_name or feed_url}, [
+            ContentAnalyzeRequest(
+                url=f"{feed_url}/1",
+                title=feed_url,
+                source_name=source_name or feed_url,
+                summary="summary",
+                published_at="2024-01-01T00:00:00+00:00",
+                screen=False,
+            )
+        ]
+
+    def fake_process(store: InboxStore, payload: ContentAnalyzeRequest, raw: dict | None = None):
+        nonlocal active, max_active
+        with lock:
+            active += 1
+            max_active = max(max_active, active)
+        time.sleep(0.05)
+        with lock:
+            active -= 1
+        return make_process_result(payload)
+
+    monkeypatch.setattr("app.rss_runner.parse_feed", fake_parse_feed)
+    monkeypatch.setattr("app.rss_runner.process_content_thread_safe", fake_process)
+
+    response = client.post(
+        "/api/rss/analyze-batch",
+        json={
+            "sources": [
+                {"source_id": "s1", "feed_url": "feed-a"},
+                {"source_id": "s2", "feed_url": "feed-b"},
+                {"source_id": "s3", "feed_url": "feed-c"},
+            ],
+            "screen": False,
+            "max_concurrent_sources": 1,
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["successful_sources"] == 3
+    assert max_active == 1
+
+
+def test_rss_batch_runs_sources_concurrently(tmp_path: Path, monkeypatch) -> None:
+    client = make_client(tmp_path)
+    active = 0
+    max_active = 0
+    lock = threading.Lock()
+
+    def fake_parse_feed(feed_url: str, source_name: str | None = None, **_: object):
+        return {"source_name": source_name or feed_url}, [
+            ContentAnalyzeRequest(
+                url=f"{feed_url}/1",
+                title=feed_url,
+                source_name=source_name or feed_url,
+                summary="summary",
+                published_at="2024-01-01T00:00:00+00:00",
+                screen=False,
+            )
+        ]
+
+    def fake_process(store: InboxStore, payload: ContentAnalyzeRequest, raw: dict | None = None):
+        nonlocal active, max_active
+        with lock:
+            active += 1
+            max_active = max(max_active, active)
+        time.sleep(0.05)
+        with lock:
+            active -= 1
+        return make_process_result(payload)
+
+    monkeypatch.setattr("app.rss_runner.parse_feed", fake_parse_feed)
+    monkeypatch.setattr("app.rss_runner.process_content_thread_safe", fake_process)
+
+    response = client.post(
+        "/api/rss/analyze-batch",
+        json={
+            "sources": [
+                {"source_id": "s1", "feed_url": "feed-a"},
+                {"source_id": "s2", "feed_url": "feed-b"},
+                {"source_id": "s3", "feed_url": "feed-c"},
+            ],
+            "screen": False,
+            "max_concurrent_sources": 3,
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["successful_sources"] == 3
+    assert max_active >= 2
+
+
+def test_sort_entries_for_processing_orders_dated_entries_and_keeps_undated_stable() -> None:
+    entries = [
+        ContentAnalyzeRequest(title="new", summary="1", published_at="2024-01-03T00:00:00+00:00"),
+        ContentAnalyzeRequest(title="undated-a", summary="2"),
+        ContentAnalyzeRequest(title="old", summary="3", published_at="2024-01-01T00:00:00+00:00"),
+        ContentAnalyzeRequest(title="undated-b", summary="4"),
+    ]
+
+    ordered = sort_entries_for_processing(entries)
+
+    assert [entry.title for entry in ordered] == ["old", "new", "undated-a", "undated-b"]
+
+
+def test_rss_batch_source_failure_does_not_block_other_sources(tmp_path: Path, monkeypatch) -> None:
+    client = make_client(tmp_path)
+
+    def fake_parse_feed(feed_url: str, source_name: str | None = None, **_: object):
+        if feed_url == "bad-feed":
+            raise ValueError("boom")
+        return {"source_name": source_name or feed_url}, [
+            ContentAnalyzeRequest(
+                url=f"{feed_url}/1",
+                title=feed_url,
+                source_name=source_name or feed_url,
+                summary="summary",
+                published_at="2024-01-01T00:00:00+00:00",
+                screen=False,
+            )
+        ]
+
+    monkeypatch.setattr("app.rss_runner.parse_feed", fake_parse_feed)
+
+    response = client.post(
+        "/api/rss/analyze-batch",
+        json={
+            "sources": [
+                {"source_id": "bad", "feed_url": "bad-feed"},
+                {"source_id": "good", "feed_url": "good-feed"},
+            ],
+            "screen": False,
+            "max_concurrent_sources": 2,
+        },
+    )
+
+    body = response.json()
+    assert response.status_code == 200
+    assert body["failed_sources"] == 1
+    assert body["successful_sources"] == 1
+    assert body["source_results"][0]["source_id"] == "bad"
+    assert body["source_results"][0]["error"] == "boom"
+    assert body["source_results"][1]["source_id"] == "good"
+    assert body["source_results"][1]["new_items"] == 1
+
+
+def test_rss_analyze_entry_failure_does_not_stop_later_entries(tmp_path: Path, monkeypatch) -> None:
+    client = make_client(tmp_path)
+    seen_titles: list[str] = []
+
+    def fake_parse_feed(feed_url: str, source_name: str | None = None, **_: object):
+        return {"source_name": source_name or feed_url}, [
+            ContentAnalyzeRequest(title="first", summary="1", source_name="src", screen=False),
+            ContentAnalyzeRequest(title="second", summary="2", source_name="src", screen=False),
+        ]
+
+    def fake_process(store: InboxStore, payload: ContentAnalyzeRequest, raw: dict | None = None):
+        seen_titles.append(payload.title or "")
+        if payload.title == "first":
+            raise RuntimeError("first failed")
+        return make_process_result(payload)
+
+    monkeypatch.setattr("app.rss_runner.parse_feed", fake_parse_feed)
+    monkeypatch.setattr("app.rss_runner.process_content_thread_safe", fake_process)
+
+    response = client.post(
+        "/api/rss/analyze",
+        json={"feed_url": "feed-a", "screen": False},
+    )
+
+    body = response.json()
+    assert response.status_code == 200
+    assert body["ok"] is False
+    assert body["failed_items"] == 1
+    assert body["new_items"] == 1
+    assert seen_titles == ["first", "second"]
+
+
+def test_rss_batch_preserves_input_source_order(tmp_path: Path, monkeypatch) -> None:
+    client = make_client(tmp_path)
+
+    def fake_parse_feed(feed_url: str, source_name: str | None = None, **_: object):
+        if feed_url == "feed-a":
+            time.sleep(0.05)
+        return {"source_name": source_name or feed_url}, [
+            ContentAnalyzeRequest(
+                url=f"{feed_url}/1",
+                title=feed_url,
+                source_name=source_name or feed_url,
+                summary="summary",
+                published_at="2024-01-01T00:00:00+00:00",
+                screen=False,
+            )
+        ]
+
+    monkeypatch.setattr("app.rss_runner.parse_feed", fake_parse_feed)
+
+    response = client.post(
+        "/api/rss/analyze-batch",
+        json={
+            "sources": [
+                {"source_id": "first", "feed_url": "feed-a"},
+                {"source_id": "second", "feed_url": "feed-b"},
+            ],
+            "screen": False,
+            "max_concurrent_sources": 2,
+        },
+    )
+
+    assert response.status_code == 200
+    assert [result["source_id"] for result in response.json()["source_results"]] == [
+        "first",
+        "second",
+    ]
+
+
+def test_rss_batch_duplicate_urls_do_not_raise_unique_constraint(tmp_path: Path, monkeypatch) -> None:
+    client = make_client(tmp_path)
+
+    def fake_parse_feed(feed_url: str, source_name: str | None = None, **_: object):
+        return {"source_name": source_name or feed_url}, [
+            ContentAnalyzeRequest(
+                url="https://example.com/shared",
+                title=f"{feed_url}-title",
+                source_name=source_name or feed_url,
+                summary="summary",
+                published_at="2024-01-01T00:00:00+00:00",
+                screen=False,
+            )
+        ]
+
+    monkeypatch.setattr("app.rss_runner.parse_feed", fake_parse_feed)
+
+    response = client.post(
+        "/api/rss/analyze-batch",
+        json={
+            "sources": [
+                {"source_id": "s1", "feed_url": "feed-a"},
+                {"source_id": "s2", "feed_url": "feed-b"},
+            ],
+            "screen": False,
+            "max_concurrent_sources": 2,
+        },
+    )
+
+    body = response.json()
+    assert response.status_code == 200
+    assert body["failed_sources"] == 0
+    assert body["partial_failed_sources"] == 0
+    assert body["new_items"] == 1
+    assert body["duplicate_items"] == 1
+    assert all("UNIQUE constraint failed" not in str(item) for item in body["source_results"])
 
 
 def test_screen_true_without_key_is_saved_for_manual_review(tmp_path: Path) -> None:
@@ -204,3 +519,41 @@ def test_cluster_content_new_event_score_three_defaults_to_silent(tmp_path: Path
 
     assert clustering.cluster_relation == "new_event"
     assert clustering.notification_decision == "silent"
+
+
+def make_process_result(payload: ContentAnalyzeRequest) -> ProcessResult:
+    normalized = NormalizedContent(
+        title=payload.title or payload.url or "Untitled",
+        url=payload.url,
+        source_name=payload.source_name or "Unknown",
+        source_category=payload.source_category,
+        content_type=payload.content_type or "unknown",
+        published_at=payload.published_at,
+        author=payload.author,
+        summary=payload.summary,
+        content_text=payload.content_text,
+        guid=payload.guid,
+    )
+    screening = ScreeningResult(
+        summary=payload.summary or payload.title or "summary",
+        category="其他",
+        value_score=3,
+        personal_relevance=3,
+        novelty_score=3,
+        source_quality=3,
+        actionability=3,
+        suggested_action="review",
+        followup_type="manual_review",
+        reason="test",
+        screening_method="none",
+        screening_status="ok",
+    )
+    return ProcessResult(
+        item_id=f"item-{payload.title or payload.url or 'x'}",
+        is_duplicate=False,
+        normalized=normalized,
+        screening=screening,
+        notification_decision="silent",
+        cluster_relation="disabled",
+        incremental_summary="",
+    )

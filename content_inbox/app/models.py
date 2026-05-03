@@ -30,6 +30,24 @@ class RSSAnalyzeRequest(BaseModel):
     screen: bool = True
 
 
+class RSSSourceSpec(BaseModel):
+    feed_url: str
+    source_name: str | None = None
+    source_category: str | None = None
+    source_id: str | None = None
+    limit: int | None = Field(default=None, ge=1, le=200)
+    screen: bool | None = None
+
+
+class RSSBatchAnalyzeRequest(BaseModel):
+    sources: list[RSSSourceSpec]
+    limit_per_source: int | None = Field(default=20, ge=1, le=200)
+    screen: bool = True
+    max_concurrent_sources: int = Field(default=3, ge=1, le=5)
+    preserve_source_entry_order: bool = True
+    include_items: bool = True
+
+
 class ContentAnalyzeRequest(BaseModel):
     url: str | None = None
     title: str | None = None
