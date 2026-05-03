@@ -134,14 +134,117 @@ def process_content(
     )
 
 
+def _build_duplicate_result(updated: dict[str, Any]) -> ProcessResult:
+    clustering = updated.get("clustering") or ClusteringResult()
+    if isinstance(clustering, dict):
+        return ProcessResult(
+            item_id=updated["item_id"],
+            is_duplicate=True,
+            normalized=NormalizedContent(
+                title=updated["title"],
+                url=updated["url"],
+                source_name=updated["source_name"],
+                source_category=updated["source_category"],
+                content_type=updated["content_type"],
+                published_at=updated["published_at"],
+                author=updated["author"],
+                summary=updated["summary"],
+                content_text=updated["content_text"],
+                guid=updated["guid"],
+            ),
+            screening=updated["screening"],
+            clustering=clustering,
+            notification_decision=clustering.get("notification_decision", "manual_review"),
+            cluster_relation=clustering.get("cluster_relation", "disabled"),
+            incremental_summary=clustering.get("incremental_summary", ""),
+        )
+    return ProcessResult(
+        item_id=updated["item_id"],
+        is_duplicate=True,
+        normalized=NormalizedContent(
+            title=updated["title"],
+            url=updated["url"],
+            source_name=updated["source_name"],
+            source_category=updated["source_category"],
+            content_type=updated["content_type"],
+            published_at=updated["published_at"],
+            author=updated["author"],
+            summary=updated["summary"],
+            content_text=updated["content_text"],
+            guid=updated["guid"],
+        ),
+        screening=updated["screening"],
+        clustering=clustering,
+        notification_decision=clustering.notification_decision,
+        cluster_relation=clustering.cluster_relation,
+        incremental_summary=clustering.incremental_summary,
+    )
+
+
 def process_content_thread_safe(
     store: InboxStore, payload: ContentAnalyzeRequest, raw: dict[str, Any] | None = None
 ) -> ProcessResult:
+    normalized = normalize_content(payload)
+    dedupe_key = build_dedupe_key(normalized)
+
+    # Phase 1: pre-dedupe inside lock (fast – only SQLite read)
     t_wait = time.monotonic()
     with CONTENT_STATE_LOCK:
         t_acquired = time.monotonic()
-        result = process_content(store, payload, raw=raw)
+        profiler.record("pre_dedupe_lock_wait_seconds", t_acquired - t_wait)
+        existing = store.get_by_dedupe_key(dedupe_key)
+        if existing:
+            updated = store.mark_seen(existing["item_id"])
+            t_done = time.monotonic()
+            profiler.record("pre_dedupe_lock_held_seconds", t_done - t_acquired)
+            return _build_duplicate_result(updated)
         t_done = time.monotonic()
-        profiler.record("lock_wait_seconds", t_acquired - t_wait)
-        profiler.record("lock_held_seconds", t_done - t_acquired)
-        return result
+        profiler.record("pre_dedupe_lock_held_seconds", t_done - t_acquired)
+
+    # Phase 2: screening outside lock (LLM calls allowed to run concurrently)
+    should_call, gate_reason, gate_hints = pre_llm_gate(normalized)
+    if not should_call:
+        if not payload.screen:
+            screening = screen_content(normalized, use_ai=False)
+        else:
+            screening = gated_screening(normalized, gate_reason, gate_hints)
+    else:
+        screening = screen_content(normalized, use_ai=payload.screen)
+        if gate_hints:
+            screening.gate_hints = gate_hints
+
+    # Phase 3: commit inside lock with secondary dedupe
+    t_wait2 = time.monotonic()
+    with CONTENT_STATE_LOCK:
+        t_acquired2 = time.monotonic()
+        profiler.record("commit_lock_wait_seconds", t_acquired2 - t_wait2)
+
+        existing = store.get_by_dedupe_key(dedupe_key)
+        if existing:
+            updated = store.mark_seen(existing["item_id"])
+            t_done2 = time.monotonic()
+            profiler.record("commit_lock_held_seconds", t_done2 - t_acquired2)
+            return _build_duplicate_result(updated)
+
+        inserted = store.insert(dedupe_key, normalized, screening, raw=raw)
+        clustering = cluster_content(
+            store,
+            item_id=inserted["item_id"],
+            normalized=normalized,
+            screening=screening,
+        )
+        updated = store.update_item_clustering(inserted["item_id"], clustering)
+
+        t_done2 = time.monotonic()
+        profiler.record("commit_lock_held_seconds", t_done2 - t_acquired2)
+
+        return ProcessResult(
+            item_id=updated["item_id"],
+            is_duplicate=False,
+            normalized=normalized,
+            screening=screening,
+            clustering=clustering,
+            notification_decision=clustering.notification_decision,
+            cluster_relation=clustering.cluster_relation,
+            incremental_summary=clustering.incremental_summary,
+        )

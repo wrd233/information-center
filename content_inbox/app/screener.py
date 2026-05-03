@@ -20,6 +20,21 @@ from app.utils import truncate
 
 
 # ---------------------------------------------------------------------------
+# LLM concurrency control
+# ---------------------------------------------------------------------------
+
+_LLM_SEMAPHORE: threading.Semaphore | None = None
+
+
+def _get_llm_semaphore() -> threading.Semaphore:
+    global _LLM_SEMAPHORE
+    if _LLM_SEMAPHORE is None:
+        max_concurrency = int(settings.llm.get("max_concurrency", 2))
+        _LLM_SEMAPHORE = threading.Semaphore(max_concurrency)
+    return _LLM_SEMAPHORE
+
+
+# ---------------------------------------------------------------------------
 # Thread-local state for full LLM request body dumping
 # ---------------------------------------------------------------------------
 
@@ -258,7 +273,8 @@ def call_prompt_json(
         "messages": messages,
         "response_format": {"type": "json_object"},
     }
-    payload = call_llm(body)
+    with _get_llm_semaphore():
+        payload = call_llm(body)
     content_text = payload["choices"][0]["message"]["content"]
     try:
         data = json.loads(content_text)

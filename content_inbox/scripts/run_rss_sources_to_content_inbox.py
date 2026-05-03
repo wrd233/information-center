@@ -577,13 +577,32 @@ def summarize_result_for_source(plan: SourcePlan, response: Dict[str, Any]) -> D
     failed_by_http = status_code is not None and int(status_code) >= 400
 
     profile = response.get("profile") or {}
+    pre_dedupe_wait = profile.get("pre_dedupe_lock_wait_seconds", 0) or 0
+    pre_dedupe_held = profile.get("pre_dedupe_lock_held_seconds", 0) or 0
+    commit_wait = profile.get("commit_lock_wait_seconds", 0) or 0
+    commit_held = profile.get("commit_lock_held_seconds", 0) or 0
+
+    # Backwards-compatible roll-ups: sum of the two lock phases.
+    # Direct old keys are kept for runs made before the lock split; when they
+    # are missing we compute from the new split keys.
+    lock_wait = profile.get("lock_wait_seconds")
+    lock_held = profile.get("lock_held_seconds")
+    if lock_wait is None:
+        lock_wait = round(pre_dedupe_wait + commit_wait, 3)
+    if lock_held is None:
+        lock_held = round(pre_dedupe_held + commit_held, 3)
+
     profile_fields = {
         "fetch_feed_seconds": profile.get("fetch_feed_seconds", ""),
         "llm_basic_screening_seconds": profile.get("llm_basic_screening_seconds", ""),
         "llm_need_matching_seconds": profile.get("llm_need_matching_seconds", ""),
         "embedding_seconds": profile.get("embedding_seconds", ""),
-        "lock_wait_seconds": profile.get("lock_wait_seconds", ""),
-        "lock_held_seconds": profile.get("lock_held_seconds", ""),
+        "lock_wait_seconds": lock_wait,
+        "lock_held_seconds": lock_held,
+        "pre_dedupe_lock_wait_seconds": pre_dedupe_wait,
+        "pre_dedupe_lock_held_seconds": pre_dedupe_held,
+        "commit_lock_wait_seconds": commit_wait,
+        "commit_lock_held_seconds": commit_held,
         "source_total_seconds": profile.get("source_total_seconds", ""),
     }
 
@@ -728,6 +747,10 @@ def results_csv_headers() -> List[str]:
         "embedding_seconds",
         "lock_wait_seconds",
         "lock_held_seconds",
+        "pre_dedupe_lock_wait_seconds",
+        "pre_dedupe_lock_held_seconds",
+        "commit_lock_wait_seconds",
+        "commit_lock_held_seconds",
         "source_total_seconds",
     ]
 
