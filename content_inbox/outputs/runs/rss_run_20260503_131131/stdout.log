@@ -1,0 +1,337 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_131131
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 501
+[INFO] Selected sources: 501
+[INFO] Pending sources this invocation: 501
+[INFO] URL mode: docker-host
+[INFO] Screen enabled: True
+[INFO] Concurrency: 2
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": true, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1"}, "_status": 200}
+[SUBMIT] 001/501 Hi, DIYgod
+         category=Articles feed_url=https://diygod.cc/feed
+[SUBMIT] 002/501 tanscp
+         category=Articles feed_url=https://tanscp.com/feed/
+[DONE] 001/501 Hi, DIYgod status=success total_items=3 new_items=1 duplicate_items=2
+[SUBMIT] 003/501 Airing 的博客
+         category=Articles feed_url=https://ursb.me/blog/feed.xml
+[DONE] 002/501 tanscp status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 004/501 Rolen's Blog
+         category=个人博客-人生 feed_url=https://rolen.wiki/feed/
+[DONE] 003/501 Airing 的博客 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 005/501 Ben's Love
+         category=个人博客-人生 feed_url=https://bens.love/feed
+[DONE] 004/501 Rolen's Blog status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 006/501 莫比乌斯
+         category=个人博客-人生 feed_url=https://mobius.blog/feed/
+[DONE] 005/501 Ben's Love status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 007/501 白熊阿丸的小屋
+         category=个人博客-人生 feed_url=https://blog.bxaw.name/feed/
+[DONE] 006/501 莫比乌斯 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 008/501 草稿拾遗
+         category=个人博客-人生 feed_url=https://kill-the-newsletter.com/feeds/t87xbbj6p4iwfhsi.xml
+[DONE] 008/501 草稿拾遗 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 009/501 Paradise Lost
+         category=Articles feed_url=https://2890.ltd/feed/
+[DONE] 007/501 白熊阿丸的小屋 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 010/501 笨方法学写作
+         category=Articles feed_url=https://www.cnfeat.com/feed.xml
+[DONE] 009/501 Paradise Lost status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 011/501 豆瓣小组-无用美学
+         category=Articles feed_url=http://host.docker.internal:1200/douban/group/699356/essence
+[DONE] 010/501 笨方法学写作 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 012/501 StarYuhen
+         category=Articles feed_url=https://www.yuhenm.top/feed/
+[DONE] 012/501 StarYuhen status=failed error_type=unknown error_message={"detail": "HTTP Error 403: Forbidden"}
+[SUBMIT] 013/501 少数派
+         category=优质信息源 feed_url=http://host.docker.internal:1200/sspai/index
+[DONE] 011/501 豆瓣小组-无用美学 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 014/501 少数派 -- Matrix
+         category=优质信息源 feed_url=http://host.docker.internal:1200/sspai/matrix
+[DONE] 013/501 少数派 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 015/501 Experimental History
+         category=Articles feed_url=https://www.experimental-history.com/feed
+[DONE] 014/501 少数派 -- Matrix status=success total_items=3 new_items=2 duplicate_items=1
+[SUBMIT] 016/501 Blog - Remote Work Prep
+         category=Articles feed_url=https://www.remoteworkprep.com/blog?format=rss
+[DONE] 015/501 Experimental History status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 017/501 EVANGELION:ALL
+         category=Articles feed_url=https://www.eva-all.com/news/feed/
+[DONE] 016/501 Blog - Remote Work Prep status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 018/501 纵横四海
+         category=Articles feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/62694abdb221dd5908417d1e
+[DONE] 018/501 纵横四海 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 019/501 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台
+         category=其他 feed_url=https://51cg1.com/feed/
+[DONE] 017/501 EVANGELION:ALL status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 020/501 今日热榜
+         category=Articles feed_url=https://web2rss.cc/feed/rebang.today?preview=true
+[DONE] 020/501 今日热榜 status=failed error_type=network_error error_message={"detail": "<urlopen error [Errno -2] Name or service not known>"}
+[SUBMIT] 021/501 安全代码
+         category=Articles feed_url=https://www.usmacd.com/atom.xml
+[DONE] 019/501 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 022/501 老T博客
+         category=Articles feed_url=https://lawtee.com/index.xml
+[DONE] 022/501 老T博客 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 023/501 小众软件
+         category=科技与编程 feed_url=https://www.appinn.com/feed/
+[DONE] 021/501 安全代码 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 024/501 HelloGithub - 月刊
+         category=科技与编程 feed_url=http://host.docker.internal:1200/hellogithub/volume
+[DONE] 023/501 小众软件 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 025/501 宝玉的分享
+         category=科技与编程 feed_url=https://s.baoyu.io/feed.xml
+[DONE] 024/501 HelloGithub - 月刊 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 026/501 阮一峰的网络日志
+         category=科技与编程 feed_url=https://feeds.feedburner.com/ruanyifeng
+[DONE] 025/501 宝玉的分享 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 027/501 龙爪槐守望者
+         category=科技与编程 feed_url=https://www.ftium4.com/rss.xml
+[DONE] 026/501 阮一峰的网络日志 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 028/501 十年之约聚合订阅
+         category=科技与编程 feed_url=https://tool.bcrjl.com/snzy-rss/
+[DONE] 027/501 龙爪槐守望者 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 029/501 #UNTAG
+         category=科技与编程 feed_url=https://rss.utgd.net/feed/
+[DONE] 028/501 十年之约聚合订阅 status=success total_items=3 new_items=2 duplicate_items=1
+[SUBMIT] 030/501 混沌周刊
+         category=科技与编程 feed_url=https://weekly.love/feed/atom
+[DONE] 029/501 #UNTAG status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 031/501 🔔科技频道[奇诺分享-ccino.org]⚡️
+         category=科技与编程 feed_url=https://channel.ccino.org/rss.xml
+[DONE] 030/501 混沌周刊 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 032/501 猴猴说话
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3279284299.atom
+[DONE] 031/501 🔔科技频道[奇诺分享-ccino.org]⚡️ status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 033/501 潦草学者
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3239649460.atom
+[DONE] 033/501 潦草学者 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 034/501 L先生说
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3015646136.atom
+[DONE] 032/501 猴猴说话 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 035/501 常青说
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3944297233.atom
+[DONE] 034/501 L先生说 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 036/501 啊桂实验室
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3097885397.atom
+[DONE] 035/501 常青说 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 037/501 大问题Dialectic
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_2391461928.atom
+[DONE] 036/501 啊桂实验室 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 038/501 ONE字幕组
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3220087653.atom
+[DONE] 037/501 大问题Dialectic status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 039/501 everystep
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_2396013984.atom
+[DONE] 038/501 ONE字幕组 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 040/501 走路
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3097360004.atom
+[DONE] 039/501 everystep status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 041/501 Vista看天下
+         category=社评 feed_url=https://plink.anyfeeder.com/weixin/vistaweek
+[DONE] 040/501 走路 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 042/501 Tinyfool的个人网站
+         category=社评 feed_url=https://codechina.org/feed/
+[DONE] 041/501 Vista看天下 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 043/501 刘夙的科技世界
+         category=社评 feed_url=https://wewe-rss.jerrylf.uk/feeds/MP_WXS_3002603832.json
+[DONE] 043/501 刘夙的科技世界 status=failed error_type=feed_parse_error error_message={"detail": "failed to parse feed: <unknown>:2:0: not well-formed (invalid token)"}
+[SUBMIT] 044/501 三联生活周刊 Lifeweek
+         category=社评 feed_url=https://the.bi/s/rawbbyu2zgmy32
+[DONE] 044/501 三联生活周刊 Lifeweek status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 045/501 时代观察 - 乌有之乡网刊
+         category=社评 feed_url=http://host.docker.internal:1200/wyzxwk/article
+[DONE] 045/501 时代观察 - 乌有之乡网刊 status=failed error_type=rsshub_503 error_message={"detail": "HTTP Error 503: Service Unavailable"}
+[SUBMIT] 046/501 一觉醒来发生了什么 - 即刻圈子
+         category=国内外资讯 feed_url=http://host.docker.internal:1200/jike/topic/553870e8e4b0cafb0a1bef68
+[DONE] 042/501 Tinyfool的个人网站 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 047/501 东西智库 – 专注中国制造业高质量发展
+         category=国内外资讯 feed_url=http://host.docker.internal:1200/dx2025
+[DONE] 047/501 东西智库 – 专注中国制造业高质量发展 status=failed error_type=rsshub_503 error_message={"detail": "HTTP Error 503: Service Unavailable"}
+[SUBMIT] 048/501 中国政府网 - 最新政策
+         category=国内政策 feed_url=http://host.docker.internal:1200/gov/zhengce/zuixin
+[DONE] 048/501 中国政府网 - 最新政策 status=failed error_type=rsshub_503 error_message={"detail": "HTTP Error 503: Service Unavailable"}
+[SUBMIT] 049/501 - 政府文件库
+         category=国内政策 feed_url=http://host.docker.internal:1200/gov/zhengce/zhengceku/bmwj
+[DONE] 049/501 - 政府文件库 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 050/501 不如读书
+         category=Articles feed_url=https://wuyagege.substack.com/feed
+[DONE] 046/501 一觉醒来发生了什么 - 即刻圈子 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 051/501 Lukas Petersson’s blog
+         category=Articles feed_url=https://lukaspetersson.com/feed.xml
+[DONE] 050/501 不如读书 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 052/501 一亩三分地 - 日本热门帖子
+         category=Articles feed_url=http://host.docker.internal:1200/1point3acres/category/%E6%97%A5%E6%9C%AC
+[DONE] 051/501 Lukas Petersson’s blog status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 053/501 偷懒爱好者周刊
+         category=Articles feed_url=https://toolight.cn/open/p/weekly/atom.xml
+[DONE] 053/501 偷懒爱好者周刊 status=failed error_type=unknown error_message={"detail": "HTTP Error 404: Not Found"}
+[SUBMIT] 054/501 GeekPlux Letters
+         category=Articles feed_url=https://letters.geekplux.com/rss/
+[DONE] 052/501 一亩三分地 - 日本热门帖子 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 055/501 信息差——独立开发者出海周刊
+         category=Articles feed_url=https://gapis.money/rss.xml
+[DONE] 055/501 信息差——独立开发者出海周刊 status=failed error_type=feed_parse_error error_message={"detail": "failed to parse feed: <unknown>:28:5120: not well-formed (invalid token)"}
+[SUBMIT] 056/501 joojen Zhou 的网站
+         category=Articles feed_url=https://joojen.com/feed
+[DONE] 054/501 GeekPlux Letters status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 057/501 周刊 归档 - 酷口家数字花园
+         category=Articles feed_url=https://weqoocu.com/feed
+[DONE] 056/501 joojen Zhou 的网站 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 058/501 莫尔索随笔
+         category=Articles feed_url=https://liduos.com/atom.xml
+[DONE] 057/501 周刊 归档 - 酷口家数字花园 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 059/501 Ahead of AI
+         category=Articles feed_url=https://magazine.sebastianraschka.com/feed
+[DONE] 058/501 莫尔索随笔 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 060/501 歸藏的AI工具箱
+         category=Articles feed_url=https://wechat2rss.bestblogs.dev/feed/1fc32fedbf5da37e8e819a9298ae80724c12cb03.xml
+[DONE] 060/501 歸藏的AI工具箱 status=failed error_type=content_inbox_error error_message={"detail": "HTTP Error 500: Internal Server Error"}
+[SUBMIT] 061/501 Kubernetes Blog
+         category=Articles feed_url=https://kubernetes.io/feed.xml
+[DONE] 059/501 Ahead of AI status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 062/501 AI洞察日报 RSS Feed
+         category=Articles feed_url=https://justlovemaki.github.io/CloudFlare-AI-Insight-Daily/rss.xml
+[DONE] 062/501 AI洞察日报 RSS Feed status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 063/501 最新发布_共产党员网
+         category=党政信息 feed_url=http://host.docker.internal:1200/12371/zxfb
+[DONE] 061/501 Kubernetes Blog status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 064/501 新华社新闻_新华网
+         category=党政信息 feed_url=https://plink.anyfeeder.com/newscn/whxw
+[DONE] 063/501 最新发布_共产党员网 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 065/501 半月谈快报
+         category=党政信息 feed_url=https://data.getpodcast.xyz/data/ximalaya/9604235.xml
+[DONE] 065/501 半月谈快报 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 066/501 - 求是网
+         category=党政信息 feed_url=https://plink.anyfeeder.com/qstheory
+[DONE] 064/501 新华社新闻_新华网 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 067/501 学习一下订阅源
+         category=Articles feed_url=http://host.docker.internal:1200/follow/profile/158883963341209600
+[DONE] 067/501 学习一下订阅源 status=failed error_type=rsshub_503 error_message={"detail": "HTTP Error 503: Service Unavailable"}
+[SUBMIT] 068/501 Lex Fridman Podcast
+         category=Articles feed_url=https://lexfridman.com/feed/podcast/
+[DONE] 066/501 - 求是网 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 069/501 Podnews Daily - podcast industry news
+         category=Articles feed_url=https://podnews.net/rss
+[DONE] 069/501 Podnews Daily - podcast industry news status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 070/501 新智元
+         category=Articles feed_url=https://raw.githubusercontent.com/osnsyc/Wechat-Scholar/main/channels/gh_108f2a2a27f4.xml
+[DONE] 068/501 Lex Fridman Podcast status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 071/501 机器之心
+         category=Articles feed_url=https://www.jiqizhixin.com/rss
+[DONE] 071/501 机器之心 status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1016)>"}
+[SUBMIT] 072/501 腾讯研究院
+         category=Articles feed_url=https://wechat2rss.bestblogs.dev/feed/6152301e0978bffb0a8284cab339262b9764dcfb.xml
+[DONE] 070/501 新智元 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 073/501 极客公园
+         category=Articles feed_url=https://www.geekpark.net/rss
+[DONE] 072/501 腾讯研究院 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 074/501 极客公园
+         category=Articles feed_url=https://wechat2rss.xlab.app/feed/1a5aec98e71c707c8ca092bc2c255b9d4bac477d.xml
+[DONE] 074/501 极客公园 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 075/501 图书推荐 – 书伴
+         category=SocialMedia feed_url=http://host.docker.internal:1200/bookfere/books
+[DONE] 073/501 极客公园 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 076/501 每周一书 – 书伴
+         category=SocialMedia feed_url=http://host.docker.internal:1200/bookfere/weekly
+[DONE] 076/501 每周一书 – 书伴 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 077/501 笔记交流站 - 即刻圈子
+         category=SocialMedia feed_url=http://host.docker.internal:1200/jike/topic/660165c504703c909c6d8b2e
+[DONE] 075/501 图书推荐 – 书伴 status=success total_items=3 new_items=1 duplicate_items=2
+[SUBMIT] 078/501 你不知道的行业内幕 - 即刻圈子
+         category=资讯 feed_url=http://host.docker.internal:1200/jike/topic/5699f451d3e8351200bffdc8
+[DONE] 078/501 你不知道的行业内幕 - 即刻圈子 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 079/501 Mike Krieger(@mikeyk)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/78d7b99318b04b309b04000f7e24da29
+[DONE] 077/501 笔记交流站 - 即刻圈子 status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 080/501 Richard Socher(@RichardSocher)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4d2d4165a7524217a08d3f57f27fa190
+[DONE] 079/501 Mike Krieger(@mikeyk) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 081/501 Hugging Face(@huggingface)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/fc16750ce50741f1b1f05ea1fb29436f
+[DONE] 080/501 Richard Socher(@RichardSocher) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 082/501 小互(@imxiaohu)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/74e542992cf7441390c708f5601071d4
+[DONE] 082/501 小互(@imxiaohu) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 083/501 AI at Meta(@AIatMeta)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/ef7c70f9568d45f4915169fef4ce90b4
+[DONE] 081/501 Hugging Face(@huggingface) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 084/501 Mistral AI(@MistralAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/8d2d03aea8af49818096da4ea00409d1
+[DONE] 083/501 AI at Meta(@AIatMeta) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 085/501 xAI(@xai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/3953aa71e87a422eb9d7bf6ff1c7c43e
+[DONE] 085/501 xAI(@xai) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 086/501 Dia(@diabrowser)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/6384ee3c656c48fea5e8b3cdacece4d0
+[DONE] 084/501 Mistral AI(@MistralAI) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 087/501 AI Breakfast(@AiBreakfast)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/0e3ebaf288014c45b0d24b71fe37312b
+[DONE] 087/501 AI Breakfast(@AiBreakfast) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 088/501 DeepSeek(@deepseek_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/68b610deb24b47ae9a236811563cda86
+[DONE] 086/501 Dia(@diabrowser) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 089/501 Jim Fan(@DrJimFan)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/c6cfe7c0d6b74849997073233fdea840
+[DONE] 089/501 Jim Fan(@DrJimFan) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 090/501 Akshay Kothari(@akothari)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/3434c0d56ee0446f991fb6af42bfac4b
+[DONE] 088/501 DeepSeek(@deepseek_ai) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 091/501 歸藏(guizang.ai)(@op7418)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/831fac36aa0a49a9af79f35dc1c9b5d9
+[DONE] 090/501 Akshay Kothari(@akothari) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 092/501 Notion(@NotionHQ)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f97a26863aec4425b021720d4f8e4ede
+[DONE] 091/501 歸藏(guizang.ai)(@op7418) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 093/501 Replicate(@replicate)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/12eba9c3db4940c5ab2a72bd00f9ff2c
+[DONE] 093/501 Replicate(@replicate) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 094/501 lmarena.ai(@lmarena_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f01b088d5a39473e854b07143df77ec5
+[DONE] 092/501 Notion(@NotionHQ) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 095/501 Poe(@poe_platform)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/17687b1051204b2dbaed4ea4c9178f28
+[DONE] 094/501 lmarena.ai(@lmarena_ai) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 096/501 Ray Dalio(@RayDalio)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4838204097ed422eac24ad48e68dc3ff
+[DONE] 095/501 Poe(@poe_platform) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 097/501 Arthur Mensch(@arthurmensch)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/d8121d969fb34c7daad2dd2aac4ba270
+[DONE] 097/501 Arthur Mensch(@arthurmensch) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 098/501 Paul Graham(@paulg)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/900549ddadf04e839d3f7a17ebaba3fc
+[DONE] 096/501 Ray Dalio(@RayDalio) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 099/501 Browser Use(@browser_use)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/b8d7530f0b294405825013bbc1cc198f
+[DONE] 098/501 Paul Graham(@paulg) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 100/501 The Rundown AI(@TheRundownAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/83b1ea38940b4a1d81ea57d1ffb12ad7
+[DONE] 099/501 Browser Use(@browser_use) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 101/501 AI Will(@FinanceYF5)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/aa74321087f9405a872fd9a76b743bf8
+Traceback (most recent call last):
+  File "/Users/wangrundong/work/infomation-center/content_inbox/scripts/run_rss_sources_to_content_inbox.py", line 1315, in main
+    done, _ = wait(set(in_flight.keys()), return_when=FIRST_COMPLETED)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/concurrent/futures/_base.py", line 306, in wait
+    waiter.event.wait(timeout)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.py", line 574, in wait
+    signaled = self._cond.wait(timeout)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.py", line 312, in wait
+    waiter.acquire()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wangrundong/work/infomation-center/content_inbox/scripts/run_rss_sources_to_content_inbox.py", line 1456, in <module>
+    raise SystemExit(main())
+  File "/Users/wangrundong/work/infomation-center/content_inbox/scripts/run_rss_sources_to_content_inbox.py", line 1374, in main
+    submit_next(executor)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/concurrent/futures/_base.py", line 636, in __exit__
+    self.shutdown(wait=True)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/concurrent/futures/thread.py", line 229, in shutdown
+    t.join()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.py", line 1053, in join
+    self._wait_for_tstate_lock()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.py", line 1069, in _wait_for_tstate_lock
+    elif lock.acquire(block, timeout):
+KeyboardInterrupt
