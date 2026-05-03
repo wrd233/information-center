@@ -1,0 +1,4 @@
+source_name,source_category,local_xml_url,xml_url,feed_url,error_message,error_type
+utcc.utoronto.ca/~cks,英文博客,,https://utcc.utoronto.ca/~cks/space/blog/?atom,https://utcc.utoronto.ca/~cks/space/blog/?atom,"{""detail"": ""HTTP Error 429: Too Many Requests""}",unknown
+rachelbythebay.com,英文博客,,https://rachelbythebay.com/w/atom.xml,https://rachelbythebay.com/w/atom.xml,"{""detail"": ""HTTP Error 429: Too Many Requests""}",unknown
+joanwestenberg.com,英文博客,,https://joanwestenberg.com/rss,https://joanwestenberg.com/rss,"{""detail"": ""<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>""}",network_error
