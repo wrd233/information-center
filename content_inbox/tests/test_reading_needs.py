@@ -362,12 +362,14 @@ def test_inbox_filters_by_need_and_topic_and_old_items_do_not_crash(tmp_path: Pa
         )
 
     entertainment_response = client.get(
-        "/api/inbox?need_id=entertainment&min_need_score=4&include_silent=true"
+        "/api/inbox?need_id=entertainment&min_need_score=4"
     )
     assert entertainment_response.status_code == 200
     entertainment_body = entertainment_response.json()
     assert entertainment_body["ok"] is True
     assert [item["title"] for item in entertainment_body["items"]] == ["今天刷点轻松的"]
+    assert entertainment_body["filters"]["include_silent"] is True
+    assert entertainment_body["filters"]["include_ignored"] is True
 
     frontier_response = client.get("/api/inbox?need_id=frontier&priority=P0&include_silent=true")
     assert frontier_response.status_code == 200
@@ -375,11 +377,13 @@ def test_inbox_filters_by_need_and_topic_and_old_items_do_not_crash(tmp_path: Pa
     assert frontier_body["ok"] is True
     assert [item["title"] for item in frontier_body["items"]] == ["OpenAI Agent SDK ships"]
 
-    topic_response = client.get("/api/inbox?topic_id=ai_agent&include_silent=true")
+    topic_response = client.get("/api/inbox?topic_id=ai_agent")
     assert topic_response.status_code == 200
     topic_body = topic_response.json()
     assert topic_body["ok"] is True
     assert [item["title"] for item in topic_body["items"]] == ["OpenAI Agent SDK ships"]
+    assert topic_body["filters"]["include_silent"] is True
+    assert topic_body["filters"]["include_ignored"] is True
 
     legacy_response = client.get("/api/inbox?need_id=entertainment&include_silent=true&limit=10")
     assert legacy_response.status_code == 200

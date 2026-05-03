@@ -1,0 +1,50 @@
+{
+  "status": "completed",
+  "started_at": "2026-05-03T04:25:35+00:00",
+  "updated_at": "2026-05-03T04:31:32+00:00",
+  "args": {
+    "api_base": "http://127.0.0.1:8788",
+    "csv": "/Users/wangrundong/work/infomation-center/content_inbox/outputs/manual_tests/bilibili_entertainment_sources.csv",
+    "count": "50",
+    "all": true,
+    "max_sources": null,
+    "limit_per_source": 2,
+    "screen": true,
+    "sleep": 0.5,
+    "timeout": 120,
+    "inbox_limit": 100,
+    "url_mode": "docker-host",
+    "rsshub_service_name": "rsshub",
+    "dry_run": false,
+    "resume": false,
+    "skip_known_failed": false,
+    "max_consecutive_failures": 20
+  },
+  "url_mode": "docker-host",
+  "selected_count": 8,
+  "completed_count": 8,
+  "successful_count": 8,
+  "failed_count": 0,
+  "consecutive_failures": 0,
+  "completed_source_ids": [
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/3546676667091128\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/3546676667091128\", \"row_index\": 2, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-3546676667091128\", \"xml_url\": \"\"}",
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/946974\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/946974\", \"row_index\": 3, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-946974\", \"xml_url\": \"\"}",
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/456249922\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/456249922\", \"row_index\": 4, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-456249922\", \"xml_url\": \"\"}",
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/269288799\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/269288799\", \"row_index\": 5, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-269288799\", \"xml_url\": \"\"}",
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/334932680\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/334932680\", \"row_index\": 6, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-334932680\", \"xml_url\": \"\"}",
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/1073153713\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/1073153713\", \"row_index\": 7, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-1073153713\", \"xml_url\": \"\"}",
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/6697975\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/6697975\", \"row_index\": 8, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-6697975\", \"xml_url\": \"\"}",
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/591610354\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/591610354\", \"row_index\": 9, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-591610354\", \"xml_url\": \"\"}"
+  ],
+  "successful_source_ids": [
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/3546676667091128\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/3546676667091128\", \"row_index\": 2, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-3546676667091128\", \"xml_url\": \"\"}",
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/946974\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/946974\", \"row_index\": 3, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-946974\", \"xml_url\": \"\"}",
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/456249922\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/456249922\", \"row_index\": 4, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-456249922\", \"xml_url\": \"\"}",
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/269288799\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/269288799\", \"row_index\": 5, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-269288799\", \"xml_url\": \"\"}",
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/334932680\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/334932680\", \"row_index\": 6, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-334932680\", \"xml_url\": \"\"}",
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/1073153713\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/1073153713\", \"row_index\": 7, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-1073153713\", \"xml_url\": \"\"}",
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/6697975\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/6697975\", \"row_index\": 8, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-6697975\", \"xml_url\": \"\"}",
+    "{\"feed_url\": \"http://host.docker.internal:1200/bilibili/user/video/591610354\", \"local_xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/591610354\", \"row_index\": 9, \"source_category\": \"最娱乐\", \"source_name\": \"B站娱乐测试-591610354\", \"xml_url\": \"\"}"
+  ],
+  "notes": []
+}

@@ -500,8 +500,60 @@ def filter_items(items: list[dict[str, Any]], filters: dict[str, Any]) -> list[d
             ]
             if not filtered_topic_matches:
                 continue
-        result.append(public_item(item))
-    return result
+        result.append(item)
+
+    if filters.get("need_id"):
+        need_id = filters["need_id"]
+        result.sort(
+            key=lambda item: need_sort_key(
+                next(
+                    (
+                        match
+                        for match in (item["screening"].get("need_matches") or [])
+                        if match.get("need_id") == need_id
+                    ),
+                    {},
+                )
+            )
+        )
+    elif filters.get("topic_id"):
+        topic_id = filters["topic_id"]
+        result.sort(
+            key=lambda item: topic_sort_key(
+                next(
+                    (
+                        match
+                        for match in (item["screening"].get("topic_matches") or [])
+                        if match.get("topic_id") == topic_id
+                    ),
+                    {},
+                )
+            )
+        )
+
+    return [public_item(item) for item in result]
+
+
+def need_sort_key(match: dict[str, Any]) -> tuple[int, int, str]:
+    return (
+        -int(match.get("score", 0) or 0),
+        priority_rank(match.get("priority")),
+        str(match.get("need_id", "")),
+    )
+
+
+def topic_sort_key(match: dict[str, Any]) -> tuple[int, str, str]:
+    return (
+        -int(match.get("score", 0) or 0),
+        str(match.get("update_type", "")),
+        str(match.get("topic_id", "")),
+    )
+
+
+def priority_rank(priority: Any) -> int:
+    value = str(priority or "").upper()
+    mapping = {"P0": 0, "P1": 1, "P2": 2, "P3": 3}
+    return mapping.get(value, 9)
 
 
 def public_item(item: dict[str, Any]) -> dict[str, Any]:

@@ -1,0 +1,83 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_122535
+[INFO] CSV: /Users/wangrundong/work/infomation-center/content_inbox/outputs/manual_tests/bilibili_entertainment_sources.csv
+[INFO] Enabled candidate sources: 8
+[INFO] Selected sources: 8
+[INFO] Pending sources this invocation: 8
+[INFO] URL mode: docker-host
+[INFO] Screen enabled: True
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/data/content_inbox_test_reading_needs.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": true, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1"}, "_status": 200}
+[RUN] 1/8 B站娱乐测试-3546676667091128
+       category:      最娱乐
+       local_xml_url: http://127.0.0.1:1200/bilibili/user/video/3546676667091128
+       xml_url:       -
+       feed_url:      http://host.docker.internal:1200/bilibili/user/video/3546676667091128
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=2, new_items=2, duplicate_items=0, screened_items=2, recommended_items=0, new_event_items=0, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 2/8 B站娱乐测试-946974
+       category:      最娱乐
+       local_xml_url: http://127.0.0.1:1200/bilibili/user/video/946974
+       xml_url:       -
+       feed_url:      http://host.docker.internal:1200/bilibili/user/video/946974
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=2, new_items=2, duplicate_items=0, screened_items=2, recommended_items=2, new_event_items=0, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 3/8 B站娱乐测试-456249922
+       category:      最娱乐
+       local_xml_url: http://127.0.0.1:1200/bilibili/user/video/456249922
+       xml_url:       -
+       feed_url:      http://host.docker.internal:1200/bilibili/user/video/456249922
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=2, new_items=2, duplicate_items=0, screened_items=2, recommended_items=1, new_event_items=0, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 4/8 B站娱乐测试-269288799
+       category:      最娱乐
+       local_xml_url: http://127.0.0.1:1200/bilibili/user/video/269288799
+       xml_url:       -
+       feed_url:      http://host.docker.internal:1200/bilibili/user/video/269288799
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=2, new_items=2, duplicate_items=0, screened_items=2, recommended_items=0, new_event_items=0, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 5/8 B站娱乐测试-334932680
+       category:      最娱乐
+       local_xml_url: http://127.0.0.1:1200/bilibili/user/video/334932680
+       xml_url:       -
+       feed_url:      http://host.docker.internal:1200/bilibili/user/video/334932680
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=2, new_items=2, duplicate_items=0, screened_items=2, recommended_items=1, new_event_items=0, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 6/8 B站娱乐测试-1073153713
+       category:      最娱乐
+       local_xml_url: http://127.0.0.1:1200/bilibili/user/video/1073153713
+       xml_url:       -
+       feed_url:      http://host.docker.internal:1200/bilibili/user/video/1073153713
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=2, new_items=2, duplicate_items=0, screened_items=2, recommended_items=2, new_event_items=0, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 7/8 B站娱乐测试-6697975
+       category:      最娱乐
+       local_xml_url: http://127.0.0.1:1200/bilibili/user/video/6697975
+       xml_url:       -
+       feed_url:      http://host.docker.internal:1200/bilibili/user/video/6697975
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=2, new_items=2, duplicate_items=0, screened_items=2, recommended_items=0, new_event_items=0, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 8/8 B站娱乐测试-591610354
+       category:      最娱乐
+       local_xml_url: http://127.0.0.1:1200/bilibili/user/video/591610354
+       xml_url:       -
+       feed_url:      http://host.docker.internal:1200/bilibili/user/video/591610354
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=2, new_items=2, duplicate_items=0, screened_items=2, recommended_items=0, new_event_items=0, incremental_items=0, silent_items=2, failed_items=0, error_message=
+
+[SUMMARY]
+Processed sources: 8
+Successful sources: 8
+Failed sources: 0
+Skipped known failed sources: 0
+New items: 16
+Recommended items from API responses: 6
+Final inbox items from this run: 0
+Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_122535/report.md
+Run state path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_122535/run_state.json

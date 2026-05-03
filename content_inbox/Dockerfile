@@ -11,6 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
 COPY config ./config
+COPY prompts.yaml ./prompts.yaml
 
 EXPOSE 8787
 

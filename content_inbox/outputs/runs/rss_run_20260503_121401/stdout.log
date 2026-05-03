@@ -1,0 +1,59 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_121401
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 501
+[INFO] Selected sources: 5
+[INFO] Pending sources this invocation: 5
+[INFO] URL mode: docker-host
+[INFO] Screen enabled: True
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/data/content_inbox_test_reading_needs.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": true, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1"}, "_status": 200}
+[RUN] 1/5 Hi, DIYgod
+       category:      Articles
+       local_xml_url: -
+       xml_url:       https://diygod.cc/feed
+       feed_url:      https://diygod.cc/feed
+       url_mode:      docker-host (xml_url)
+       screen:        True
+       total_items=2, new_items=0, duplicate_items=2, screened_items=0, recommended_items=0, new_event_items=1, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 2/5 图书推荐 – 书伴
+       category:      SocialMedia
+       local_xml_url: http://127.0.0.1:1200/bookfere/books
+       xml_url:       https://macmini-rsshub.tail99ecfa.ts.net/bookfere/books
+       feed_url:      http://host.docker.internal:1200/bookfere/books
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=2, new_items=0, duplicate_items=2, screened_items=0, recommended_items=0, new_event_items=1, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 3/5 AI Foundations
+       category:      Videos
+       local_xml_url: -
+       xml_url:       https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g
+       feed_url:      https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g
+       url_mode:      docker-host (xml_url)
+       screen:        True
+       total_items=2, new_items=0, duplicate_items=2, screened_items=0, recommended_items=2, new_event_items=0, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 4/5 Rolen's Blog
+       category:      个人博客-人生
+       local_xml_url: -
+       xml_url:       https://rolen.wiki/feed/
+       feed_url:      https://rolen.wiki/feed/
+       url_mode:      docker-host (xml_url)
+       screen:        True
+       total_items=2, new_items=0, duplicate_items=2, screened_items=0, recommended_items=2, new_event_items=0, incremental_items=0, silent_items=2, failed_items=0, error_message=
+[RUN] 5/5 最新发布_共产党员网
+       category:      党政信息
+       local_xml_url: http://127.0.0.1:1200/12371/zxfb
+       xml_url:       https://macmini-rsshub.tail99ecfa.ts.net/12371/zxfb
+       feed_url:      http://host.docker.internal:1200/12371/zxfb
+       url_mode:      docker-host (local_xml_url)
+       screen:        True
+       total_items=2, new_items=0, duplicate_items=2, screened_items=0, recommended_items=0, new_event_items=0, incremental_items=0, silent_items=2, failed_items=0, error_message=
+
+[SUMMARY]
+Processed sources: 5
+Successful sources: 5
+Failed sources: 0
+Skipped known failed sources: 0
+New items: 0
+Recommended items from API responses: 4
+Final inbox items from this run: 0
+Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_121401/report.md
+Run state path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_121401/run_state.json

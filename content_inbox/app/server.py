@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import date, datetime, time, timezone
 from typing import Annotated, Any
 
-from fastapi import Depends, FastAPI, HTTPException, Query
+from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 
 from app.config import settings
@@ -112,6 +112,7 @@ def analyze_rss(
 
 @app.get("/api/inbox")
 def get_inbox(
+    request: Request,
     date_filter: Annotated[str | None, Query(alias="date")] = None,
     from_filter: Annotated[str | None, Query(alias="from")] = None,
     to_filter: Annotated[str | None, Query(alias="to")] = None,
@@ -143,6 +144,15 @@ def get_inbox(
     offset: int = Query(default=0, ge=0),
     inbox_store: Annotated[InboxStore, Depends(get_store)] = store,
 ) -> JSONResponse:
+    reading_view_query = bool(need_id or topic_id)
+    include_silent_value = include_silent
+    if reading_view_query and "include_silent" not in request.query_params:
+        include_silent_value = True
+
+    include_ignored_value = include_ignored
+    if reading_view_query and "include_ignored" not in request.query_params:
+        include_ignored_value = True
+
     filters: dict[str, Any] = {
         "source_name": source_name,
         "source_category": source_category,
@@ -156,8 +166,8 @@ def get_inbox(
         "cluster_relation": cluster_relation,
         "notification_decision": split_csv(notification_decision),
         "min_similarity": min_similarity,
-        "include_silent": include_silent
-        if include_silent is not None
+        "include_silent": include_silent_value
+        if include_silent_value is not None
         else settings.notification.get("include_silent_in_default_inbox", False),
         "only_new_events": only_new_events,
         "only_incremental": only_incremental,
@@ -169,7 +179,7 @@ def get_inbox(
         "priority": split_csv(priority),
         "include_maybe": include_maybe,
         "needs_more_context": needs_more_context,
-        "include_ignored": include_ignored,
+        "include_ignored": include_ignored_value,
         "limit": limit,
         "offset": offset,
     }

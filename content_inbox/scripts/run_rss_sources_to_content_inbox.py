@@ -23,6 +23,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
+import yaml
+
 
 TRUTHY = {"y", "yes", "true", "1", "on", "enable", "enabled", "启用", "是"}
 FALSY = {"n", "no", "false", "0", "off", "disable", "disabled", "停用", "否"}
@@ -374,6 +376,67 @@ def query_inbox(
     return fallback
 
 
+def query_inbox_view(
+    api_base: str,
+    api_key: Optional[str],
+    timeout: int,
+    *,
+    need_id: str | None = None,
+    topic_id: str | None = None,
+    min_need_score: int | None = None,
+    limit: int = 100,
+    from_time: str = "",
+    notification_mode: bool = False,
+) -> Dict[str, Any]:
+    base = f"{api_base.rstrip('/')}/api/inbox"
+    params: Dict[str, str] = {"limit": str(limit)}
+    if from_time:
+        params["from"] = from_time
+    else:
+        params["date"] = "today"
+
+    if notification_mode:
+        params["notification_decision"] = "full_push,incremental_push"
+        params["include_silent"] = "false"
+    else:
+        params["include_ignored"] = "true"
+        params["include_silent"] = "true"
+        if need_id:
+            params["need_id"] = need_id
+        if topic_id:
+            params["topic_id"] = topic_id
+        if min_need_score is not None:
+            params["min_need_score"] = str(min_need_score)
+
+    url = base + "?" + urllib.parse.urlencode(params)
+    result = request_json("GET", url, timeout=timeout, api_key=api_key)
+    result["_query_mode"] = "from" if from_time else "date"
+    result["_query_url"] = url
+    return result
+
+
+def load_reading_need_min_scores(repo_root: Path) -> Dict[str, int]:
+    path = repo_root / "content_inbox" / "config" / "reading_needs.yaml"
+    if not path.exists():
+        return {}
+    loaded = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    needs = loaded.get("needs") if isinstance(loaded, dict) else []
+    result: Dict[str, int] = {}
+    if not isinstance(needs, list):
+        return result
+    for need in needs:
+        if not isinstance(need, dict):
+            continue
+        need_id = str(need.get("id") or "").strip()
+        if not need_id:
+            continue
+        try:
+            result[need_id] = int(need.get("min_score", 4))
+        except (TypeError, ValueError):
+            result[need_id] = 4
+    return result
+
+
 def get_nested(d: Dict[str, Any], *keys: str, default: Any = "") -> Any:
     current: Any = d
     for key in keys:
@@ -405,34 +468,7 @@ def as_list(value: Any) -> List[str]:
     return [str(value)]
 
 
-def group_inbox_items(items: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
-    groups = {
-        "entertainment": [],
-        "frontier": [],
-        "watch_topic_update": [],
-        "worth_reading": [],
-    }
-    for item in items:
-        screening = item.get("screening") or {}
-        need_matches = screening.get("need_matches") or []
-        topic_matches = screening.get("topic_matches") or []
-        included_need_ids = {
-            match.get("need_id")
-            for match in need_matches
-            if match.get("decision") == "include"
-        }
-        if "entertainment" in included_need_ids:
-            groups["entertainment"].append(item)
-        if "frontier" in included_need_ids:
-            groups["frontier"].append(item)
-        if "watch_topic_update" in included_need_ids or topic_matches:
-            groups["watch_topic_update"].append(item)
-        if "worth_reading" in included_need_ids:
-            groups["worth_reading"].append(item)
-    return groups
-
-
-def item_line(item: Dict[str, Any]) -> str:
+def item_line(item: Dict[str, Any], *, need_id: str | None = None, topic_id: str | None = None) -> str:
     title = item.get("title") or get_nested(item, "normalized", "title") or "未命名"
     url = item.get("url") or get_nested(item, "normalized", "url")
     source = item.get("source_name") or get_nested(item, "normalized", "source_name") or ""
@@ -442,10 +478,10 @@ def item_line(item: Dict[str, Any]) -> str:
     reason = screening.get("reason") or ""
     score = screening.get("value_score") or item.get("value_score") or ""
     title_cn = screening.get("title_cn") or ""
-    tags = ", ".join(as_list(screening.get("tags") or item.get("tags")))
-    incremental = clustering.get("incremental_summary") or item.get("incremental_summary") or ""
     need_matches = screening.get("need_matches") or []
     topic_matches = screening.get("topic_matches") or []
+    selected_need_match = next((match for match in need_matches if match.get("need_id") == need_id), None)
+    selected_topic_match = next((match for match in topic_matches if match.get("topic_id") == topic_id), None)
 
     parts = [f"- **{md_escape(title)}**"]
     if title_cn:
@@ -456,42 +492,29 @@ def item_line(item: Dict[str, Any]) -> str:
         parts.append(f"  - 链接：{url}")
     if score != "":
         parts.append(f"  - 评分：{md_escape(score)}")
-    if screening.get("needs_more_context") is not None:
-        parts.append(f"  - needs_more_context：{md_escape(screening.get('needs_more_context'))}")
-    if screening.get("confidence") != "":
-        parts.append(f"  - confidence：{md_escape(screening.get('confidence'))}")
     if summary:
         parts.append(f"  - 摘要：{md_escape(summary)}")
-    if incremental:
-        parts.append(f"  - 增量：{md_escape(incremental)}")
-    if reason:
-        parts.append(f"  - 理由：{md_escape(reason)}")
-    if tags:
-        parts.append(f"  - 标签：{md_escape(tags)}")
-    if need_matches:
-        for match in need_matches:
-            parts.append(
-                "  - need_match[{need_id}] score={score} priority={priority} reason={reason} evidence={evidence} confidence={confidence} needs_more_context={needs_more_context}".format(
-                    need_id=md_escape(match.get("need_id", "")),
-                    score=md_escape(match.get("score", "")),
-                    priority=md_escape(match.get("priority", "")),
-                    reason=md_escape(match.get("reason", "")),
-                    evidence=md_escape(", ".join(as_list(match.get("evidence")))),
-                    confidence=md_escape(match.get("confidence", "")),
-                    needs_more_context=md_escape(match.get("needs_more_context", "")),
-                )
-            )
-    if topic_matches:
-        for match in topic_matches:
-            parts.append(
-                "  - topic_match[{topic_id}] score={score} update_type={update_type} reason={reason} confidence={confidence}".format(
-                    topic_id=md_escape(match.get("topic_id", "")),
-                    score=md_escape(match.get("score", "")),
-                    update_type=md_escape(match.get("update_type", "")),
-                    reason=md_escape(match.get("reason", "")),
-                    confidence=md_escape(match.get("confidence", "")),
-                )
-            )
+    if selected_need_match:
+        parts.append(f"  - need_score：{md_escape(selected_need_match.get('score', ''))}")
+        parts.append(f"  - priority：{md_escape(selected_need_match.get('priority', ''))}")
+        parts.append(f"  - reason：{md_escape(selected_need_match.get('reason', ''))}")
+        parts.append(f"  - evidence：{md_escape(', '.join(as_list(selected_need_match.get('evidence'))))}")
+        parts.append(f"  - confidence：{md_escape(selected_need_match.get('confidence', ''))}")
+        parts.append(f"  - needs_more_context：{md_escape(selected_need_match.get('needs_more_context', ''))}")
+    elif selected_topic_match:
+        parts.append(f"  - topic_score：{md_escape(selected_topic_match.get('score', ''))}")
+        parts.append(f"  - reason：{md_escape(selected_topic_match.get('reason', ''))}")
+        parts.append(f"  - confidence：{md_escape(selected_topic_match.get('confidence', ''))}")
+        parts.append(f"  - needs_more_context：{md_escape(screening.get('needs_more_context'))}")
+    else:
+        if reason:
+            parts.append(f"  - 理由：{md_escape(reason)}")
+        if screening.get("confidence") != "":
+            parts.append(f"  - confidence：{md_escape(screening.get('confidence'))}")
+        if screening.get("needs_more_context") is not None:
+            parts.append(f"  - needs_more_context：{md_escape(screening.get('needs_more_context'))}")
+    parts.append(f"  - suggested_action：{md_escape(screening.get('suggested_action', ''))}")
+    parts.append(f"  - notification_decision：{md_escape(clustering.get('notification_decision', ''))}")
     return "\n".join(parts)
 
 
@@ -712,21 +735,50 @@ def aggregate_stats(results: List[Dict[str, Any]], inbox: Dict[str, Any]) -> Dic
     }
 
 
+def view_definitions(need_min_scores: Dict[str, int]) -> List[Dict[str, Any]]:
+    return [
+        {
+            "title": "### 今天看什么娱乐\n",
+            "key": "entertainment",
+            "need_id": "entertainment",
+            "min_need_score": need_min_scores.get("entertainment", 4),
+        },
+        {
+            "title": "### 我关注的前沿咋样了\n",
+            "key": "frontier",
+            "need_id": "frontier",
+            "min_need_score": need_min_scores.get("frontier", 4),
+        },
+        {
+            "title": "### 我关心的话题议题有什么新的进展\n",
+            "key": "watch_topic_update",
+            "need_id": "watch_topic_update",
+            "min_need_score": need_min_scores.get("watch_topic_update", 4),
+        },
+        {
+            "title": "### 有什么是我值得看的\n",
+            "key": "worth_reading",
+            "need_id": "worth_reading",
+            "min_need_score": need_min_scores.get("worth_reading", 4),
+        },
+    ]
+
+
 def write_report(
     report_path: Path,
     selected: List[SourcePlan],
     results: List[Dict[str, Any]],
-    inbox: Dict[str, Any],
+    notification_inbox: Dict[str, Any],
+    reading_views: Dict[str, Dict[str, Any]],
     started_at: str,
     finished_at: str,
     url_mode: str,
     notes: List[str],
+    need_min_scores: Dict[str, int],
 ) -> None:
     success = [r for r in results if r["status"] == "success"]
     failed = [r for r in results if r["status"] == "failed"]
-    stats = aggregate_stats(results, inbox)
-    inbox_items = extract_items(inbox)
-    groups = group_inbox_items(inbox_items)
+    stats = aggregate_stats(results, notification_inbox)
 
     lines: List[str] = []
     lines.append("# RSS 批量输入 content-inbox 运行报告\n")
@@ -759,6 +811,7 @@ def write_report(
     lines.append("- `recommended_items_from_api_response` 来自 `POST /api/rss/analyze` 聚合返回，可能受重复内容和服务端统计实现影响。")
     lines.append("- `new_items_recommended` 当前 API 没有稳定字段可精确区分“本次新增且被推荐”的数量，因此记为 `unknown`。")
     lines.append("- `final_inbox_items_from_this_run` / `full_push_items_from_this_run` / `incremental_push_items_from_this_run` 来自本次运行结束后 `GET /api/inbox?from=<run_started_at>` 的查询结果。")
+    lines.append("- 四个阅读需求栏目使用独立的 `need_id` 查询，默认包含 silent / ignored 内容，不依赖通知决策。")
     if notes:
         for note in notes:
             lines.append(f"- {note}")
@@ -789,17 +842,22 @@ def write_report(
     lines.append("")
 
     lines.append("## 4. 阅读视图\n")
-    for title, key in [
-        ("### 今天看什么娱乐\n", "entertainment"),
-        ("### 我关注的前沿咋样了\n", "frontier"),
-        ("### 我关心的话题议题有什么新的进展\n", "watch_topic_update"),
-        ("### 有什么是我值得看的\n", "worth_reading"),
-    ]:
-        lines.append(title)
-        if not groups[key]:
+    for view in view_definitions(need_min_scores):
+        lines.append(view["title"])
+        view_items = extract_items(reading_views.get(view["key"], {}))
+        if not view_items:
             lines.append("无\n")
             continue
-        for item in groups[key][:30]:
+        for item in view_items[:30]:
+            lines.append(item_line(item, need_id=view["need_id"]))
+            lines.append("")
+
+    lines.append("### 系统通知推荐\n")
+    notification_items = extract_items(notification_inbox)
+    if not notification_items:
+        lines.append("无\n")
+    else:
+        for item in notification_items[:30]:
             lines.append(item_line(item))
             lines.append("")
 
@@ -823,13 +881,15 @@ def save_run_artifacts(
     run_dir: Path,
     plans: List[SourcePlan],
     results: List[Dict[str, Any]],
-    inbox: Dict[str, Any],
+    notification_inbox: Dict[str, Any],
+    reading_views: Dict[str, Dict[str, Any]],
     started_at: str,
     url_mode: str,
     state_status: str,
     args_snapshot: Dict[str, Any],
     consecutive_failures: int,
     notes: List[str],
+    need_min_scores: Dict[str, int],
 ) -> None:
     selected_rows = build_selected_rows(plans)
     source_results_path = run_dir / "source_results.csv"
@@ -848,11 +908,13 @@ def save_run_artifacts(
         report_path=report_path,
         selected=plans,
         results=results,
-        inbox=inbox,
+        notification_inbox=notification_inbox,
+        reading_views=reading_views,
         started_at=started_at,
         finished_at=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         url_mode=url_mode,
         notes=notes,
+        need_min_scores=need_min_scores,
     )
 
     completed_source_ids = [r["source_id"] for r in results if r.get("status") in {"success", "failed", "skipped_known_failed"}]
@@ -1106,6 +1168,7 @@ def main() -> int:
     }
     started_at = existing_state.get("started_at") if args.resume and existing_state.get("started_at") else dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
     notes: List[str] = []
+    need_min_scores = load_reading_need_min_scores(repo_root)
     if skipped_known_failed:
         notes.append(f"本次因 --skip-known-failed 跳过 {skipped_known_failed} 个已知失败源。")
     if args.resume:
@@ -1135,14 +1198,48 @@ def main() -> int:
                 f"({plan.url_source}) -> {plan.feed_url}",
                 flush=True,
             )
-        inbox = {"ok": True, "items": [], "stats": {}, "_query_mode": "not_run"}
-        save_run_artifacts(run_dir, plans, results, inbox, started_at, args.url_mode, "dry_run", args_snapshot, 0, notes)
+        notification_inbox = {"ok": True, "items": [], "stats": {}, "_query_mode": "not_run"}
+        reading_views = {
+            view["key"]: {"ok": True, "items": [], "stats": {}, "_query_mode": "not_run"}
+            for view in view_definitions(need_min_scores)
+        }
+        save_run_artifacts(
+            run_dir,
+            plans,
+            results,
+            notification_inbox,
+            reading_views,
+            started_at,
+            args.url_mode,
+            "dry_run",
+            args_snapshot,
+            0,
+            notes,
+            need_min_scores,
+        )
         print(f"[INFO] Dry run finished. No API calls were made. Report path: {run_dir / 'report.md'}", flush=True)
         return 0
 
-    inbox: Dict[str, Any] = {"ok": True, "items": [], "stats": {}, "_query_mode": "pending"}
+    notification_inbox: Dict[str, Any] = {"ok": True, "items": [], "stats": {}, "_query_mode": "pending"}
+    reading_views: Dict[str, Dict[str, Any]] = {
+        view["key"]: {"ok": True, "items": [], "stats": {}, "_query_mode": "pending"}
+        for view in view_definitions(need_min_scores)
+    }
     consecutive_failures = int(existing_state.get("consecutive_failures", 0)) if args.resume else 0
-    save_run_artifacts(run_dir, plans, results, inbox, started_at, args.url_mode, "running", args_snapshot, consecutive_failures, notes)
+    save_run_artifacts(
+        run_dir,
+        plans,
+        results,
+        notification_inbox,
+        reading_views,
+        started_at,
+        args.url_mode,
+        "running",
+        args_snapshot,
+        consecutive_failures,
+        notes,
+        need_min_scores,
+    )
 
     results_by_source_id = {row["source_id"]: row for row in results if row.get("source_id")}
     for plan in pending_plans:
@@ -1180,11 +1277,37 @@ def main() -> int:
             flush=True,
         )
 
-        save_run_artifacts(run_dir, plans, ordered_results, inbox, started_at, args.url_mode, "running", args_snapshot, consecutive_failures, notes)
+        save_run_artifacts(
+            run_dir,
+            plans,
+            ordered_results,
+            notification_inbox,
+            reading_views,
+            started_at,
+            args.url_mode,
+            "running",
+            args_snapshot,
+            consecutive_failures,
+            notes,
+            need_min_scores,
+        )
 
         if consecutive_failures >= args.max_consecutive_failures:
             notes.append(f"连续失败达到阈值 {args.max_consecutive_failures}，提前停止运行。")
-            save_run_artifacts(run_dir, plans, ordered_results, inbox, started_at, args.url_mode, "stopped_consecutive_failures", args_snapshot, consecutive_failures, notes)
+            save_run_artifacts(
+                run_dir,
+                plans,
+                ordered_results,
+                notification_inbox,
+                reading_views,
+                started_at,
+                args.url_mode,
+                "stopped_consecutive_failures",
+                args_snapshot,
+                consecutive_failures,
+                notes,
+                need_min_scores,
+            )
             print(f"[ERROR] Consecutive failures reached {args.max_consecutive_failures}. Stopping run.", file=sys.stderr, flush=True)
             return 4
 
@@ -1192,22 +1315,47 @@ def main() -> int:
             time.sleep(args.sleep)
 
     ordered_results = [results_by_source_id[p.source_id] for p in plans if p.source_id in results_by_source_id]
-    inbox = query_inbox(
+    notification_inbox = query_inbox(
         args.api_base,
         api_key=api_key,
         timeout=args.timeout,
         limit=args.inbox_limit,
         from_time=started_at,
     )
-    if inbox.get("_query_mode") == "date":
+    if notification_inbox.get("_query_mode") == "date":
         notes.append("`from=<run_started_at>` 查询未稳定生效，已回退到 `date=today`。")
+    reading_views = {
+        view["key"]: query_inbox_view(
+            args.api_base,
+            api_key,
+            args.timeout,
+            need_id=view["need_id"],
+            min_need_score=view["min_need_score"],
+            limit=args.inbox_limit,
+            from_time=started_at,
+        )
+        for view in view_definitions(need_min_scores)
+    }
 
     state_status = "completed"
     if any(r.get("status") == "failed" for r in ordered_results):
         state_status = "completed_with_failures"
-    save_run_artifacts(run_dir, plans, ordered_results, inbox, started_at, args.url_mode, state_status, args_snapshot, consecutive_failures, notes)
+    save_run_artifacts(
+        run_dir,
+        plans,
+        ordered_results,
+        notification_inbox,
+        reading_views,
+        started_at,
+        args.url_mode,
+        state_status,
+        args_snapshot,
+        consecutive_failures,
+        notes,
+        need_min_scores,
+    )
 
-    stats = aggregate_stats(ordered_results, inbox)
+    stats = aggregate_stats(ordered_results, notification_inbox)
     print("\n[SUMMARY]", flush=True)
     print(f"Processed sources: {stats['processed_sources']}", flush=True)
     print(f"Successful sources: {stats['successful_sources']}", flush=True)
@@ -1225,7 +1373,7 @@ def main() -> int:
             if r.get("status") == "failed":
                 print(f"- {r['source_name']} | {r['feed_url']} | {r['error_type']} | {r['error_message']}", flush=True)
 
-    inbox_items = extract_items(inbox)
+    inbox_items = extract_items(notification_inbox)
     if inbox_items:
         print("\n[TOP INBOX ITEMS]", flush=True)
         for item in inbox_items[:10]:
