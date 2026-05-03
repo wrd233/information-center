@@ -100,3 +100,60 @@ incremental:
     new_entities: ["新实体"]
     should_update_cluster_summary: true
     updated_cluster_summary: "更新后的事件簇摘要"
+
+screen_and_match:
+  purpose: "基础内容理解 + 阅读需求/关注议题匹配，合并为一次调用"
+  system: |
+    你是一个本地 content-inbox 的内容理解和需求匹配器。
+    你会收到 RSS 标题、摘要、部分正文、来源信息、用户阅读需求、关注议题。
+    你的任务：
+    1. 基础理解：分类、评分、提取实体/事件/隐藏信号，只基于已有证据；
+    2. 需求匹配：判断内容匹配哪些 reading_needs；
+    3. 议题匹配：判断内容匹配哪些 watch_topics；
+    4. 不要为不存在的需求或议题编造结果；
+    5. 对娱乐内容保持公平，不要只因为缺乏项目价值就压低；
+    6. 只输出 JSON object。
+  user_template: |
+    请根据以下输入做内容理解和需求匹配。
+    输入：
+    {input_json}
+
+    输出必须符合下面的 JSON 结构约束：
+    {output_contract_json}
+  output_contract:
+    summary: "一句话说明这条内容在讲什么"
+    title_cn: "如果原标题是英文，给出中文解释；如果原标题已是中文，可为空字符串"
+    category: ["AI前沿", "AI工具", "信息管理", "技术学习", "工程实践", "社会观察", "人生经验", "商业产品", "娱乐内容", "新闻资讯", "低质营销", "其他"]
+    value_score: "1-5 的整数"
+    personal_relevance: "1-5 的整数"
+    novelty_score: "1-5 的整数"
+    source_quality: "1-5 的整数"
+    actionability: "1-5 的整数"
+    hidden_signals: ["标题和摘要表层之外的隐含趋势、风险、机会或工作流启发"]
+    entities: ["核心人物、公司、项目、产品、地点、政策、技术名词等"]
+    event_hint: "一句话事件描述，用于后续事件聚类"
+    suggested_action: "ignore|skim|read|save|transcribe|review"
+    followup_type: "none|fetch_fulltext|archive|transcribe|manual_review"
+    suggested_next_step: "none|fetch_fulltext|transcribe|manual_review"
+    reason: "推荐、忽略或复核的理由"
+    tags: ["标签1", "标签2"]
+    confidence: "0-1 的数字"
+    evidence_level: "title_only|summary|partial_text|full_text"
+    needs_more_context: true
+    need_matches:
+      - need_id: "frontier"
+        need_name: "我关注的前沿咋样了"
+        score: 5
+        decision: "include|maybe|exclude"
+        priority: "P0|P1|P2|P3"
+        reason: "涉及重要 AI 产品动态。"
+        evidence: ["DeepSeek", "多模态"]
+        confidence: 0.9
+        needs_more_context: false
+    topic_matches:
+      - topic_id: "ai_agent"
+        topic_name: "AI Agent"
+        score: 4
+        update_type: "new_event|update|related"
+        reason: "讨论 Agent 工作流和 MCP。"
+        confidence: 0.82

@@ -10,6 +10,7 @@ llm:
 
 screening:
   enabled: true
+  mode: "two_stage"
   max_input_chars: 4000
   categories:
     - "AI前沿"

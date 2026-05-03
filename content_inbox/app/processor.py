@@ -8,7 +8,7 @@ from app.config import settings
 from app.clusterer import cluster_content
 from app.models import ClusteringResult, ContentAnalyzeRequest, NormalizedContent, ProcessResult
 from app.profiler import profiler
-from app.screener import screen_content
+from app.screener import gated_screening, screen_content
 from app.storage import InboxStore
 from app.utils import clean_text, normalize_url, stable_hash, truncate
 
@@ -39,6 +39,36 @@ def build_dedupe_key(content: NormalizedContent) -> str:
     if content.guid:
         return stable_hash(f"guid:{content.source_name}:{content.guid}")
     return stable_hash(f"title-source:{content.source_name}:{content.title.lower()}")
+
+
+def pre_llm_gate(normalized: NormalizedContent) -> tuple[bool, str, list[str]]:
+    title = (normalized.title or "").strip()
+    summary = (normalized.summary or "").strip()
+    content_text = (normalized.content_text or "").strip()
+    combined_text = f"{title}\n{summary}\n{content_text}".strip()
+
+    if not combined_text:
+        return False, "empty_content", []
+
+    if len(combined_text) < 20:
+        return False, "too_short", []
+
+    hints = _collect_hints(title)
+    return True, "", hints
+
+
+def _collect_hints(title: str) -> list[str]:
+    hints = []
+    title_lower = title.lower()
+    if any(kw in title_lower for kw in ["限时优惠", "免费领取", "扫码", "加群", "到手价", "促销", "秒杀"]):
+        hints.append("possible_ad")
+    if any(kw in title_lower for kw in ["招聘", "求职", "内推", "急招", "招人", "校招", "社招"]):
+        hints.append("possible_job")
+    if any(kw in title_lower for kw in ["周报", "日报", "月报", "季报", "简报", "newsletter"]):
+        hints.append("possible_digest")
+    if any(kw in title_lower for kw in ["导航", "目录", "链接汇总", "资源汇总"]):
+        hints.append("possible_navigation")
+    return hints
 
 
 def process_content(
@@ -73,7 +103,17 @@ def process_content(
             incremental_summary=(updated.get("clustering") or {}).get("incremental_summary", ""),
         )
 
-    screening = screen_content(normalized, use_ai=payload.screen)
+    should_call, gate_reason, gate_hints = pre_llm_gate(normalized)
+    if not should_call:
+        if not payload.screen:
+            screening = screen_content(normalized, use_ai=False)
+        else:
+            screening = gated_screening(normalized, gate_reason, gate_hints)
+    else:
+        screening = screen_content(normalized, use_ai=payload.screen)
+        if gate_hints:
+            screening.gate_hints = gate_hints
+
     inserted = store.insert(dedupe_key, normalized, screening, raw=raw)
     clustering = cluster_content(
         store,

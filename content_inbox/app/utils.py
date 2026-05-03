@@ -4,7 +4,7 @@ import hashlib
 import re
 from datetime import datetime, timezone
 from html import unescape
-from urllib.parse import urldefrag, urlparse, urlunparse
+from urllib.parse import parse_qs, urldefrag, urlencode, urlparse, urlunparse
 
 
 TAG_RE = re.compile(r"<[^>]+>")
@@ -23,6 +23,33 @@ def clean_text(value: str | None) -> str | None:
     return text or None
 
 
+_TRACKING_PARAMS = frozenset(
+    {
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "utm_term",
+        "utm_content",
+        "fbclid",
+        "gclid",
+        "ref",
+        "ref_src",
+        "source",
+        "spm",
+    }
+)
+
+
+def _clean_query(query: str) -> str:
+    if not query:
+        return query
+    params = parse_qs(query, keep_blank_values=True)
+    cleaned = {k: v for k, v in params.items() if k not in _TRACKING_PARAMS}
+    if not cleaned:
+        return ""
+    return urlencode(sorted(cleaned.items()), doseq=True)
+
+
 def normalize_url(value: str | None) -> str | None:
     if not value:
         return None
@@ -35,7 +62,8 @@ def normalize_url(value: str | None) -> str | None:
     path = parsed.path or "/"
     if path != "/" and path.endswith("/"):
         path = path.rstrip("/")
-    return urlunparse((scheme, netloc, path, "", parsed.query, ""))
+    query = _clean_query(parsed.query)
+    return urlunparse((scheme, netloc, path, "", query, ""))
 
 
 def stable_hash(value: str) -> str:

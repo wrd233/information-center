@@ -132,6 +132,7 @@ class ScreeningResult(BaseModel):
     model: str | None = None
     raw_model_response: dict[str, Any] | None = None
     error: str | None = None
+    gate_hints: list[str] = Field(default_factory=list)
 
     @field_validator("category", mode="before")
     @classmethod

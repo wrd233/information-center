@@ -23,6 +23,9 @@ def screen_content(content: NormalizedContent, use_ai: bool) -> ScreeningResult:
             "screen=true requires CONTENT_INBOX_DEEPSEEK_API_KEY or configured llm.api_key_env",
         )
     try:
+        mode = settings.screening.get("mode", "two_stage")
+        if mode == "merged":
+            return apply_score_policy(ai_screen_merged(content), content)
         return apply_score_policy(ai_screen(content), content)
     except Exception as exc:
         return failed_screening(content, str(exc))
@@ -82,6 +85,39 @@ def ai_screen(content: NormalizedContent) -> ScreeningResult:
     return ScreeningResult.model_validate(merged)
 
 
+def ai_screen_merged(content: NormalizedContent) -> ScreeningResult:
+    content_payload = content.model_dump()
+    content_payload["content_text"] = truncate(
+        content_payload.get("content_text"),
+        int(settings.screening.get("max_input_chars", 4000)),
+    )
+
+    t0 = time.monotonic()
+    merged_input = {
+        "content": content_payload,
+        "categories": settings.screening.get("categories", []),
+        "reading_needs": settings.reading_needs,
+        "watch_topics": settings.watch_topics,
+    }
+    merged_data = call_prompt_json(
+        "screen_and_match",
+        basic_input=merged_input,
+        output_contract=prompt_output_contract("screen_and_match"),
+        temperature=settings.llm.get("temperature", 0.2),
+        max_tokens=settings.llm.get("max_tokens", 3000),
+    )
+    profiler.record("llm_basic_screening_seconds", time.monotonic() - t0)
+    profiler.record("llm_need_matching_seconds", 0.0)
+
+    raw_response = merged_data.pop("_raw_response", None)
+    merged_data["screening_method"] = "ai"
+    merged_data["screening_status"] = "ok"
+    merged_data["prompt_version"] = settings.prompt_version
+    merged_data["model"] = settings.llm.get("model")
+    merged_data["raw_model_response"] = {"screen_and_match": raw_response}
+    return ScreeningResult.model_validate(merged_data)
+
+
 def call_prompt_json(
     prompt_name: str,
     basic_input: dict[str, Any],
@@ -109,10 +145,13 @@ def call_prompt_json(
     content_text = payload["choices"][0]["message"]["content"]
     try:
         data = json.loads(content_text)
-        data["_raw_response"] = payload
-        return data
-    except json.JSONDecodeError as exc:
-        raise RuntimeError(f"invalid {prompt_name} JSON: {content_text}") from exc
+    except json.JSONDecodeError:
+        try:
+            data = json.loads(content_text, strict=False)
+        except json.JSONDecodeError as exc:
+            raise RuntimeError(f"invalid {prompt_name} JSON: {content_text}") from exc
+    data["_raw_response"] = payload
+    return data
 
 
 def call_llm(body: dict[str, Any]) -> dict[str, Any]:
@@ -260,6 +299,37 @@ def failed_screening(content: NormalizedContent, error: str) -> ScreeningResult:
         prompt_version=settings.prompt_version,
         model=settings.llm.get("model"),
         error=error,
+    )
+
+
+def gated_screening(content: NormalizedContent, reason: str, hints: list[str]) -> ScreeningResult:
+    return ScreeningResult(
+        summary=truncate(content.summary or content.content_text or content.title, 120) or "无内容",
+        title_cn="",
+        category="其他",
+        value_score=1,
+        personal_relevance=1,
+        novelty_score=1,
+        source_quality=1,
+        actionability=1,
+        hidden_signals=[],
+        entities=[],
+        event_hint="",
+        suggested_action="ignore",
+        followup_type="none",
+        suggested_next_step="none",
+        reason=f"pre-LLM gate skipped: {reason}",
+        tags=[],
+        confidence=0.0,
+        evidence_level=infer_evidence_level(content),
+        needs_more_context=False,
+        need_matches=[],
+        topic_matches=[],
+        screening_method="ai" if reason != "empty_content" else "none",
+        screening_status="ok",
+        prompt_version=settings.prompt_version,
+        model=None,
+        gate_hints=hints,
     )
 
 
