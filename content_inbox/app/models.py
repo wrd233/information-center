@@ -17,6 +17,9 @@ ClusterRelation = Literal[
     "disabled",
 ]
 NotificationDecision = Literal["full_push", "incremental_push", "silent", "manual_review"]
+EvidenceLevel = Literal["title_only", "summary", "partial_text", "full_text"]
+NeedDecision = Literal["include", "maybe", "exclude"]
+NeedPriority = Literal["P0", "P1", "P2", "P3"]
 
 
 class RSSAnalyzeRequest(BaseModel):
@@ -61,9 +64,31 @@ class NormalizedContent(BaseModel):
     guid: str | None = None
 
 
+class NeedMatch(BaseModel):
+    need_id: str
+    need_name: str
+    score: int = Field(ge=1, le=5)
+    decision: NeedDecision = "exclude"
+    priority: NeedPriority = "P3"
+    reason: str = ""
+    evidence: list[str] = Field(default_factory=list)
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    needs_more_context: bool = False
+
+
+class TopicMatch(BaseModel):
+    topic_id: str
+    topic_name: str
+    score: int = Field(ge=1, le=5)
+    update_type: str = "related"
+    reason: str = ""
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+
+
 class ScreeningResult(BaseModel):
     summary: str
     category: str
+    title_cn: str = ""
     value_score: int = Field(ge=1, le=5)
     personal_relevance: int = Field(ge=1, le=5)
     novelty_score: int = Field(default=3, ge=1, le=5)
@@ -77,6 +102,11 @@ class ScreeningResult(BaseModel):
     reason: str
     tags: list[str] = Field(default_factory=list)
     confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    evidence_level: EvidenceLevel = "summary"
+    needs_more_context: bool = False
+    suggested_next_step: FollowupType = "none"
+    need_matches: list[NeedMatch] = Field(default_factory=list)
+    topic_matches: list[TopicMatch] = Field(default_factory=list)
     screening_method: Literal["ai", "none"] = "none"
     screening_status: Literal["ok", "failed", "skipped"] = "ok"
     prompt_version: str | None = None

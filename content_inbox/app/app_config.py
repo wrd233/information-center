@@ -81,6 +81,9 @@ DEFAULT_CONFIG: dict[str, Any] = {
     },
 }
 
+DEFAULT_READING_NEEDS: dict[str, Any] = {"needs": []}
+DEFAULT_WATCH_TOPICS: dict[str, Any] = {"topics": []}
+
 
 def load_yaml_config(base_dir: Path) -> dict[str, Any]:
     path = Path(os.getenv("CONTENT_INBOX_CONFIG", base_dir / "config" / "content_inbox.yaml"))
@@ -91,6 +94,55 @@ def load_yaml_config(base_dir: Path) -> dict[str, Any]:
         deep_merge(config, loaded)
     apply_env_overrides(config)
     return config
+
+
+def load_required_yaml(path: Path, label: str) -> dict[str, Any]:
+    if not path.exists():
+        raise RuntimeError(f"missing required {label} file: {path}")
+    with path.open(encoding="utf-8") as f:
+        loaded = yaml.safe_load(f) or {}
+    if not isinstance(loaded, dict):
+        raise RuntimeError(f"invalid {label} file, expected mapping at top level: {path}")
+    return loaded
+
+
+def load_optional_structured_yaml(path: Path, root_key: str, default: dict[str, Any]) -> dict[str, Any]:
+    if not path.exists():
+        return copy.deepcopy(default)
+    with path.open(encoding="utf-8") as f:
+        loaded = yaml.safe_load(f) or {}
+    if not isinstance(loaded, dict):
+        raise RuntimeError(f"invalid config file, expected mapping at top level: {path}")
+    if root_key not in loaded:
+        loaded[root_key] = []
+    if not isinstance(loaded[root_key], list):
+        raise RuntimeError(f"invalid config file, expected list at key '{root_key}': {path}")
+    return loaded
+
+
+def load_prompts(base_dir: Path) -> dict[str, Any]:
+    prompts = load_required_yaml(base_dir / "prompts.yaml", "prompts")
+    required = {"basic_screening", "need_matching", "incremental"}
+    missing = sorted(required - set(prompts.keys()))
+    if missing:
+        raise RuntimeError(f"prompts.yaml missing required prompt blocks: {', '.join(missing)}")
+    return prompts
+
+
+def load_reading_needs(base_dir: Path) -> dict[str, Any]:
+    return load_optional_structured_yaml(
+        base_dir / "config" / "reading_needs.yaml",
+        "needs",
+        DEFAULT_READING_NEEDS,
+    )
+
+
+def load_watch_topics(base_dir: Path) -> dict[str, Any]:
+    return load_optional_structured_yaml(
+        base_dir / "config" / "watch_topics.yaml",
+        "topics",
+        DEFAULT_WATCH_TOPICS,
+    )
 
 
 def deep_merge(target: dict[str, Any], source: dict[str, Any]) -> None:

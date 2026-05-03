@@ -1,0 +1,36 @@
+topics:
+  - id: ai_agent
+    name: "AI Agent"
+    description: "关注 Agent、MCP、Computer Use、Claude Code、OpenClaw、Manus 等方向。"
+    keywords:
+      - "Agent"
+      - "智能体"
+      - "MCP"
+      - "Claude Code"
+      - "OpenClaw"
+      - "Computer Use"
+      - "Manus"
+
+  - id: information_system
+    name: "个人信息系统"
+    description: "关注 RSS、Obsidian、Memo、信息流、内容处理、知识库自动化。"
+    keywords:
+      - "RSS"
+      - "RSSHub"
+      - "Obsidian"
+      - "Memo"
+      - "Memos"
+      - "信息流"
+      - "内容处理"
+      - "知识库"
+
+  - id: ai_video
+    name: "AI 视频生成"
+    description: "关注可灵、Sora、Veo、Runway、多模态视频生成和 AI 视频工作流。"
+    keywords:
+      - "视频生成"
+      - "可灵"
+      - "Sora"
+      - "Veo"
+      - "Runway"
+      - "多模态"

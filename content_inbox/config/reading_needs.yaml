@@ -1,0 +1,66 @@
+needs:
+  - id: entertainment
+    name: "今天看什么娱乐"
+    enabled: true
+    description: >
+      我想找一些轻松、有趣、适合放松的内容。
+      不要求有项目价值，不要求信息密度很高。
+    source_categories:
+      - "最娱乐"
+      - "绝活娱乐"
+    question: "这条内容是否适合我今天轻松看一下？"
+    rubric: |
+      5 分：非常适合放松，轻松、有趣、低压力，明显值得点开。
+      4 分：适合放松，有一定趣味。
+      3 分：可看可不看。
+      2 分：吸引力较弱。
+      1 分：低质、标题党、噪声。
+    min_score: 4
+
+  - id: frontier
+    name: "我关注的前沿咋样了"
+    enabled: true
+    description: >
+      我想了解 AI、Agent、AI 工具、技术趋势、产品变化和产业信号。
+    source_categories:
+      - "微信公众号"
+      - "英文博客"
+      - "科技与编程"
+      - "Articles"
+      - "SocialMedia"
+    question: "这条内容是否提供了值得关注的 AI、技术、产品或行业前沿信号？"
+    rubric: |
+      5 分：重要前沿动态，可能影响趋势判断或工具选择。
+      4 分：明确有新产品、新模型、新研究、新趋势或重要案例。
+      3 分：有一定信息量，但重要性一般。
+      2 分：信息较弱或重复。
+      1 分：无明显前沿价值。
+    min_score: 4
+
+  - id: watch_topic_update
+    name: "我关心的话题议题有什么新的进展"
+    enabled: true
+    description: >
+      我想追踪自己关心的议题是否出现了新进展。
+    question: "这条内容是否匹配我的关注议题，并提供了值得注意的新进展？"
+    rubric: |
+      5 分：强匹配关注议题，且提供重要新进展。
+      4 分：匹配关注议题，并有明确新增信息。
+      3 分：相关但新增信息有限。
+      2 分：弱相关。
+      1 分：无关。
+    min_score: 4
+
+  - id: worth_reading
+    name: "有什么是我值得看的"
+    enabled: true
+    description: >
+      我想从所有内容中找出最值得花时间阅读的内容。
+    question: "这条内容是否值得我今天花时间阅读？"
+    rubric: |
+      5 分：今天必看，高相关、高信息密度、高启发。
+      4 分：值得看，有明确阅读收益。
+      3 分：可扫一眼。
+      2 分：不太值得花时间。
+      1 分：忽略。
+    min_score: 4

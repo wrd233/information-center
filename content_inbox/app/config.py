@@ -5,7 +5,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from app.app_config import load_yaml_config
+from app.app_config import load_prompts, load_reading_needs, load_watch_topics, load_yaml_config
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 load_dotenv(BASE_DIR / ".env")
@@ -47,6 +47,22 @@ class Settings:
         self.embedding = self.config["embedding"]
         self.clustering = self.config["clustering"]
         self.notification = self.config["notification"]
+        self.prompts = load_prompts(BASE_DIR)
+        self.reading_needs_config = load_reading_needs(BASE_DIR)
+        self.watch_topics_config = load_watch_topics(BASE_DIR)
+        self.reading_needs = [
+            need
+            for need in self.reading_needs_config.get("needs", [])
+            if isinstance(need, dict) and need.get("enabled", True)
+        ]
+        self.watch_topics = [
+            topic for topic in self.watch_topics_config.get("topics", []) if isinstance(topic, dict)
+        ]
+        self.prompt_version = (
+            self.prompts.get("version")
+            or self.llm.get("prompt_version")
+            or "prompts_unversioned"
+        )
 
     def llm_api_key(self) -> str:
         env_name = self.llm.get("api_key_env", "CONTENT_INBOX_DEEPSEEK_API_KEY")

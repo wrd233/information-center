@@ -427,9 +427,12 @@ def filter_items(items: list[dict[str, Any]], filters: dict[str, Any]) -> list[d
     result = []
     actions = set(filters.get("suggested_action") or [])
     notification_decisions = set(filters.get("notification_decision") or [])
+    priorities = set(filters.get("priority") or [])
     for item in items:
         screening = item["screening"]
         clustering = item["clustering"]
+        need_matches = screening.get("need_matches") or []
+        topic_matches = screening.get("topic_matches") or []
         if filters.get("category") and screening.get("category") != filters["category"]:
             continue
         if filters.get("followup_type") and screening.get("followup_type") != filters["followup_type"]:
@@ -463,6 +466,40 @@ def filter_items(items: list[dict[str, Any]], filters: dict[str, Any]) -> list[d
             and clustering.get("notification_decision") == "silent"
         ):
             continue
+        if filters.get("needs_more_context") is not None and screening.get("needs_more_context") != filters.get("needs_more_context"):
+            continue
+        if filters.get("need_id"):
+            filtered_need_matches = [
+                match
+                for match in need_matches
+                if match.get("need_id") == filters["need_id"]
+            ]
+            if not filtered_need_matches:
+                continue
+            if filters.get("min_need_score") is not None and not any(
+                int(match.get("score", 0)) >= filters["min_need_score"] for match in filtered_need_matches
+            ):
+                continue
+            if priorities and not any(match.get("priority") in priorities for match in filtered_need_matches):
+                continue
+            if not filters.get("include_maybe") and not any(
+                match.get("decision") == "include" for match in filtered_need_matches
+            ):
+                continue
+        elif filters.get("min_need_score") is not None:
+            if not any(int(match.get("score", 0)) >= filters["min_need_score"] for match in need_matches):
+                continue
+        elif priorities:
+            if not any(match.get("priority") in priorities for match in need_matches):
+                continue
+        if filters.get("topic_id"):
+            filtered_topic_matches = [
+                match
+                for match in topic_matches
+                if match.get("topic_id") == filters["topic_id"]
+            ]
+            if not filtered_topic_matches:
+                continue
         result.append(public_item(item))
     return result
 

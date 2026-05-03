@@ -407,35 +407,28 @@ def as_list(value: Any) -> List[str]:
 
 def group_inbox_items(items: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
     groups = {
-        "new_events": [],
-        "incremental_updates": [],
-        "transcribe": [],
-        "manual_review": [],
-        "other_recommended": [],
+        "entertainment": [],
+        "frontier": [],
+        "watch_topic_update": [],
+        "worth_reading": [],
     }
     for item in items:
         screening = item.get("screening") or {}
-        clustering = item.get("clustering") or {}
-        action = screening.get("suggested_action") or item.get("suggested_action")
-        followup = screening.get("followup_type") or item.get("followup_type")
-        relation = clustering.get("cluster_relation") or item.get("cluster_relation")
-        decision = clustering.get("notification_decision") or item.get("notification_decision")
-
-        added = False
-        if decision == "full_push" or relation == "new_event":
-            groups["new_events"].append(item)
-            added = True
-        if decision == "incremental_push" or relation == "incremental_update":
-            groups["incremental_updates"].append(item)
-            added = True
-        if action == "transcribe" or followup == "transcribe":
-            groups["transcribe"].append(item)
-            added = True
-        if action == "review" or decision == "manual_review":
-            groups["manual_review"].append(item)
-            added = True
-        if not added:
-            groups["other_recommended"].append(item)
+        need_matches = screening.get("need_matches") or []
+        topic_matches = screening.get("topic_matches") or []
+        included_need_ids = {
+            match.get("need_id")
+            for match in need_matches
+            if match.get("decision") == "include"
+        }
+        if "entertainment" in included_need_ids:
+            groups["entertainment"].append(item)
+        if "frontier" in included_need_ids:
+            groups["frontier"].append(item)
+        if "watch_topic_update" in included_need_ids or topic_matches:
+            groups["watch_topic_update"].append(item)
+        if "worth_reading" in included_need_ids:
+            groups["worth_reading"].append(item)
     return groups
 
 
@@ -448,16 +441,25 @@ def item_line(item: Dict[str, Any]) -> str:
     summary = screening.get("summary") or item.get("summary") or ""
     reason = screening.get("reason") or ""
     score = screening.get("value_score") or item.get("value_score") or ""
+    title_cn = screening.get("title_cn") or ""
     tags = ", ".join(as_list(screening.get("tags") or item.get("tags")))
     incremental = clustering.get("incremental_summary") or item.get("incremental_summary") or ""
+    need_matches = screening.get("need_matches") or []
+    topic_matches = screening.get("topic_matches") or []
 
     parts = [f"- **{md_escape(title)}**"]
+    if title_cn:
+        parts.append(f"  - 中文解释：{md_escape(title_cn)}")
     if source:
         parts.append(f"  - 来源：{md_escape(source)}")
     if url:
         parts.append(f"  - 链接：{url}")
     if score != "":
         parts.append(f"  - 评分：{md_escape(score)}")
+    if screening.get("needs_more_context") is not None:
+        parts.append(f"  - needs_more_context：{md_escape(screening.get('needs_more_context'))}")
+    if screening.get("confidence") != "":
+        parts.append(f"  - confidence：{md_escape(screening.get('confidence'))}")
     if summary:
         parts.append(f"  - 摘要：{md_escape(summary)}")
     if incremental:
@@ -466,6 +468,30 @@ def item_line(item: Dict[str, Any]) -> str:
         parts.append(f"  - 理由：{md_escape(reason)}")
     if tags:
         parts.append(f"  - 标签：{md_escape(tags)}")
+    if need_matches:
+        for match in need_matches:
+            parts.append(
+                "  - need_match[{need_id}] score={score} priority={priority} reason={reason} evidence={evidence} confidence={confidence} needs_more_context={needs_more_context}".format(
+                    need_id=md_escape(match.get("need_id", "")),
+                    score=md_escape(match.get("score", "")),
+                    priority=md_escape(match.get("priority", "")),
+                    reason=md_escape(match.get("reason", "")),
+                    evidence=md_escape(", ".join(as_list(match.get("evidence")))),
+                    confidence=md_escape(match.get("confidence", "")),
+                    needs_more_context=md_escape(match.get("needs_more_context", "")),
+                )
+            )
+    if topic_matches:
+        for match in topic_matches:
+            parts.append(
+                "  - topic_match[{topic_id}] score={score} update_type={update_type} reason={reason} confidence={confidence}".format(
+                    topic_id=md_escape(match.get("topic_id", "")),
+                    score=md_escape(match.get("score", "")),
+                    update_type=md_escape(match.get("update_type", "")),
+                    reason=md_escape(match.get("reason", "")),
+                    confidence=md_escape(match.get("confidence", "")),
+                )
+            )
     return "\n".join(parts)
 
 
@@ -762,13 +788,12 @@ def write_report(
         )
     lines.append("")
 
-    lines.append("## 4. 今日推荐内容\n")
+    lines.append("## 4. 阅读视图\n")
     for title, key in [
-        ("### 新事件\n", "new_events"),
-        ("### 增量更新\n", "incremental_updates"),
-        ("### 建议转录\n", "transcribe"),
-        ("### 需要人工复核\n", "manual_review"),
-        ("### 其他推荐内容\n", "other_recommended"),
+        ("### 今天看什么娱乐\n", "entertainment"),
+        ("### 我关注的前沿咋样了\n", "frontier"),
+        ("### 我关心的话题议题有什么新的进展\n", "watch_topic_update"),
+        ("### 有什么是我值得看的\n", "worth_reading"),
     ]:
         lines.append(title)
         if not groups[key]:
