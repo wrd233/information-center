@@ -22,6 +22,7 @@ DEFAULT_CONFIG: dict[str, Any] = {
     "screening": {
         "enabled": True,
         "max_input_chars": 4000,
+        "merged_max_tokens": 3000,
         "categories": [
             "AI前沿",
             "AI工具",

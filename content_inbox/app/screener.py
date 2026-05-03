@@ -110,6 +110,18 @@ def screen_content(content: NormalizedContent, use_ai: bool) -> ScreeningResult:
         return failed_screening(content, str(exc))
 
 
+def _normalize_action_fields(data: dict[str, Any]) -> dict[str, Any]:
+    """Fix known model mistake: fetch_fulltext misplaced into suggested_action."""
+    if data.get("suggested_action") == "fetch_fulltext":
+        data = dict(data)
+        data["suggested_action"] = "review"
+        if not data.get("followup_type") or data.get("followup_type") == "none":
+            data["followup_type"] = "fetch_fulltext"
+        if not data.get("suggested_next_step") or data.get("suggested_next_step") == "none":
+            data["suggested_next_step"] = "fetch_fulltext"
+    return data
+
+
 def ai_screen(content: NormalizedContent) -> ScreeningResult:
     set_dump_item_context(
         source_name=content.source_name or "",
@@ -169,6 +181,7 @@ def ai_screen(content: NormalizedContent) -> ScreeningResult:
         "basic_screening": basic_raw,
         "need_matching": matching_raw,
     }
+    merged = _normalize_action_fields(merged)
     return ScreeningResult.model_validate(merged)
 
 
@@ -198,7 +211,7 @@ def ai_screen_merged(content: NormalizedContent) -> ScreeningResult:
         basic_input=merged_input,
         output_contract=prompt_output_contract("screen_and_match"),
         temperature=settings.llm.get("temperature", 0.2),
-        max_tokens=settings.llm.get("max_tokens", 3000),
+        max_tokens=int(settings.screening.get("merged_max_tokens", 3000)),
     )
     profiler.record("llm_basic_screening_seconds", time.monotonic() - t0)
     profiler.record("llm_need_matching_seconds", 0.0)
@@ -209,6 +222,7 @@ def ai_screen_merged(content: NormalizedContent) -> ScreeningResult:
     merged_data["prompt_version"] = settings.prompt_version
     merged_data["model"] = settings.llm.get("model")
     merged_data["raw_model_response"] = {"screen_and_match": raw_response}
+    merged_data = _normalize_action_fields(merged_data)
     return ScreeningResult.model_validate(merged_data)
 
 
@@ -252,7 +266,24 @@ def call_prompt_json(
         try:
             data = json.loads(content_text, strict=False)
         except json.JSONDecodeError as exc:
-            raise RuntimeError(f"invalid {prompt_name} JSON: {content_text}") from exc
+            finish_reason = payload["choices"][0].get("finish_reason")
+            usage = payload.get("usage", {})
+            completion_tokens = usage.get("completion_tokens")
+            content_chars = len(content_text)
+            tail_preview = content_text[-300:]
+            if finish_reason == "length":
+                raise RuntimeError(
+                    f"{prompt_name} JSON truncated: finish_reason=length, "
+                    f"max_tokens={max_tokens}, "
+                    f"completion_tokens={completion_tokens}, "
+                    f"content_chars={content_chars}, "
+                    f"tail_preview={tail_preview}"
+                ) from exc
+            raise RuntimeError(
+                f"invalid {prompt_name} JSON (finish_reason={finish_reason}): "
+                f"content_chars={content_chars}, "
+                f"tail_preview={tail_preview}"
+            ) from exc
     data["_raw_response"] = payload
     return data
 

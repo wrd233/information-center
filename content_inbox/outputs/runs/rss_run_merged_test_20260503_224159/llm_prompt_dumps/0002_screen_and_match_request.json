@@ -1,0 +1,40 @@
+{
+  "dump_type": "llm_request_body",
+  "exact_api_payload": true,
+  "prompt_name": "screen_and_match",
+  "stage": "merged",
+  "source_name": "Z Finance",
+  "source_url": "https://mp.weixin.qq.com/s/xUm_u7n7nY5pNepZFreZPg",
+  "item_title": "深度｜对话红杉资本：SEO 已死，未来三年不懂 Agent 的营销人将被淘汰",
+  "item_url": "https://mp.weixin.qq.com/s/xUm_u7n7nY5pNepZFreZPg",
+  "created_at": "2026-05-03T14:44:24.862147+00:00",
+  "request_body": {
+    "model": "deepseek-v4-flash",
+    "temperature": 0.2,
+    "max_tokens": 3000,
+    "messages": [
+      {
+        "role": "system",
+        "content": "你是一个本地 content-inbox 的内容理解和需求匹配器。\n你会收到 RSS 标题、摘要、部分正文、来源信息、用户阅读需求、关注议题。\n你的任务：\n1. 基础理解：分类、评分、提取实体/事件/隐藏信号，只基于已有证据；\n2. 需求匹配：判断内容匹配哪些 reading_needs；\n3. 议题匹配：判断内容匹配哪些 watch_topics；\n4. 不要为不存在的需求或议题编造结果；\n5. 对娱乐内容保持公平，不要只因为缺乏项目价值就压低；\n6. 只输出 JSON object。\n"
+      },
+      {
+        "role": "user",
+        "content": "请根据以下输入做内容理解和需求匹配。\n输入：\n{\"content\": {\"title\": \"深度｜对话红杉资本：SEO 已死，未来三年不懂 Agent 的营销人将被淘汰\", \"url\": \"https://mp.weixin.qq.com/s/xUm_u7n7nY5pNepZFreZPg\", \"source_name\": \"Z Finance\", \"source_category\": \"Articles/AI\", \"content_type\": \"article\", \"published_at\": \"2026-04-30T16:16:09+08:00\", \"author\": \"Z Finance\", \"summary\": \"营销行业正迎来底层重构\", \"content_text\": \"营销行业正迎来底层重构\", \"guid\": \"3077513391-2453898784_1\"}, \"categories\": [\"AI前沿\", \"AI工具\", \"信息管理\", \"技术学习\", \"工程实践\", \"社会观察\", \"人生经验\", \"商业产品\", \"娱乐内容\", \"新闻资讯\", \"低质营销\", \"其他\"], \"reading_needs\": [{\"id\": \"entertainment\", \"name\": \"今天看什么娱乐\", \"enabled\": true, \"description\": \"我想找一些轻松、有趣、适合放松的内容。 不要求有项目价值，不要求信息密度很高。\\n\", \"source_categories\": [\"最娱乐\", \"绝活娱乐\"], \"question\": \"这条内容是否适合我今天轻松看一下？\", \"rubric\": \"5 分：非常适合放松，轻松、有趣、低压力，明显值得点开。\\n4 分：适合放松，有一定趣味。\\n3 分：可看可不看。\\n2 分：吸引力较弱。\\n1 分：低质、标题党、噪声。\\n\", \"min_score\": 4}, {\"id\": \"frontier\", \"name\": \"我关注的前沿咋样了\", \"enabled\": true, \"description\": \"我想了解 AI、Agent、AI 工具、技术趋势、产品变化和产业信号。\\n\", \"source_categories\": [\"微信公众号\", \"英文博客\", \"科技与编程\", \"Articles\", \"SocialMedia\"], \"question\": \"这条内容是否提供了值得关注的 AI、技术、产品或行业前沿信号？\", \"rubric\": \"5 分：重要前沿动态，可能影响趋势判断或工具选择。\\n4 分：明确有新产品、新模型、新研究、新趋势或重要案例。\\n3 分：有一定信息量，但重要性一般。\\n2 分：信息较弱或重复。\\n1 分：无明显前沿价值。\\n\", \"min_score\": 4}, {\"id\": \"watch_topic_update\", \"name\": \"我关心的话题议题有什么新的进展\", \"enabled\": true, \"description\": \"我想追踪自己关心的议题是否出现了新进展。\\n\", \"question\": \"这条内容是否匹配我的关注议题，并提供了值得注意的新进展？\", \"rubric\": \"5 分：强匹配关注议题，且提供重要新进展。\\n4 分：匹配关注议题，并有明确新增信息。\\n3 分：相关但新增信息有限。\\n2 分：弱相关。\\n1 分：无关。\\n\", \"min_score\": 4}, {\"id\": \"worth_reading\", \"name\": \"有什么是我值得看的\", \"enabled\": true, \"description\": \"我想从所有内容中找出最值得花时间阅读的内容。\\n\", \"question\": \"这条内容是否值得我今天花时间阅读？\", \"rubric\": \"5 分：今天必看，高相关、高信息密度、高启发。\\n4 分：值得看，有明确阅读收益。\\n3 分：可扫一眼。\\n2 分：不太值得花时间。\\n1 分：忽略。\\n\", \"min_score\": 4}], \"watch_topics\": [{\"id\": \"ai_agent\", \"name\": \"AI Agent\", \"description\": \"关注 Agent、MCP、Computer Use、Claude Code、OpenClaw、Manus 等方向。\", \"keywords\": [\"Agent\", \"智能体\", \"MCP\", \"Claude Code\", \"OpenClaw\", \"Computer Use\", \"Manus\"]}, {\"id\": \"information_system\", \"name\": \"个人信息系统\", \"description\": \"关注 RSS、Obsidian、Memo、信息流、内容处理、知识库自动化。\", \"keywords\": [\"RSS\", \"RSSHub\", \"Obsidian\", \"Memo\", \"Memos\", \"信息流\", \"内容处理\", \"知识库\"]}, {\"id\": \"ai_video\", \"name\": \"AI 视频生成\", \"description\": \"关注可灵、Sora、Veo、Runway、多模态视频生成和 AI 视频工作流。\", \"keywords\": [\"视频生成\", \"可灵\", \"Sora\", \"Veo\", \"Runway\", \"多模态\"]}]}\n\n输出必须符合下面的 JSON 结构约束：\n{\"summary\": \"一句话说明这条内容在讲什么\", \"title_cn\": \"如果原标题是英文，给出中文解释；如果原标题已是中文，可为空字符串\", \"category\": [\"AI前沿\", \"AI工具\", \"信息管理\", \"技术学习\", \"工程实践\", \"社会观察\", \"人生经验\", \"商业产品\", \"娱乐内容\", \"新闻资讯\", \"低质营销\", \"其他\"], \"value_score\": \"1-5 的整数\", \"personal_relevance\": \"1-5 的整数\", \"novelty_score\": \"1-5 的整数\", \"source_quality\": \"1-5 的整数\", \"actionability\": \"1-5 的整数\", \"hidden_signals\": [\"标题和摘要表层之外的隐含趋势、风险、机会或工作流启发\"], \"entities\": [\"核心人物、公司、项目、产品、地点、政策、技术名词等\"], \"event_hint\": \"一句话事件描述，用于后续事件聚类\", \"suggested_action\": \"ignore|skim|read|save|transcribe|review\", \"followup_type\": \"none|fetch_fulltext|archive|transcribe|manual_review\", \"suggested_next_step\": \"none|fetch_fulltext|transcribe|manual_review\", \"reason\": \"推荐、忽略或复核的理由\", \"tags\": [\"标签1\", \"标签2\"], \"confidence\": \"0-1 的数字\", \"evidence_level\": \"title_only|summary|partial_text|full_text\", \"needs_more_context\": true, \"need_matches\": [{\"need_id\": \"frontier\", \"need_name\": \"我关注的前沿咋样了\", \"score\": 5, \"decision\": \"include|maybe|exclude\", \"priority\": \"P0|P1|P2|P3\", \"reason\": \"涉及重要 AI 产品动态。\", \"evidence\": [\"DeepSeek\", \"多模态\"], \"confidence\": 0.9, \"needs_more_context\": false}], \"topic_matches\": [{\"topic_id\": \"ai_agent\", \"topic_name\": \"AI Agent\", \"score\": 4, \"update_type\": \"new_event|update|related\", \"reason\": \"讨论 Agent 工作流和 MCP。\", \"confidence\": 0.82}]}\n"
+      }
+    ],
+    "response_format": {
+      "type": "json_object"
+    }
+  },
+  "stats": {
+    "system_chars": 247,
+    "user_chars": 3569,
+    "total_chars": 3816,
+    "estimated_tokens_chars_div4": 954,
+    "estimated_tokens_cjk_aware": 1787,
+    "url_count": 1,
+    "html_tag_count": 0,
+    "markdown_link_count": 0,
+    "image_url_count": 0
+  }
+}

@@ -29,9 +29,9 @@ basic_screening:
     hidden_signals: ["标题和摘要表层之外的隐含趋势、风险、机会或工作流启发"]
     entities: ["核心人物、公司、项目、产品、地点、政策、技术名词等"]
     event_hint: "一句话事件描述，用于后续事件聚类"
-    suggested_action: "ignore|skim|read|save|transcribe|review"
-    followup_type: "none|fetch_fulltext|archive|transcribe|manual_review"
-    suggested_next_step: "none|fetch_fulltext|transcribe|manual_review"
+    suggested_action: "只允许 ignore | skim | read | save | transcribe | review。如果你认为需要抓取全文，填 review（不是 fetch_fulltext）。"
+    followup_type: "只允许 none | fetch_fulltext | archive | transcribe | manual_review"
+    suggested_next_step: "只允许 none | fetch_fulltext | transcribe | manual_review"
     reason: "推荐、忽略或复核的理由"
     tags: ["标签1", "标签2"]
     confidence: "0-1 的数字"
@@ -132,9 +132,9 @@ screen_and_match:
     hidden_signals: ["标题和摘要表层之外的隐含趋势、风险、机会或工作流启发"]
     entities: ["核心人物、公司、项目、产品、地点、政策、技术名词等"]
     event_hint: "一句话事件描述，用于后续事件聚类"
-    suggested_action: "ignore|skim|read|save|transcribe|review"
-    followup_type: "none|fetch_fulltext|archive|transcribe|manual_review"
-    suggested_next_step: "none|fetch_fulltext|transcribe|manual_review"
+    suggested_action: "只允许 ignore | skim | read | save | transcribe | review。如果你认为需要抓取全文，填 review（不是 fetch_fulltext）。"
+    followup_type: "只允许 none | fetch_fulltext | archive | transcribe | manual_review"
+    suggested_next_step: "只允许 none | fetch_fulltext | transcribe | manual_review"
     reason: "推荐、忽略或复核的理由"
     tags: ["标签1", "标签2"]
     confidence: "0-1 的数字"
