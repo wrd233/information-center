@@ -1,0 +1,3 @@
+source_name,source_category,local_xml_url,xml_url,feed_url,error_message,error_type
+东西智库,Articles,,http://127.0.0.1:1200/dx2025,http://127.0.0.1:1200/dx2025,"{""detail"": ""HTTP Error 503: Service Unavailable""}",rsshub_503
+Twitter-@Tom-Huang,SocialMedia,,http://127.0.0.1:1200/twitter/user/tuturetom,http://127.0.0.1:1200/twitter/user/tuturetom,"{""detail"": ""HTTP Error 503: Service Unavailable""}",rsshub_503

@@ -334,8 +334,11 @@ def analyze_rss_source(
     timeout: int,
     api_key: Optional[str],
     profile: bool = False,
+    audit_prompt: bool = False,
+    dump_llm_prompt: bool = False,
+    dump_llm_prompt_dir: str = "",
 ) -> Dict[str, Any]:
-    payload = {
+    payload: Dict[str, Any] = {
         "feed_url": feed_url,
         "source_name": source.source_name,
         "source_category": source.source_category,
@@ -344,6 +347,12 @@ def analyze_rss_source(
     }
     if profile:
         payload["profile"] = True
+    if audit_prompt:
+        payload["audit_prompt"] = True
+    if dump_llm_prompt:
+        payload["dump_llm_prompt"] = True
+    if dump_llm_prompt_dir:
+        payload["dump_llm_prompt_dir"] = dump_llm_prompt_dir
     return request_json("POST", f"{api_base.rstrip('/')}/api/rss/analyze", payload=payload, timeout=timeout, api_key=api_key)
 
 
@@ -357,7 +366,12 @@ def run_one_plan(plan: SourcePlan, args: argparse.Namespace, api_key: Optional[s
         timeout=args.timeout,
         api_key=api_key,
         profile=args.profile,
+        audit_prompt=args.audit_prompt,
+        dump_llm_prompt=args.dump_llm_prompt,
+        dump_llm_prompt_dir=getattr(args, 'dump_llm_prompt_dir', ''),
     )
+    if args.audit_prompt:
+        return summarize_audit_response(plan, response)
     return summarize_result_for_source(plan, response)
 
 
@@ -621,6 +635,66 @@ def summarize_result_for_source(plan: SourcePlan, response: Dict[str, Any]) -> D
         "failed_items": response.get("failed_items", 0),
         "error_message": "",
         "error_type": "",
+    }
+
+
+def summarize_audit_response(plan: SourcePlan, response: Dict[str, Any]) -> Dict[str, Any]:
+    """Summarize an audit-mode API response into a result dict for the script pipeline."""
+    ok = response.get("ok")
+    status_code = response.get("_status")
+    failed_by_http = status_code is not None and int(status_code) >= 400
+
+    base = {
+        "source_id": plan.source_id,
+        "sequence": plan.sequence,
+        "source_name": plan.source.source_name,
+        "source_category": plan.source.source_category,
+        "local_xml_url": plan.source.local_xml_url,
+        "xml_url": plan.source.xml_url,
+        "feed_url": plan.feed_url,
+        "url_mode": plan.url_mode,
+        "screen": plan.screen,
+    }
+
+    if ok is False or failed_by_http:
+        error_message = json.dumps(response.get("error", response), ensure_ascii=False)[:1000]
+        result = {
+            **base,
+            "status": "failed",
+            "total_items": 0,
+            "new_items": 0,
+            "duplicate_items": 0,
+            "screened_items": 0,
+            "recommended_items_from_api_response": 0,
+            "new_items_recommended": "unknown",
+            "new_event_items": 0,
+            "incremental_items": 0,
+            "silent_items": 0,
+            "failed_items": 0,
+            "error_message": error_message,
+            "_audit_records": [],
+        }
+        result["error_type"] = classify_error(result)
+        return result
+
+    audit_records = response.get("audit_records", [])
+    return {
+        **base,
+        "status": "audited",
+        "total_items": response.get("total_items", 0),
+        "new_items": 0,
+        "duplicate_items": 0,
+        "screened_items": 0,
+        "recommended_items_from_api_response": 0,
+        "new_items_recommended": "unknown",
+        "new_event_items": 0,
+        "incremental_items": 0,
+        "silent_items": 0,
+        "failed_items": 0,
+        "error_message": "",
+        "error_type": "",
+        "total_prompts": len(audit_records),
+        "_audit_records": audit_records,
     }
 
 
@@ -1052,6 +1126,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--limit-per-source", type=int, default=20, help="Item limit for each RSS source.")
     parser.add_argument("--screen", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--profile", action="store_true", help="Enable per-source profiling in source_results.csv.")
+    parser.add_argument("--audit-prompt", action="store_true", help="Enable prompt audit mode: assemble prompts without calling LLM and write prompt_audit.jsonl.")
+    parser.add_argument("--dump-llm-prompt", action="store_true", help="Dump complete LLM request bodies to files. Real API calls are made.")
+    parser.add_argument("--dump-llm-prompt-dir", default="", help="Output directory for LLM prompt dumps. Default: <run_dir>/llm_prompt_dumps/")
     parser.add_argument("--sleep", type=float, default=1.0, help="Sleep seconds between sources.")
     parser.add_argument(
         "--concurrency",
@@ -1239,6 +1316,12 @@ def main() -> int:
     print(f"[INFO] Concurrency: {args.concurrency}", flush=True)
     print(f"[INFO] content-inbox health OK: {json.dumps(health, ensure_ascii=False)}", flush=True)
 
+    if args.dump_llm_prompt:
+        dump_dir = args.dump_llm_prompt_dir or str(run_dir / "llm_prompt_dumps")
+        args.dump_llm_prompt_dir = dump_dir
+        Path(dump_dir).mkdir(parents=True, exist_ok=True)
+        print(f"[PROMPT_DUMP] Dump directory: {dump_dir}", flush=True)
+
     write_csv_rows(run_dir / "selected_sources.csv", selected_csv_headers(), build_selected_rows(plans))
 
     if args.dry_run:
@@ -1377,6 +1460,13 @@ def main() -> int:
                         f"error_message={result.get('error_message', '')}",
                         flush=True,
                     )
+                elif result["status"] == "audited":
+                    print(
+                        f"[DONE] {plan.sequence:03d}/{len(plans):03d} {plan.source.source_name} "
+                        f"status=audited total_items={result.get('total_items', 0)} "
+                        f"prompts_audited={result.get('total_prompts', 0)}",
+                        flush=True,
+                    )
                 else:
                     consecutive_failures = 0
                     print(
@@ -1401,6 +1491,40 @@ def main() -> int:
         save_progress("stopped_consecutive_failures")
         print(f"[ERROR] Consecutive failures reached {args.max_consecutive_failures}. Stopping new submissions.", file=sys.stderr, flush=True)
         return 4
+
+    if args.audit_prompt:
+        ordered = ordered_results()
+        all_records: list[Dict[str, Any]] = []
+        for result in ordered:
+            records = result.pop("_audit_records", [])
+            all_records.extend(records)
+            status = result.get("status", "")
+            source_name = result.get("source_name", "")
+            feed_url = result.get("feed_url", "")
+            seq = result.get("sequence", "")
+            prompts = result.get("total_prompts", 0)
+            print(
+                f"[AUDIT] source={source_name} feed={feed_url} seq={seq} "
+                f"status={status} prompts={prompts}",
+                flush=True,
+            )
+        for record in all_records:
+            print(f"[PROMPT_AUDIT] {json.dumps(record, ensure_ascii=False)}", flush=True)
+        prompt_audit_path = run_dir / "prompt_audit.jsonl"
+        with prompt_audit_path.open("w", encoding="utf-8") as f:
+            for record in all_records:
+                f.write(json.dumps(record, ensure_ascii=False) + "\n")
+        print(f"[AUDIT] Total prompt audit records: {len(all_records)}", flush=True)
+        print(f"[AUDIT] prompt_audit.jsonl written to {prompt_audit_path}", flush=True)
+        print("[AUDIT] Audit mode complete. No LLM calls were made. No data was stored.", flush=True)
+        return 0
+
+    if args.dump_llm_prompt:
+        dump_dir = args.dump_llm_prompt_dir
+        dump_files = sorted(Path(dump_dir).glob("*.json"))
+        print(f"[PROMPT_DUMP] {len(dump_files)} request body dumps written to {dump_dir}", flush=True)
+        for f in dump_files:
+            print(f"[PROMPT_DUMP]   {f.name}", flush=True)
 
     ordered_results = ordered_results()
     notification_inbox = query_inbox(

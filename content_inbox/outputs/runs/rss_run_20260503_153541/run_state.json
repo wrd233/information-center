@@ -1,0 +1,38 @@
+{
+  "status": "completed_with_failures",
+  "started_at": "2026-05-03T07:35:41+00:00",
+  "updated_at": "2026-05-03T07:35:43+00:00",
+  "args": {
+    "api_base": "http://127.0.0.1:8787",
+    "csv": "/Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv",
+    "count": "2",
+    "all": false,
+    "max_sources": null,
+    "limit_per_source": 1,
+    "screen": true,
+    "sleep": 0.0,
+    "concurrency": 1,
+    "timeout": 120,
+    "inbox_limit": 100,
+    "url_mode": "docker-host",
+    "rsshub_service_name": "rsshub",
+    "dry_run": false,
+    "resume": false,
+    "skip_known_failed": false,
+    "max_consecutive_failures": 20
+  },
+  "url_mode": "docker-host",
+  "selected_count": 2,
+  "completed_count": 2,
+  "successful_count": 1,
+  "failed_count": 1,
+  "consecutive_failures": 1,
+  "completed_source_ids": [
+    "{\"feed_url\": \"https://diygod.cc/feed\", \"local_xml_url\": \"\", \"row_index\": 2, \"source_category\": \"Articles\", \"source_name\": \"Hi, DIYgod\", \"xml_url\": \"https://diygod.cc/feed\"}",
+    "{\"feed_url\": \"http://host.docker.internal:1200/bookfere/books\", \"local_xml_url\": \"http://127.0.0.1:1200/bookfere/books\", \"row_index\": 76, \"source_category\": \"SocialMedia\", \"source_name\": \"图书推荐 – 书伴\", \"xml_url\": \"https://macmini-rsshub.tail99ecfa.ts.net/bookfere/books\"}"
+  ],
+  "successful_source_ids": [
+    "{\"feed_url\": \"https://diygod.cc/feed\", \"local_xml_url\": \"\", \"row_index\": 2, \"source_category\": \"Articles\", \"source_name\": \"Hi, DIYgod\", \"xml_url\": \"https://diygod.cc/feed\"}"
+  ],
+  "notes": []
+}

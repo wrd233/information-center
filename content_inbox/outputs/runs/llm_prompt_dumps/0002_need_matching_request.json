@@ -1,0 +1,40 @@
+{
+  "dump_type": "llm_request_body",
+  "exact_api_payload": true,
+  "prompt_name": "need_matching",
+  "stage": "two_stage_stage2",
+  "source_name": "Sanitize Test",
+  "source_url": "",
+  "item_title": "Sanitize Verification 1777817146",
+  "item_url": "",
+  "created_at": "2026-05-03T14:05:55.247009+00:00",
+  "request_body": {
+    "model": "deepseek-v4-flash",
+    "temperature": 0.2,
+    "max_tokens": 1200,
+    "messages": [
+      {
+        "role": "system",
+        "content": "你是一个阅读需求匹配器。\n你会收到：\n1. 内容原始信息；\n2. 基础理解结果；\n3. 用户定义的 reading_needs；\n4. 用户定义的 watch_topics。\n\n你的任务是：\n1. 判断内容匹配哪些阅读需求；\n2. 判断内容是否匹配用户关注议题；\n3. 输出 need_matches 和 topic_matches；\n4. 不要为不存在的需求编造结果；\n5. 如果信息不足，要在 confidence 和 needs_more_context 上体现；\n6. 只输出 JSON object。\n"
+      },
+      {
+        "role": "user",
+        "content": "请根据以下输入判断阅读需求和关注议题匹配情况。\n输入：\n{\"content\": {\"title\": \"Sanitize Verification 1777817146\", \"url\": null, \"source_name\": \"Sanitize Test\", \"source_category\": null, \"content_type\": \"unknown\", \"published_at\": null, \"author\": null, \"summary\": \"验证 need_matching 不再包含 _raw_response 等 API 原始字段。\", \"content_text\": \"This article tests that basic_screening sanitization works correctly in two_stage mode. The need_matching prompt should only contain whitelisted business fields.\", \"guid\": null}, \"basic_screening\": {\"summary\": \"测试basic_screening消毒功能在two_stage模式下的正确性，验证need_matching不再包含API原始字段。\", \"title_cn\": \"消毒验证测试\", \"category\": [\"工程实践\", \"技术学习\"], \"value_score\": 1, \"personal_relevance\": 1, \"novelty_score\": 1, \"source_quality\": 2, \"actionability\": 1, \"hidden_signals\": [\"内部系统测试可能暗示工程团队正在优化数据处理管线\", \"关注API字段过滤的合规性\"], \"entities\": [\"basic_screening\", \"two_stage\", \"need_matching\"], \"event_hint\": \"basic_screening消毒功能测试\", \"suggested_action\": \"skim\", \"followup_type\": \"none\", \"suggested_next_step\": \"none\", \"reason\": \"内容为内部测试，缺乏实际应用价值，仅作技术验证参考。\", \"tags\": [\"消毒测试\", \"API字段过滤\", \"技术验证\"], \"confidence\": 0.7, \"evidence_level\": \"partial_text\", \"needs_more_context\": false}, \"reading_needs\": [{\"id\": \"entertainment\", \"name\": \"今天看什么娱乐\", \"enabled\": true, \"description\": \"我想找一些轻松、有趣、适合放松的内容。 不要求有项目价值，不要求信息密度很高。\\n\", \"source_categories\": [\"最娱乐\", \"绝活娱乐\"], \"question\": \"这条内容是否适合我今天轻松看一下？\", \"rubric\": \"5 分：非常适合放松，轻松、有趣、低压力，明显值得点开。\\n4 分：适合放松，有一定趣味。\\n3 分：可看可不看。\\n2 分：吸引力较弱。\\n1 分：低质、标题党、噪声。\\n\", \"min_score\": 4}, {\"id\": \"frontier\", \"name\": \"我关注的前沿咋样了\", \"enabled\": true, \"description\": \"我想了解 AI、Agent、AI 工具、技术趋势、产品变化和产业信号。\\n\", \"source_categories\": [\"微信公众号\", \"英文博客\", \"科技与编程\", \"Articles\", \"SocialMedia\"], \"question\": \"这条内容是否提供了值得关注的 AI、技术、产品或行业前沿信号？\", \"rubric\": \"5 分：重要前沿动态，可能影响趋势判断或工具选择。\\n4 分：明确有新产品、新模型、新研究、新趋势或重要案例。\\n3 分：有一定信息量，但重要性一般。\\n2 分：信息较弱或重复。\\n1 分：无明显前沿价值。\\n\", \"min_score\": 4}, {\"id\": \"watch_topic_update\", \"name\": \"我关心的话题议题有什么新的进展\", \"enabled\": true, \"description\": \"我想追踪自己关心的议题是否出现了新进展。\\n\", \"question\": \"这条内容是否匹配我的关注议题，并提供了值得注意的新进展？\", \"rubric\": \"5 分：强匹配关注议题，且提供重要新进展。\\n4 分：匹配关注议题，并有明确新增信息。\\n3 分：相关但新增信息有限。\\n2 分：弱相关。\\n1 分：无关。\\n\", \"min_score\": 4}, {\"id\": \"worth_reading\", \"name\": \"有什么是我值得看的\", \"enabled\": true, \"description\": \"我想从所有内容中找出最值得花时间阅读的内容。\\n\", \"question\": \"这条内容是否值得我今天花时间阅读？\", \"rubric\": \"5 分：今天必看，高相关、高信息密度、高启发。\\n4 分：值得看，有明确阅读收益。\\n3 分：可扫一眼。\\n2 分：不太值得花时间。\\n1 分：忽略。\\n\", \"min_score\": 4}], \"watch_topics\": [{\"id\": \"ai_agent\", \"name\": \"AI Agent\", \"description\": \"关注 Agent、MCP、Computer Use、Claude Code、OpenClaw、Manus 等方向。\", \"keywords\": [\"Agent\", \"智能体\", \"MCP\", \"Claude Code\", \"OpenClaw\", \"Computer Use\", \"Manus\"]}, {\"id\": \"information_system\", \"name\": \"个人信息系统\", \"description\": \"关注 RSS、Obsidian、Memo、信息流、内容处理、知识库自动化。\", \"keywords\": [\"RSS\", \"RSSHub\", \"Obsidian\", \"Memo\", \"Memos\", \"信息流\", \"内容处理\", \"知识库\"]}, {\"id\": \"ai_video\", \"name\": \"AI 视频生成\", \"description\": \"关注可灵、Sora、Veo、Runway、多模态视频生成和 AI 视频工作流。\", \"keywords\": [\"视频生成\", \"可灵\", \"Sora\", \"Veo\", \"Runway\", \"多模态\"]}]}\n\n输出必须符合下面的 JSON 结构约束：\n{\"need_matches\": [{\"need_id\": \"frontier\", \"need_name\": \"我关注的前沿咋样了\", \"score\": 5, \"decision\": \"include|maybe|exclude\", \"priority\": \"P0|P1|P2|P3\", \"reason\": \"涉及重要 AI 产品动态。\", \"evidence\": [\"DeepSeek\", \"多模态\"], \"confidence\": 0.9, \"needs_more_context\": false}], \"topic_matches\": [{\"topic_id\": \"ai_agent\", \"topic_name\": \"AI Agent\", \"score\": 4, \"update_type\": \"new_event|update|related\", \"reason\": \"讨论 Agent 工作流和 MCP。\", \"confidence\": 0.82}]}\n"
+      }
+    ],
+    "response_format": {
+      "type": "json_object"
+    }
+  },
+  "stats": {
+    "system_chars": 256,
+    "user_chars": 3382,
+    "total_chars": 3638,
+    "estimated_tokens_chars_div4": 910,
+    "estimated_tokens_cjk_aware": 1601,
+    "url_count": 0,
+    "html_tag_count": 0,
+    "markdown_link_count": 0,
+    "image_url_count": 0
+  }
+}

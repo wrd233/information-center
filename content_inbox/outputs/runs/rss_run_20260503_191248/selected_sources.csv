@@ -1,0 +1,2 @@
+sequence,source_id,source_name,source_category,local_xml_url,xml_url,feed_url,url_mode,url_source,screen,row_index,status,priority
+1,"{""feed_url"": ""https://diygod.cc/feed"", ""local_xml_url"": """", ""row_index"": 2, ""source_category"": ""Articles"", ""source_name"": ""Hi, DIYgod"", ""xml_url"": ""https://diygod.cc/feed""}","Hi, DIYgod",Articles,,https://diygod.cc/feed,https://diygod.cc/feed,remote,xml_url,True,2,active,P2

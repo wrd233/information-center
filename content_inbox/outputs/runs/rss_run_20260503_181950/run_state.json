@@ -1,0 +1,45 @@
+{
+  "status": "completed",
+  "started_at": "2026-05-03T10:19:50+00:00",
+  "updated_at": "2026-05-03T10:19:56+00:00",
+  "args": {
+    "api_base": "http://127.0.0.1:8787",
+    "csv": "/tmp/bilibili_test_5.csv",
+    "count": "all",
+    "all": false,
+    "max_sources": null,
+    "limit_per_source": 2,
+    "screen": true,
+    "sleep": 1.0,
+    "concurrency": 3,
+    "timeout": 300,
+    "inbox_limit": 100,
+    "url_mode": "remote",
+    "rsshub_service_name": "rsshub",
+    "dry_run": false,
+    "resume": false,
+    "skip_known_failed": false,
+    "max_consecutive_failures": 20
+  },
+  "url_mode": "remote",
+  "selected_count": 5,
+  "completed_count": 5,
+  "successful_count": 5,
+  "failed_count": 0,
+  "consecutive_failures": 0,
+  "completed_source_ids": [
+    "{\"feed_url\": \"http://127.0.0.1:1200/bilibili/user/video/346563107\", \"local_xml_url\": \"\", \"row_index\": 2, \"source_category\": \"bilibili\", \"source_name\": \"bilibili-user-346563107\", \"xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/346563107\"}",
+    "{\"feed_url\": \"http://127.0.0.1:1200/bilibili/user/video/730732\", \"local_xml_url\": \"\", \"row_index\": 3, \"source_category\": \"bilibili\", \"source_name\": \"bilibili-user-730732\", \"xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/730732\"}",
+    "{\"feed_url\": \"http://127.0.0.1:1200/bilibili/user/video/1372433\", \"local_xml_url\": \"\", \"row_index\": 4, \"source_category\": \"bilibili\", \"source_name\": \"bilibili-user-1372433\", \"xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/1372433\"}",
+    "{\"feed_url\": \"http://127.0.0.1:1200/bilibili/user/video/281127303\", \"local_xml_url\": \"\", \"row_index\": 5, \"source_category\": \"bilibili\", \"source_name\": \"bilibili-user-281127303\", \"xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/281127303\"}",
+    "{\"feed_url\": \"http://127.0.0.1:1200/bilibili/user/video/279991456\", \"local_xml_url\": \"\", \"row_index\": 6, \"source_category\": \"bilibili\", \"source_name\": \"bilibili-user-279991456\", \"xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/279991456\"}"
+  ],
+  "successful_source_ids": [
+    "{\"feed_url\": \"http://127.0.0.1:1200/bilibili/user/video/346563107\", \"local_xml_url\": \"\", \"row_index\": 2, \"source_category\": \"bilibili\", \"source_name\": \"bilibili-user-346563107\", \"xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/346563107\"}",
+    "{\"feed_url\": \"http://127.0.0.1:1200/bilibili/user/video/730732\", \"local_xml_url\": \"\", \"row_index\": 3, \"source_category\": \"bilibili\", \"source_name\": \"bilibili-user-730732\", \"xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/730732\"}",
+    "{\"feed_url\": \"http://127.0.0.1:1200/bilibili/user/video/1372433\", \"local_xml_url\": \"\", \"row_index\": 4, \"source_category\": \"bilibili\", \"source_name\": \"bilibili-user-1372433\", \"xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/1372433\"}",
+    "{\"feed_url\": \"http://127.0.0.1:1200/bilibili/user/video/281127303\", \"local_xml_url\": \"\", \"row_index\": 5, \"source_category\": \"bilibili\", \"source_name\": \"bilibili-user-281127303\", \"xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/281127303\"}",
+    "{\"feed_url\": \"http://127.0.0.1:1200/bilibili/user/video/279991456\", \"local_xml_url\": \"\", \"row_index\": 6, \"source_category\": \"bilibili\", \"source_name\": \"bilibili-user-279991456\", \"xml_url\": \"http://127.0.0.1:1200/bilibili/user/video/279991456\"}"
+  ],
+  "notes": []
+}

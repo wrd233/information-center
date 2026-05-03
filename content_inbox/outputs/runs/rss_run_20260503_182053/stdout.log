@@ -1,0 +1,39 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_182053
+[INFO] CSV: /tmp/fresh_test_5.csv
+[INFO] Enabled candidate sources: 5
+[INFO] Selected sources: 5
+[INFO] Pending sources this invocation: 5
+[INFO] URL mode: remote
+[INFO] Screen enabled: True
+[INFO] Concurrency: 3
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": false, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1"}, "_status": 200}
+[SUBMIT] 001/005 东西智库
+         category=Articles feed_url=http://127.0.0.1:1200/dx2025
+[SUBMIT] 002/005 少数派
+         category=Articles feed_url=http://127.0.0.1:1200/sspai/index
+[SUBMIT] 003/005 Twitter-@Tom-Huang
+         category=SocialMedia feed_url=http://127.0.0.1:1200/twitter/user/tuturetom
+[DONE] 003/005 Twitter-@Tom-Huang status=failed error_type=rsshub_503 error_message={"detail": "HTTP Error 503: Service Unavailable"}
+[SUBMIT] 004/005 即刻-笔记交流站
+         category=SocialMedia feed_url=http://127.0.0.1:1200/jike/topic/660165c504703c909c6d8b2e
+[DONE] 002/005 少数派 status=success total_items=2 new_items=0 duplicate_items=2
+[SUBMIT] 005/005 书伴-每周一书
+         category=SocialMedia feed_url=http://127.0.0.1:1200/bookfere/weekly
+[DONE] 001/005 东西智库 status=failed error_type=rsshub_503 error_message={"detail": "HTTP Error 503: Service Unavailable"}
+[DONE] 004/005 即刻-笔记交流站 status=success total_items=2 new_items=0 duplicate_items=2
+[DONE] 005/005 书伴-每周一书 status=success total_items=2 new_items=0 duplicate_items=2
+
+[SUMMARY]
+Processed sources: 5
+Successful sources: 3
+Failed sources: 2
+Skipped known failed sources: 0
+New items: 0
+Recommended items from API responses: 2
+Final inbox items from this run: 0
+Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_182053/report.md
+Run state path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_182053/run_state.json
+
+[FAILED SOURCES]
+- 东西智库 | http://127.0.0.1:1200/dx2025 | rsshub_503 | {"detail": "HTTP Error 503: Service Unavailable"}
+- Twitter-@Tom-Huang | http://127.0.0.1:1200/twitter/user/tuturetom | rsshub_503 | {"detail": "HTTP Error 503: Service Unavailable"}

@@ -1,0 +1,64 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_173620
+[INFO] CSV: /tmp/bilibili_test_sources.csv
+[INFO] Enabled candidate sources: 27
+[INFO] Selected sources: 27
+[INFO] Pending sources this invocation: 27
+[INFO] URL mode: remote
+[INFO] Screen enabled: False
+[INFO] Concurrency: 5
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": false, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1"}, "_status": 200}
+[SUBMIT] 001/027 bilibili-user-1033890839
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/1033890839
+[SUBMIT] 002/027 bilibili-user-25073738
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/25073738
+[SUBMIT] 003/027 bilibili-user-19319172
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/19319172
+[SUBMIT] 004/027 bilibili-user-1858861103
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/1858861103
+[SUBMIT] 005/027 bilibili-user-470585121
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/470585121
+[DONE] 001/027 bilibili-user-1033890839 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 006/027 bilibili-user-1288663494
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/1288663494
+[DONE] 002/027 bilibili-user-25073738 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 007/027 bilibili-user-252411834
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/252411834
+[DONE] 003/027 bilibili-user-19319172 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 008/027 bilibili-user-431850986
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/431850986
+[DONE] 004/027 bilibili-user-1858861103 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 009/027 bilibili-user-476051104
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/476051104
+[DONE] 005/027 bilibili-user-470585121 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 010/027 bilibili-user-17780825
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/17780825
+[DONE] 006/027 bilibili-user-1288663494 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 011/027 bilibili-user-495979610
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/495979610
+[DONE] 007/027 bilibili-user-252411834 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 012/027 bilibili-user-14004258
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/14004258
+[DONE] 008/027 bilibili-user-431850986 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 013/027 bilibili-user-521296768
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/521296768
+[DONE] 009/027 bilibili-user-476051104 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 014/027 bilibili-user-489640651
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/489640651
+[DONE] 010/027 bilibili-user-17780825 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 015/027 bilibili-user-1850874570
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/1850874570
+[DONE] 011/027 bilibili-user-495979610 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 016/027 bilibili-user-3493286931073848
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/3493286931073848
+[DONE] 012/027 bilibili-user-14004258 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 017/027 bilibili-user-213845897
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/213845897
+[DONE] 013/027 bilibili-user-521296768 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 018/027 bilibili-user-409842788
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/409842788
+[DONE] 014/027 bilibili-user-489640651 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 019/027 bilibili-user-600428973
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/600428973
+[DONE] 015/027 bilibili-user-1850874570 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 020/027 bilibili-user-17549684
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/17549684

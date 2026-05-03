@@ -1,0 +1,16 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_190716
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 501
+[INFO] Selected sources: 1
+[INFO] Pending sources this invocation: 1
+[INFO] URL mode: remote
+[INFO] Screen enabled: True
+[INFO] Concurrency: 1
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": false, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1"}, "_status": 200}
+[SUBMIT] 001/001 Hi, DIYgod
+         category=Articles feed_url=https://diygod.cc/feed
+[DONE] 001/001 Hi, DIYgod status=success total_items=2 new_items=0 duplicate_items=0
+[AUDIT] source=Hi, DIYgod feed=https://diygod.cc/feed seq=1 status=audited prompts=0
+[AUDIT] Total prompt audit records: 0
+[AUDIT] prompt_audit.jsonl written to /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_190716/prompt_audit.jsonl
+[AUDIT] Audit mode complete. No LLM calls were made. No data was stored.

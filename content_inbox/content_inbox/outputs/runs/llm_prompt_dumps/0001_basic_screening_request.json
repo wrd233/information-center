@@ -1,0 +1,40 @@
+{
+  "dump_type": "llm_request_body",
+  "exact_api_payload": true,
+  "prompt_name": "basic_screening",
+  "stage": "two_stage_stage1",
+  "source_name": "Test",
+  "source_url": "",
+  "item_title": "Default Path Test 1777816069",
+  "item_url": "",
+  "created_at": "2026-05-03T13:47:49.688076+00:00",
+  "request_body": {
+    "model": "deepseek-v4-flash",
+    "temperature": 0.2,
+    "max_tokens": 1200,
+    "messages": [
+      {
+        "role": "system",
+        "content": "你是一个本地 content-inbox 的基础内容理解器。\n你会收到 RSS 标题、摘要、部分正文和来源信息。\n你的任务是：\n1. 承认证据边界，不要假装已经读完全文；\n2. 给出简洁、可靠、中文可读的基础理解；\n3. 对娱乐内容保持公平，不要只因为缺乏项目价值就压低；\n4. 只输出 JSON object，不要输出 Markdown。\n"
+      },
+      {
+        "role": "user",
+        "content": "请根据以下输入做基础理解。\n输入：\n{\"content\": {\"title\": \"Default Path Test 1777816069\", \"url\": null, \"source_name\": \"Test\", \"source_category\": null, \"content_type\": \"unknown\", \"published_at\": null, \"author\": null, \"summary\": \"Test default dump path under runs.\", \"content_text\": \"Testing.\", \"guid\": null}, \"categories\": [\"AI前沿\", \"AI工具\", \"信息管理\", \"技术学习\", \"工程实践\", \"社会观察\", \"人生经验\", \"商业产品\", \"娱乐内容\", \"新闻资讯\", \"低质营销\", \"其他\"]}\n\n输出必须符合下面的 JSON 结构约束：\n{\"summary\": \"一句话说明这条内容在讲什么\", \"title_cn\": \"如果原标题是英文，给出中文解释；如果原标题已是中文，可为空字符串\", \"category\": [\"AI前沿\", \"AI工具\", \"信息管理\", \"技术学习\", \"工程实践\", \"社会观察\", \"人生经验\", \"商业产品\", \"娱乐内容\", \"新闻资讯\", \"低质营销\", \"其他\"], \"value_score\": \"1-5 的整数\", \"personal_relevance\": \"1-5 的整数\", \"novelty_score\": \"1-5 的整数\", \"source_quality\": \"1-5 的整数\", \"actionability\": \"1-5 的整数\", \"hidden_signals\": [\"标题和摘要表层之外的隐含趋势、风险、机会或工作流启发\"], \"entities\": [\"核心人物、公司、项目、产品、地点、政策、技术名词等\"], \"event_hint\": \"一句话事件描述，用于后续事件聚类\", \"suggested_action\": \"ignore|skim|read|save|transcribe|review\", \"followup_type\": \"none|fetch_fulltext|archive|transcribe|manual_review\", \"suggested_next_step\": \"none|fetch_fulltext|transcribe|manual_review\", \"reason\": \"推荐、忽略或复核的理由\", \"tags\": [\"标签1\", \"标签2\"], \"confidence\": \"0-1 的数字\", \"evidence_level\": \"title_only|summary|partial_text|full_text\", \"needs_more_context\": true}\n"
+      }
+    ],
+    "response_format": {
+      "type": "json_object"
+    }
+  },
+  "stats": {
+    "system_chars": 171,
+    "user_chars": 1250,
+    "total_chars": 1421,
+    "estimated_tokens_chars_div4": 356,
+    "estimated_tokens_cjk_aware": 633,
+    "url_count": 0,
+    "html_tag_count": 0,
+    "markdown_link_count": 0,
+    "image_url_count": 0
+  }
+}

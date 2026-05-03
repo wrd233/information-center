@@ -79,6 +79,32 @@ Important behavior:
 - `--skip-known-failed` consults prior run failures.
 - Real runs call the local API and can mutate the SQLite database. Ask before running them.
 
+## Prompt Debug
+
+Two script flags for inspecting LLM prompts without reading source code or log output:
+
+### `--audit-prompt` (no API calls)
+
+Assembles prompts using the real `build_prompt_messages()` path but skips LLM API calls, embedding, clustering, and DB writes. Outputs per-prompt statistics (char/token counts, noise detection) and truncated previews to stdout and `prompt_audit.jsonl`.
+
+```bash
+python3 scripts/run_rss_sources_to_content_inbox.py --count 1 --limit-per-source 2 --audit-prompt
+```
+
+### `--dump-llm-prompt` (real API calls)
+
+Makes real LLM API calls but dumps the complete, un-truncated request body to files before each call. Dump files land in `<run_dir>/llm_prompt_dumps/`. Each file contains `request_body` (model, messages, temperature, max_tokens, response_format) plus stats. Authorization headers are not dumped; API-key-like strings in the body are redacted.
+
+```bash
+python3 scripts/run_rss_sources_to_content_inbox.py --count 1 --limit-per-source 1 --dump-llm-prompt
+```
+
+Both flags also work via the API directly (`audit_prompt` / `dump_llm_prompt` fields on `ContentAnalyzeRequest` and `RSSAnalyzeRequest`).
+
+### Sanitization note
+
+In two_stage mode, the stage-2 `need_matching` prompt receives a whitelist-filtered subset of the stage-1 `basic_screening` result. The whitelist (`_SCREENING_WHITELIST` in `app/screener.py`) excludes `_raw_response` and any underscore-prefixed internal fields.
+
 ## Config And Prompts
 
 - `config/content_inbox.yaml`: LLM, screening, score policy, embedding, clustering, and notification tuning.

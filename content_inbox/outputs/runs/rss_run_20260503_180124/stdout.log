@@ -1,0 +1,101 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_180124
+[INFO] CSV: /tmp/bilibili_test_sources.csv
+[INFO] Enabled candidate sources: 27
+[INFO] Selected sources: 27
+[INFO] Pending sources this invocation: 27
+[INFO] URL mode: remote
+[INFO] Screen enabled: False
+[INFO] Concurrency: 5
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": false, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1"}, "_status": 200}
+[SUBMIT] 001/027 bilibili-user-1033890839
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/1033890839
+[SUBMIT] 002/027 bilibili-user-25073738
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/25073738
+[SUBMIT] 003/027 bilibili-user-19319172
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/19319172
+[SUBMIT] 004/027 bilibili-user-1858861103
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/1858861103
+[SUBMIT] 005/027 bilibili-user-470585121
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/470585121
+[DONE] 001/027 bilibili-user-1033890839 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 006/027 bilibili-user-1288663494
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/1288663494
+[DONE] 002/027 bilibili-user-25073738 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 007/027 bilibili-user-252411834
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/252411834
+[DONE] 005/027 bilibili-user-470585121 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 008/027 bilibili-user-431850986
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/431850986
+[DONE] 003/027 bilibili-user-19319172 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 009/027 bilibili-user-476051104
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/476051104
+[DONE] 004/027 bilibili-user-1858861103 status=success total_items=5 new_items=0 duplicate_items=5
+[DONE] 006/027 bilibili-user-1288663494 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 010/027 bilibili-user-17780825
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/17780825
+[SUBMIT] 011/027 bilibili-user-495979610
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/495979610
+[DONE] 007/027 bilibili-user-252411834 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 012/027 bilibili-user-14004258
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/14004258
+[DONE] 009/027 bilibili-user-476051104 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 013/027 bilibili-user-521296768
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/521296768
+[DONE] 010/027 bilibili-user-17780825 status=success total_items=5 new_items=0 duplicate_items=5
+[DONE] 008/027 bilibili-user-431850986 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 014/027 bilibili-user-489640651
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/489640651
+[SUBMIT] 015/027 bilibili-user-1850874570
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/1850874570
+[DONE] 011/027 bilibili-user-495979610 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 016/027 bilibili-user-3493286931073848
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/3493286931073848
+[DONE] 013/027 bilibili-user-521296768 status=success total_items=5 new_items=0 duplicate_items=5
+[DONE] 012/027 bilibili-user-14004258 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 017/027 bilibili-user-213845897
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/213845897
+[SUBMIT] 018/027 bilibili-user-409842788
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/409842788
+[DONE] 015/027 bilibili-user-1850874570 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 019/027 bilibili-user-600428973
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/600428973
+[DONE] 014/027 bilibili-user-489640651 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 020/027 bilibili-user-17549684
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/17549684
+[DONE] 016/027 bilibili-user-3493286931073848 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 021/027 bilibili-user-1366786686
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/1366786686
+[DONE] 017/027 bilibili-user-213845897 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 022/027 bilibili-user-3537109151386355
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/3537109151386355
+[DONE] 018/027 bilibili-user-409842788 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 023/027 bilibili-user-346563107
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/346563107
+[DONE] 020/027 bilibili-user-17549684 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 024/027 bilibili-user-730732
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/730732
+[DONE] 024/027 bilibili-user-730732 status=success total_items=5 new_items=2 duplicate_items=3
+[SUBMIT] 025/027 bilibili-user-1372433
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/1372433
+[DONE] 019/027 bilibili-user-600428973 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 026/027 bilibili-user-281127303
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/281127303
+[DONE] 021/027 bilibili-user-1366786686 status=success total_items=5 new_items=0 duplicate_items=5
+[SUBMIT] 027/027 bilibili-user-279991456
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/279991456
+[DONE] 022/027 bilibili-user-3537109151386355 status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 023/027 bilibili-user-346563107 status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 026/027 bilibili-user-281127303 status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 025/027 bilibili-user-1372433 status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 027/027 bilibili-user-279991456 status=success total_items=5 new_items=5 duplicate_items=0
+
+[SUMMARY]
+Processed sources: 27
+Successful sources: 27
+Failed sources: 0
+Skipped known failed sources: 0
+New items: 27
+Recommended items from API responses: 75
+Final inbox items from this run: 0
+Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_180124/report.md
+Run state path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_180124/run_state.json

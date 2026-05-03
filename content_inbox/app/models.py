@@ -29,6 +29,9 @@ class RSSAnalyzeRequest(BaseModel):
     limit: int | None = Field(default=20, ge=1, le=200)
     screen: bool = True
     profile: bool = False
+    audit_prompt: bool = False
+    dump_llm_prompt: bool = False
+    dump_llm_prompt_dir: str | None = None
 
 
 class RSSSourceSpec(BaseModel):
@@ -61,6 +64,9 @@ class ContentAnalyzeRequest(BaseModel):
     author: str | None = None
     guid: str | None = None
     screen: bool = True
+    audit_prompt: bool = False
+    dump_llm_prompt: bool = False
+    dump_llm_prompt_dir: str | None = None
 
     @model_validator(mode="after")
     def require_basic_information(self) -> "ContentAnalyzeRequest":

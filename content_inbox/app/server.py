@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import date, datetime, time, timezone
+from pathlib import Path
 from typing import Annotated, Any
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
@@ -9,8 +10,10 @@ from fastapi.responses import JSONResponse
 from app.batch_runner import RSSBatchRunner
 from app.config import settings
 from app.models import ContentAnalyzeRequest, RSSAnalyzeRequest, RSSBatchAnalyzeRequest
-from app.processor import process_content_thread_safe
+from app.processor import normalize_content, process_content_thread_safe
+from app.rss import parse_feed
 from app.rss_runner import analyze_one_rss_source
+from app.screener import audit_screen_content, configure_llm_dump
 from app.storage import InboxStore
 
 
@@ -42,14 +45,54 @@ def health() -> dict[str, Any]:
 def analyze_content(
     payload: ContentAnalyzeRequest, inbox_store: Annotated[InboxStore, Depends(get_store)]
 ) -> dict[str, Any]:
-    result = process_content_thread_safe(inbox_store, payload, raw=payload.model_dump())
-    return {"ok": True, **result.model_dump()}
+    if payload.audit_prompt:
+        normalized = normalize_content(payload)
+        audit_records = audit_screen_content(normalized)
+        return {
+            "ok": True,
+            "audit_type": "prompt_audit",
+            "audit_records": audit_records,
+        }
+    if payload.dump_llm_prompt:
+        dump_dir = payload.dump_llm_prompt_dir or "outputs/runs/llm_prompt_dumps"
+        Path(dump_dir).mkdir(parents=True, exist_ok=True)
+        configure_llm_dump(enabled=True, output_dir=dump_dir)
+    try:
+        result = process_content_thread_safe(inbox_store, payload, raw=payload.model_dump())
+        return {"ok": True, **result.model_dump()}
+    finally:
+        if payload.dump_llm_prompt:
+            configure_llm_dump(enabled=False)
 
 
 @app.post("/api/rss/analyze")
 def analyze_rss(
     payload: RSSAnalyzeRequest, inbox_store: Annotated[InboxStore, Depends(get_store)]
 ) -> dict[str, Any]:
+    if payload.audit_prompt:
+        meta, entries = parse_feed(
+            payload.feed_url,
+            source_name=payload.source_name,
+            source_category=payload.source_category,
+            limit=payload.limit,
+        )
+        audit_records: list[dict[str, Any]] = []
+        for entry in entries:
+            normalized = normalize_content(entry)
+            records = audit_screen_content(normalized)
+            audit_records.extend(records)
+        return {
+            "ok": True,
+            "audit_type": "prompt_audit",
+            "feed_url": payload.feed_url,
+            "source_name": meta["source_name"],
+            "total_items": len(entries),
+            "audit_records": audit_records,
+        }
+    if payload.dump_llm_prompt:
+        dump_dir = payload.dump_llm_prompt_dir or "outputs/runs/llm_prompt_dumps"
+        Path(dump_dir).mkdir(parents=True, exist_ok=True)
+        configure_llm_dump(enabled=True, output_dir=dump_dir)
     try:
         return analyze_one_rss_source(
             inbox_store,
@@ -59,6 +102,9 @@ def analyze_rss(
         )
     except Exception as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    finally:
+        if payload.dump_llm_prompt:
+            configure_llm_dump(enabled=False)
 
 @app.post("/api/rss/analyze-batch")
 def analyze_rss_batch(

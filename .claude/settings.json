@@ -1,8 +1,8 @@
 {
-  "defaultMode": "default",
-  "disableBypassPermissionsMode": "disable",
   "includeCoAuthoredBy": false,
   "permissions": {
+    "defaultMode": "acceptEdits",
+    "disableBypassPermissionsMode": "disable",
     "deny": [
       "Read(./.env)",
       "Read(./.env.*)",
@@ -13,17 +13,20 @@
       "Read(./**/*token*)",
       "Read(./**/*credential*)",
       "Read(./**/*key*)",
+
       "Read(./content_inbox/data/**)",
       "Read(./content_inbox/outputs/runs/**)",
       "Edit(./content_inbox/data/**)",
       "Edit(./content_inbox/outputs/runs/**)",
       "Write(./content_inbox/data/**)",
       "Write(./content_inbox/outputs/runs/**)",
+
       "Bash(rm:*)",
       "Bash(rm -rf:*)",
       "Bash(git reset:*)",
       "Bash(git clean:*)",
       "Bash(git push:*)",
+
       "Bash(cat .env*)",
       "Bash(cat */.env*)",
       "Bash(cat **/.env*)",
@@ -31,31 +34,45 @@
       "Bash(grep -R * .env*)",
       "Bash(printenv:*)",
       "Bash(env:*)",
+
       "Bash(curl *api_key*)",
       "Bash(curl *token*)",
       "Bash(curl *secret*)"
     ],
     "ask": [
-      "Edit",
-      "Write",
-      "MultiEdit",
-      "Bash(python3:*)",
-      "Bash(python:*)",
-      "Bash(pytest:*)",
-      "Bash(docker:*)",
-      "Bash(docker compose:*)",
       "Bash(curl:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)"
     ],
     "allow": [
-      "Bash(git status:*)",
-      "Bash(git diff:*)",
-      "Bash(git log:*)",
+      "Read",
+      "Glob",
+      "Grep",
+      "LS",
+      "Edit",
+      "Write",
+      "MultiEdit",
+
       "Bash(pwd)",
       "Bash(ls:*)",
       "Bash(find . -maxdepth 3:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+
+      "Bash(python3 -m pytest:*)",
+      "Bash(python -m pytest:*)",
+      "Bash(pytest:*)",
+
+      "Bash(python3 -u content_inbox/scripts/run_rss_sources_to_content_inbox.py:*)",
+      "Bash(python3 content_inbox/scripts/run_rss_sources_to_content_inbox.py:*)",
+
+      "Bash(docker compose ps:*)",
+      "Bash(docker compose logs:*)",
+      "Bash(docker compose up -d:*)",
+      "Bash(docker compose restart:*)"
     ]
   }
 }

@@ -1,0 +1,35 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_181950
+[INFO] CSV: /tmp/bilibili_test_5.csv
+[INFO] Enabled candidate sources: 5
+[INFO] Selected sources: 5
+[INFO] Pending sources this invocation: 5
+[INFO] URL mode: remote
+[INFO] Screen enabled: True
+[INFO] Concurrency: 3
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": false, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1"}, "_status": 200}
+[SUBMIT] 001/005 bilibili-user-346563107
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/346563107
+[SUBMIT] 002/005 bilibili-user-730732
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/730732
+[SUBMIT] 003/005 bilibili-user-1372433
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/1372433
+[DONE] 001/005 bilibili-user-346563107 status=success total_items=2 new_items=0 duplicate_items=2
+[SUBMIT] 004/005 bilibili-user-281127303
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/281127303
+[DONE] 003/005 bilibili-user-1372433 status=success total_items=2 new_items=0 duplicate_items=2
+[DONE] 002/005 bilibili-user-730732 status=success total_items=2 new_items=0 duplicate_items=2
+[SUBMIT] 005/005 bilibili-user-279991456
+         category=bilibili feed_url=http://127.0.0.1:1200/bilibili/user/video/279991456
+[DONE] 004/005 bilibili-user-281127303 status=success total_items=2 new_items=0 duplicate_items=2
+[DONE] 005/005 bilibili-user-279991456 status=success total_items=2 new_items=0 duplicate_items=2
+
+[SUMMARY]
+Processed sources: 5
+Successful sources: 5
+Failed sources: 0
+Skipped known failed sources: 0
+New items: 0
+Recommended items from API responses: 10
+Final inbox items from this run: 0
+Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_181950/report.md
+Run state path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_181950/run_state.json
