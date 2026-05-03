@@ -19,6 +19,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from concurrent.futures import FIRST_COMPLETED, Future, ThreadPoolExecutor, wait
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
@@ -341,6 +342,19 @@ def analyze_rss_source(
         "screen": screen,
     }
     return request_json("POST", f"{api_base.rstrip('/')}/api/rss/analyze", payload=payload, timeout=timeout, api_key=api_key)
+
+
+def run_one_plan(plan: SourcePlan, args: argparse.Namespace, api_key: Optional[str]) -> Dict[str, Any]:
+    response = analyze_rss_source(
+        api_base=args.api_base,
+        source=plan.source,
+        feed_url=plan.feed_url,
+        limit_per_source=args.limit_per_source,
+        screen=plan.screen,
+        timeout=args.timeout,
+        api_key=api_key,
+    )
+    return summarize_result_for_source(plan, response)
 
 
 def query_inbox(
@@ -1015,6 +1029,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--limit-per-source", type=int, default=20, help="Item limit for each RSS source.")
     parser.add_argument("--screen", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--sleep", type=float, default=1.0, help="Sleep seconds between sources.")
+    parser.add_argument(
+        "--concurrency",
+        "--max-concurrent-sources",
+        dest="concurrency",
+        type=int,
+        default=1,
+        help="Maximum number of RSS sources to process concurrently. Default: 1.",
+    )
     parser.add_argument("--timeout", type=int, default=180, help="HTTP timeout seconds for each source.")
     parser.add_argument("--inbox-limit", type=int, default=100)
     parser.add_argument("--output-dir", default="", help="Default: content_inbox/outputs")
@@ -1024,7 +1046,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--resume", action="store_true", help="Resume from the latest unfinished run.")
     parser.add_argument("--skip-known-failed", action="store_true", help="Skip sources that already failed in current/history runs.")
     parser.add_argument("--max-consecutive-failures", type=int, default=20)
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.concurrency < 1:
+        parser.error("--concurrency must be >= 1")
+    return args
 
 
 def main() -> int:
@@ -1157,6 +1182,7 @@ def main() -> int:
         "limit_per_source": args.limit_per_source,
         "screen": args.screen,
         "sleep": args.sleep,
+        "concurrency": args.concurrency,
         "timeout": args.timeout,
         "inbox_limit": args.inbox_limit,
         "url_mode": args.url_mode,
@@ -1186,6 +1212,7 @@ def main() -> int:
     print(f"[INFO] Pending sources this invocation: {len(pending_plans)}", flush=True)
     print(f"[INFO] URL mode: {args.url_mode}", flush=True)
     print(f"[INFO] Screen enabled: {args.screen}", flush=True)
+    print(f"[INFO] Concurrency: {args.concurrency}", flush=True)
     print(f"[INFO] content-inbox health OK: {json.dumps(health, ensure_ascii=False)}", flush=True)
 
     write_csv_rows(run_dir / "selected_sources.csv", selected_csv_headers(), build_selected_rows(plans))
@@ -1198,6 +1225,7 @@ def main() -> int:
                 f"({plan.url_source}) -> {plan.feed_url}",
                 flush=True,
             )
+        print(f"[INFO] Dry run concurrency: {args.concurrency}", flush=True)
         notification_inbox = {"ok": True, "items": [], "stats": {}, "_query_mode": "not_run"}
         reading_views = {
             view["key"]: {"ok": True, "items": [], "stats": {}, "_query_mode": "not_run"}
@@ -1242,79 +1270,115 @@ def main() -> int:
     )
 
     results_by_source_id = {row["source_id"]: row for row in results if row.get("source_id")}
-    for plan in pending_plans:
-        print(f"[RUN] {plan.sequence}/{len(plans)} {plan.source.source_name}", flush=True)
-        print(f"       category:      {plan.source.source_category or '-'}", flush=True)
-        print(f"       local_xml_url: {plan.source.local_xml_url or '-'}", flush=True)
-        print(f"       xml_url:       {plan.source.xml_url or '-'}", flush=True)
-        print(f"       feed_url:      {plan.feed_url}", flush=True)
-        print(f"       url_mode:      {plan.url_mode} ({plan.url_source})", flush=True)
-        print(f"       screen:        {plan.screen}", flush=True)
+    pending_queue = list(pending_plans)
+    in_flight: Dict[Future[Dict[str, Any]], SourcePlan] = {}
+    stop_submitting = False
+    stop_reason_recorded = False
 
-        response = analyze_rss_source(
-            api_base=args.api_base,
-            source=plan.source,
-            feed_url=plan.feed_url,
-            limit_per_source=args.limit_per_source,
-            screen=plan.screen,
-            timeout=args.timeout,
-            api_key=api_key,
-        )
-        result = summarize_result_for_source(plan, response)
-        results_by_source_id[plan.source_id] = result
-        ordered_results = [results_by_source_id[p.source_id] for p in plans if p.source_id in results_by_source_id]
+    def ordered_results() -> List[Dict[str, Any]]:
+        return [results_by_source_id[p.source_id] for p in plans if p.source_id in results_by_source_id]
 
-        if result["status"] == "failed":
-            consecutive_failures += 1
-        else:
-            consecutive_failures = 0
-
-        print(
-            "       total_items={total_items}, new_items={new_items}, duplicate_items={duplicate_items}, "
-            "screened_items={screened_items}, recommended_items={recommended_items_from_api_response}, "
-            "new_event_items={new_event_items}, incremental_items={incremental_items}, silent_items={silent_items}, "
-            "failed_items={failed_items}, error_message={error_message}".format(**result),
-            flush=True,
-        )
-
+    def save_progress(state_status: str) -> None:
         save_run_artifacts(
             run_dir,
             plans,
-            ordered_results,
+            ordered_results(),
             notification_inbox,
             reading_views,
             started_at,
             args.url_mode,
-            "running",
+            state_status,
             args_snapshot,
             consecutive_failures,
             notes,
             need_min_scores,
         )
 
-        if consecutive_failures >= args.max_consecutive_failures:
-            notes.append(f"连续失败达到阈值 {args.max_consecutive_failures}，提前停止运行。")
-            save_run_artifacts(
-                run_dir,
-                plans,
-                ordered_results,
-                notification_inbox,
-                reading_views,
-                started_at,
-                args.url_mode,
-                "stopped_consecutive_failures",
-                args_snapshot,
-                consecutive_failures,
-                notes,
-                need_min_scores,
-            )
-            print(f"[ERROR] Consecutive failures reached {args.max_consecutive_failures}. Stopping run.", file=sys.stderr, flush=True)
-            return 4
-
-        if args.sleep > 0 and plan.sequence < len(plans):
+    def submit_next(executor: ThreadPoolExecutor) -> bool:
+        nonlocal stop_submitting
+        if stop_submitting or not pending_queue:
+            return False
+        plan = pending_queue.pop(0)
+        print(f"[SUBMIT] {plan.sequence:03d}/{len(plans):03d} {plan.source.source_name}", flush=True)
+        print(f"         category={plan.source.source_category or '-'} feed_url={plan.feed_url}", flush=True)
+        future = executor.submit(run_one_plan, plan, args, api_key)
+        in_flight[future] = plan
+        if args.sleep > 0 and pending_queue:
             time.sleep(args.sleep)
+        return True
 
-    ordered_results = [results_by_source_id[p.source_id] for p in plans if p.source_id in results_by_source_id]
+    with ThreadPoolExecutor(max_workers=args.concurrency) as executor:
+        while len(in_flight) < args.concurrency and pending_queue and not stop_submitting:
+            submit_next(executor)
+
+        while in_flight:
+            done, _ = wait(set(in_flight.keys()), return_when=FIRST_COMPLETED)
+            for future in done:
+                plan = in_flight.pop(future)
+                try:
+                    result = future.result()
+                except Exception as exc:
+                    result = {
+                        "source_id": plan.source_id,
+                        "sequence": plan.sequence,
+                        "source_name": plan.source.source_name,
+                        "source_category": plan.source.source_category,
+                        "local_xml_url": plan.source.local_xml_url,
+                        "xml_url": plan.source.xml_url,
+                        "feed_url": plan.feed_url,
+                        "url_mode": plan.url_mode,
+                        "screen": plan.screen,
+                        "status": "failed",
+                        "total_items": 0,
+                        "new_items": 0,
+                        "duplicate_items": 0,
+                        "screened_items": 0,
+                        "recommended_items_from_api_response": 0,
+                        "new_items_recommended": "unknown",
+                        "new_event_items": 0,
+                        "incremental_items": 0,
+                        "silent_items": 0,
+                        "failed_items": 0,
+                        "error_type": "worker_error",
+                        "error_message": str(exc),
+                    }
+
+                results_by_source_id[plan.source_id] = result
+
+                if result["status"] == "failed":
+                    consecutive_failures += 1
+                    print(
+                        f"[DONE] {plan.sequence:03d}/{len(plans):03d} {plan.source.source_name} "
+                        f"status=failed error_type={result.get('error_type', '')} "
+                        f"error_message={result.get('error_message', '')}",
+                        flush=True,
+                    )
+                else:
+                    consecutive_failures = 0
+                    print(
+                        f"[DONE] {plan.sequence:03d}/{len(plans):03d} {plan.source.source_name} "
+                        f"status=success total_items={result.get('total_items', 0)} "
+                        f"new_items={result.get('new_items', 0)} duplicate_items={result.get('duplicate_items', 0)}",
+                        flush=True,
+                    )
+
+                save_progress("running")
+
+                if consecutive_failures >= args.max_consecutive_failures:
+                    stop_submitting = True
+                    if not stop_reason_recorded:
+                        notes.append(f"连续失败达到阈值 {args.max_consecutive_failures}，提前停止运行。")
+                        stop_reason_recorded = True
+
+            while len(in_flight) < args.concurrency and pending_queue and not stop_submitting:
+                submit_next(executor)
+
+    if stop_submitting and consecutive_failures >= args.max_consecutive_failures:
+        save_progress("stopped_consecutive_failures")
+        print(f"[ERROR] Consecutive failures reached {args.max_consecutive_failures}. Stopping new submissions.", file=sys.stderr, flush=True)
+        return 4
+
+    ordered_results = ordered_results()
     notification_inbox = query_inbox(
         args.api_base,
         api_key=api_key,

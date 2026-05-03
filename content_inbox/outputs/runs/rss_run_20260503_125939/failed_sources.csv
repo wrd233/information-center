@@ -1,0 +1,11 @@
+source_name,source_category,local_xml_url,xml_url,feed_url,error_message,error_type
+"Hi, DIYgod",Articles,,https://diygod.cc/feed,https://diygod.cc/feed,"""timed out""",timeout
+tanscp,Articles,,https://tanscp.com/feed/,https://tanscp.com/feed/,"""timed out""",timeout
+Airing 的博客,Articles,,https://ursb.me/blog/feed.xml,https://ursb.me/blog/feed.xml,"""timed out""",timeout
+Rolen's Blog,个人博客-人生,,https://rolen.wiki/feed/,https://rolen.wiki/feed/,"""timed out""",timeout
+Ben's Love,个人博客-人生,,https://bens.love/feed,https://bens.love/feed,"""timed out""",timeout
+莫比乌斯,个人博客-人生,,https://mobius.blog/feed/,https://mobius.blog/feed/,"""timed out""",timeout
+白熊阿丸的小屋,个人博客-人生,,https://blog.bxaw.name/feed/,https://blog.bxaw.name/feed/,"""timed out""",timeout
+草稿拾遗,个人博客-人生,,https://kill-the-newsletter.com/feeds/t87xbbj6p4iwfhsi.xml,https://kill-the-newsletter.com/feeds/t87xbbj6p4iwfhsi.xml,"""timed out""",timeout
+豆瓣小组-无用美学,Articles,http://127.0.0.1:1200/douban/group/699356/essence,https://macmini-rsshub.tail99ecfa.ts.net/douban/group/699356/essence,http://host.docker.internal:1200/douban/group/699356/essence,"{""detail"": ""timed out""}",timeout
+StarYuhen,Articles,,https://www.yuhenm.top/feed/,https://www.yuhenm.top/feed/,"{""detail"": ""HTTP Error 403: Forbidden""}",unknown

@@ -1,0 +1,93 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_125939
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 501
+[INFO] Selected sources: 501
+[INFO] Pending sources this invocation: 501
+[INFO] URL mode: docker-host
+[INFO] Screen enabled: True
+[INFO] Concurrency: 8
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": true, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1"}, "_status": 200}
+[SUBMIT] 001/501 Hi, DIYgod
+         category=Articles feed_url=https://diygod.cc/feed
+[SUBMIT] 002/501 tanscp
+         category=Articles feed_url=https://tanscp.com/feed/
+[SUBMIT] 003/501 Airing 的博客
+         category=Articles feed_url=https://ursb.me/blog/feed.xml
+[SUBMIT] 004/501 Rolen's Blog
+         category=个人博客-人生 feed_url=https://rolen.wiki/feed/
+[SUBMIT] 005/501 Ben's Love
+         category=个人博客-人生 feed_url=https://bens.love/feed
+[SUBMIT] 006/501 莫比乌斯
+         category=个人博客-人生 feed_url=https://mobius.blog/feed/
+[SUBMIT] 007/501 白熊阿丸的小屋
+         category=个人博客-人生 feed_url=https://blog.bxaw.name/feed/
+[SUBMIT] 008/501 草稿拾遗
+         category=个人博客-人生 feed_url=https://kill-the-newsletter.com/feeds/t87xbbj6p4iwfhsi.xml
+[DONE] 001/501 Hi, DIYgod status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 009/501 Paradise Lost
+         category=Articles feed_url=https://2890.ltd/feed/
+[DONE] 002/501 tanscp status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 010/501 笨方法学写作
+         category=Articles feed_url=https://www.cnfeat.com/feed.xml
+[DONE] 003/501 Airing 的博客 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 011/501 豆瓣小组-无用美学
+         category=Articles feed_url=http://host.docker.internal:1200/douban/group/699356/essence
+[DONE] 004/501 Rolen's Blog status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 012/501 StarYuhen
+         category=Articles feed_url=https://www.yuhenm.top/feed/
+[DONE] 005/501 Ben's Love status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 013/501 少数派
+         category=优质信息源 feed_url=http://host.docker.internal:1200/sspai/index
+[DONE] 006/501 莫比乌斯 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 014/501 少数派 -- Matrix
+         category=优质信息源 feed_url=http://host.docker.internal:1200/sspai/matrix
+[DONE] 007/501 白熊阿丸的小屋 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 015/501 Experimental History
+         category=Articles feed_url=https://www.experimental-history.com/feed
+[DONE] 012/501 StarYuhen status=failed error_type=unknown error_message={"detail": "HTTP Error 403: Forbidden"}
+[DONE] 008/501 草稿拾遗 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 016/501 Blog - Remote Work Prep
+         category=Articles feed_url=https://www.remoteworkprep.com/blog?format=rss
+[SUBMIT] 017/501 EVANGELION:ALL
+         category=Articles feed_url=https://www.eva-all.com/news/feed/
+[DONE] 011/501 豆瓣小组-无用美学 status=failed error_type=timeout error_message={"detail": "timed out"}
+[SUBMIT] 018/501 纵横四海
+         category=Articles feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/62694abdb221dd5908417d1e
+Traceback (most recent call last):
+  File "/Users/wangrundong/work/infomation-center/content_inbox/scripts/run_rss_sources_to_content_inbox.py", line 1315, in main
+    done, _ = wait(set(in_flight.keys()), return_when=FIRST_COMPLETED)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/concurrent/futures/_base.py", line 306, in wait
+    waiter.event.wait(timeout)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.py", line 574, in wait
+    signaled = self._cond.wait(timeout)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.py", line 312, in wait
+    waiter.acquire()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wangrundong/work/infomation-center/content_inbox/scripts/run_rss_sources_to_content_inbox.py", line 1456, in <module>
+    raise SystemExit(main())
+  File "/Users/wangrundong/work/infomation-center/content_inbox/scripts/run_rss_sources_to_content_inbox.py", line 1374, in main
+    submit_next(executor)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/concurrent/futures/_base.py", line 636, in __exit__
+    self.shutdown(wait=True)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/concurrent/futures/thread.py", line 229, in shutdown
+    t.join()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.py", line 1053, in join
+    self._wait_for_tstate_lock()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.py", line 1069, in _wait_for_tstate_lock
+    elif lock.acquire(block, timeout):
+KeyboardInterrupt
+Exception ignored in: <module 'threading' from '/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.py'>
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.py", line 1435, in _shutdown
+    atexit_call()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/concurrent/futures/thread.py", line 31, in _python_exit
+    t.join()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.py", line 1053, in join
+    self._wait_for_tstate_lock()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.py", line 1069, in _wait_for_tstate_lock
+    elif lock.acquire(block, timeout):
+KeyboardInterrupt: 
