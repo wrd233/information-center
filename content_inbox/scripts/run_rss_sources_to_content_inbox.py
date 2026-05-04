@@ -29,7 +29,7 @@ import yaml
 
 TRUTHY = {"y", "yes", "true", "1", "on", "enable", "enabled", "启用", "是"}
 FALSY = {"n", "no", "false", "0", "off", "disable", "disabled", "停用", "否"}
-SKIP_STATUSES = {"disabled", "inactive", "broken", "error", "failed", "invalid", "停用", "失效", "错误"}
+SKIP_STATUSES = {"disabled", "inactive", "broken", "error", "failed", "invalid", "dead", "paused", "停用", "失效", "错误"}
 RUNS_DIRNAME = "runs"
 RUN_PREFIX = "rss_run_"
 
@@ -325,6 +325,18 @@ def request_json(
         return {"ok": False, "_status": None, "error": str(e)}
 
 
+def set_llm_max_concurrency(
+    api_base: str,
+    max_concurrency: int,
+    api_key: Optional[str],
+    timeout: int = 30,
+) -> Dict[str, Any]:
+    """Call POST /api/runtime/llm-concurrency on the content-inbox service."""
+    url = f"{api_base.rstrip('/')}/api/runtime/llm-concurrency"
+    payload = {"max_concurrency": max_concurrency}
+    return request_json("POST", url, payload, timeout=timeout, api_key=api_key)
+
+
 def analyze_rss_source(
     api_base: str,
     source: Source,
@@ -554,6 +566,8 @@ def classify_error(result: Dict[str, Any]) -> str:
     message = (result.get("error_message") or "").lower()
     if not message:
         return ""
+    if "429" in message:
+        return "rate_limit"
     if "503" in message:
         return "rsshub_503"
     if "failed to parse feed" in message or "not well-formed" in message:
@@ -1161,6 +1175,12 @@ def parse_args() -> argparse.Namespace:
         default=1,
         help="Maximum number of RSS sources to process concurrently. Default: 1.",
     )
+    parser.add_argument(
+        "--llm-max-concurrency",
+        type=int,
+        default=None,
+        help="Set the content-inbox service LLM max concurrency at runtime via POST /api/runtime/llm-concurrency before processing sources. Default: leave unchanged.",
+    )
     parser.add_argument("--timeout", type=int, default=180, help="HTTP timeout seconds for each source.")
     parser.add_argument("--inbox-limit", type=int, default=100)
     parser.add_argument("--output-dir", default="", help="Default: content_inbox/outputs")
@@ -1297,6 +1317,9 @@ def main() -> int:
     results.extend([results_by_id[source_id] for source_id in completed_source_ids if source_id in results_by_id and source_id not in seen_result_ids])
     results.sort(key=lambda row: int(row.get("sequence") or 0))
 
+    llm_max_concurrency_applied: Optional[int] = None
+    runtime_config_set_ok: Optional[bool] = None
+
     args_snapshot = {
         "api_base": args.api_base,
         "csv": str(csv_path),
@@ -1307,6 +1330,9 @@ def main() -> int:
         "screen": args.screen,
         "sleep": args.sleep,
         "concurrency": args.concurrency,
+        "llm_max_concurrency_requested": args.llm_max_concurrency,
+        "llm_max_concurrency_applied": llm_max_concurrency_applied,
+        "runtime_config_set_ok": runtime_config_set_ok,
         "timeout": args.timeout,
         "inbox_limit": args.inbox_limit,
         "url_mode": args.url_mode,
@@ -1338,6 +1364,54 @@ def main() -> int:
     print(f"[INFO] Screen enabled: {args.screen}", flush=True)
     print(f"[INFO] Concurrency: {args.concurrency}", flush=True)
     print(f"[INFO] content-inbox health OK: {json.dumps(health, ensure_ascii=False)}", flush=True)
+
+    # -- Runtime LLM concurrency configuration
+    if args.llm_max_concurrency is not None:
+        if args.dry_run:
+            print(
+                f"[INFO] Dry run: --llm-max-concurrency={args.llm_max_concurrency} would be applied, "
+                "but not modifying runtime concurrency.",
+                flush=True,
+            )
+            llm_max_concurrency_applied = None
+            runtime_config_set_ok = None
+        else:
+            print(
+                f"[INFO] Setting service LLM max concurrency to {args.llm_max_concurrency} ...",
+                flush=True,
+            )
+            result = set_llm_max_concurrency(
+                args.api_base, args.llm_max_concurrency, api_key, timeout=30
+            )
+            if result.get("ok") and result.get("_status") in (200, None):
+                llm_max_concurrency_applied = result.get("llm_max_concurrency")
+                runtime_config_set_ok = True
+                print(
+                    f"[INFO] Service LLM max concurrency set to {llm_max_concurrency_applied}",
+                    flush=True,
+                )
+            else:
+                runtime_config_set_ok = False
+                err = result.get("error", result.get("detail", json.dumps(result, ensure_ascii=False)))
+                print(
+                    f"[ERROR] Failed to set service LLM max concurrency: {err}",
+                    file=sys.stderr,
+                    flush=True,
+                )
+                return 4
+
+    # Update args_snapshot with actual runtime values (set after the runtime call)
+    args_snapshot["llm_max_concurrency_applied"] = llm_max_concurrency_applied
+    args_snapshot["runtime_config_set_ok"] = runtime_config_set_ok
+
+    notes.append(
+        f"source concurrency={args.concurrency}, "
+        f"llm_max_concurrency_requested={args.llm_max_concurrency}, "
+        f"llm_max_concurrency_applied={llm_max_concurrency_applied}, "
+        f"timeout={args.timeout}, "
+        f"sleep={args.sleep}, "
+        f"limit_per_source={args.limit_per_source}"
+    )
 
     if args.dump_llm_prompt:
         dump_dir = args.dump_llm_prompt_dir or str(run_dir / "llm_prompt_dumps")

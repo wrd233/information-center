@@ -4,7 +4,9 @@ import copy
 import json
 import math
 import os
+import random
 import re
+import socket
 import threading
 import time
 import urllib.error
@@ -32,6 +34,39 @@ def _get_llm_semaphore() -> threading.Semaphore:
         max_concurrency = int(settings.llm.get("max_concurrency", 2))
         _LLM_SEMAPHORE = threading.Semaphore(max_concurrency)
     return _LLM_SEMAPHORE
+
+
+def reconfigure_llm_semaphore(max_concurrency: int) -> int:
+    """Reconfigure the global LLM semaphore at runtime.
+
+    Updates settings.llm["max_concurrency"] and replaces the shared semaphore.
+    Threads currently holding the old semaphore are unaffected; new callers
+    will use the new value.
+    """
+    if not isinstance(max_concurrency, int) or max_concurrency < 1:
+        raise ValueError(f"max_concurrency must be a positive integer, got {max_concurrency}")
+    settings.llm["max_concurrency"] = max_concurrency
+    global _LLM_SEMAPHORE
+    _LLM_SEMAPHORE = threading.Semaphore(max_concurrency)
+    print(f"[LLM_CONCURRENCY] reconfigured to {max_concurrency}", flush=True)
+    return max_concurrency
+
+
+# ---------------------------------------------------------------------------
+# LLM retry configuration
+# ---------------------------------------------------------------------------
+
+_LLM_RETRY_MAX_ATTEMPTS = 3
+_LLM_RETRY_BASE_DELAY = 2.0
+_LLM_RETRY_MAX_DELAY = 30.0
+
+
+def _is_retryable_llm_error(exc: Exception) -> bool:
+    if isinstance(exc, urllib.error.HTTPError):
+        return exc.code in (429, 503)
+    if isinstance(exc, (urllib.error.URLError, socket.timeout)):
+        return True
+    return False
 
 
 # ---------------------------------------------------------------------------
@@ -395,21 +430,41 @@ def call_llm(body: dict[str, Any]) -> dict[str, Any]:
     # Dump full request body if enabled (before HTTP call)
     _dump_llm_body(body)
 
-    req = urllib.request.Request(
-        f"{settings.llm['base_url'].rstrip('/')}/chat/completions",
-        data=json.dumps(body, ensure_ascii=False).encode("utf-8"),
-        headers={
-            "content-type": "application/json",
-            "authorization": f"Bearer {settings.llm_api_key()}",
-        },
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=float(settings.llm.get("timeout_seconds", 60))) as response:
-            return json.loads(response.read().decode("utf-8"))
-    except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"OpenAI-compatible API returned {exc.code}: {detail}") from exc
+    url = f"{settings.llm['base_url'].rstrip('/')}/chat/completions"
+    data = json.dumps(body, ensure_ascii=False).encode("utf-8")
+    headers = {
+        "content-type": "application/json",
+        "authorization": f"Bearer {settings.llm_api_key()}",
+    }
+    timeout = float(settings.llm.get("timeout_seconds", 60))
+
+    last_exc: Exception | None = None
+    for attempt in range(1, _LLM_RETRY_MAX_ATTEMPTS + 1):
+        try:
+            req = urllib.request.Request(url, data=data, headers=headers, method="POST")
+            with urllib.request.urlopen(req, timeout=timeout) as response:
+                return json.loads(response.read().decode("utf-8"))
+        except (urllib.error.HTTPError, urllib.error.URLError, socket.timeout) as exc:
+            last_exc = exc
+            if attempt < _LLM_RETRY_MAX_ATTEMPTS and _is_retryable_llm_error(exc):
+                delay = min(_LLM_RETRY_BASE_DELAY * (2 ** (attempt - 1)), _LLM_RETRY_MAX_DELAY)
+                jitter = random.uniform(0, 0.1 * delay)
+                total_delay = delay + jitter
+                code = getattr(exc, "code", None)
+                print(
+                    f"[LLM_RETRY] attempt {attempt}/{_LLM_RETRY_MAX_ATTEMPTS} "
+                    f"after {code or type(exc).__name__}, "
+                    f"sleeping {total_delay:.1f}s",
+                    flush=True,
+                )
+                time.sleep(total_delay)
+                continue
+            break
+
+    if isinstance(last_exc, urllib.error.HTTPError):
+        detail = last_exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"OpenAI-compatible API returned {last_exc.code}: {detail}") from last_exc
+    raise RuntimeError(f"LLM request failed: {last_exc}") from last_exc
 
 
 def audit_prompt_messages(

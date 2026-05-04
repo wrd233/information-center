@@ -6,6 +6,7 @@ from typing import Annotated, Any
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel, Field
 
 from app.batch_runner import RSSBatchRunner
 from app.config import settings
@@ -13,7 +14,7 @@ from app.models import ContentAnalyzeRequest, RSSAnalyzeRequest, RSSBatchAnalyze
 from app.processor import normalize_content, process_content_thread_safe
 from app.rss import parse_feed
 from app.rss_runner import analyze_one_rss_source
-from app.screener import audit_screen_content, configure_llm_dump
+from app.screener import audit_screen_content, configure_llm_dump, reconfigure_llm_semaphore
 from app.storage import InboxStore
 
 
@@ -37,7 +38,24 @@ def health() -> dict[str, Any]:
             "llm_model": settings.llm.get("model"),
             "embedding_model": settings.embedding.get("model"),
             "prompt_version": settings.prompt_version,
+            "llm_max_concurrency": int(settings.llm.get("max_concurrency", 2)),
         },
+    }
+
+
+class LLMConcurrencyRequest(BaseModel):
+    max_concurrency: int = Field(ge=1, le=32)
+
+
+@app.post("/api/runtime/llm-concurrency")
+def set_llm_concurrency(payload: LLMConcurrencyRequest) -> dict[str, Any]:
+    try:
+        new_value = reconfigure_llm_semaphore(payload.max_concurrency)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {
+        "ok": True,
+        "llm_max_concurrency": new_value,
     }
 
 

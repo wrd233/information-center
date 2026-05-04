@@ -167,6 +167,9 @@ def apply_env_overrides(config: dict[str, Any]) -> None:
     llm["timeout_seconds"] = float(
         os.getenv("CONTENT_INBOX_OPENAI_TIMEOUT", str(llm["timeout_seconds"]))
     )
+    llm["max_concurrency"] = int(
+        os.getenv("CONTENT_INBOX_LLM_MAX_CONCURRENCY", str(llm.get("max_concurrency", 2)))
+    )
 
     embedding = config["embedding"]
     embedding["base_url"] = os.getenv(
