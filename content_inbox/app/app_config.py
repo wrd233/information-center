@@ -21,6 +21,7 @@ DEFAULT_CONFIG: dict[str, Any] = {
     },
     "screening": {
         "enabled": True,
+        "mode": "two_stage",
         "max_input_chars": 4000,
         "merged_max_tokens": 3000,
         "categories": [

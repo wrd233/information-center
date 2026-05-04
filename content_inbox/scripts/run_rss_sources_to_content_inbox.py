@@ -337,6 +337,18 @@ def set_llm_max_concurrency(
     return request_json("POST", url, payload, timeout=timeout, api_key=api_key)
 
 
+def set_screening_mode(
+    api_base: str,
+    mode: str,
+    api_key: Optional[str],
+    timeout: int = 30,
+) -> Dict[str, Any]:
+    """Call POST /api/runtime/screening-mode on the content-inbox service."""
+    url = f"{api_base.rstrip('/')}/api/runtime/screening-mode"
+    payload = {"mode": mode}
+    return request_json("POST", url, payload, timeout=timeout, api_key=api_key)
+
+
 def analyze_rss_source(
     api_base: str,
     source: Source,
@@ -610,6 +622,9 @@ def summarize_result_for_source(plan: SourcePlan, response: Dict[str, Any]) -> D
         "fetch_feed_seconds": profile.get("fetch_feed_seconds", ""),
         "llm_basic_screening_seconds": profile.get("llm_basic_screening_seconds", ""),
         "llm_need_matching_seconds": profile.get("llm_need_matching_seconds", ""),
+        "llm_screen_and_match_seconds": profile.get("llm_screen_and_match_seconds", ""),
+        "screening_mode": response.get("screening_mode", ""),
+        "llm_call_count": profile.get("llm_call_count", ""),
         "embedding_seconds": profile.get("embedding_seconds", ""),
         "lock_wait_seconds": lock_wait,
         "lock_held_seconds": lock_held,
@@ -758,6 +773,9 @@ def results_csv_headers() -> List[str]:
         "fetch_feed_seconds",
         "llm_basic_screening_seconds",
         "llm_need_matching_seconds",
+        "llm_screen_and_match_seconds",
+        "screening_mode",
+        "llm_call_count",
         "embedding_seconds",
         "lock_wait_seconds",
         "lock_held_seconds",
@@ -1181,6 +1199,12 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Set the content-inbox service LLM max concurrency at runtime via POST /api/runtime/llm-concurrency before processing sources. Default: leave unchanged.",
     )
+    parser.add_argument(
+        "--screening-mode",
+        choices=["two_stage", "merged"],
+        default=None,
+        help="Set the content-inbox service screening mode at runtime via POST /api/runtime/screening-mode before processing sources. Default: leave unchanged.",
+    )
     parser.add_argument("--timeout", type=int, default=180, help="HTTP timeout seconds for each source.")
     parser.add_argument("--inbox-limit", type=int, default=100)
     parser.add_argument("--output-dir", default="", help="Default: content_inbox/outputs")
@@ -1404,10 +1428,51 @@ def main() -> int:
     args_snapshot["llm_max_concurrency_applied"] = llm_max_concurrency_applied
     args_snapshot["runtime_config_set_ok"] = runtime_config_set_ok
 
+    # -- Runtime screening mode configuration
+    screening_mode_applied: Optional[str] = None
+    runtime_screening_mode_set_ok: Optional[bool] = None
+    if args.screening_mode is not None:
+        if args.dry_run:
+            print(
+                f"[INFO] Dry run: --screening-mode={args.screening_mode} would be applied, "
+                "but not modifying runtime screening mode.",
+                flush=True,
+            )
+        else:
+            print(
+                f"[INFO] Setting service screening mode to {args.screening_mode} ...",
+                flush=True,
+            )
+            result = set_screening_mode(
+                args.api_base, args.screening_mode, api_key, timeout=30
+            )
+            if result.get("ok") and result.get("_status") in (200, None):
+                screening_mode_applied = result.get("screening_mode")
+                runtime_screening_mode_set_ok = True
+                print(
+                    f"[INFO] Service screening mode set to {screening_mode_applied}",
+                    flush=True,
+                )
+            else:
+                runtime_screening_mode_set_ok = False
+                err = result.get("error", result.get("detail", json.dumps(result, ensure_ascii=False)))
+                print(
+                    f"[ERROR] Failed to set service screening mode: {err}",
+                    file=sys.stderr,
+                    flush=True,
+                )
+                return 4
+
+    args_snapshot["screening_mode_requested"] = args.screening_mode
+    args_snapshot["screening_mode_applied"] = screening_mode_applied
+    args_snapshot["runtime_screening_mode_set_ok"] = runtime_screening_mode_set_ok
+
     notes.append(
         f"source concurrency={args.concurrency}, "
         f"llm_max_concurrency_requested={args.llm_max_concurrency}, "
         f"llm_max_concurrency_applied={llm_max_concurrency_applied}, "
+        f"screening_mode_requested={args.screening_mode}, "
+        f"screening_mode_applied={screening_mode_applied}, "
         f"timeout={args.timeout}, "
         f"sleep={args.sleep}, "
         f"limit_per_source={args.limit_per_source}"

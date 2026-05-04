@@ -52,6 +52,19 @@ def reconfigure_llm_semaphore(max_concurrency: int) -> int:
     return max_concurrency
 
 
+def reconfigure_screening_mode(mode: str) -> str:
+    """Reconfigure the screening mode at runtime.
+
+    Valid values: 'two_stage', 'merged'.
+    Updates settings.screening['mode'] and returns the new value.
+    """
+    if mode not in ("two_stage", "merged"):
+        raise ValueError(f"screening mode must be 'two_stage' or 'merged', got {mode!r}")
+    settings.screening["mode"] = mode
+    print(f"[SCREENING_MODE] reconfigured to {mode}", flush=True)
+    return mode
+
+
 # ---------------------------------------------------------------------------
 # LLM retry configuration
 # ---------------------------------------------------------------------------
@@ -218,6 +231,8 @@ def ai_screen(content: NormalizedContent) -> ScreeningResult:
         max_tokens=settings.llm.get("max_tokens", 1200),
     )
     profiler.record("llm_need_matching_seconds", time.monotonic() - t1)
+    profiler.record("llm_screen_and_match_seconds", 0.0)
+    profiler.record("llm_call_count", 2.0)
 
     matching_raw = matching_data.pop("_raw_response", None)
     merged = dict(basic_data)
@@ -263,8 +278,8 @@ def ai_screen_merged(content: NormalizedContent) -> ScreeningResult:
         temperature=settings.llm.get("temperature", 0.2),
         max_tokens=int(settings.screening.get("merged_max_tokens", 3000)),
     )
-    profiler.record("llm_basic_screening_seconds", time.monotonic() - t0)
-    profiler.record("llm_need_matching_seconds", 0.0)
+    profiler.record("llm_screen_and_match_seconds", time.monotonic() - t0)
+    profiler.record("llm_call_count", 1.0)
 
     raw_response = merged_data.pop("_raw_response", None)
     merged_data["screening_method"] = "ai"

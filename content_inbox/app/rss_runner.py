@@ -4,6 +4,7 @@ import time
 from datetime import datetime
 from typing import Any
 
+from app.config import settings
 from app.models import ContentAnalyzeRequest, RSSAnalyzeRequest
 from app.processor import process_content_thread_safe
 from app.profiler import profiler
@@ -103,6 +104,7 @@ def analyze_one_rss_source(
     profiler.record("source_total_seconds", source_total)
     if profiler.enabled:
         response["profile"] = profiler.collect()
+    response["screening_mode"] = settings.screening.get("mode", "two_stage")
     return response
 
 

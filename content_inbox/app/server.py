@@ -14,7 +14,7 @@ from app.models import ContentAnalyzeRequest, RSSAnalyzeRequest, RSSBatchAnalyze
 from app.processor import normalize_content, process_content_thread_safe
 from app.rss import parse_feed
 from app.rss_runner import analyze_one_rss_source
-from app.screener import audit_screen_content, configure_llm_dump, reconfigure_llm_semaphore
+from app.screener import audit_screen_content, configure_llm_dump, reconfigure_llm_semaphore, reconfigure_screening_mode
 from app.storage import InboxStore
 
 
@@ -39,6 +39,7 @@ def health() -> dict[str, Any]:
             "embedding_model": settings.embedding.get("model"),
             "prompt_version": settings.prompt_version,
             "llm_max_concurrency": int(settings.llm.get("max_concurrency", 2)),
+            "screening_mode": settings.screening.get("mode", "two_stage"),
         },
     }
 
@@ -56,6 +57,22 @@ def set_llm_concurrency(payload: LLMConcurrencyRequest) -> dict[str, Any]:
     return {
         "ok": True,
         "llm_max_concurrency": new_value,
+    }
+
+
+class ScreeningModeRequest(BaseModel):
+    mode: str
+
+
+@app.post("/api/runtime/screening-mode")
+def set_screening_mode(payload: ScreeningModeRequest) -> dict[str, Any]:
+    try:
+        new_mode = reconfigure_screening_mode(payload.mode)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {
+        "ok": True,
+        "screening_mode": new_mode,
     }
 
 
