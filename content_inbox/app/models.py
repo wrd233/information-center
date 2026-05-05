@@ -32,6 +32,11 @@ class RSSAnalyzeRequest(BaseModel):
     audit_prompt: bool = False
     dump_llm_prompt: bool = False
     dump_llm_prompt_dir: str | None = None
+    incremental_mode: Literal["fixed_limit", "until_existing"] = "fixed_limit"
+    probe_limit: int = Field(default=20, ge=1)
+    new_source_initial_limit: int = Field(default=5, ge=1)
+    old_source_no_anchor_limit: int = Field(default=20, ge=1)
+    stop_on_first_existing: bool = True
 
 
 class RSSSourceSpec(BaseModel):
@@ -41,6 +46,11 @@ class RSSSourceSpec(BaseModel):
     source_id: str | None = None
     limit: int | None = Field(default=None, ge=1, le=200)
     screen: bool | None = None
+    incremental_mode: Literal["fixed_limit", "until_existing"] | None = None
+    probe_limit: int | None = Field(default=None, ge=1)
+    new_source_initial_limit: int | None = Field(default=None, ge=1)
+    old_source_no_anchor_limit: int | None = Field(default=None, ge=1)
+    stop_on_first_existing: bool | None = None
 
 
 class RSSBatchAnalyzeRequest(BaseModel):
@@ -50,6 +60,11 @@ class RSSBatchAnalyzeRequest(BaseModel):
     max_concurrent_sources: int = Field(default=3, ge=1, le=5)
     preserve_source_entry_order: bool = True
     include_items: bool = True
+    incremental_mode: Literal["fixed_limit", "until_existing"] = "fixed_limit"
+    probe_limit: int = Field(default=20, ge=1)
+    new_source_initial_limit: int = Field(default=5, ge=1)
+    old_source_no_anchor_limit: int = Field(default=20, ge=1)
+    stop_on_first_existing: bool = True
 
 
 class ContentAnalyzeRequest(BaseModel):

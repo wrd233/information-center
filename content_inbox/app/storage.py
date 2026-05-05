@@ -133,6 +133,28 @@ class InboxStore:
             ).fetchone()
         return row_to_item(row) if row else None
 
+    def has_source_history(self, source_name: str, source_category: str | None) -> bool:
+        """Check whether any items from this source exist in the database.
+
+        Source identity is determined by source_name + source_category.
+        Limitation: feed_url is not stored as a column (only inside raw_json TEXT),
+        so two different feeds sharing the same name+category will be treated
+        as the same source. For this feature's purpose (distinguishing new
+        sources from old sources), this is acceptable.
+        """
+        with self.connect() as conn:
+            if source_category is not None:
+                row = conn.execute(
+                    "SELECT 1 FROM inbox_items WHERE source_name = ? AND source_category = ?",
+                    (source_name, source_category),
+                ).fetchone()
+            else:
+                row = conn.execute(
+                    "SELECT 1 FROM inbox_items WHERE source_name = ? AND source_category IS NULL",
+                    (source_name,),
+                ).fetchone()
+        return row is not None
+
     def mark_seen(self, item_id: str) -> dict[str, Any]:
         now = utc_now()
         with self.connect() as conn:

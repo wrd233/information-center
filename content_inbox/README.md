@@ -101,6 +101,82 @@ curl -s http://127.0.0.1:8787/api/rss/analyze-batch \
 curl -s 'http://127.0.0.1:8787/api/inbox?min_score=3&suggested_action=read,save&limit=20'
 ```
 
+## RSS 增量同步模式
+
+从 v0.2.0 开始，`/api/rss/analyze` 支持两种同步模式：
+
+### fixed_limit（默认，当前行为）
+
+每个 RSS 源按 `limit` 固定处理前 N 条。适合首次小批量测试、手动抽样、debug。
+
+```bash
+curl -s http://127.0.0.1:8787/api/rss/analyze \
+  -H 'content-type: application/json' \
+  -d '{"feed_url":"https://example.com/feed.xml","limit":20,"screen":true}'
+```
+
+### until_existing（增量同步）
+
+从最新条目向后扫描，遇到数据库中已存在的条目时停止，只处理该条目之前的新条目。适合每日定时同步。
+
+```bash
+curl -s http://127.0.0.1:8787/api/rss/analyze \
+  -H 'content-type: application/json' \
+  -d '{
+    "feed_url":"https://example.com/feed.xml",
+    "incremental_mode":"until_existing",
+    "probe_limit":20,
+    "new_source_initial_limit":5,
+    "old_source_no_anchor_limit":20,
+    "screen":true
+  }'
+```
+
+**决策逻辑：**
+
+| 条件 | 决策 | 处理条目 |
+|---|---|---|
+| 在 probe_limit 内找到已存在条目 | `until_existing_anchor_found` | 锚点之前的新条目 |
+| 数据库中无源历史记录（新源） | `new_source_initial_baseline` | 前 N 条（`new_source_initial_limit`，默认 5）|
+| 数据库有历史但 probe_limit 内未找到锚点 | `old_source_no_anchor` | 前 N 条（`old_source_no_anchor_limit`，默认 20），返回 warning |
+
+**新增请求字段：**
+
+| 字段 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `incremental_mode` | `"fixed_limit" \| "until_existing"` | `"fixed_limit"` | 同步模式 |
+| `probe_limit` | `int` | `20` | 扫描锚点的最大条目数 |
+| `new_source_initial_limit` | `int` | `5` | 新源基线处理条数 |
+| `old_source_no_anchor_limit` | `int` | `20` | 老源无锚点时处理条数 |
+| `stop_on_first_existing` | `bool` | `true` | 遇到第一条已存在条目即停止 |
+
+**until_existing 模式新增响应字段：**
+
+`incremental_mode`、`incremental_decision`、`source_has_history`、`probe_limit`、`new_source_initial_limit`、`old_source_no_anchor_limit`、`feed_items_seen`、`anchor_found`、`anchor_index`、`selected_items_for_processing`、`warnings`。
+
+### 批量 API 和外部运行器
+
+批量端点（`/api/rss/analyze-batch`）的 `RSSBatchAnalyzeRequest` 和 `RSSSourceSpec` 也支持增量字段。
+
+外部运行器脚本新增 CLI 参数：
+
+```bash
+python3 -u content_inbox/scripts/run_rss_sources_to_content_inbox.py \
+  --api-base http://127.0.0.1:8787 \
+  --csv rsshub/rss_opml/rss_sources.csv \
+  --all \
+  --url-mode docker-host \
+  --incremental-mode until_existing \
+  --probe-limit 20 \
+  --new-source-initial-limit 5 \
+  --old-source-no-anchor-limit 20 \
+  --concurrency 2 \
+  --llm-max-concurrency 2 \
+  --screening-mode merged \
+  --timeout 600 \
+  --profile
+```
+
 ## 性能 Profiling
 
 通过 `CONTENT_INBOX_PROFILE=1` 环境变量或 `--profile` 脚本标志启用逐源耗时记录。启用后 `source_results.csv` 会额外记录每个源各阶段的墙钟时间。

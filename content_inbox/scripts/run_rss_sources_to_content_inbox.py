@@ -361,6 +361,11 @@ def analyze_rss_source(
     audit_prompt: bool = False,
     dump_llm_prompt: bool = False,
     dump_llm_prompt_dir: str = "",
+    incremental_mode: str = "fixed_limit",
+    probe_limit: int = 20,
+    new_source_initial_limit: int = 5,
+    old_source_no_anchor_limit: int = 20,
+    stop_on_first_existing: bool = True,
 ) -> Dict[str, Any]:
     payload: Dict[str, Any] = {
         "feed_url": feed_url,
@@ -377,6 +382,12 @@ def analyze_rss_source(
         payload["dump_llm_prompt"] = True
     if dump_llm_prompt_dir:
         payload["dump_llm_prompt_dir"] = dump_llm_prompt_dir
+    if incremental_mode != "fixed_limit":
+        payload["incremental_mode"] = incremental_mode
+    payload["probe_limit"] = probe_limit
+    payload["new_source_initial_limit"] = new_source_initial_limit
+    payload["old_source_no_anchor_limit"] = old_source_no_anchor_limit
+    payload["stop_on_first_existing"] = stop_on_first_existing
     return request_json("POST", f"{api_base.rstrip('/')}/api/rss/analyze", payload=payload, timeout=timeout, api_key=api_key)
 
 
@@ -393,6 +404,11 @@ def run_one_plan(plan: SourcePlan, args: argparse.Namespace, api_key: Optional[s
         audit_prompt=args.audit_prompt,
         dump_llm_prompt=args.dump_llm_prompt,
         dump_llm_prompt_dir=getattr(args, 'dump_llm_prompt_dir', ''),
+        incremental_mode=args.incremental_mode,
+        probe_limit=args.probe_limit,
+        new_source_initial_limit=args.new_source_initial_limit,
+        old_source_no_anchor_limit=args.old_source_no_anchor_limit,
+        stop_on_first_existing=args.stop_on_first_existing,
     )
     if args.audit_prompt:
         return summarize_audit_response(plan, response)
@@ -663,6 +679,15 @@ def summarize_result_for_source(plan: SourcePlan, response: Dict[str, Any]) -> D
             "incremental_items": 0,
             "silent_items": 0,
             "failed_items": 0,
+            "incremental_mode": "",
+            "incremental_decision": "",
+            "source_has_history": "",
+            "probe_limit": "",
+            "feed_items_seen": "",
+            "anchor_found": "",
+            "anchor_index": "",
+            "selected_items_for_processing": "",
+            "incremental_warning": "",
             "error_message": error_message,
         }
         result["error_type"] = classify_error(result)
@@ -681,6 +706,15 @@ def summarize_result_for_source(plan: SourcePlan, response: Dict[str, Any]) -> D
         "incremental_items": response.get("incremental_items", 0),
         "silent_items": response.get("silent_items", 0),
         "failed_items": response.get("failed_items", 0),
+        "incremental_mode": response.get("incremental_mode", ""),
+        "incremental_decision": response.get("incremental_decision", ""),
+        "source_has_history": str(response.get("source_has_history", "")),
+        "probe_limit": response.get("probe_limit", ""),
+        "feed_items_seen": response.get("feed_items_seen", ""),
+        "anchor_found": str(response.get("anchor_found", "")),
+        "anchor_index": response.get("anchor_index", ""),
+        "selected_items_for_processing": response.get("selected_items_for_processing", ""),
+        "incremental_warning": "; ".join(response.get("warnings", [])),
         "error_message": "",
         "error_type": "",
     }
@@ -719,6 +753,15 @@ def summarize_audit_response(plan: SourcePlan, response: Dict[str, Any]) -> Dict
             "incremental_items": 0,
             "silent_items": 0,
             "failed_items": 0,
+            "incremental_mode": "",
+            "incremental_decision": "",
+            "source_has_history": "",
+            "probe_limit": "",
+            "feed_items_seen": "",
+            "anchor_found": "",
+            "anchor_index": "",
+            "selected_items_for_processing": "",
+            "incremental_warning": "",
             "error_message": error_message,
             "_audit_records": [],
         }
@@ -739,6 +782,15 @@ def summarize_audit_response(plan: SourcePlan, response: Dict[str, Any]) -> Dict
         "incremental_items": 0,
         "silent_items": 0,
         "failed_items": 0,
+        "incremental_mode": "",
+        "incremental_decision": "",
+        "source_has_history": "",
+        "probe_limit": "",
+        "feed_items_seen": "",
+        "anchor_found": "",
+        "anchor_index": "",
+        "selected_items_for_processing": "",
+        "incremental_warning": "",
         "error_message": "",
         "error_type": "",
         "total_prompts": len(audit_records),
@@ -758,6 +810,15 @@ def results_csv_headers() -> List[str]:
         "url_mode",
         "screen",
         "status",
+        "incremental_mode",
+        "incremental_decision",
+        "source_has_history",
+        "probe_limit",
+        "feed_items_seen",
+        "anchor_found",
+        "anchor_index",
+        "selected_items_for_processing",
+        "incremental_warning",
         "total_items",
         "new_items",
         "duplicate_items",
@@ -880,6 +941,23 @@ def aggregate_stats(results: List[Dict[str, Any]], inbox: Dict[str, Any]) -> Dic
     skipped = [r for r in results if r.get("status") == "skipped_known_failed"]
     inbox_items = extract_items(inbox)
     stats = inbox.get("stats") or {}
+    incremental_mode = ""
+    anchor_found_sources = 0
+    new_source_baseline_sources = 0
+    old_source_no_anchor_sources = 0
+    selected_items_for_processing_total = 0
+    for r in success:
+        mode = r.get("incremental_mode", "")
+        if mode:
+            incremental_mode = mode
+        dec = r.get("incremental_decision", "")
+        if dec == "until_existing_anchor_found":
+            anchor_found_sources += 1
+        elif dec == "new_source_initial_baseline":
+            new_source_baseline_sources += 1
+        elif dec == "old_source_no_anchor":
+            old_source_no_anchor_sources += 1
+        selected_items_for_processing_total += int(r.get("selected_items_for_processing") or 0)
     return {
         "processed_sources": len(results),
         "successful_sources": len(success),
@@ -898,6 +976,11 @@ def aggregate_stats(results: List[Dict[str, Any]], inbox: Dict[str, Any]) -> Dic
         "incremental_push_items_from_this_run": int(stats.get("incremental_push", 0)),
         "inbox_query_mode": inbox.get("_query_mode", "unknown"),
         "inbox_query_fallback_used": bool(inbox.get("_fallback_used")),
+        "incremental_mode": incremental_mode,
+        "anchor_found_sources": anchor_found_sources,
+        "new_source_baseline_sources": new_source_baseline_sources,
+        "old_source_no_anchor_sources": old_source_no_anchor_sources,
+        "selected_items_for_processing_total": selected_items_for_processing_total,
     }
 
 
@@ -972,6 +1055,25 @@ def write_report(
     lines.append(f"- failed_items：{stats['failed_items']}")
     lines.append(f"- inbox 查询模式：{stats['inbox_query_mode']}")
     lines.append(f"- inbox 是否回退到 date=today：{stats['inbox_query_fallback_used']}\n")
+
+    # Incremental mode summary
+    incremental_mode = stats.get("incremental_mode", "fixed_limit")
+    lines.append("## 增量同步模式汇总\n")
+    lines.append(f"- 同步模式：{incremental_mode}")
+    if incremental_mode == "until_existing":
+        lines.append(f"- 命中历史锚点的源数：{stats['anchor_found_sources']}")
+        lines.append(f"- 新源基线同步数：{stats['new_source_baseline_sources']}")
+        lines.append(f"- 老源未找到锚点数：{stats['old_source_no_anchor_sources']}")
+        lines.append(f"- selected_items_for_processing 总计：{stats['selected_items_for_processing_total']}")
+        old_source_no_anchor_list = [
+            r for r in results
+            if r.get("incremental_decision") == "old_source_no_anchor"
+        ]
+        if old_source_no_anchor_list:
+            lines.append("\n**⚠️ 老源未找到锚点 (old_source_no_anchor) 的源列表：**\n")
+            for r in old_source_no_anchor_list:
+                lines.append(f"- **{md_escape(r.get('source_name'))}** ({md_escape(r.get('source_category'))}): {md_escape(r.get('incremental_warning', ''))}")
+    lines.append("")
 
     lines.append("## 2. 统计口径说明\n")
     lines.append("- `recommended_items_from_api_response` 来自 `POST /api/rss/analyze` 聚合返回，可能受重复内容和服务端统计实现影响。")
@@ -1214,6 +1316,37 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--resume", action="store_true", help="Resume from the latest unfinished run.")
     parser.add_argument("--skip-known-failed", action="store_true", help="Skip sources that already failed in current/history runs.")
     parser.add_argument("--max-consecutive-failures", type=int, default=20)
+    parser.add_argument(
+        "--incremental-mode",
+        choices=["fixed_limit", "until_existing"],
+        default="fixed_limit",
+        help="RSS incremental mode. fixed_limit=current behavior (process first N items). "
+        "until_existing=scan until finding an existing anchor item.",
+    )
+    parser.add_argument(
+        "--probe-limit",
+        type=int,
+        default=20,
+        help="Max items to scan for an anchor in until_existing mode.",
+    )
+    parser.add_argument(
+        "--new-source-initial-limit",
+        type=int,
+        default=5,
+        help="Max items to process for a new source in until_existing mode.",
+    )
+    parser.add_argument(
+        "--old-source-no-anchor-limit",
+        type=int,
+        default=20,
+        help="Max items to process for an old source with no anchor found in until_existing mode.",
+    )
+    parser.add_argument(
+        "--stop-on-first-existing",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Stop scanning when first existing item is found (until_existing mode).",
+    )
     args = parser.parse_args()
     if args.concurrency < 1:
         parser.error("--concurrency must be >= 1")
@@ -1365,6 +1498,11 @@ def main() -> int:
         "resume": args.resume,
         "skip_known_failed": args.skip_known_failed,
         "max_consecutive_failures": args.max_consecutive_failures,
+        "incremental_mode": args.incremental_mode,
+        "probe_limit": args.probe_limit,
+        "new_source_initial_limit": args.new_source_initial_limit,
+        "old_source_no_anchor_limit": args.old_source_no_anchor_limit,
+        "stop_on_first_existing": args.stop_on_first_existing,
     }
     started_at = existing_state.get("started_at") if args.resume and existing_state.get("started_at") else dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
     notes: List[str] = []

@@ -6,7 +6,7 @@ from typing import Any
 
 from app.config import settings
 from app.models import ContentAnalyzeRequest, RSSAnalyzeRequest
-from app.processor import process_content_thread_safe
+from app.processor import build_dedupe_key, normalize_content, process_content_thread_safe
 from app.profiler import profiler
 from app.rss import parse_feed
 from app.storage import InboxStore
@@ -38,16 +38,97 @@ def analyze_one_rss_source(
     if payload.profile:
         profiler.enable_for_request()
     profiler.reset()
-    meta, entries = parse_feed(
-        payload.feed_url,
-        source_name=payload.source_name,
-        source_category=payload.source_category,
-        limit=payload.limit,
-    )
-    processing_entries = (
-        sort_entries_for_processing(entries) if preserve_source_entry_order else list(entries)
-    )
 
+    response_extra: dict[str, Any] = {}
+    meta: dict[str, Any] = {}
+
+    if payload.incremental_mode == "until_existing":
+        # ---- Path A: until_existing mode ----
+        meta, all_entries = parse_feed(
+            payload.feed_url,
+            source_name=payload.source_name,
+            source_category=payload.source_category,
+            limit=None,
+        )
+
+        source_identity_name = payload.source_name or meta.get("source_name", "")
+        source_has_history = inbox_store.has_source_history(
+            source_identity_name,
+            payload.source_category,
+        )
+
+        scan_candidates: list[ContentAnalyzeRequest] = []
+        anchor_found = False
+        anchor_index: int | None = None
+
+        for i, entry in enumerate(all_entries):
+            if i >= payload.probe_limit:
+                break
+            normalized_stub = normalize_content(entry)
+            dedupe_key = build_dedupe_key(normalized_stub)
+            if inbox_store.get_by_dedupe_key(dedupe_key):
+                anchor_found = True
+                anchor_index = i
+                break
+            scan_candidates.append(entry)
+
+        feed_items_seen = len(scan_candidates) + (1 if anchor_found else 0)
+        warnings: list[str] = []
+
+        if anchor_found:
+            items_to_process = scan_candidates
+            incremental_decision = "until_existing_anchor_found"
+        elif not source_has_history:
+            items_to_process = all_entries[: payload.new_source_initial_limit]
+            incremental_decision = "new_source_initial_baseline"
+            warnings.append(
+                f"New source: processing first {len(items_to_process)} items as initial baseline "
+                f"(new_source_initial_limit={payload.new_source_initial_limit})."
+            )
+        else:
+            items_to_process = all_entries[: payload.old_source_no_anchor_limit]
+            incremental_decision = "old_source_no_anchor"
+            warnings.append(
+                f"This source has history in DB but no existing item was found within "
+                f"probe_limit={payload.probe_limit}. Processing first {len(items_to_process)} items "
+                f"(old_source_no_anchor_limit={payload.old_source_no_anchor_limit}). "
+                f"Possible causes: high-frequency updates, guid/url changes, RSSHub route changes, "
+                f"or dedupe rule changes."
+            )
+
+        processing_entries = (
+            sort_entries_for_processing(items_to_process)
+            if preserve_source_entry_order
+            else list(items_to_process)
+        )
+
+        response_extra = {
+            "incremental_mode": "until_existing",
+            "incremental_decision": incremental_decision,
+            "source_has_history": source_has_history,
+            "probe_limit": payload.probe_limit,
+            "new_source_initial_limit": payload.new_source_initial_limit,
+            "old_source_no_anchor_limit": payload.old_source_no_anchor_limit,
+            "feed_items_seen": feed_items_seen,
+            "anchor_found": anchor_found,
+            "anchor_index": anchor_index,
+            "selected_items_for_processing": len(processing_entries),
+            "warnings": warnings,
+        }
+
+    else:
+        # ---- Path B: fixed_limit mode (existing logic, unchanged) ----
+        meta, entries = parse_feed(
+            payload.feed_url,
+            source_name=payload.source_name,
+            source_category=payload.source_category,
+            limit=payload.limit,
+        )
+        processing_entries = (
+            sort_entries_for_processing(entries) if preserve_source_entry_order else list(entries)
+        )
+
+    # ---- Shared processing pipeline ----
     total = len(processing_entries)
     new_items = 0
     duplicate_items = 0
@@ -98,6 +179,7 @@ def analyze_one_rss_source(
         "recommended_items": recommended_items,
         "failed_items": failed_items,
     }
+    response.update(response_extra)
     if include_items:
         response["items"] = item_results
     source_total = time.monotonic() - t_source

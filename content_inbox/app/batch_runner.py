@@ -39,6 +39,31 @@ class RSSBatchRunner:
             source_category=source.source_category,
             limit=source.limit if source.limit is not None else payload.limit_per_source,
             screen=source.screen if source.screen is not None else payload.screen,
+            incremental_mode=(
+                source.incremental_mode
+                if source.incremental_mode is not None
+                else payload.incremental_mode
+            ),
+            probe_limit=(
+                source.probe_limit
+                if source.probe_limit is not None
+                else payload.probe_limit
+            ),
+            new_source_initial_limit=(
+                source.new_source_initial_limit
+                if source.new_source_initial_limit is not None
+                else payload.new_source_initial_limit
+            ),
+            old_source_no_anchor_limit=(
+                source.old_source_no_anchor_limit
+                if source.old_source_no_anchor_limit is not None
+                else payload.old_source_no_anchor_limit
+            ),
+            stop_on_first_existing=(
+                source.stop_on_first_existing
+                if source.stop_on_first_existing is not None
+                else payload.stop_on_first_existing
+            ),
         )
         try:
             result = analyze_one_rss_source(
