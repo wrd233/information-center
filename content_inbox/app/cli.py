@@ -7,6 +7,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import date, datetime, time, timezone
+from pathlib import Path
 from typing import Any
 
 try:
@@ -86,6 +87,11 @@ def build_parser() -> argparse.ArgumentParser:
     inbox.add_argument("--today", action="store_true")
     inbox.add_argument("--from", dest="from_time")
     inbox.add_argument("--to", dest="to_time")
+    inbox.add_argument("--created-from")
+    inbox.add_argument("--created-to")
+    inbox.add_argument("--published-from")
+    inbox.add_argument("--published-to")
+    inbox.add_argument("--view", choices=["all", "readable", "recommended", "notifications"])
     inbox.add_argument("--keyword")
     inbox.add_argument("--source", dest="source_name")
     inbox.add_argument("--type", dest="content_type")
@@ -149,6 +155,43 @@ def build_parser() -> argparse.ArgumentParser:
     sources_ingest.add_argument("--old-source-no-anchor-limit", type=int)
     sources_ingest.add_argument("--include-items", action="store_true")
 
+    sources_test = sources_sub.add_parser("test")
+    add_common_api_args(sources_test)
+    sources_test.add_argument("source_id")
+    sources_test.add_argument("--limit", type=int, default=5)
+
+    sources_import = sources_sub.add_parser("import-csv")
+    add_common_api_args(sources_import)
+    sources_import.add_argument("--csv", required=True)
+    sources_import.add_argument("--dry-run", action="store_true")
+    sources_import.add_argument("--upsert", action="store_true")
+    sources_import.add_argument("--skip-existing", action="store_true")
+    sources_import.add_argument("--update-existing", action="store_true")
+    sources_import.add_argument("--default-status", default="active")
+    sources_import.add_argument("--default-category")
+    sources_import.add_argument("--source-id-column")
+
+    sources_backfill = sources_sub.add_parser("backfill-items")
+    add_common_api_args(sources_backfill)
+    sources_backfill.add_argument("--dry-run", action="store_true")
+    sources_backfill.add_argument("--apply", action="store_true")
+
+    sources_health = sources_sub.add_parser("health")
+    add_common_api_args(sources_health)
+
+    runs = subparsers.add_parser("runs", help="Inspect RSS ingest runs.")
+    runs_sub = runs.add_subparsers(dest="runs_command", required=True)
+    runs_list = runs_sub.add_parser("list")
+    add_common_api_args(runs_list)
+    runs_list.add_argument("--limit", type=int, default=20)
+    runs_list.add_argument("--offset", type=int, default=0)
+    runs_get = runs_sub.add_parser("get")
+    add_common_api_args(runs_get)
+    runs_get.add_argument("run_id")
+    runs_sources = runs_sub.add_parser("sources")
+    add_common_api_args(runs_sources)
+    runs_sources.add_argument("run_id")
+
     return parser
 
 
@@ -197,6 +240,11 @@ def run_inbox(args: argparse.Namespace) -> int:
         "topic_id": args.topic_id,
         "min_need_score": args.min_need_score,
         "min_topic_score": args.min_topic_score,
+        "created_from": args.created_from,
+        "created_to": args.created_to,
+        "published_from": args.published_from,
+        "published_to": args.published_to,
+        "view": args.view,
     }
     for key, value in option_map.items():
         if value is not None:
@@ -273,10 +321,86 @@ def run_sources(args: argparse.Namespace) -> int:
             }.items()
             if value is not None
         }
+    elif args.sources_command == "test":
+        method = "POST"
+        url = f"{base}/api/rss/sources/{urllib.parse.quote(args.source_id)}/ingest"
+        payload = {"test": True, "screen": False, "limit": args.limit}
+    elif args.sources_command == "import-csv":
+        from app.source_importer import read_source_csv
+
+        sources = read_source_csv(
+            Path(args.csv),
+            default_status=args.default_status,
+            default_category=args.default_category,
+            source_id_column=args.source_id_column,
+        )
+        if args.dry_run:
+            data = {
+                "ok": True,
+                "dry_run": True,
+                "sources": sources,
+                "stats": {"created": 0, "updated": 0, "skipped": len(sources), "failed": 0},
+            }
+            write_json(data)
+            return 0
+        stats = {"created": 0, "updated": 0, "skipped": 0, "failed": 0}
+        results = []
+        for source in sources:
+            status, data = request_json("POST", f"{base}/api/rss/sources", source)
+            if status == 409 and (args.upsert or args.update_existing or args.skip_existing):
+                if args.skip_existing and not args.update_existing:
+                    stats["skipped"] += 1
+                    results.append(data)
+                    continue
+                source_id = source.get("source_id")
+                if not source_id:
+                    stats["failed"] += 1
+                    results.append(data)
+                    continue
+                status, data = request_json("PATCH", f"{base}/api/rss/sources/{urllib.parse.quote(source_id)}", source)
+                if status < 400 and data.get("ok") is not False:
+                    stats["updated"] += 1
+                else:
+                    stats["failed"] += 1
+                results.append(data)
+                continue
+            if status < 400 and data.get("ok") is not False:
+                stats["created"] += 1
+            else:
+                stats["failed"] += 1
+            results.append(data)
+        data = {"ok": stats["failed"] == 0, "stats": stats, "results": results}
+        write_json(data)
+        return 0 if data["ok"] else 1
+    elif args.sources_command == "backfill-items":
+        method = "POST"
+        apply_flag = bool(args.apply and not args.dry_run)
+        url = f"{base}/api/rss/backfill-items?{urllib.parse.urlencode({'apply': str(apply_flag).lower()})}"
+        payload = None
+    elif args.sources_command == "health":
+        url = f"{base}/api/rss/sources?limit=1"
     else:  # pragma: no cover - argparse prevents this.
         raise ValueError(f"unknown sources command: {args.sources_command}")
 
     status, data = request_json(method, url, payload)
+    write_json(data)
+    if status == 0 or status >= 400 or data.get("ok") is False:
+        print(f"content-inbox CLI error: {data.get('error', data)}", file=sys.stderr)
+        return 1
+    return 0
+
+
+def run_runs(args: argparse.Namespace) -> int:
+    base = args.api_base.rstrip("/")
+    if args.runs_command == "list":
+        url = f"{base}/api/rss/runs?{urllib.parse.urlencode({'limit': args.limit, 'offset': args.offset})}"
+    elif args.runs_command == "get":
+        url = f"{base}/api/rss/runs/{urllib.parse.quote(args.run_id)}"
+    elif args.runs_command == "sources":
+        url = f"{base}/api/rss/runs/{urllib.parse.quote(args.run_id)}/sources"
+    else:  # pragma: no cover
+        raise ValueError(f"unknown runs command: {args.runs_command}")
+    status, data = request_json("GET", url)
     write_json(data)
     if status == 0 or status >= 400 or data.get("ok") is False:
         print(f"content-inbox CLI error: {data.get('error', data)}", file=sys.stderr)
@@ -292,6 +416,8 @@ def main(argv: list[str] | None = None) -> int:
             return run_inbox(args)
         if args.command == "sources":
             return run_sources(args)
+        if args.command == "runs":
+            return run_runs(args)
     except Exception as exc:
         data = {
             "ok": False,

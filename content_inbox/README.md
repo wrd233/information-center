@@ -1,18 +1,18 @@
 # content-inbox
 
-本地内容处理模块，实现三个核心 API：RSS 分析、单条内容分析、筛选结果查询。
+本地内容摄入与检索内核，负责 RSS/Atom 摄入、去重、source registry、run history、inbox 查询和 Agent CLI。`screen=false` 路径完全 deterministic，不需要 LLM 或 embedding key；`screen=true` 才会进入模型筛选路径。
 
 ## 安装
 
 ```bash
-cd "/Users/wangrundong/work/infomation-center/content_inbox"
+cd content_inbox
 python3 -m pip install -r requirements.txt
 ```
 
 ## 启动
 
 ```bash
-cd "/Users/wangrundong/work/infomation-center/content_inbox"
+cd content_inbox
 PYTHONPATH=. python3 -m app.server
 ```
 
@@ -27,7 +27,7 @@ http://127.0.0.1:8787
 项目提供了 `Dockerfile` 和 `docker-compose.yml`。Compose 会读取本目录的 `.env`，并把数据库保存到宿主机的 `./data/content_inbox.sqlite3`。
 
 ```bash
-cd "/Users/wangrundong/work/infomation-center/content_inbox"
+cd content_inbox
 docker compose up -d --build
 ```
 
@@ -64,12 +64,12 @@ curl -s http://127.0.0.1:8787/api/content/analyze \
   }'
 ```
 
-分析 RSS：
+分析 RSS。测试和 CI 建议使用 `screen=false`，避免依赖 LLM：
 
 ```bash
 curl -s http://127.0.0.1:8787/api/rss/analyze \
   -H 'content-type: application/json' \
-  -d '{"feed_url":"https://example.com/feed.xml","limit":5,"screen":true}'
+  -d '{"feed_url":"https://example.com/feed.xml","limit":5,"screen":false}'
 ```
 
 批量分析 RSS：
@@ -103,7 +103,7 @@ curl -s 'http://127.0.0.1:8787/api/inbox?min_score=3&suggested_action=read,save&
 
 ## RSS 源注册与状态
 
-`content_inbox` 支持把 RSS 源注册为稳定的服务端资源。注册后可查看源状态、按 `source_id` 摄入，并在摄入成功或失败后更新最近运行状态。
+`rss_sources` 是 RSS 源事实来源。CSV/OPML 只是导入来源；后续调度中心应读取 registry，而不是直接读 CSV。注册后可查看源状态、按 `source_id` 摄入，并在摄入成功或失败后更新 health 与 run history。
 
 注册源：
 
@@ -144,16 +144,24 @@ curl -s -X DELETE http://127.0.0.1:8787/api/rss/sources/rsshub-36kr
 | status | 说明 |
 |---|---|
 | `active` | 正常源。 |
-| `paused` | 临时暂停。 |
+| `paused` | 临时暂停；手动 ingest 需要 `force=true`。 |
 | `disabled` | 软停用，默认拒绝按源摄入。 |
-| `broken` | 已知异常或待人工检查。 |
+| `broken` | 连续失败或待人工检查；`test=true` 或 `force=true` 可手动验证。 |
 
 按注册源摄入：
 
 ```bash
 curl -s http://127.0.0.1:8787/api/rss/sources/rsshub-36kr/ingest \
   -H 'content-type: application/json' \
-  -d '{"screen":false,"incremental_mode":"until_existing","probe_limit":20}'
+  -d '{"screen":false,"incremental_mode":"until_existing","probe_limit":20,"process_order":"oldest_first"}'
+```
+
+查看 run history：
+
+```bash
+curl -s 'http://127.0.0.1:8787/api/rss/runs?limit=20'
+curl -s http://127.0.0.1:8787/api/rss/runs/<run_id>
+curl -s http://127.0.0.1:8787/api/rss/runs/<run_id>/sources
 ```
 
 结构化错误示例：
@@ -183,9 +191,20 @@ PYTHONPATH=. python -m app.cli sources get rsshub-36kr --json
 PYTHONPATH=. python -m app.cli sources register --source-id rsshub-36kr --name 36氪 --feed-url http://rsshub:1200/36kr/news/latest --json
 PYTHONPATH=. python -m app.cli sources update rsshub-36kr --status paused --json
 PYTHONPATH=. python -m app.cli sources ingest rsshub-36kr --json --screen false
+PYTHONPATH=. python -m app.cli sources import-csv --csv ../rsshub/rss_opml/rss_sources.csv --dry-run --json
+PYTHONPATH=. python -m app.cli sources backfill-items --dry-run --json
+PYTHONPATH=. python -m app.cli runs list --json
 ```
 
-`scripts/run_rss_sources_to_content_inbox.py` 暂时仍是批量 runner、报告和调试工具，不是正式 Agent 查询 CLI；不要解析它的 stdout 作为稳定 JSON。
+`scripts/run_rss_sources_to_content_inbox.py` 仍是批量 runner、报告和调试工具，不是正式 Agent 查询 CLI；不要解析它的 stdout 作为稳定 JSON。新批量摄入可使用 registry mode：
+
+```bash
+PYTHONPATH=. python scripts/run_rss_sources_to_content_inbox.py \
+  --source-mode registry \
+  --count 20 \
+  --no-screen \
+  --incremental-mode until_existing
+```
 
 ## RSS 增量同步模式
 

@@ -15,10 +15,13 @@ from app.config import settings
 from app.models import ContentAnalyzeRequest, RSSAnalyzeRequest, RSSBatchAnalyzeRequest
 from app.models import RSSSourceCreateRequest, RSSSourceIngestRequest, RSSSourceUpdateRequest
 from app.processor import normalize_content, process_content_thread_safe
+from app.query import apply_view_defaults, resolve_date_filters as resolve_inbox_date_filters
 from app.rss import parse_feed
 from app.rss_errors import classify_exception, error_payload, error_response, retryable_for
+from app.rss_ingest import ingest_registered_source, source_status_summary
 from app.rss_runner import analyze_one_rss_source
 from app.screener import audit_screen_content, configure_llm_dump, reconfigure_llm_semaphore, reconfigure_screening_mode
+from app.source_backfill import backfill_items
 from app.storage import InboxStore
 
 
@@ -101,24 +104,77 @@ def create_rss_source(
 def list_rss_sources(
     status: str | None = None,
     category: str | None = None,
+    tag: str | None = None,
+    keyword: str | None = None,
+    priority_min: int | None = None,
+    priority_max: int | None = None,
+    has_error: bool | None = None,
+    retryable: bool | None = None,
+    last_success_before: str | None = None,
+    last_failure_after: str | None = None,
+    sort: str | None = None,
     limit: int = Query(default=100, ge=1, le=500),
     offset: int = Query(default=0, ge=0),
     inbox_store: Annotated[InboxStore, Depends(get_store)] = store,
 ) -> dict[str, Any]:
     sources, stats = inbox_store.list_rss_sources(
-        {"status": status, "category": category, "limit": limit, "offset": offset}
+        {
+            "status": status,
+            "category": category,
+            "tag": tag,
+            "keyword": keyword,
+            "priority_min": priority_min,
+            "priority_max": priority_max,
+            "has_error": has_error,
+            "retryable": retryable,
+            "last_success_before": last_success_before,
+            "last_failure_after": last_failure_after,
+            "sort": sort,
+            "limit": limit,
+            "offset": offset,
+        }
     )
-    return {"ok": True, "sources": sources, "stats": stats}
+    return {"ok": True, "sources": sources, "items": sources, "stats": stats, "status_stats": stats}
+
+
+@app.post("/api/rss/backfill-items")
+def backfill_source_items(
+    apply: bool = False,
+    inbox_store: Annotated[InboxStore, Depends(get_store)] = store,
+) -> dict[str, Any]:
+    return backfill_items(inbox_store, apply=apply)
 
 
 @app.get("/api/rss/sources/{source_id}")
 def get_rss_source(
-    source_id: str, inbox_store: Annotated[InboxStore, Depends(get_store)]
+    source_id: str,
+    include_recent_items: bool = False,
+    inbox_store: Annotated[InboxStore, Depends(get_store)] = store,
 ) -> JSONResponse:
     source = inbox_store.get_rss_source(source_id)
     if not source:
         return error_response("source_not_found", "RSS source not found", status_code=404, source_id=source_id)
-    return JSONResponse({"ok": True, "source": source})
+    latest_ingest = inbox_store.get_ingest_run(source.get("last_run_id")) if source.get("last_run_id") else None
+    recent_items = []
+    if include_recent_items:
+        recent_items, _total = inbox_store.query(
+            {
+                "source_id": source_id,
+                "include_silent": True,
+                "include_ignored": True,
+                "limit": 10,
+                "offset": 0,
+            }
+        )
+    return JSONResponse(
+        {
+            "ok": True,
+            "source": source,
+            "health": source_status_summary(source),
+            "latest_ingest": latest_ingest,
+            "recent_items": recent_items,
+        }
+    )
 
 
 @app.patch("/api/rss/sources/{source_id}")
@@ -128,6 +184,14 @@ def update_rss_source(
     inbox_store: Annotated[InboxStore, Depends(get_store)],
 ) -> JSONResponse:
     updates = payload.model_dump(exclude_unset=True)
+    if "source_id" in updates and updates["source_id"] != source_id:
+        return error_response(
+            "source_id_immutable",
+            "source_id cannot be modified",
+            status_code=400,
+            source_id=source_id,
+        )
+    updates.pop("source_id", None)
     try:
         source = inbox_store.update_rss_source(source_id, updates)
     except ValueError as exc:
@@ -153,111 +217,8 @@ def ingest_rss_source(
     payload: RSSSourceIngestRequest,
     inbox_store: Annotated[InboxStore, Depends(get_store)],
 ) -> JSONResponse:
-    source = inbox_store.get_rss_source(source_id)
-    if not source:
-        return error_response("source_not_found", "RSS source not found", status_code=404, source_id=source_id)
-    if source["status"] == "disabled":
-        return error_response(
-            "source_disabled",
-            "RSS source is disabled",
-            status_code=409,
-            source_id=source_id,
-            feed_url=source["feed_url"],
-        )
-
-    started_at = datetime.now(timezone.utc)
-    t0 = monotonic_time.monotonic()
-    run_id = build_rss_run_id(started_at, source_id)
-    config = source.get("config") or {}
-    request = RSSAnalyzeRequest(
-        feed_url=source["feed_url"],
-        source_id=source_id,
-        source_name=source["source_name"],
-        source_category=source["source_category"],
-        limit=payload.limit if payload.limit is not None else int(config.get("limit", 20)),
-        screen=payload.screen if payload.screen is not None else bool(config.get("screen", True)),
-        incremental_mode=payload.incremental_mode or config.get("incremental_mode", "fixed_limit"),
-        probe_limit=payload.probe_limit if payload.probe_limit is not None else int(config.get("probe_limit", 20)),
-        new_source_initial_limit=(
-            payload.new_source_initial_limit
-            if payload.new_source_initial_limit is not None
-            else int(config.get("new_source_initial_limit", 5))
-        ),
-        old_source_no_anchor_limit=(
-            payload.old_source_no_anchor_limit
-            if payload.old_source_no_anchor_limit is not None
-            else int(config.get("old_source_no_anchor_limit", 20))
-        ),
-    )
-
-    try:
-        analysis = analyze_one_rss_source(
-            inbox_store,
-            request,
-            include_items=payload.include_items,
-            preserve_source_entry_order=True,
-        )
-        if analysis.get("ok") is False:
-            raise RuntimeError("content processing failed")
-        finished_at = datetime.now(timezone.utc)
-        processed_items = int(analysis.get("new_items", 0)) + int(analysis.get("duplicate_items", 0))
-        run = build_run_result(
-            run_id,
-            source_id,
-            started_at,
-            finished_at,
-            t0,
-            "success",
-            analysis,
-        )
-        updated_source = inbox_store.record_rss_source_success(
-            source_id,
-            run_id=run_id,
-            finished_at=finished_at.isoformat(),
-            new_items=int(analysis.get("new_items", 0)),
-            duplicate_items=int(analysis.get("duplicate_items", 0)),
-            processed_items=processed_items,
-            feed_items_seen=int(analysis.get("feed_items_seen", analysis.get("total_items", 0)) or 0),
-            incremental_decision=analysis.get("incremental_decision"),
-            anchor_found=analysis.get("anchor_found"),
-        )
-        return JSONResponse(
-            {
-                "ok": True,
-                "run": run,
-                "source": source_status_summary(updated_source or source),
-                "items": analysis.get("items", []),
-            }
-        )
-    except Exception as exc:
-        error_code, message = classify_exception(exc)
-        finished_at = datetime.now(timezone.utc)
-        run = build_run_result(
-            run_id,
-            source_id,
-            started_at,
-            finished_at,
-            t0,
-            "failed",
-            {},
-            error_code=error_code,
-            error_message=message,
-        )
-        updated_source = inbox_store.record_rss_source_failure(
-            source_id,
-            run_id=run_id,
-            finished_at=finished_at.isoformat(),
-            error_code=error_code,
-            error_message=message,
-        )
-        return JSONResponse(
-            status_code=400,
-            content={
-                **error_payload(error_code, message, source_id=source_id, feed_url=source["feed_url"]),
-                "run": run,
-                "source": source_status_summary(updated_source or source),
-            },
-        )
+    status_code, body = ingest_registered_source(inbox_store, source_id, payload)
+    return JSONResponse(status_code=status_code, content=body)
 
 
 @app.post("/api/content/analyze")
@@ -335,12 +296,49 @@ def analyze_rss_batch(
     return runner.run(payload)
 
 
+@app.get("/api/rss/runs")
+def list_rss_runs(
+    limit: int = Query(default=50, ge=1, le=500),
+    offset: int = Query(default=0, ge=0),
+    inbox_store: Annotated[InboxStore, Depends(get_store)] = store,
+) -> dict[str, Any]:
+    runs, total = inbox_store.list_ingest_runs(limit=limit, offset=offset)
+    return {"ok": True, "runs": runs, "items": runs, "stats": {"total": total, "returned": len(runs), "limit": limit, "offset": offset}}
+
+
+@app.get("/api/rss/runs/{run_id}")
+def get_rss_run(
+    run_id: str, inbox_store: Annotated[InboxStore, Depends(get_store)] = store
+) -> JSONResponse:
+    run = inbox_store.get_ingest_run(run_id)
+    if not run:
+        return error_response("source_not_found", "RSS ingest run not found", status_code=404)
+    return JSONResponse({"ok": True, "run": run})
+
+
+@app.get("/api/rss/runs/{run_id}/sources")
+def list_rss_run_sources(
+    run_id: str, inbox_store: Annotated[InboxStore, Depends(get_store)] = store
+) -> JSONResponse:
+    if not inbox_store.get_ingest_run(run_id):
+        return error_response("source_not_found", "RSS ingest run not found", status_code=404)
+    sources = inbox_store.list_ingest_run_sources(run_id)
+    return JSONResponse({"ok": True, "run_id": run_id, "sources": sources, "items": sources})
+
+
 @app.get("/api/inbox")
 def get_inbox(
     request: Request,
     date_filter: Annotated[str | None, Query(alias="date")] = None,
     from_filter: Annotated[str | None, Query(alias="from")] = None,
     to_filter: Annotated[str | None, Query(alias="to")] = None,
+    tz: str | None = None,
+    created_from: str | None = None,
+    created_to: str | None = None,
+    published_from: str | None = None,
+    published_to: str | None = None,
+    view: str | None = None,
+    source_id: str | None = None,
     source_name: str | None = None,
     source_category: str | None = None,
     content_type: str | None = None,
@@ -380,6 +378,7 @@ def get_inbox(
 
     filters: dict[str, Any] = {
         "source_name": source_name,
+        "source_id": source_id,
         "source_category": source_category,
         "content_type": content_type,
         "category": category,
@@ -405,10 +404,23 @@ def get_inbox(
         "include_maybe": include_maybe,
         "needs_more_context": needs_more_context,
         "include_ignored": include_ignored_value,
+        "view": view,
         "limit": limit,
         "offset": offset,
     }
-    filters.update(resolve_date_filters(date_filter, from_filter, to_filter))
+    filters.update(
+        resolve_inbox_date_filters(
+            date_filter,
+            from_filter,
+            to_filter,
+            tz=tz,
+            created_from=created_from,
+            created_to=created_to,
+            published_from=published_from,
+            published_to=published_to,
+        )
+    )
+    filters = apply_view_defaults(filters, set(request.query_params.keys()))
     items, total = inbox_store.query(filters)
     stats = build_stats(items)
     compact_filters = {key: value for key, value in filters.items() if value not in (None, [], "")}
@@ -416,7 +428,16 @@ def get_inbox(
         {
             "ok": True,
             "filters": compact_filters,
-            "stats": {"total": len(items), "matched_before_screening_filters": total, **stats},
+            "stats": {
+                "total": len(items),
+                "matched_before_screening_filters": total,
+                "matched_before_post_filters": total,
+                "matched_after_post_filters": len(items),
+                "returned": len(items),
+                "limit": limit,
+                "offset": offset,
+                **stats,
+            },
             "items": items,
         }
     )
@@ -425,15 +446,7 @@ def get_inbox(
 def resolve_date_filters(
     date_filter: str | None, from_filter: str | None, to_filter: str | None
 ) -> dict[str, str | None]:
-    if date_filter:
-        if date_filter == "today":
-            target = date.today()
-        else:
-            target = date.fromisoformat(date_filter)
-        start = datetime.combine(target, time.min, tzinfo=timezone.utc).isoformat()
-        end = datetime.combine(target, time.max, tzinfo=timezone.utc).isoformat()
-        return {"from": start, "to": end}
-    return {"from": from_filter, "to": to_filter}
+    return resolve_inbox_date_filters(date_filter, from_filter, to_filter)
 
 
 def split_csv(value: str | None) -> list[str]:

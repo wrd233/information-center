@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
+import unicodedata
 import uuid
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -70,6 +72,9 @@ class InboxStore:
             self.ensure_column(conn, "inbox_items", "embedding_model", "TEXT")
             self.ensure_column(conn, "inbox_items", "source_id", "TEXT")
             self.ensure_column(conn, "inbox_items", "feed_url", "TEXT")
+            self.ensure_column(conn, "inbox_items", "dedupe_version", "INTEGER DEFAULT 1")
+            self.ensure_column(conn, "inbox_items", "latest_raw_json", "TEXT")
+            self.ensure_column(conn, "inbox_items", "latest_seen_summary", "TEXT")
             conn.execute(
                 """
                 CREATE TABLE IF NOT EXISTS rss_sources (
@@ -99,6 +104,75 @@ class InboxStore:
                     created_at TEXT NOT NULL,
                     updated_at TEXT NOT NULL,
                     UNIQUE(normalized_feed_url)
+                )
+                """
+            )
+            self.ensure_column(conn, "rss_sources", "local_feed_url", "TEXT")
+            self.ensure_column(conn, "rss_sources", "remote_feed_url", "TEXT")
+            self.ensure_column(conn, "rss_sources", "deleted_at", "TEXT")
+            self.ensure_column(conn, "rss_sources", "last_ingest_at", "TEXT")
+            self.ensure_column(conn, "rss_sources", "last_error_retryable", "INTEGER")
+            self.ensure_column(conn, "rss_sources", "failure_count", "INTEGER NOT NULL DEFAULT 0")
+            self.ensure_column(conn, "rss_sources", "consecutive_failure_count", "INTEGER NOT NULL DEFAULT 0")
+            self.ensure_column(conn, "rss_sources", "last_new_items_count", "INTEGER NOT NULL DEFAULT 0")
+            self.ensure_column(conn, "rss_sources", "last_duplicate_items_count", "INTEGER NOT NULL DEFAULT 0")
+            self.ensure_column(conn, "rss_sources", "last_processed_items_count", "INTEGER NOT NULL DEFAULT 0")
+            self.ensure_column(conn, "rss_sources", "last_duration_ms", "INTEGER")
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS rss_ingest_runs (
+                    run_id TEXT PRIMARY KEY,
+                    trigger_type TEXT NOT NULL,
+                    source_mode TEXT,
+                    status TEXT NOT NULL,
+                    started_at TEXT NOT NULL,
+                    finished_at TEXT,
+                    duration_ms INTEGER,
+                    selected_source_count INTEGER DEFAULT 0,
+                    success_source_count INTEGER DEFAULT 0,
+                    failure_source_count INTEGER DEFAULT 0,
+                    new_items_count INTEGER DEFAULT 0,
+                    duplicate_items_count INTEGER DEFAULT 0,
+                    processed_items_count INTEGER DEFAULT 0,
+                    failed_items_count INTEGER DEFAULT 0,
+                    created_by TEXT,
+                    request_json TEXT,
+                    summary_json TEXT,
+                    error_code TEXT,
+                    error_message TEXT,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL
+                )
+                """
+            )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS rss_ingest_run_sources (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    run_id TEXT NOT NULL,
+                    source_id TEXT,
+                    feed_url TEXT,
+                    source_name TEXT,
+                    source_category TEXT,
+                    status TEXT NOT NULL,
+                    started_at TEXT,
+                    finished_at TEXT,
+                    duration_ms INTEGER,
+                    error_code TEXT,
+                    error_message TEXT,
+                    retryable INTEGER,
+                    fetched_entries_count INTEGER DEFAULT 0,
+                    processed_entries_count INTEGER DEFAULT 0,
+                    new_items_count INTEGER DEFAULT 0,
+                    duplicate_items_count INTEGER DEFAULT 0,
+                    failed_items_count INTEGER DEFAULT 0,
+                    incremental_mode TEXT,
+                    incremental_decision TEXT,
+                    anchor_found INTEGER,
+                    anchor_index INTEGER,
+                    warnings_json TEXT,
+                    result_json TEXT,
+                    created_at TEXT NOT NULL
                 )
                 """
             )
@@ -133,6 +207,11 @@ class InboxStore:
             conn.execute("CREATE INDEX IF NOT EXISTS idx_inbox_created_at ON inbox_items(created_at)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_inbox_source_name ON inbox_items(source_name)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_inbox_content_type ON inbox_items(content_type)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_inbox_source_id ON inbox_items(source_id)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_inbox_published_at ON inbox_items(published_at)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_rss_sources_status ON rss_sources(status)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_rss_runs_started_at ON rss_ingest_runs(started_at)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_rss_run_sources_run_id ON rss_ingest_run_sources(run_id)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_clusters_status ON event_clusters(status)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_clusters_last_seen ON event_clusters(last_seen_at)")
 
@@ -211,15 +290,32 @@ class InboxStore:
         return row is not None
 
     def mark_seen(self, item_id: str) -> dict[str, Any]:
+        return self.mark_seen_with_latest(item_id)
+
+    def mark_seen_with_latest(
+        self,
+        item_id: str,
+        *,
+        latest_raw: dict[str, Any] | None = None,
+        latest_seen_summary: str | None = None,
+    ) -> dict[str, Any]:
         now = utc_now()
         with self.connect() as conn:
             conn.execute(
                 """
                 UPDATE inbox_items
-                SET last_seen_at = ?, updated_at = ?, seen_count = seen_count + 1
+                SET last_seen_at = ?, updated_at = ?, seen_count = seen_count + 1,
+                    latest_raw_json = COALESCE(?, latest_raw_json),
+                    latest_seen_summary = COALESCE(?, latest_seen_summary)
                 WHERE item_id = ?
                 """,
-                (now, now, item_id),
+                (
+                    now,
+                    now,
+                    json.dumps(latest_raw, ensure_ascii=False) if latest_raw is not None else None,
+                    latest_seen_summary,
+                    item_id,
+                ),
             )
             row = conn.execute("SELECT * FROM inbox_items WHERE item_id = ?", (item_id,)).fetchone()
         return row_to_item(row)
@@ -243,9 +339,10 @@ class InboxStore:
                     item_id, dedupe_key, url, guid, source_id, feed_url, title, source_name, source_category,
                     content_type, published_at, author, summary, content_text,
                     screening_json, clustering_json, embedding_text, embedding_model,
-                    raw_json, created_at, updated_at, last_seen_at, seen_count
+                    raw_json, dedupe_version, latest_raw_json, latest_seen_summary,
+                    created_at, updated_at, last_seen_at, seen_count
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
                 """,
                 (
                     item_id,
@@ -267,6 +364,9 @@ class InboxStore:
                     clustering.embedding_text,
                     clustering.embedding_model,
                     json.dumps(raw or {}, ensure_ascii=False),
+                    int(payload.get("dedupe_version") or 1),
+                    json.dumps(raw or {}, ensure_ascii=False),
+                    payload.get("summary"),
                     now,
                     now,
                     now,
@@ -277,12 +377,39 @@ class InboxStore:
 
     def generate_source_id(self, feed_url: str) -> str:
         normalized = normalize_url(feed_url) or feed_url.strip()
-        return f"rss_{stable_hash('feed-url:' + normalized)[:16]}"
+        return re.sub(r"[^A-Za-z0-9]+", "-", normalized.lower()).strip("-")[:64] or "source"
+
+    def generate_source_id_from_parts(
+        self,
+        source_category: str | None,
+        source_name: str | None,
+        feed_url: str,
+    ) -> str:
+        normalized = normalize_url(feed_url) or feed_url.strip()
+        base_text = "-".join(part for part in [source_category, source_name] if part)
+        ascii_text = unicodedata.normalize("NFKD", base_text).encode("ascii", "ignore").decode("ascii")
+        slug = re.sub(r"[^A-Za-z0-9]+", "-", ascii_text.lower()).strip("-")
+        if len(slug) < 3:
+            parsed_host = re.sub(r"[^A-Za-z0-9]+", "-", normalized.lower()).strip("-")
+            slug = parsed_host[:40] or "source"
+        candidate = slug[:64]
+        suffix = stable_hash("source-id:" + normalized)[:8]
+        with self.connect() as conn:
+            if not conn.execute(
+                "SELECT 1 FROM rss_sources WHERE source_id = ?", (candidate,)
+            ).fetchone():
+                return candidate
+        return f"{candidate[:55]}-{suffix}"
 
     def create_rss_source(self, payload: dict[str, Any]) -> tuple[dict[str, Any], bool]:
         feed_url = str(payload["feed_url"]).strip()
         normalized_feed_url = normalize_url(feed_url) or feed_url
-        source_id = (payload.get("source_id") or self.generate_source_id(feed_url)).strip()
+        source_id = (
+            payload.get("source_id")
+            or self.generate_source_id_from_parts(
+                payload.get("source_category"), payload.get("source_name"), feed_url
+            )
+        ).strip()
         now = utc_now()
         tags = payload.get("tags") or []
         config = payload.get("config") or {}
@@ -300,9 +427,10 @@ class InboxStore:
                 """
                 INSERT INTO rss_sources (
                     source_id, source_name, source_category, feed_url, normalized_feed_url,
-                    status, priority, tags_json, notes, config_json, created_at, updated_at
+                    status, priority, tags_json, notes, config_json,
+                    local_feed_url, remote_feed_url, created_at, updated_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     source_id,
@@ -311,10 +439,12 @@ class InboxStore:
                     feed_url,
                     normalized_feed_url,
                     payload.get("status", "active"),
-                    int(payload.get("priority", 3)),
+                    int(payload.get("priority", 0)),
                     json.dumps(tags, ensure_ascii=False),
                     payload.get("notes"),
                     json.dumps(config, ensure_ascii=False),
+                    payload.get("local_feed_url"),
+                    payload.get("remote_feed_url"),
                     now,
                     now,
                 ),
@@ -340,15 +470,56 @@ class InboxStore:
         if filters.get("category"):
             clauses.append("source_category LIKE ?")
             params.append(f"%{filters['category']}%")
+        if filters.get("tag"):
+            clauses.append("tags_json LIKE ?")
+            params.append(f"%{filters['tag']}%")
+        if filters.get("keyword"):
+            clauses.append("(source_id LIKE ? OR source_name LIKE ? OR feed_url LIKE ? OR notes LIKE ?)")
+            keyword = f"%{filters['keyword']}%"
+            params.extend([keyword, keyword, keyword, keyword])
+        if filters.get("priority_min") is not None:
+            clauses.append("priority >= ?")
+            params.append(int(filters["priority_min"]))
+        if filters.get("priority_max") is not None:
+            clauses.append("priority <= ?")
+            params.append(int(filters["priority_max"]))
+        if filters.get("has_error") is not None:
+            clauses.append("last_error_code IS NOT NULL" if filters["has_error"] else "last_error_code IS NULL")
+        if filters.get("retryable") is not None:
+            clauses.append("last_error_retryable = ?")
+            params.append(1 if filters["retryable"] else 0)
+        if filters.get("last_success_before"):
+            clauses.append("last_success_at < ?")
+            params.append(filters["last_success_before"])
+        if filters.get("last_failure_after"):
+            clauses.append("last_failure_at > ?")
+            params.append(filters["last_failure_after"])
         where_sql = f"WHERE {' AND '.join(clauses)}" if clauses else ""
         limit = int(filters.get("limit", 100))
         offset = int(filters.get("offset", 0))
+        sort = filters.get("sort") or "priority:asc,source_name:asc"
+        allowed_sort = {
+            "priority": "priority",
+            "source_name": "source_name",
+            "last_success_at": "last_success_at",
+            "last_failure_at": "last_failure_at",
+            "updated_at": "updated_at",
+            "status": "status",
+        }
+        order_terms = []
+        for raw_part in str(sort).split(","):
+            field, _, direction = raw_part.partition(":")
+            column = allowed_sort.get(field.strip())
+            if column:
+                direction_sql = "DESC" if direction.strip().lower() == "desc" else "ASC"
+                order_terms.append(f"{column} {direction_sql}")
+        order_sql = ", ".join(order_terms) or "priority ASC, source_name ASC"
         with self.connect() as conn:
             rows = conn.execute(
                 f"""
                 SELECT * FROM rss_sources
                 {where_sql}
-                ORDER BY priority ASC, source_name ASC
+                ORDER BY {order_sql}
                 LIMIT ? OFFSET ?
                 """,
                 (*params, limit, offset),
@@ -385,6 +556,8 @@ class InboxStore:
             "status": "status",
             "priority": "priority",
             "notes": "notes",
+            "local_feed_url": "local_feed_url",
+            "remote_feed_url": "remote_feed_url",
         }
         for key, column in field_map.items():
             if key in updates:
@@ -441,15 +614,19 @@ class InboxStore:
         feed_items_seen: int,
         incremental_decision: str | None,
         anchor_found: bool | None,
+        duration_ms: int | None = None,
     ) -> dict[str, Any] | None:
         with self.connect() as conn:
             conn.execute(
                 """
                 UPDATE rss_sources
-                SET last_fetch_at = ?, last_success_at = ?, last_failure_at = NULL,
+                SET last_fetch_at = ?, last_ingest_at = ?, last_success_at = ?, last_failure_at = NULL,
                     last_error_code = NULL, last_error_message = NULL,
-                    consecutive_failures = 0, last_run_id = ?, last_new_items = ?,
+                    last_error_retryable = NULL, consecutive_failures = 0,
+                    consecutive_failure_count = 0, last_run_id = ?, last_new_items = ?,
                     last_duplicate_items = ?, last_processed_items = ?,
+                    last_new_items_count = ?, last_duplicate_items_count = ?,
+                    last_processed_items_count = ?, last_duration_ms = ?,
                     last_feed_items_seen = ?, last_incremental_decision = ?,
                     last_anchor_found = ?, updated_at = ?
                 WHERE source_id = ?
@@ -457,10 +634,15 @@ class InboxStore:
                 (
                     finished_at,
                     finished_at,
+                    finished_at,
                     run_id,
                     new_items,
                     duplicate_items,
                     processed_items,
+                    new_items,
+                    duplicate_items,
+                    processed_items,
+                    duration_ms,
                     feed_items_seen,
                     incremental_decision,
                     None if anchor_found is None else int(anchor_found),
@@ -481,22 +663,175 @@ class InboxStore:
         finished_at: str,
         error_code: str,
         error_message: str,
+        retryable: bool = True,
+        duration_ms: int | None = None,
+        broken_threshold: int = 5,
     ) -> dict[str, Any] | None:
         with self.connect() as conn:
+            current = conn.execute(
+                "SELECT status, consecutive_failure_count FROM rss_sources WHERE source_id = ?",
+                (source_id,),
+            ).fetchone()
+            new_consecutive = int((current["consecutive_failure_count"] if current else 0) or 0) + 1
+            new_status = (
+                "broken"
+                if current
+                and current["status"] == "active"
+                and new_consecutive >= broken_threshold
+                else (current["status"] if current else "active")
+            )
             conn.execute(
                 """
                 UPDATE rss_sources
-                SET last_fetch_at = ?, last_failure_at = ?, last_error_code = ?,
-                    last_error_message = ?, consecutive_failures = consecutive_failures + 1,
-                    last_run_id = ?, updated_at = ?
+                SET last_fetch_at = ?, last_ingest_at = ?, last_failure_at = ?, last_error_code = ?,
+                    last_error_message = ?, last_error_retryable = ?,
+                    failure_count = failure_count + 1,
+                    consecutive_failures = consecutive_failures + 1,
+                    consecutive_failure_count = consecutive_failure_count + 1,
+                    status = ?, last_run_id = ?, last_duration_ms = ?, updated_at = ?
                 WHERE source_id = ?
                 """,
-                (finished_at, finished_at, error_code, error_message, run_id, finished_at, source_id),
+                (
+                    finished_at,
+                    finished_at,
+                    finished_at,
+                    error_code,
+                    error_message,
+                    int(retryable),
+                    new_status,
+                    run_id,
+                    duration_ms,
+                    finished_at,
+                    source_id,
+                ),
             )
             row = conn.execute(
                 "SELECT * FROM rss_sources WHERE source_id = ?", (source_id,)
             ).fetchone()
         return row_to_source(row) if row else None
+
+    def create_ingest_run(self, run: dict[str, Any]) -> dict[str, Any]:
+        now = utc_now()
+        with self.connect() as conn:
+            conn.execute(
+                """
+                INSERT OR REPLACE INTO rss_ingest_runs (
+                    run_id, trigger_type, source_mode, status, started_at, finished_at,
+                    duration_ms, selected_source_count, success_source_count,
+                    failure_source_count, new_items_count, duplicate_items_count,
+                    processed_items_count, failed_items_count, created_by,
+                    request_json, summary_json, error_code, error_message,
+                    created_at, updated_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    run["run_id"],
+                    run.get("trigger_type", "api"),
+                    run.get("source_mode"),
+                    run.get("status", "running"),
+                    run["started_at"],
+                    run.get("finished_at"),
+                    run.get("duration_ms"),
+                    int(run.get("selected_source_count", 0)),
+                    int(run.get("success_source_count", 0)),
+                    int(run.get("failure_source_count", 0)),
+                    int(run.get("new_items_count", 0)),
+                    int(run.get("duplicate_items_count", 0)),
+                    int(run.get("processed_items_count", 0)),
+                    int(run.get("failed_items_count", 0)),
+                    run.get("created_by"),
+                    json.dumps(run.get("request") or {}, ensure_ascii=False),
+                    json.dumps(run.get("summary") or {}, ensure_ascii=False),
+                    run.get("error_code"),
+                    run.get("error_message"),
+                    run.get("created_at", now),
+                    run.get("updated_at", now),
+                ),
+            )
+            row = conn.execute(
+                "SELECT * FROM rss_ingest_runs WHERE run_id = ?", (run["run_id"],)
+            ).fetchone()
+        return row_to_ingest_run(row)
+
+    def create_ingest_run_source(self, result: dict[str, Any]) -> dict[str, Any]:
+        now = utc_now()
+        with self.connect() as conn:
+            cursor = conn.execute(
+                """
+                INSERT INTO rss_ingest_run_sources (
+                    run_id, source_id, feed_url, source_name, source_category, status,
+                    started_at, finished_at, duration_ms, error_code, error_message,
+                    retryable, fetched_entries_count, processed_entries_count,
+                    new_items_count, duplicate_items_count, failed_items_count,
+                    incremental_mode, incremental_decision, anchor_found, anchor_index,
+                    warnings_json, result_json, created_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    result["run_id"],
+                    result.get("source_id"),
+                    result.get("feed_url"),
+                    result.get("source_name"),
+                    result.get("source_category"),
+                    result.get("status", "success"),
+                    result.get("started_at"),
+                    result.get("finished_at"),
+                    result.get("duration_ms"),
+                    result.get("error_code"),
+                    result.get("error_message"),
+                    None if result.get("retryable") is None else int(bool(result.get("retryable"))),
+                    int(result.get("fetched_entries_count", 0)),
+                    int(result.get("processed_entries_count", 0)),
+                    int(result.get("new_items_count", 0)),
+                    int(result.get("duplicate_items_count", 0)),
+                    int(result.get("failed_items_count", 0)),
+                    result.get("incremental_mode"),
+                    result.get("incremental_decision"),
+                    None if result.get("anchor_found") is None else int(bool(result.get("anchor_found"))),
+                    result.get("anchor_index"),
+                    json.dumps(result.get("warnings") or [], ensure_ascii=False),
+                    json.dumps(result.get("result") or {}, ensure_ascii=False),
+                    now,
+                ),
+            )
+            row = conn.execute(
+                "SELECT * FROM rss_ingest_run_sources WHERE id = ?", (cursor.lastrowid,)
+            ).fetchone()
+        return row_to_ingest_run_source(row)
+
+    def list_ingest_runs(self, limit: int = 50, offset: int = 0) -> tuple[list[dict[str, Any]], int]:
+        with self.connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT * FROM rss_ingest_runs
+                ORDER BY started_at DESC
+                LIMIT ? OFFSET ?
+                """,
+                (limit, offset),
+            ).fetchall()
+            total = conn.execute("SELECT COUNT(*) AS total FROM rss_ingest_runs").fetchone()["total"]
+        return [row_to_ingest_run(row) for row in rows], int(total)
+
+    def get_ingest_run(self, run_id: str) -> dict[str, Any] | None:
+        with self.connect() as conn:
+            row = conn.execute(
+                "SELECT * FROM rss_ingest_runs WHERE run_id = ?", (run_id,)
+            ).fetchone()
+        return row_to_ingest_run(row) if row else None
+
+    def list_ingest_run_sources(self, run_id: str) -> list[dict[str, Any]]:
+        with self.connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT * FROM rss_ingest_run_sources
+                WHERE run_id = ?
+                ORDER BY id ASC
+                """,
+                (run_id,),
+            ).fetchall()
+        return [row_to_ingest_run_source(row) for row in rows]
 
     def update_item_clustering(self, item_id: str, clustering: ClusteringResult) -> dict[str, Any]:
         now = utc_now()
@@ -649,13 +984,19 @@ class InboxStore:
         clauses: list[str] = []
         params: list[Any] = []
 
-        if filters.get("from"):
+        if filters.get("created_from") or filters.get("from"):
             clauses.append("created_at >= ?")
-            params.append(filters["from"])
-        if filters.get("to"):
+            params.append(filters.get("created_from") or filters["from"])
+        if filters.get("created_to") or filters.get("to"):
             clauses.append("created_at <= ?")
-            params.append(filters["to"])
-        for column in ["source_name", "source_category", "content_type"]:
+            params.append(filters.get("created_to") or filters["to"])
+        if filters.get("published_from"):
+            clauses.append("published_at >= ?")
+            params.append(filters["published_from"])
+        if filters.get("published_to"):
+            clauses.append("published_at <= ?")
+            params.append(filters["published_to"])
+        for column in ["source_id", "source_name", "source_category", "content_type"]:
             if filters.get(column):
                 clauses.append(f"{column} = ?")
                 params.append(filters[column])
@@ -703,6 +1044,9 @@ def row_to_item(row: sqlite3.Row) -> dict[str, Any]:
         "clustering": clustering,
         "embedding_text": row["embedding_text"],
         "embedding_model": row["embedding_model"],
+        "dedupe_version": row["dedupe_version"],
+        "latest_raw_json": row["latest_raw_json"],
+        "latest_seen_summary": row["latest_seen_summary"],
         "created_at": row["created_at"],
         "updated_at": row["updated_at"],
         "last_seen_at": row["last_seen_at"],
@@ -717,6 +1061,8 @@ def row_to_source(row: sqlite3.Row) -> dict[str, Any]:
         "source_category": row["source_category"],
         "feed_url": row["feed_url"],
         "normalized_feed_url": row["normalized_feed_url"],
+        "local_feed_url": row["local_feed_url"],
+        "remote_feed_url": row["remote_feed_url"],
         "status": row["status"],
         "priority": row["priority"],
         "tags": json.loads(row["tags_json"] or "[]"),
@@ -728,17 +1074,28 @@ def row_to_source(row: sqlite3.Row) -> dict[str, Any]:
         "last_error_code": row["last_error_code"],
         "last_error_message": row["last_error_message"],
         "consecutive_failures": row["consecutive_failures"],
+        "failure_count": row["failure_count"],
+        "consecutive_failure_count": row["consecutive_failure_count"],
+        "last_ingest_at": row["last_ingest_at"],
+        "last_error_retryable": None
+        if row["last_error_retryable"] is None
+        else bool(row["last_error_retryable"]),
         "last_run_id": row["last_run_id"],
         "last_new_items": row["last_new_items"],
         "last_duplicate_items": row["last_duplicate_items"],
         "last_processed_items": row["last_processed_items"],
+        "last_new_items_count": row["last_new_items_count"],
+        "last_duplicate_items_count": row["last_duplicate_items_count"],
+        "last_processed_items_count": row["last_processed_items_count"],
         "last_feed_items_seen": row["last_feed_items_seen"],
+        "last_duration_ms": row["last_duration_ms"],
         "last_incremental_decision": row["last_incremental_decision"],
         "last_anchor_found": None
         if row["last_anchor_found"] is None
         else bool(row["last_anchor_found"]),
         "created_at": row["created_at"],
         "updated_at": row["updated_at"],
+        "deleted_at": row["deleted_at"],
     }
 
 
@@ -756,6 +1113,62 @@ def row_to_cluster(row: sqlite3.Row) -> dict[str, Any]:
         "status": row["status"],
         "cluster_vector": json.loads(row["cluster_vector_json"] or "[]"),
         "embedding_model": row["embedding_model"],
+    }
+
+
+def row_to_ingest_run(row: sqlite3.Row) -> dict[str, Any]:
+    return {
+        "run_id": row["run_id"],
+        "trigger_type": row["trigger_type"],
+        "source_mode": row["source_mode"],
+        "status": row["status"],
+        "started_at": row["started_at"],
+        "finished_at": row["finished_at"],
+        "duration_ms": row["duration_ms"],
+        "selected_source_count": row["selected_source_count"],
+        "success_source_count": row["success_source_count"],
+        "failure_source_count": row["failure_source_count"],
+        "new_items_count": row["new_items_count"],
+        "duplicate_items_count": row["duplicate_items_count"],
+        "processed_items_count": row["processed_items_count"],
+        "failed_items_count": row["failed_items_count"],
+        "created_by": row["created_by"],
+        "request": json.loads(row["request_json"] or "{}"),
+        "summary": json.loads(row["summary_json"] or "{}"),
+        "error_code": row["error_code"],
+        "error_message": row["error_message"],
+        "created_at": row["created_at"],
+        "updated_at": row["updated_at"],
+    }
+
+
+def row_to_ingest_run_source(row: sqlite3.Row) -> dict[str, Any]:
+    return {
+        "id": row["id"],
+        "run_id": row["run_id"],
+        "source_id": row["source_id"],
+        "feed_url": row["feed_url"],
+        "source_name": row["source_name"],
+        "source_category": row["source_category"],
+        "status": row["status"],
+        "started_at": row["started_at"],
+        "finished_at": row["finished_at"],
+        "duration_ms": row["duration_ms"],
+        "error_code": row["error_code"],
+        "error_message": row["error_message"],
+        "retryable": None if row["retryable"] is None else bool(row["retryable"]),
+        "fetched_entries_count": row["fetched_entries_count"],
+        "processed_entries_count": row["processed_entries_count"],
+        "new_items_count": row["new_items_count"],
+        "duplicate_items_count": row["duplicate_items_count"],
+        "failed_items_count": row["failed_items_count"],
+        "incremental_mode": row["incremental_mode"],
+        "incremental_decision": row["incremental_decision"],
+        "anchor_found": None if row["anchor_found"] is None else bool(row["anchor_found"]),
+        "anchor_index": row["anchor_index"],
+        "warnings": json.loads(row["warnings_json"] or "[]"),
+        "result": json.loads(row["result_json"] or "{}"),
+        "created_at": row["created_at"],
     }
 
 
@@ -914,6 +1327,9 @@ def public_item(item: dict[str, Any]) -> dict[str, Any]:
         "created_at": item["created_at"],
         "last_seen_at": item["last_seen_at"],
         "seen_count": item["seen_count"],
+        "dedupe_version": item.get("dedupe_version"),
+        "latest_raw_json": item.get("latest_raw_json"),
+        "latest_seen_summary": item.get("latest_seen_summary"),
     }
 
 

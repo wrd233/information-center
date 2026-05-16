@@ -14,7 +14,10 @@ from app.storage import InboxStore
 
 def sort_entries_for_processing(
     entries: list[ContentAnalyzeRequest],
+    process_order: str = "oldest_first",
 ) -> list[ContentAnalyzeRequest]:
+    if process_order == "feed":
+        return list(entries)
     dated_entries: list[tuple[datetime, int, ContentAnalyzeRequest]] = []
     undated_entries: list[ContentAnalyzeRequest] = []
     for index, entry in enumerate(entries):
@@ -23,7 +26,8 @@ def sort_entries_for_processing(
             undated_entries.append(entry)
             continue
         dated_entries.append((published_at, index, entry))
-    dated_entries.sort(key=lambda item: (item[0], item[1]))
+    reverse = process_order == "newest_first"
+    dated_entries.sort(key=lambda item: (item[0], item[1]), reverse=reverse)
     return [entry for _, _, entry in dated_entries] + undated_entries
 
 
@@ -33,6 +37,8 @@ def analyze_one_rss_source(
     *,
     include_items: bool = True,
     preserve_source_entry_order: bool = True,
+    process_order: str | None = None,
+    dry_run: bool = False,
 ) -> dict[str, Any]:
     t_source = time.monotonic()
     if payload.profile:
@@ -61,6 +67,7 @@ def analyze_one_rss_source(
         )
 
         scan_candidates: list[ContentAnalyzeRequest] = []
+        non_existing_candidates: list[ContentAnalyzeRequest] = []
         anchor_found = False
         anchor_index: int | None = None
 
@@ -72,14 +79,21 @@ def analyze_one_rss_source(
             if inbox_store.get_by_dedupe_key(dedupe_key):
                 anchor_found = True
                 anchor_index = i
-                break
+                if payload.stop_on_first_existing:
+                    break
+                continue
             scan_candidates.append(entry)
+            non_existing_candidates.append(entry)
 
-        feed_items_seen = len(scan_candidates) + (1 if anchor_found else 0)
+        feed_items_seen = (
+            len(scan_candidates) + (1 if anchor_found else 0)
+            if payload.stop_on_first_existing
+            else min(len(all_entries), payload.probe_limit)
+        )
         warnings: list[str] = []
 
         if anchor_found:
-            items_to_process = scan_candidates
+            items_to_process = scan_candidates if payload.stop_on_first_existing else non_existing_candidates
             incremental_decision = "until_existing_anchor_found"
         elif not source_has_history:
             items_to_process = all_entries[: payload.new_source_initial_limit]
@@ -100,7 +114,7 @@ def analyze_one_rss_source(
             )
 
         processing_entries = (
-            sort_entries_for_processing(items_to_process)
+            sort_entries_for_processing(items_to_process, process_order or payload.process_order or "oldest_first")
             if preserve_source_entry_order
             else list(items_to_process)
         )
@@ -129,7 +143,9 @@ def analyze_one_rss_source(
             limit=payload.limit,
         )
         processing_entries = (
-            sort_entries_for_processing(entries) if preserve_source_entry_order else list(entries)
+            sort_entries_for_processing(entries, process_order or payload.process_order or "oldest_first")
+            if preserve_source_entry_order
+            else list(entries)
         )
 
     # ---- Shared processing pipeline ----
@@ -147,6 +163,12 @@ def analyze_one_rss_source(
     for entry in processing_entries:
         try:
             entry.screen = payload.screen
+            if dry_run:
+                result = None
+                new_items += 1
+                if include_items:
+                    item_results.append({"ok": True, "dry_run": True, "normalized": normalize_content(entry).model_dump()})
+                continue
             result = process_content_thread_safe(inbox_store, entry, raw=entry.model_dump())
             if include_items:
                 item_results.append(result.model_dump())
@@ -198,6 +220,6 @@ def parse_published_at(value: str | None) -> datetime | None:
     if not value:
         return None
     try:
-        return datetime.fromisoformat(value)
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))
     except ValueError:
         return None

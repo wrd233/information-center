@@ -65,6 +65,11 @@ class RSSBatchRunner:
                 if source.stop_on_first_existing is not None
                 else payload.stop_on_first_existing
             ),
+            process_order=(
+                source.process_order
+                if source.process_order is not None
+                else payload.process_order
+            ),
         )
         try:
             result = analyze_one_rss_source(

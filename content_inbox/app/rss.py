@@ -10,6 +10,7 @@ import feedparser
 from app.config import settings
 from app.models import ContentAnalyzeRequest
 from app.profiler import profiler
+from app.rss_normalize import real_entry_link
 from app.utils import clean_text
 
 
@@ -49,7 +50,7 @@ def parse_feed(
         )
         items.append(
             ContentAnalyzeRequest(
-                url=entry.get("link"),
+                url=real_entry_link(entry),
                 source_id=source_id,
                 feed_url=feed_url,
                 title=entry.get("title"),

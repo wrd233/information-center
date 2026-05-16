@@ -391,25 +391,124 @@ def analyze_rss_source(
     return request_json("POST", f"{api_base.rstrip('/')}/api/rss/analyze", payload=payload, timeout=timeout, api_key=api_key)
 
 
-def run_one_plan(plan: SourcePlan, args: argparse.Namespace, api_key: Optional[str]) -> Dict[str, Any]:
-    response = analyze_rss_source(
-        api_base=args.api_base,
-        source=plan.source,
-        feed_url=plan.feed_url,
-        limit_per_source=args.limit_per_source,
-        screen=plan.screen,
-        timeout=args.timeout,
+def read_registry_sources(api_base: str, api_key: Optional[str], timeout: int, limit: int = 500) -> List[Source]:
+    params = urllib.parse.urlencode({"status": "active", "limit": str(limit), "offset": "0"})
+    response = request_json("GET", f"{api_base.rstrip('/')}/api/rss/sources?{params}", timeout=timeout, api_key=api_key)
+    if response.get("ok") is False or (response.get("_status") is not None and int(response.get("_status")) >= 400):
+        raise RuntimeError(json.dumps(response.get("error", response), ensure_ascii=False))
+    rows = response.get("sources") or response.get("items") or []
+    sources: List[Source] = []
+    for idx, row in enumerate(rows, start=1):
+        if str(row.get("status") or "").lower() != "active":
+            continue
+        feed_url = str(row.get("feed_url") or "").strip()
+        if not feed_url:
+            continue
+        sources.append(
+            Source(
+                row_index=idx,
+                source_name=str(row.get("source_name") or row.get("source_id") or f"registry_source_{idx}"),
+                source_category=str(row.get("source_category") or ""),
+                local_xml_url=str(row.get("local_feed_url") or ""),
+                xml_url=feed_url,
+                status=str(row.get("status") or "active"),
+                enabled_raw="true",
+                priority=str(row.get("priority") if row.get("priority") is not None else ""),
+                raw={k: "" if v is None else str(v) for k, v in row.items()},
+            )
+        )
+    return sources
+
+
+def analyze_registered_source(
+    api_base: str,
+    source_id: str,
+    limit_per_source: int,
+    screen: bool,
+    timeout: int,
+    api_key: Optional[str],
+    incremental_mode: str = "fixed_limit",
+    probe_limit: int = 20,
+    new_source_initial_limit: int = 5,
+    old_source_no_anchor_limit: int = 20,
+    stop_on_first_existing: bool = True,
+) -> Dict[str, Any]:
+    payload: Dict[str, Any] = {
+        "limit": limit_per_source,
+        "screen": screen,
+        "incremental_mode": incremental_mode,
+        "probe_limit": probe_limit,
+        "new_source_initial_limit": new_source_initial_limit,
+        "old_source_no_anchor_limit": old_source_no_anchor_limit,
+        "stop_on_first_existing": stop_on_first_existing,
+    }
+    return request_json(
+        "POST",
+        f"{api_base.rstrip('/')}/api/rss/sources/{urllib.parse.quote(source_id)}/ingest",
+        payload=payload,
+        timeout=timeout,
         api_key=api_key,
-        profile=args.profile,
-        audit_prompt=args.audit_prompt,
-        dump_llm_prompt=args.dump_llm_prompt,
-        dump_llm_prompt_dir=getattr(args, 'dump_llm_prompt_dir', ''),
-        incremental_mode=args.incremental_mode,
-        probe_limit=args.probe_limit,
-        new_source_initial_limit=args.new_source_initial_limit,
-        old_source_no_anchor_limit=args.old_source_no_anchor_limit,
-        stop_on_first_existing=args.stop_on_first_existing,
     )
+
+
+def flatten_registered_ingest_response(response: Dict[str, Any]) -> Dict[str, Any]:
+    run = response.get("run") or {}
+    stats = run.get("stats") or {}
+    incremental = run.get("incremental") or {}
+    flattened = dict(response)
+    flattened.setdefault("total_items", stats.get("fetched_entries", stats.get("feed_items_seen", 0)))
+    flattened.setdefault("new_items", stats.get("new_items", 0))
+    flattened.setdefault("duplicate_items", stats.get("duplicate_items", 0))
+    flattened.setdefault("failed_items", stats.get("failed_items", 0))
+    flattened.setdefault("screened_items", stats.get("processed_entries", stats.get("processed_items", 0)))
+    flattened.setdefault("incremental_mode", incremental.get("mode") or incremental.get("incremental_mode", ""))
+    flattened.setdefault("incremental_decision", incremental.get("decision") or incremental.get("incremental_decision", ""))
+    flattened.setdefault("source_has_history", incremental.get("source_has_history", ""))
+    flattened.setdefault("probe_limit", incremental.get("probe_limit", ""))
+    flattened.setdefault("feed_items_seen", stats.get("fetched_entries", stats.get("feed_items_seen", "")))
+    flattened.setdefault("anchor_found", incremental.get("anchor_found", ""))
+    flattened.setdefault("anchor_index", incremental.get("anchor_index", ""))
+    flattened.setdefault("selected_items_for_processing", stats.get("processed_entries", stats.get("selected_items_for_processing", "")))
+    flattened.setdefault("warnings", incremental.get("warnings", []))
+    return flattened
+
+
+def run_one_plan(plan: SourcePlan, args: argparse.Namespace, api_key: Optional[str]) -> Dict[str, Any]:
+    if getattr(args, "source_mode", "csv") == "registry":
+        response = flatten_registered_ingest_response(
+            analyze_registered_source(
+                api_base=args.api_base,
+                source_id=plan.source_id,
+                limit_per_source=args.limit_per_source,
+                screen=plan.screen,
+                timeout=args.timeout,
+                api_key=api_key,
+                incremental_mode=args.incremental_mode,
+                probe_limit=args.probe_limit,
+                new_source_initial_limit=args.new_source_initial_limit,
+                old_source_no_anchor_limit=args.old_source_no_anchor_limit,
+                stop_on_first_existing=args.stop_on_first_existing,
+            )
+        )
+    else:
+        response = analyze_rss_source(
+            api_base=args.api_base,
+            source=plan.source,
+            feed_url=plan.feed_url,
+            limit_per_source=args.limit_per_source,
+            screen=plan.screen,
+            timeout=args.timeout,
+            api_key=api_key,
+            profile=args.profile,
+            audit_prompt=args.audit_prompt,
+            dump_llm_prompt=args.dump_llm_prompt,
+            dump_llm_prompt_dir=getattr(args, 'dump_llm_prompt_dir', ''),
+            incremental_mode=args.incremental_mode,
+            probe_limit=args.probe_limit,
+            new_source_initial_limit=args.new_source_initial_limit,
+            old_source_no_anchor_limit=args.old_source_no_anchor_limit,
+            stop_on_first_existing=args.stop_on_first_existing,
+        )
     if args.audit_prompt:
         return summarize_audit_response(plan, response)
     return summarize_result_for_source(plan, response)
@@ -1188,6 +1287,7 @@ def save_run_artifacts(
     completed_source_ids = [r["source_id"] for r in results if r.get("status") in {"success", "failed", "skipped_known_failed"}]
     successful_source_ids = [r["source_id"] for r in results if r.get("status") == "success"]
     run_state = {
+        "schema_version": 2,
         "status": state_status,
         "started_at": started_at,
         "updated_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
@@ -1203,6 +1303,17 @@ def save_run_artifacts(
         "notes": notes,
     }
     run_state_path.write_text(json.dumps(run_state, ensure_ascii=False, indent=2), encoding="utf-8")
+    metadata = {
+        "schema_version": 1,
+        "source_mode": args_snapshot.get("source_mode", "csv"),
+        "started_at": started_at,
+        "updated_at": run_state["updated_at"],
+        "selected_count": len(plans),
+        "completed_count": len(completed_source_ids),
+        "successful_count": len(successful_source_ids),
+        "failed_count": run_state["failed_count"],
+    }
+    (run_dir / "metadata.json").write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def parse_count(value: str) -> Optional[int]:
@@ -1276,6 +1387,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Submit RSS sources to content-inbox and generate resumable reports.")
     parser.add_argument("--api-base", default=os.getenv("CONTENT_INBOX_API_BASE", "http://127.0.0.1:8787"))
     parser.add_argument("--api-key", default=os.getenv("CONTENT_INBOX_API_KEY", ""))
+    parser.add_argument("--source-mode", choices=["csv", "registry"], default="csv", help="Read sources from CSV or the registered RSS source API.")
     parser.add_argument("--csv", default="", help="Path to rss_sources.csv. Default: rsshub/rss_opml/rss_sources.csv")
     parser.add_argument("--count", default="50", help="Number of enabled RSS sources to select, or 'all'.")
     parser.add_argument("--all", action="store_true", help="Process all enabled RSS sources.")
@@ -1403,13 +1515,17 @@ def main() -> int:
     sys.stderr = TeeStream(base_stderr, log_file)
 
     api_key = args.api_key or None
+    count_value = None if args.all else parse_count(args.count)
+    registry_limit = args.max_sources or count_value or 500
     try:
-        sources = read_sources(csv_path)
+        if args.source_mode == "registry":
+            sources = read_registry_sources(args.api_base, api_key, args.timeout, limit=int(registry_limit))
+        else:
+            sources = read_sources(csv_path)
     except Exception as e:
         print(f"[ERROR] Failed to read RSS sources: {e}", file=sys.stderr, flush=True)
         return 2
 
-    count_value = None if args.all else parse_count(args.count)
     selected_sources = sources if count_value is None else select_sources(sources, count_value)
     if args.max_sources is not None:
         selected_sources = selected_sources[: args.max_sources]
@@ -1424,7 +1540,7 @@ def main() -> int:
                 feed_url=feed_url,
                 url_mode=args.url_mode,
                 url_source=url_source,
-                source_id=build_source_id(source, feed_url),
+                source_id=source.raw.get("source_id") if args.source_mode == "registry" and source.raw.get("source_id") else build_source_id(source, feed_url),
                 screen=args.screen,
             )
         )
@@ -1479,6 +1595,7 @@ def main() -> int:
 
     args_snapshot = {
         "api_base": args.api_base,
+        "source_mode": args.source_mode,
         "csv": str(csv_path),
         "count": args.count,
         "all": args.all,
@@ -1518,7 +1635,9 @@ def main() -> int:
         return 3
 
     print(f"[INFO] Run dir: {run_dir}", flush=True)
-    print(f"[INFO] CSV: {csv_path}", flush=True)
+    print(f"[INFO] Source mode: {args.source_mode}", flush=True)
+    if args.source_mode == "csv":
+        print(f"[INFO] CSV: {csv_path}", flush=True)
     print(f"[INFO] Enabled candidate sources: {len(sources)}", flush=True)
     print(f"[INFO] Selected sources: {len(plans)}", flush=True)
     print(f"[INFO] Pending sources this invocation: {len(pending_plans)}", flush=True)

@@ -63,7 +63,7 @@ def test_parse_html_summary_is_safe_and_normalization_cleans_html() -> None:
     ("fixture", "expected_url", "expected_guid"),
     [
         ("rss_missing_guid.xml", "https://fixtures.example.com/missing-guid", None),
-        ("rss_missing_link.xml", "missing-link-guid", "missing-link-guid"),
+        ("rss_missing_link.xml", None, "missing-link-guid"),
         ("rss_missing_link_guid.xml", None, None),
     ],
 )

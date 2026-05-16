@@ -11,8 +11,13 @@ RETRYABLE_ERRORS = {
     "rss_fetch_timeout",
     "rss_fetch_http_error",
     "rss_fetch_connection_error",
+    "rss_fetch_rate_limited",
+    "rss_fetch_server_error",
     "content_processing_error",
     "storage_error",
+    "dedupe_error",
+    "migration_error",
+    "api_unreachable",
     "unknown_error",
 }
 
@@ -61,6 +66,10 @@ def classify_exception(exc: Exception) -> tuple[str, str]:
     if isinstance(exc, urllib.error.HTTPError):
         if exc.code == 404:
             return "rss_fetch_not_found", message
+        if exc.code == 429:
+            return "rss_fetch_rate_limited", message
+        if exc.code >= 500:
+            return "rss_fetch_server_error", message
         return "rss_fetch_http_error", message
     if isinstance(exc, urllib.error.URLError):
         reason = str(getattr(exc, "reason", exc))
@@ -75,6 +84,12 @@ def classify_exception(exc: Exception) -> tuple[str, str]:
         return "rss_empty_feed", message
     if "content processing" in lowered:
         return "content_processing_error", message
+    if "dedupe" in lowered:
+        return "dedupe_error", message
+    if "llm" in lowered or "screening" in lowered:
+        return "llm_error", message
+    if "embedding" in lowered:
+        return "embedding_error", message
     if "sqlite" in lowered or "database" in lowered:
         return "storage_error", message
     return "unknown_error", message

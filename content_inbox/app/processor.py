@@ -6,11 +6,12 @@ from typing import Any
 
 from app.config import settings
 from app.clusterer import cluster_content
+from app.dedupe import build_dedupe_key
 from app.models import ClusteringResult, ContentAnalyzeRequest, NormalizedContent, ProcessResult
 from app.profiler import profiler
 from app.screener import gated_screening, screen_content
 from app.storage import InboxStore
-from app.utils import clean_text, normalize_url, stable_hash, truncate
+from app.utils import clean_text, normalize_url, truncate
 
 CONTENT_STATE_LOCK = threading.RLock()
 
@@ -33,14 +34,6 @@ def normalize_content(payload: ContentAnalyzeRequest) -> NormalizedContent:
         content_text=truncate(content_text, settings.max_content_chars),
         guid=clean_text(payload.guid),
     )
-
-
-def build_dedupe_key(content: NormalizedContent) -> str:
-    if content.url:
-        return stable_hash(f"url:{content.url}")
-    if content.guid:
-        return stable_hash(f"guid:{content.source_name}:{content.guid}")
-    return stable_hash(f"title-source:{content.source_name}:{content.title.lower()}")
 
 
 def pre_llm_gate(normalized: NormalizedContent) -> tuple[bool, str, list[str]]:
@@ -80,7 +73,11 @@ def process_content(
     dedupe_key = build_dedupe_key(normalized)
     existing = store.get_by_dedupe_key(dedupe_key)
     if existing:
-        updated = store.mark_seen(existing["item_id"])
+        updated = store.mark_seen_with_latest(
+            existing["item_id"],
+            latest_raw=raw,
+            latest_seen_summary=normalized.summary,
+        )
         return ProcessResult(
             item_id=updated["item_id"],
             is_duplicate=True,
@@ -202,7 +199,7 @@ def process_content_thread_safe(
         profiler.record("pre_dedupe_lock_wait_seconds", t_acquired - t_wait)
         existing = store.get_by_dedupe_key(dedupe_key)
         if existing:
-            updated = store.mark_seen(existing["item_id"])
+            updated = mark_duplicate_seen(store, existing["item_id"], raw, normalized.summary)
             t_done = time.monotonic()
             profiler.record("pre_dedupe_lock_held_seconds", t_done - t_acquired)
             return _build_duplicate_result(updated)
@@ -229,7 +226,7 @@ def process_content_thread_safe(
 
         existing = store.get_by_dedupe_key(dedupe_key)
         if existing:
-            updated = store.mark_seen(existing["item_id"])
+            updated = mark_duplicate_seen(store, existing["item_id"], raw, normalized.summary)
             t_done2 = time.monotonic()
             profiler.record("commit_lock_held_seconds", t_done2 - t_acquired2)
             return _build_duplicate_result(updated)
@@ -246,13 +243,27 @@ def process_content_thread_safe(
         t_done2 = time.monotonic()
         profiler.record("commit_lock_held_seconds", t_done2 - t_acquired2)
 
-        return ProcessResult(
-            item_id=updated["item_id"],
-            is_duplicate=False,
+    return ProcessResult(
+        item_id=updated["item_id"],
+        is_duplicate=False,
             normalized=normalized,
             screening=screening,
             clustering=clustering,
             notification_decision=clustering.notification_decision,
             cluster_relation=clustering.cluster_relation,
-            incremental_summary=clustering.incremental_summary,
-        )
+        incremental_summary=clustering.incremental_summary,
+    )
+
+
+def mark_duplicate_seen(
+    store: InboxStore,
+    item_id: str,
+    raw: dict[str, Any] | None,
+    latest_seen_summary: str | None,
+) -> dict[str, Any]:
+    marker = getattr(store, "mark_seen_with_latest", None)
+    if callable(marker):
+        updated = marker(item_id, latest_raw=raw, latest_seen_summary=latest_seen_summary)
+        if isinstance(updated, dict):
+            return updated
+    return store.mark_seen(item_id)

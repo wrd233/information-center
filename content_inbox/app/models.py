@@ -25,14 +25,31 @@ RSSErrorCode = Literal[
     "source_not_found",
     "source_conflict",
     "source_disabled",
+    "source_paused",
+    "source_broken",
+    "source_id_immutable",
+    "source_invalid_status",
+    "source_invalid_feed_url",
     "rss_fetch_timeout",
+    "rss_fetch_connection_error",
     "rss_fetch_http_error",
     "rss_fetch_not_found",
-    "rss_fetch_connection_error",
+    "rss_fetch_rate_limited",
+    "rss_fetch_server_error",
+    "rss_fetch_invalid_content_type",
+    "rss_fetch_too_large",
     "rss_parse_error",
     "rss_empty_feed",
+    "rss_invalid_entry",
+    "rss_bad_date",
     "content_processing_error",
+    "dedupe_error",
     "storage_error",
+    "migration_error",
+    "llm_error",
+    "embedding_error",
+    "api_unreachable",
+    "cli_error",
     "unknown_error",
 ]
 
@@ -53,6 +70,7 @@ class RSSAnalyzeRequest(BaseModel):
     new_source_initial_limit: int = Field(default=5, ge=1)
     old_source_no_anchor_limit: int = Field(default=20, ge=1)
     stop_on_first_existing: bool = True
+    process_order: Literal["feed", "oldest_first", "newest_first"] | None = None
 
 
 class RSSSourceSpec(BaseModel):
@@ -67,6 +85,7 @@ class RSSSourceSpec(BaseModel):
     new_source_initial_limit: int | None = Field(default=None, ge=1)
     old_source_no_anchor_limit: int | None = Field(default=None, ge=1)
     stop_on_first_existing: bool | None = None
+    process_order: Literal["feed", "oldest_first", "newest_first"] | None = None
 
 
 class RSSBatchAnalyzeRequest(BaseModel):
@@ -81,6 +100,7 @@ class RSSBatchAnalyzeRequest(BaseModel):
     new_source_initial_limit: int = Field(default=5, ge=1)
     old_source_no_anchor_limit: int = Field(default=20, ge=1)
     stop_on_first_existing: bool = True
+    process_order: Literal["feed", "oldest_first", "newest_first"] | None = None
 
 
 class ContentAnalyzeRequest(BaseModel):
@@ -122,6 +142,7 @@ class NormalizedContent(BaseModel):
     summary: str | None = None
     content_text: str | None = None
     guid: str | None = None
+    dedupe_version: int = 2
 
 
 class NeedMatch(BaseModel):
@@ -221,6 +242,7 @@ class RSSSourceCreateRequest(BaseModel):
 
 
 class RSSSourceUpdateRequest(BaseModel):
+    source_id: str | None = None
     source_name: str | None = None
     source_category: str | None = None
     feed_url: str | None = None
@@ -266,13 +288,19 @@ class RSSSourceListResponse(BaseModel):
 
 
 class RSSSourceIngestRequest(BaseModel):
+    mode: Literal["normal"] = "normal"
+    force: bool = False
+    dry_run: bool = False
+    test: bool = False
     limit: int | None = Field(default=None, ge=1, le=200)
     screen: bool | None = None
     incremental_mode: Literal["fixed_limit", "until_existing"] | None = None
     probe_limit: int | None = Field(default=None, ge=1)
     new_source_initial_limit: int | None = Field(default=None, ge=1)
     old_source_no_anchor_limit: int | None = Field(default=None, ge=1)
+    stop_on_first_existing: bool | None = None
     include_items: bool = False
+    process_order: Literal["feed", "oldest_first", "newest_first"] = "oldest_first"
 
 
 class RSSStructuredError(BaseModel):
