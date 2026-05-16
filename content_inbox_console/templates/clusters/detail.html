@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% set active_page = "clusters" %}
+{% block title %}{{ cluster.cluster_title | truncate(60) }} - Inbox Console{% endblock %}
+
+{% block content %}
+<p><a href="/clusters">&larr; Back to Clusters</a></p>
+
+<h1>{{ cluster.cluster_title }}</h1>
+
+<h2>Basic Info</h2>
+<table class="striped">
+  <tbody>
+    <tr><th>Cluster ID</th><td><code>{{ cluster.cluster_id }}</code></td></tr>
+    <tr><th>Status</th><td>{{ cluster.status or '-' }}</td></tr>
+    <tr><th>Items</th><td>{{ cluster.item_count or 0 }}</td></tr>
+    <tr><th>First Seen</th><td>{{ cluster.first_seen_at or '-' }}</td></tr>
+    <tr><th>Last Seen</th><td>{{ cluster.last_seen_at or '-' }}</td></tr>
+    <tr><th>Created</th><td>{{ cluster.created_at or '-' }}</td></tr>
+    {% if cluster.embedding_model %}
+    <tr><th>Embedding Model</th><td>{{ cluster.embedding_model }}</td></tr>
+    {% endif %}
+  </tbody>
+</table>
+
+{% if cluster.cluster_summary %}
+<h2>Summary</h2>
+<blockquote>{{ cluster.cluster_summary }}</blockquote>
+{% endif %}
+
+{% if cluster.entities_json %}
+<h2>Entities</h2>
+<div>
+  {% for entity in cluster.entities_json %}
+  <mark>{{ entity }}</mark>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if cluster.representative_item_id %}
+<h2>Representative Item</h2>
+<p><a href="/items/{{ cluster.representative_item_id }}">{{ cluster.representative_item_id }}</a></p>
+{% endif %}
+
+{% if cluster_items %}
+<h2>Items in Cluster ({{ cluster_items | length }})</h2>
+<table class="striped">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Source</th>
+      <th>Created</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in cluster_items %}
+    <tr>
+      <td><a href="/items/{{ item.item_id }}">{{ item.title | truncate(80) if item.title else item.item_id }}</a></td>
+      <td><small>{{ item.source_name or '-' }}</small></td>
+      <td><small>{{ item.created_at or '-' }}</small></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% endblock %}

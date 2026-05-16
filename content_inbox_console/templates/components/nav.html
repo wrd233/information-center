@@ -1,0 +1,12 @@
+<nav class="container-fluid">
+  <ul>
+    <li><strong>Inbox Console</strong></li>
+  </ul>
+  <ul>
+    <li><a href="/dashboard" role="button" class="{% if active_page == 'dashboard' %}outline{% endif %}">Dashboard</a></li>
+    <li><a href="/items" role="button" class="{% if active_page == 'items' %}outline{% endif %}">Items</a></li>
+    <li><a href="/sources" role="button" class="{% if active_page == 'sources' %}outline{% endif %}">Sources</a></li>
+    <li><a href="/runs" role="button" class="{% if active_page == 'runs' %}outline{% endif %}">Runs</a></li>
+    <li><a href="/clusters" role="button" class="{% if active_page == 'clusters' %}outline{% endif %}">Clusters</a></li>
+  </ul>
+</nav>

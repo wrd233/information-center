@@ -1,0 +1,12 @@
+{# source status badge #}
+{% if status == "active" %}
+<mark class="status-active">active</mark>
+{% elif status == "paused" %}
+<mark class="status-paused">paused</mark>
+{% elif status == "broken" %}
+<mark class="status-broken">broken</mark>
+{% elif status == "disabled" %}
+<mark class="status-disabled">disabled</mark>
+{% else %}
+<mark>{{ status }}</mark>
+{% endif %}

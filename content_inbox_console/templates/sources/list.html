@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% set active_page = "sources" %}
+{% block title %}Sources - Inbox Console{% endblock %}
+
+{% block content %}
+<h1>Sources</h1>
+
+<form id="source-filters" hx-get="/sources/rows" hx-target="#sources-table-body" hx-trigger="submit, change delay:300ms" hx-indicator="#loading-indicator">
+  <div class="grid">
+    <label>
+      Status
+      <select name="status">
+        <option value="">All</option>
+        <option value="active" {% if filters.status == 'active' %}selected{% endif %}>Active</option>
+        <option value="paused" {% if filters.status == 'paused' %}selected{% endif %}>Paused</option>
+        <option value="broken" {% if filters.status == 'broken' %}selected{% endif %}>Broken</option>
+        <option value="disabled" {% if filters.status == 'disabled' %}selected{% endif %}>Disabled</option>
+      </select>
+    </label>
+    <label>
+      Keyword
+      <input type="search" name="keyword" value="{{ filters.keyword or '' }}" placeholder="Search name or URL">
+    </label>
+    <label>
+      Sort By
+      <select name="sort_by">
+        <option value="source_name" {% if filters.sort_by == 'source_name' %}selected{% endif %}>Name</option>
+        <option value="last_fetch_at" {% if filters.sort_by == 'last_fetch_at' %}selected{% endif %}>Last Fetch</option>
+        <option value="failure_count" {% if filters.sort_by == 'failure_count' %}selected{% endif %}>Failure Count</option>
+      </select>
+    </label>
+  </div>
+  <input type="hidden" name="page" value="{{ filters.page or 1 }}">
+  <input type="hidden" name="page_size" value="{{ filters.page_size or 50 }}">
+</form>
+<span id="loading-indicator" class="htmx-indicator">Loading...</span>
+
+{% if not sources %}
+{% include "components/empty_state.html" with context %}
+{% set message = "No sources found." %}
+{% set hint = "Import sources via the content_inbox API or CLI." %}
+{% else %}
+<div class="table-container">
+<table class="striped" id="sources-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Status</th>
+      <th>Priority</th>
+      <th>Last Fetch</th>
+      <th>Failures</th>
+      <th>Last Error</th>
+    </tr>
+  </thead>
+  <tbody id="sources-table-body">
+    {% include "sources/_rows.html" %}
+  </tbody>
+</table>
+</div>
+{% set total = total_sources %}{% set page = filters.page | int %}{% set page_size = filters.page_size | int %}
+{% set base_url = "/sources?status=" + (filters.status or '') + "&keyword=" + (filters.keyword or '') + "&sort_by=" + (filters.sort_by or '') %}
+{% set hx_target = "#sources-table-body" %}
+{% include "components/pagination.html" with context %}
+{% endif %}
+
+{% endblock %}

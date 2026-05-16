@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% set active_page = "runs" %}
+{% block title %}Run {{ run.run_id | truncate(20) }} - Inbox Console{% endblock %}
+
+{% block content %}
+<p><a href="/runs">&larr; Back to Runs</a></p>
+
+<h1>Run Detail</h1>
+{% include "components/run_status_badge.html" %}
+
+<h2>Basic Info</h2>
+<table class="striped">
+  <tbody>
+    <tr><th>Run ID</th><td><code>{{ run.run_id }}</code></td></tr>
+    <tr><th>Trigger Type</th><td>{{ run.trigger_type or '-' }}</td></tr>
+    <tr><th>Source Mode</th><td>{{ run.source_mode or '-' }}</td></tr>
+    <tr><th>Status</th><td>{% include "components/run_status_badge.html" %}</td></tr>
+    <tr><th>Started At</th><td>{{ run.started_at or '-' }}</td></tr>
+    <tr><th>Finished At</th><td>{{ run.finished_at or '-' }}</td></tr>
+    <tr><th>Duration</th><td>{% if run.duration_ms %}{{ (run.duration_ms / 1000) | round(1) }}s{% else %}-{% endif %}</td></tr>
+    <tr><th>Created By</th><td>{{ run.created_by or '-' }}</td></tr>
+    <tr><th>Created At</th><td>{{ run.created_at or '-' }}</td></tr>
+  </tbody>
+</table>
+
+<h2>Counts</h2>
+<table class="striped">
+  <tbody>
+    <tr><th>Selected Sources</th><td>{{ run.selected_source_count or 0 }}</td></tr>
+    <tr><th>Success Sources</th><td>{{ run.success_source_count or 0 }}</td></tr>
+    <tr><th>Failure Sources</th><td>{{ run.failure_source_count or 0 }}</td></tr>
+    <tr><th>New Items</th><td>{{ run.new_items_count or 0 }}</td></tr>
+    <tr><th>Duplicate Items</th><td>{{ run.duplicate_items_count or 0 }}</td></tr>
+    <tr><th>Processed Items</th><td>{{ run.processed_items_count or 0 }}</td></tr>
+    <tr><th>Failed Items</th><td>{{ run.failed_items_count or 0 }}</td></tr>
+  </tbody>
+</table>
+
+{% if run.error_code or run.error_message %}
+<h2>Error</h2>
+<table class="striped">
+  <tbody>
+    <tr><th>Error Code</th><td>{{ run.error_code or '-' }}</td></tr>
+    <tr><th>Error Message</th><td>{{ run.error_message or '-' }}</td></tr>
+  </tbody>
+</table>
+{% endif %}
+
+{% if run_sources %}
+<h2>Source Results ({{ run_sources | length }})</h2>
+<div class="table-container">
+<table class="striped">
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th>Status</th>
+      <th>Duration</th>
+      <th>New</th>
+      <th>Dup</th>
+      <th>Failed</th>
+      <th>Error</th>
+      <th>Mode</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for rs in run_sources %}
+    <tr>
+      <td>
+        {% if rs.source_id %}
+        <a href="/sources/{{ rs.source_id }}">{{ rs.source_name | truncate(30) if rs.source_name else rs.source_id }}</a>
+        {% else %}
+        {{ rs.source_name or '-' }}
+        {% endif %}
+      </td>
+      <td>
+        {% if rs.status == 'success' %}
+        <mark class="status-active">success</mark>
+        {% else %}
+        <mark class="status-broken">failed</mark>
+        {% endif %}
+      </td>
+      <td>{% if rs.duration_ms %}{{ (rs.duration_ms / 1000) | round(1) }}s{% else %}-{% endif %}</td>
+      <td>{{ rs.new_items_count or 0 }}</td>
+      <td>{{ rs.duplicate_items_count or 0 }}</td>
+      <td>{{ rs.failed_items_count or 0 }}</td>
+      <td><small>{{ (rs.error_code or rs.error_message or '-') | truncate(40) }}</small></td>
+      <td><small>{{ rs.incremental_mode or '-' }}</small></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+{% if run.request_json %}
+<h2>Request</h2>
+<details>
+  <summary>Show request JSON</summary>
+  <pre class="content-block"><code>{{ run.request_json | tojson(indent=2) }}</code></pre>
+</details>
+{% endif %}
+
+{% if run.summary_json %}
+<h2>Summary</h2>
+<details>
+  <summary>Show summary JSON</summary>
+  <pre class="content-block"><code>{{ run.summary_json | tojson(indent=2) }}</code></pre>
+</details>
+{% endif %}
+
+{% endblock %}

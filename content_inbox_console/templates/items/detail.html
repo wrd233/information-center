@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% set active_page = "items" %}
+{% block title %}{{ item.title | truncate(60) }} - Inbox Console{% endblock %}
+
+{% block content %}
+<p><a href="/items">&larr; Back to Items</a></p>
+
+<h1>{{ item.title or '(no title)' }}</h1>
+
+{% if item.url %}
+<p><a href="{{ item.url }}" target="_blank" rel="noopener" role="button">Open Original &nearr;</a></p>
+{% endif %}
+
+<table class="striped">
+  <tbody>
+    <tr><th>Item ID</th><td><code>{{ item.item_id }}</code></td></tr>
+    <tr><th>Source</th><td><a href="/sources/{{ item.source_id }}">{{ item.source_name or '-' }}</a></td></tr>
+    <tr><th>Source Category</th><td>{{ item.source_category or '-' }}</td></tr>
+    <tr><th>Feed URL</th><td><small>{{ item.feed_url or '-' }}</small></td></tr>
+    <tr><th>Content Type</th><td>{{ item.content_type or '-' }}</td></tr>
+    <tr><th>GUID</th><td><small>{{ item.guid or '-' }}</small></td></tr>
+    <tr><th>URL</th><td><small>{{ item.url or '-' }}</small></td></tr>
+    <tr><th>Dedupe Key</th><td><code class="small-code">{{ item.dedupe_key or '-' }}</code></td></tr>
+    <tr><th>Dedupe Version</th><td>{{ item.dedupe_version or 1 }}</td></tr>
+    <tr><th>Published At</th><td>{{ item.published_at or '-' }}</td></tr>
+    <tr><th>Created At</th><td>{{ item.created_at or '-' }}</td></tr>
+    <tr><th>Last Seen At</th><td>{{ item.last_seen_at or '-' }}</td></tr>
+    <tr><th>Seen Count</th><td>{{ item.seen_count or 0 }}</td></tr>
+    <tr><th>Author</th><td>{{ item.author or '-' }}</td></tr>
+  </tbody>
+</table>
+
+{% if item.summary %}
+<h2>Summary</h2>
+<blockquote>{{ item.summary }}</blockquote>
+{% endif %}
+
+{% if item.content_text %}
+<h2>Content</h2>
+<details>
+  <summary>Show content ({{ item.content_text | length }} chars)</summary>
+  <pre class="content-block">{{ item.content_text }}</pre>
+</details>
+{% endif %}
+
+{% if item.screening_json %}
+<h2>Screening Result</h2>
+<table class="striped">
+  <tbody>
+    {% for key, val in item.screening_json.items() %}
+    <tr><th>{{ key }}</th><td>{{ val }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if item.clustering_json %}
+<h2>Clustering Result</h2>
+<table class="striped">
+  <tbody>
+    {% for key, val in item.clustering_json.items() %}
+    <tr><th>{{ key }}</th><td>{{ val }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if item.embedding_model %}
+<h2>Embedding</h2>
+<p>Model: {{ item.embedding_model }}{% if item.embedding_text %} | Input length: {{ item.embedding_text | length }} chars{% endif %}</p>
+{% endif %}
+
+{% endblock %}

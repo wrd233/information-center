@@ -1,0 +1,10 @@
+{# run status badge #}
+{% if status == "success" %}
+<mark class="status-active">success</mark>
+{% elif status == "running" %}
+<mark class="status-paused">running</mark>
+{% elif status == "failed" %}
+<mark class="status-broken">failed</mark>
+{% else %}
+<mark>{{ status }}</mark>
+{% endif %}

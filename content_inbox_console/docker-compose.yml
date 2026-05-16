@@ -1,0 +1,18 @@
+services:
+  content-inbox-console:
+    build: .
+    container_name: content-inbox-console
+    restart: unless-stopped
+    environment:
+      CONTENT_INBOX_CONSOLE_HOST: 0.0.0.0
+      CONTENT_INBOX_CONSOLE_PORT: 8788
+      CONTENT_INBOX_CONSOLE_DB: /data/content_inbox.sqlite3
+      CONTENT_INBOX_CONSOLE_OUTPUTS: /outputs/runs
+      CONTENT_INBOX_CONSOLE_PAGE_SIZE: 50
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8788:8788"
+    volumes:
+      - ../content_inbox/data:/data:ro
+      - ../content_inbox/outputs/runs:/outputs/runs:ro

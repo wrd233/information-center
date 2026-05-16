@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% set active_page = "clusters" %}
+{% block title %}Clusters - Inbox Console{% endblock %}
+
+{% block content %}
+<h1>Event Clusters</h1>
+
+{% if not clusters %}
+{% include "components/empty_state.html" with context %}
+{% set message = "No clusters found." %}
+{% set hint = "Clusters are created by content_inbox's embedding/clustering pipeline. Enable clustering and add content to populate this view." %}
+{% else %}
+<div class="cluster-grid">
+{% for c in clusters %}
+<article>
+  <header>
+    <strong><a href="/clusters/{{ c.cluster_id }}">{{ c.cluster_title | truncate(60) }}</a></strong>
+  </header>
+  <p>{{ c.cluster_summary | truncate(150) if c.cluster_summary else '(no summary)' }}</p>
+  <div class="cluster-meta">
+    <small>{{ c.item_count }} items</small> &middot;
+    <small>Last seen: {{ c.last_seen_at or '-' }}</small>
+    {% if c.entities_json %}
+    <div class="cluster-entities">
+      {% for entity in c.entities_json[:5] %}
+      <mark>{{ entity }}</mark>
+      {% endfor %}
+      {% if c.entities_json | length > 5 %}
+      <small>+{{ c.entities_json | length - 5 }} more</small>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</article>
+{% endfor %}
+</div>
+
+{% set total = total_clusters %}{% set page = filters.page | int %}{% set page_size = filters.page_size | int %}
+{% set base_url = "/clusters?" %}
+{% include "components/pagination.html" with context %}
+{% endif %}
+
+{% endblock %}

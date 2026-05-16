@@ -1,0 +1,14 @@
+{# HTMX partial #}
+{% for run in runs %}
+<tr>
+  <td><a href="/runs/{{ run.run_id }}"><code>{{ run.run_id | truncate(24) }}</code></a></td>
+  <td><small>{{ run.trigger_type or '-' }}</small></td>
+  <td>{% include "components/run_status_badge.html" %}</td>
+  <td><small>{{ run.started_at or '-' }}</small></td>
+  <td>{% if run.duration_ms %}{{ (run.duration_ms / 1000) | round(1) }}s{% else %}-{% endif %}</td>
+  <td>{{ run.selected_source_count or 0 }}</td>
+  <td>{{ run.new_items_count or 0 }}</td>
+  <td>{{ run.duplicate_items_count or 0 }}</td>
+  <td>{{ run.failed_items_count or 0 }}</td>
+</tr>
+{% endfor %}

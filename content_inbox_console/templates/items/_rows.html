@@ -1,0 +1,16 @@
+{# HTMX partial: only <tr> elements #}
+{% for item in items %}
+<tr>
+  <td>
+    <a href="/items/{{ item.item_id }}">{{ item.title | truncate(80) if item.title else '(no title)' }}</a>
+    {% if item.url %}
+    <a href="{{ item.url }}" target="_blank" rel="noopener" class="external-link" title="Open original">&nearr;</a>
+    {% endif %}
+  </td>
+  <td><small>{{ (item.source_name or '-') | truncate(25) }}</small></td>
+  <td><small>{{ (item.source_category or '-') | truncate(15) }}</small></td>
+  <td><small>{{ item.published_at or '-' }}</small></td>
+  <td><small>{{ item.created_at or '-' }}</small></td>
+  <td><small>{{ item.content_type or '-' }}</small></td>
+</tr>
+{% endfor %}

@@ -1,0 +1,152 @@
+/* Custom styles for content_inbox_console -- on top of PicoCSS */
+
+/* Navigation active state */
+nav a[role="button"].outline {
+  --pico-background-color: var(--pico-primary-background);
+  --pico-color: var(--pico-primary-inverse);
+}
+
+/* Status badge colors */
+mark.status-active {
+  --pico-background-color: #2e7d32;
+  --pico-color: #fff;
+}
+
+mark.status-paused {
+  --pico-background-color: #f9a825;
+  --pico-color: #000;
+}
+
+mark.status-broken {
+  --pico-background-color: #c62828;
+  --pico-color: #fff;
+}
+
+mark.status-disabled {
+  --pico-background-color: #9e9e9e;
+  --pico-color: #fff;
+}
+
+/* Error banner */
+.error-banner {
+  --pico-background-color: #ffebee;
+  --pico-color: #c62828;
+  border-left: 4px solid #c62828;
+}
+
+.warning-banner {
+  --pico-background-color: #fff8e1;
+  --pico-color: #f57f17;
+  border-left: 4px solid #f57f17;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  opacity: 0.7;
+}
+
+/* Stats grid cards */
+.stats-grid article {
+  text-align: center;
+}
+.stats-grid article h2 {
+  margin-bottom: 0;
+  font-size: 2rem;
+}
+
+/* Table containers for horizontal scroll */
+.table-container {
+  overflow-x: auto;
+}
+
+/* External link icon */
+.external-link {
+  font-size: 0.8em;
+  text-decoration: none;
+  margin-left: 0.25em;
+}
+
+/* Content block for long text */
+.content-block {
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.85em;
+  background: var(--pico-secondary-background);
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+/* Small monospace code */
+.small-code {
+  font-size: 0.75em;
+  word-break: break-all;
+}
+
+/* Cluster card grid */
+.cluster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.cluster-entities {
+  margin-top: 0.5rem;
+}
+
+.cluster-entities mark {
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+  display: inline-block;
+}
+
+/* HTMX loading indicator */
+.htmx-indicator {
+  display: none;
+  opacity: 0.7;
+  font-style: italic;
+  padding: 0.5rem 0;
+}
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+  display: block;
+}
+
+/* Sticky nav */
+body > nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--pico-background-color);
+  border-bottom: 1px solid var(--pico-muted-border-color);
+}
+
+/* Pagination */
+.pagination {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+/* General */
+main {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+h1 {
+  margin-bottom: 1rem;
+}
+
+h2 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Disabled buttons */
+button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

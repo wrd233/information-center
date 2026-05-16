@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% set active_page = "runs" %}
+{% block title %}Runs - Inbox Console{% endblock %}
+
+{% block content %}
+<h1>Runs</h1>
+
+<form hx-get="/runs/rows" hx-target="#runs-table-body" hx-trigger="submit" hx-indicator="#loading-indicator">
+  <input type="hidden" name="page" value="{{ filters.page or 1 }}">
+  <input type="hidden" name="page_size" value="{{ filters.page_size or 30 }}">
+</form>
+<span id="loading-indicator" class="htmx-indicator">Loading...</span>
+
+{% if not runs %}
+{% include "components/empty_state.html" with context %}
+{% set message = "No runs recorded yet." %}
+{% set hint = "Run content_inbox batch ingestion to populate run history." %}
+{% else %}
+<div class="table-container">
+<table class="striped" id="runs-table">
+  <thead>
+    <tr>
+      <th>Run ID</th>
+      <th>Trigger</th>
+      <th>Status</th>
+      <th>Started</th>
+      <th>Duration</th>
+      <th>Sources</th>
+      <th>New</th>
+      <th>Dup</th>
+      <th>Failed</th>
+    </tr>
+  </thead>
+  <tbody id="runs-table-body">
+    {% include "runs/_rows.html" %}
+  </tbody>
+</table>
+</div>
+{% set total = total_runs %}{% set page = filters.page | int %}{% set page_size = filters.page_size | int %}
+{% set base_url = "/runs?" %}
+{% set hx_target = "#runs-table-body" %}
+{% include "components/pagination.html" with context %}
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% set active_page = "dashboard" %}
+{% block title %}Dashboard - Inbox Console{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+
+<div class="grid stats-grid">
+  <article>
+    <header>Total Sources</header>
+    <h2>{{ stats.total_sources }}</h2>
+  </article>
+  <article>
+    <header>Total Items</header>
+    <h2>{{ stats.total_items }}</h2>
+  </article>
+  <article>
+    <header>24h Items</header>
+    <h2>{{ stats.items_24h }}</h2>
+  </article>
+  <article>
+    <header>7d Items</header>
+    <h2>{{ stats.items_7d }}</h2>
+  </article>
+  <article>
+    <header>Total Runs</header>
+    <h2>{{ stats.total_runs }}</h2>
+  </article>
+  <article>
+    <header>Total Clusters</header>
+    <h2>{{ stats.total_clusters }}</h2>
+  </article>
+</div>
+
+<h2>Sources by Status</h2>
+{% if stats.sources_by_status %}
+<table class="striped">
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Count</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for status, count in stats.sources_by_status.items() | sort %}
+    <tr>
+      <td>{% include "components/status_badge.html" %}</td>
+      <td>{{ count }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+{% include "components/empty_state.html" with context %}
+{% set message = "No sources registered yet." %}
+{% set hint = "Add sources via the content_inbox API or CLI." %}
+{% endif %}
+
+{% if stats.last_run %}
+<h2>Last Run</h2>
+<table class="striped">
+  <tbody>
+    <tr><th>Run ID</th><td><a href="/runs/{{ stats.last_run.run_id }}">{{ stats.last_run.run_id }}</a></td></tr>
+    <tr><th>Status</th><td>{% include "components/run_status_badge.html" %}</td></tr>
+    <tr><th>Started</th><td>{{ stats.last_run.started_at or '-' }}</td></tr>
+    <tr><th>Duration</th><td>{% if stats.last_run.duration_ms %}{{ (stats.last_run.duration_ms / 1000) | round(1) }}s{% else %}-{% endif %}</td></tr>
+    <tr><th>Sources</th><td>{{ stats.last_run.success_source_count or 0 }} success / {{ stats.last_run.failure_source_count or 0 }} failed</td></tr>
+    <tr><th>Items</th><td>{{ stats.last_run.new_items_count or 0 }} new / {{ stats.last_run.duplicate_items_count or 0 }} dup</td></tr>
+  </tbody>
+</table>
+{% else %}
+<h2>Last Run</h2>
+{% include "components/empty_state.html" with context %}
+{% set message = "No runs recorded yet." %}
+{% endif %}
+
+{% if stats.items_by_category %}
+<h2>Items by Category</h2>
+<table class="striped">
+  <thead>
+    <tr><th>Category</th><th>Count</th></tr>
+  </thead>
+  <tbody>
+    {% for cat in stats.items_by_category %}
+    <tr><td>{{ cat.source_category or '(none)' }}</td><td>{{ cat.count }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if stats.recent_items %}
+<h2>Recent Items</h2>
+<table class="striped">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Source</th>
+      <th>Created</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in stats.recent_items %}
+    <tr>
+      <td><a href="/items/{{ item.item_id }}">{{ item.title | truncate(80) }}</a></td>
+      <td>{{ item.source_name | truncate(30) }}</td>
+      <td><small>{{ item.created_at or '-' }}</small></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if stats.failed_sources %}
+<h2>Recent Failed Sources</h2>
+<table class="striped">
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th>Error</th>
+      <th>Failures</th>
+      <th>Last Failure</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for src in stats.failed_sources %}
+    <tr>
+      <td><a href="/sources/{{ src.source_id }}">{{ src.source_name | truncate(40) }}</a></td>
+      <td><small>{{ (src.last_error_message or src.last_error_code or '-') | truncate(60) }}</small></td>
+      <td>{{ src.failure_count or 0 }}</td>
+      <td><small>{{ src.last_failure_at or '-' }}</small></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% endblock %}

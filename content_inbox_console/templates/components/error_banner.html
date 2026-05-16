@@ -1,0 +1,16 @@
+{# type: "error" | "warning" | "empty" #}
+{% if type == "error" %}
+<article class="error-banner">
+  <header><strong>Error</strong></header>
+  <p>{{ message }}</p>
+</article>
+{% elif type == "warning" %}
+<article class="warning-banner">
+  <header><strong>Warning</strong></header>
+  <p>{{ message }}</p>
+</article>
+{% elif type == "empty" %}
+<article class="empty-state">
+  <p>{{ message }}</p>
+</article>
+{% endif %}

@@ -1,0 +1,13 @@
+{# HTMX partial #}
+{% for src in sources %}
+<tr>
+  <td>
+    <a href="/sources/{{ src.source_id }}">{{ src.source_name | truncate(40) if src.source_name else src.source_id }}</a>
+  </td>
+  <td>{% include "components/status_badge.html" %}</td>
+  <td>{{ src.priority or 3 }}</td>
+  <td><small>{{ src.last_fetch_at or src.last_ingest_at or '-' }}</small></td>
+  <td>{{ src.failure_count or src.consecutive_failure_count or src.consecutive_failures or 0 }}</td>
+  <td><small>{{ (src.last_error_message or src.last_error_code or '-') | truncate(50) }}</small></td>
+</tr>
+{% endfor %}
