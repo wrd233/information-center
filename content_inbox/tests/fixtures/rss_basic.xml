@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Fixture Basic RSS</title>
+    <link>https://fixtures.example.com/</link>
+    <description>Basic deterministic RSS feed.</description>
+    <item>
+      <title>Basic RSS Item One</title>
+      <link>https://fixtures.example.com/items/one?utm_source=newsletter</link>
+      <guid>basic-1</guid>
+      <pubDate>Sat, 16 May 2026 01:00:00 GMT</pubDate>
+      <author>editor@example.com</author>
+      <description>First basic RSS item with emoji 🚀.</description>
+    </item>
+    <item>
+      <title>Basic RSS Item Two</title>
+      <link>https://fixtures.example.com/items/two</link>
+      <guid>basic-2</guid>
+      <pubDate>Sat, 16 May 2026 02:00:00 GMT</pubDate>
+      <description>Second basic RSS item.</description>
+    </item>
+  </channel>
+</rss>

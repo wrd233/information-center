@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Fixture Bad Date</title>
+    <item>
+      <title>Bad Date Item</title>
+      <link>https://fixtures.example.com/bad-date</link>
+      <guid>bad-date-1</guid>
+      <pubDate>not a valid rss date</pubDate>
+      <description>Bad date should not break parsing.</description>
+    </item>
+  </channel>
+</rss>

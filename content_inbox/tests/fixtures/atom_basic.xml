@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Fixture Basic Atom</title>
+  <link href="https://fixtures.example.com/atom"/>
+  <updated>2026-05-16T03:00:00Z</updated>
+  <entry>
+    <title>Atom Entry One</title>
+    <id>atom-1</id>
+    <link href="https://fixtures.example.com/atom/one"/>
+    <updated>2026-05-16T03:30:00Z</updated>
+    <summary>Atom entry summary.</summary>
+    <content type="html">&lt;p&gt;Atom entry full content.&lt;/p&gt;</content>
+    <author><name>Atom Author</name></author>
+  </entry>
+</feed>

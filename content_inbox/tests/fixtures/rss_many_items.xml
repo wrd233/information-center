@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Fixture Many Items</title>
+    <item><title>Many Item 01</title><link>https://fixtures.example.com/many/01</link><guid>many-01</guid><pubDate>Sat, 16 May 2026 00:01:00 GMT</pubDate><description>Many summary 01.</description></item>
+    <item><title>Many Item 02</title><link>https://fixtures.example.com/many/02</link><guid>many-02</guid><pubDate>Sat, 16 May 2026 00:02:00 GMT</pubDate><description>Many summary 02.</description></item>
+    <item><title>Many Item 03</title><link>https://fixtures.example.com/many/03</link><guid>many-03</guid><pubDate>Sat, 16 May 2026 00:03:00 GMT</pubDate><description>Many summary 03.</description></item>
+    <item><title>Many Item 04</title><link>https://fixtures.example.com/many/04</link><guid>many-04</guid><pubDate>Sat, 16 May 2026 00:04:00 GMT</pubDate><description>Many summary 04.</description></item>
+    <item><title>Many Item 05</title><link>https://fixtures.example.com/many/05</link><guid>many-05</guid><pubDate>Sat, 16 May 2026 00:05:00 GMT</pubDate><description>Many summary 05.</description></item>
+    <item><title>Many Item 06</title><link>https://fixtures.example.com/many/06</link><guid>many-06</guid><pubDate>Sat, 16 May 2026 00:06:00 GMT</pubDate><description>Many summary 06.</description></item>
+    <item><title>Many Item 07</title><link>https://fixtures.example.com/many/07</link><guid>many-07</guid><pubDate>Sat, 16 May 2026 00:07:00 GMT</pubDate><description>Many summary 07.</description></item>
+    <item><title>Many Item 08</title><link>https://fixtures.example.com/many/08</link><guid>many-08</guid><pubDate>Sat, 16 May 2026 00:08:00 GMT</pubDate><description>Many summary 08.</description></item>
+    <item><title>Many Item 09</title><link>https://fixtures.example.com/many/09</link><guid>many-09</guid><pubDate>Sat, 16 May 2026 00:09:00 GMT</pubDate><description>Many summary 09.</description></item>
+    <item><title>Many Item 10</title><link>https://fixtures.example.com/many/10</link><guid>many-10</guid><pubDate>Sat, 16 May 2026 00:10:00 GMT</pubDate><description>Many summary 10.</description></item>
+  </channel>
+</rss>

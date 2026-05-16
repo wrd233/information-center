@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Fixture HTML RSS</title>
+    <item>
+      <title>HTML Summary Item</title>
+      <link>https://fixtures.example.com/html</link>
+      <guid>html-1</guid>
+      <pubDate>Sat, 16 May 2026 04:00:00 GMT</pubDate>
+      <description><![CDATA[<p>Hello <strong>HTML</strong> &amp; emoji ✨.</p>]]></description>
+      <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/"><![CDATA[<article><p>Full <em>HTML</em> content.</p></article>]]></content:encoded>
+    </item>
+  </channel>
+</rss>

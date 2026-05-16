@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Fixture Incremental</title>
+    <item><title>New 01</title><link>https://fixtures.example.com/inc/new-01</link><guid>inc-new-01</guid><pubDate>Sat, 16 May 2026 00:08:00 GMT</pubDate><description>New 01.</description></item>
+    <item><title>New 02</title><link>https://fixtures.example.com/inc/new-02</link><guid>inc-new-02</guid><pubDate>Sat, 16 May 2026 00:07:00 GMT</pubDate><description>New 02.</description></item>
+    <item><title>New 03</title><link>https://fixtures.example.com/inc/new-03</link><guid>inc-new-03</guid><pubDate>Sat, 16 May 2026 00:06:00 GMT</pubDate><description>New 03.</description></item>
+    <item><title>Existing 05</title><link>https://fixtures.example.com/inc/existing-05</link><guid>inc-existing-05</guid><pubDate>Sat, 16 May 2026 00:05:00 GMT</pubDate><description>Existing 05 anchor.</description></item>
+    <item><title>Existing 04</title><link>https://fixtures.example.com/inc/existing-04</link><guid>inc-existing-04</guid><pubDate>Sat, 16 May 2026 00:04:00 GMT</pubDate><description>Existing 04.</description></item>
+  </channel>
+</rss>
