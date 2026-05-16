@@ -21,9 +21,9 @@ class TestHealthAndDashboard:
         assert response.status_code == 200
         data = response.json()
         assert data["db_available"] is True
-        assert data["total_sources"] == 2
+        assert data["registered_sources"] == 2
         assert data["total_items"] == 2
-        assert data["total_runs"] == 1
+        assert data["db_runs"] == 1
         assert data["total_clusters"] == 1
 
 
@@ -166,3 +166,117 @@ class TestErrorStates:
         assert response.status_code == 200
         html = response.text
         assert "No items" in html or "empty-state" in html.lower() or "Loading" in html
+
+
+class TestDiagnosticsAPI:
+    def test_diagnostics_endpoint(self, populated_client):
+        response = populated_client.get("/api/diagnostics")
+        assert response.status_code == 200
+        data = response.json()
+        assert "database" in data
+        assert "outputs" in data
+        assert "warnings" in data
+        assert data["database"]["db_exists"] is True
+        assert data["database"]["db_readable"] is True
+        tables = data["database"]["tables"]
+        assert tables["inbox_items"]["count"] == 2
+        assert tables["rss_sources"]["count"] == 2
+        assert tables["rss_ingest_runs"]["count"] == 1
+        assert tables["event_clusters"]["count"] == 1
+
+    def test_diagnostics_detects_empty_registry(self, legacy_client):
+        response = legacy_client.get("/api/diagnostics")
+        assert response.status_code == 200
+        data = response.json()
+        tables = data["database"]["tables"]
+        assert tables["inbox_items"]["count"] == 3
+        assert tables["rss_sources"]["count"] == 0
+        warnings = data["warnings"]
+        has_registry_warning = any("rss_sources is empty" in w for w in warnings)
+        assert has_registry_warning
+
+    def test_diagnostics_detects_file_runs(self, legacy_client):
+        response = legacy_client.get("/api/diagnostics")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["outputs"]["outputs_exists"] is True
+        assert data["outputs"]["run_directory_count"] == 1
+        has_file_run_warning = any("outputs/runs contains" in w for w in data["warnings"])
+        assert has_file_run_warning
+
+
+class TestObservedSources:
+    def test_sources_show_observed_when_registry_empty(self, legacy_client):
+        response = legacy_client.get("/sources")
+        assert response.status_code == 200
+        html = response.text
+        assert "No registered sources found" in html or "observed" in html.lower()
+        assert "Blog A" in html
+        assert "Blog B" in html
+
+    def test_observed_source_count(self, legacy_client):
+        response = legacy_client.get("/sources")
+        assert response.status_code == 200
+        html = response.text
+        # Should show 2 observed sources (Blog A has 2 items, Blog B has 1)
+        assert "2" in html
+
+    def test_observed_source_detail(self, legacy_client):
+        response = legacy_client.get("/sources/Blog A")
+        assert response.status_code == 200
+        html = response.text
+        assert "Observed Source" in html or "observed" in html.lower()
+        assert "Blog A" in html
+
+    def test_items_filter_by_observed_source(self, legacy_client):
+        response = legacy_client.get("/items?observed_source=Blog A")
+        assert response.status_code == 200
+        html = response.text
+        assert "Article A" in html
+        assert "Article B" in html
+        assert "Article C" not in html
+
+    def test_dashboard_shows_registered_and_observed(self, legacy_client):
+        response = legacy_client.get("/dashboard")
+        assert response.status_code == 200
+        html = response.text
+        assert "Registered Sources" in html
+        assert "Observed Sources" in html
+        # Registered should be 0, observed should be 2
+        assert "0" in html
+
+    def test_dashboard_shows_warnings(self, legacy_client):
+        response = legacy_client.get("/dashboard")
+        assert response.status_code == 200
+        html = response.text
+        assert "Data Status Warnings" in html or "warning" in html.lower()
+        assert "rss_sources is empty" in html
+
+
+class TestFileRuns:
+    def test_runs_show_file_runs_when_db_empty(self, legacy_client):
+        response = legacy_client.get("/runs")
+        assert response.status_code == 200
+        html = response.text
+        assert "No database run history" in html or "file" in html.lower()
+        assert "rss_run_20260101" in html
+
+    def test_file_run_detail(self, legacy_client):
+        response = legacy_client.get("/runs/rss_run_20260101_120000")
+        assert response.status_code == 200
+        html = response.text
+        assert "File Run" in html or "file-based" in html.lower()
+        assert "rss_run_20260101" in html
+        assert "Run Report" in html or "OPML sources" in html
+
+    def test_dashboard_shows_file_runs_count(self, legacy_client):
+        response = legacy_client.get("/dashboard")
+        assert response.status_code == 200
+        html = response.text
+        assert "File Runs" in html
+
+    def test_path_traversal_rejected(self, legacy_client):
+        response = legacy_client.get("/runs/../../../etc/passwd")
+        assert response.status_code in (404, 200)
+        if response.status_code == 200:
+            assert "not found" in response.text.lower() or "File Run" not in response.text

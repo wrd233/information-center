@@ -7,6 +7,10 @@ def pytest_configure(config):
         "integration: mark test as integration test (requires LLM API key, "
         "use -m integration to run)",
     )
+    config.addinivalue_line(
+        "markers",
+        "live_deepseek: mark test as live DeepSeek smoke test (requires explicit live env)",
+    )
 
 
 def pytest_collection_modifyitems(config, items):
@@ -16,5 +20,5 @@ def pytest_collection_modifyitems(config, items):
         reason="integration test (use -m integration to run)"
     )
     for item in items:
-        if "integration" in item.keywords:
+        if "integration" in item.keywords or "live_deepseek" in item.keywords:
             item.add_marker(skip_integration)

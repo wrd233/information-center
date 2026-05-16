@@ -17,11 +17,32 @@ A read-only web dashboard for visualizing the [content_inbox](../content_inbox/)
 
 | Page | Route | Description |
 |------|-------|-------------|
-| Dashboard | `/dashboard` | Overview: source counts, item stats, recent activity |
+| Dashboard | `/dashboard` | Overview: registered/observed sources, DB/file runs, item stats, recent activity |
 | Items | `/items` | Filterable, paginated inbox item list with detail view |
-| Sources | `/sources` | RSS source registry with status filters and detail view |
-| Runs | `/runs` | Ingest run history with detail and per-source breakdown |
+| Sources | `/sources` | RSS source registry with status filters, observed source fallback, detail view |
+| Runs | `/runs` | Ingest run history with DB/file fallback, detail with per-source breakdown |
 | Clusters | `/clusters` | Event cluster list with detail view |
+| Diagnostics | `/api/diagnostics` | JSON: table counts, schema info, data consistency warnings |
+
+## Registered Sources vs Observed Sources
+
+The console distinguishes two kinds of source information:
+
+### Registered Sources
+Sources stored in the `rss_sources` table. These are explicitly managed via the content_inbox source registry API or OPML import flow. They have status, priority, fetch history, and error tracking.
+
+### Observed Sources
+Sources derived from `inbox_items` metadata (the `source_name`, `source_id`, or `feed_url` columns). These appear when historical items were ingested without populating the source registry — a common state for databases created by older ingest paths.
+
+When the `rss_sources` registry is empty but inbox items contain source metadata, the console automatically shows observed sources. The Dashboard distinguishes both counts, and the Sources page displays observed sources with a contextual explanation.
+
+## DB Runs vs File Runs
+
+### Database Runs
+Ingest run records stored in the `rss_ingest_runs` table. These are created by new-registry-aware ingest flows and include per-source breakdowns in `rss_ingest_run_sources`.
+
+### File Runs
+Run reports on disk under `outputs/runs/` (directories like `rss_run_*` or `live_*` containing `final_report.md` or `report.md`). The console scans this directory and displays file-based runs when the `rss_ingest_runs` table is empty.
 
 ## Quick Start
 
@@ -30,12 +51,9 @@ A read-only web dashboard for visualizing the [content_inbox](../content_inbox/)
 ```bash
 cd content_inbox_console
 pip install -r requirements.txt
-# Adjust CONTENT_INBOX_CONSOLE_DB if your content_inbox data is elsewhere
 export CONTENT_INBOX_CONSOLE_DB=../content_inbox/data/content_inbox.sqlite3
 uvicorn app.main:app --host 127.0.0.1 --port 8788 --reload
 ```
-
-Open http://localhost:8788
 
 ### Docker
 
@@ -45,8 +63,6 @@ docker compose up --build
 ```
 
 Open http://localhost:8788
-
-The Docker compose mounts `../content_inbox/data` (database) and `../content_inbox/outputs/runs` (run history) as read-only volumes.
 
 ## Environment Variables
 
@@ -59,50 +75,58 @@ The Docker compose mounts `../content_inbox/data` (database) and `../content_inb
 | `CONTENT_INBOX_CONSOLE_DB_TIMEOUT` | `5` | SQLite connection timeout (seconds) |
 | `CONTENT_INBOX_CONSOLE_OUTPUTS` | _auto-detected from DB path_ | Path to run outputs directory |
 
-## Specifying the Database Path
+## Diagnostics API
 
-The database path can be relative (resolves from repo root) or absolute:
-
-```bash
-# Relative to repo root
-export CONTENT_INBOX_CONSOLE_DB=content_inbox/data/content_inbox.sqlite3
-
-# Absolute path
-export CONTENT_INBOX_CONSOLE_DB=/home/user/mydata/inbox.sqlite3
-
-# Docker: always absolute inside the container
-CONTENT_INBOX_CONSOLE_DB=/data/content_inbox.sqlite3
-```
-
-## Specifying the Outputs/Runs Path
-
-By default, the console derives `outputs/runs/` relative to the database file. Override with:
+Verify which database the console is reading and detect data consistency issues:
 
 ```bash
-export CONTENT_INBOX_CONSOLE_OUTPUTS=/path/to/content_inbox/outputs/runs
+curl http://localhost:8788/api/diagnostics | python3 -m json.tool
 ```
+
+Returns:
+- `database.db_path`, `database.db_exists`, `database.db_readable`
+- `database.tables` — each expected table with `exists` and `count`
+- `outputs.outputs_path`, `outputs.outputs_exists`, `outputs.run_directory_count`
+- `warnings` — list of detected inconsistencies (e.g., "rss_sources is empty but inbox_items has 2497 rows")
 
 ## Common Issues
 
+### Why are Items showing but Sources is 0?
+
+This is the most common state for databases created before the source registry was introduced:
+- `inbox_items` has data (with `source_name` embedded on each item)
+- `rss_sources` is empty (registry never populated)
+
+The console handles this by showing **observed sources** derived from inbox item metadata. Check the Sources page — it will list observed sources automatically.
+
+**Fix**: Run the content_inbox OPML/source import flow against this database to populate `rss_sources`.
+
+### Why are outputs/runs present but DB Runs is 0?
+
+Historical runs may have written reports to `outputs/runs/` without recording rows in `rss_ingest_runs`. The console falls back to showing **file runs** from disk.
+
+### Dashboard shows warnings
+
+Warnings appear when the console detects inconsistencies between tables. Common warnings:
+- "rss_sources is empty but inbox_items has N rows" → data predates the registry
+- "rss_ingest_runs is empty but outputs/runs contains N run directories" → runs were done with old scripts
+
 ### Can't find database
 
-The console shows a red error banner on every page if the database file doesn't exist. Check:
-- The `CONTENT_INBOX_CONSOLE_DB` path is correct.
-- In Docker, the volume mount `../content_inbox/data:/data:ro` points to the right directory.
+Check `CONTENT_INBOX_CONSOLE_DB` and Docker volume mounts. Use `/api/diagnostics` to verify the resolved path.
 
-### Database schema mismatch
+### Mounted wrong database
 
-The console introspects table columns at startup. If `content_inbox` adds new columns, the console handles them gracefully (missing columns return `null`). If `content_inbox` removes or renames columns used in list queries, the console may need updates.
+If you see unexpected data, your `CONTENT_INBOX_CONSOLE_DB` or Docker volume may be pointing to a different SQLite file (e.g., a test database). Compare with:
+```bash
+sqlite3 content_inbox/data/content_inbox.sqlite3 "SELECT 'inbox_items', count(*) FROM inbox_items UNION ALL SELECT 'rss_sources', count(*) FROM rss_sources"
+```
 
-### No run history
+### Outputs path not mounted
 
-The Runs page shows an empty state. This is normal if you haven't run any batch ingestion yet. Run `content_inbox/scripts/run_rss_sources_to_content_inbox.py` to populate.
+In Docker, the `../content_inbox/outputs/runs:/outputs/runs:ro` volume must exist on the host. If `outputs/runs/` doesn't exist locally, the file runs feature will show empty.
 
-### Pages show empty
-
-If the database exists but all tables are empty, the console shows friendly empty states with hints. No data = nothing to show.
-
-## Current Limitations (v0.1.0)
+## Current Limitations (v0.2.0)
 
 - **Read-only**: cannot trigger ingestion or modify sources from the console.
 - **No LLM**: no AI summaries, recommendations, or chat.

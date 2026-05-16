@@ -7,6 +7,8 @@ import sqlite3
 from app.dependencies import get_db_connection, get_settings
 from app.config import Settings
 from app.repository import ConsoleRepository
+from app.repositories.file_runs import count_file_runs
+from app.repositories.diagnostics import compute_warnings, get_db_diagnostics, get_outputs_diagnostics
 
 router = APIRouter()
 
@@ -35,12 +37,22 @@ def dashboard(
             "stats": {},
         })
 
+    registered_sources = repo.count_sources(conn)
+    observed_sources = repo.count_observed_sources(conn)
+    db_runs = repo.count_runs(conn)
+    file_runs = count_file_runs(settings.outputs_path)
+    total_observed = max(registered_sources, observed_sources)
+
     stats = {
-        "total_sources": repo.count_sources(conn),
+        "registered_sources": registered_sources,
+        "observed_sources": observed_sources,
+        "total_sources_display": registered_sources if registered_sources > 0 else observed_sources,
         "total_items": repo.count_items(conn),
         "items_24h": repo.count_items_last_24h(conn),
         "items_7d": repo.count_items_last_7d(conn),
-        "total_runs": repo.count_runs(conn),
+        "db_runs": db_runs,
+        "file_runs": file_runs,
+        "total_runs_display": db_runs if db_runs > 0 else file_runs,
         "total_clusters": repo.count_clusters(conn),
         "sources_by_status": repo.count_sources_by_status(conn),
         "last_run": repo.get_last_run(conn),
@@ -50,12 +62,17 @@ def dashboard(
         "db_size_bytes": repo.get_db_size(conn),
     }
 
+    db_diag = get_db_diagnostics(settings.database_path)
+    outputs_diag = get_outputs_diagnostics(settings.outputs_path)
+    warnings = compute_warnings(db_diag, outputs_diag)
+
     return templates.TemplateResponse("dashboard.html", {
         "request": request,
         "db_available": True,
         "db_path": str(settings.database_path),
         "active_page": "dashboard",
         "stats": stats,
+        "warnings": warnings,
         "last_run_status": stats["last_run"]["status"] if stats["last_run"] else None,
     })
 
@@ -70,13 +87,17 @@ def dashboard_stats(
     if not db_available:
         return {"error": "database unavailable", "db_available": False}
 
+    settings = request.app.state.settings
+
     return {
         "db_available": True,
-        "total_sources": repo.count_sources(conn),
+        "registered_sources": repo.count_sources(conn),
+        "observed_sources": repo.count_observed_sources(conn),
         "total_items": repo.count_items(conn),
         "items_24h": repo.count_items_last_24h(conn),
         "items_7d": repo.count_items_last_7d(conn),
-        "total_runs": repo.count_runs(conn),
+        "db_runs": repo.count_runs(conn),
+        "file_runs": count_file_runs(settings.outputs_path),
         "total_clusters": repo.count_clusters(conn),
         "sources_by_status": repo.count_sources_by_status(conn),
         "db_size_bytes": repo.get_db_size(conn),

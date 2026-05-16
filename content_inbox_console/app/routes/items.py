@@ -8,6 +8,7 @@ from typing import Optional
 from app.dependencies import get_db_connection, get_settings
 from app.config import Settings
 from app.repository import ConsoleRepository
+from app.repositories.observed_sources import list_observed_source_items
 
 router = APIRouter()
 
@@ -23,6 +24,7 @@ def list_items(
     date_from: Optional[str] = None,
     date_to: Optional[str] = None,
     min_score: Optional[str] = None,
+    observed_source: Optional[str] = None,
     page: int = 1,
     page_size: int = 50,
     conn: sqlite3.Connection = Depends(get_db_connection),
@@ -41,6 +43,7 @@ def list_items(
         "date_from": date_from,
         "date_to": date_to,
         "min_score": min_score,
+        "observed_source": observed_source,
         "page": max(1, page),
         "page_size": min(max(1, page_size), 200),
     }
@@ -49,6 +52,17 @@ def list_items(
         return templates.TemplateResponse("items/list.html", {
             "request": request, "db_available": False, "db_path": str(settings.database_path),
             "active_page": "items", "items": [], "total_items": 0, "filters": filters,
+        })
+
+    # If filtering by observed source key
+    if observed_source and not source_id:
+        items, total = list_observed_source_items(
+            conn, observed_source,
+            limit=filters["page_size"], offset=(filters["page"] - 1) * filters["page_size"],
+        )
+        return templates.TemplateResponse("items/list.html", {
+            "request": request, "db_available": True, "db_path": str(settings.database_path),
+            "active_page": "items", "items": items, "total_items": total, "filters": filters,
         })
 
     min_score_val = float(min_score) if min_score else None
@@ -83,6 +97,7 @@ def list_items_rows(
     date_from: Optional[str] = None,
     date_to: Optional[str] = None,
     min_score: Optional[str] = None,
+    observed_source: Optional[str] = None,
     page: int = 1,
     page_size: int = 50,
     conn: sqlite3.Connection = Depends(get_db_connection),
@@ -99,15 +114,21 @@ def list_items_rows(
             "request": request, "items": [],
         })
 
-    min_score_val = float(min_score) if min_score else None
-    items, _ = repo.list_items(
-        conn,
-        source_id=source_id, source_name=source_name,
-        source_category=source_category, content_type=content_type,
-        keyword=keyword, date_from=date_from, date_to=date_to,
-        min_score=min_score_val,
-        limit=page_size, offset=(page - 1) * page_size,
-    )
+    if observed_source and not source_id:
+        items, _ = list_observed_source_items(
+            conn, observed_source,
+            limit=page_size, offset=(page - 1) * page_size,
+        )
+    else:
+        min_score_val = float(min_score) if min_score else None
+        items, _ = repo.list_items(
+            conn,
+            source_id=source_id, source_name=source_name,
+            source_category=source_category, content_type=content_type,
+            keyword=keyword, date_from=date_from, date_to=date_to,
+            min_score=min_score_val,
+            limit=page_size, offset=(page - 1) * page_size,
+        )
 
     return templates.TemplateResponse("items/_rows.html", {
         "request": request, "items": items,

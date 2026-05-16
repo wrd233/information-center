@@ -338,11 +338,60 @@ export CONTENT_INBOX_EMBEDDING_MODEL="text-embedding-3-small"
 
 可调参数集中在 [config/content_inbox.yaml](/Users/wangrundong/work/infomation-center/content_inbox/config/content_inbox.yaml)。
 
+## LLM-aware Semantic Pipeline
+
+RSS ingest 仍然先写入事实层，semantic pipeline 作为后处理运行，不阻塞原始入库。
+
+常用命令：
+
+```bash
+PYTHONPATH=. python -m content_inbox.semantic cards --limit 100
+PYTHONPATH=. python -m content_inbox.semantic dedupe --limit 100
+PYTHONPATH=. python -m content_inbox.semantic cluster --limit 100
+PYTHONPATH=. python -m content_inbox.semantic source-profiles recompute
+PYTHONPATH=. python -m content_inbox.semantic review list
+```
+
+查看 cluster/source/review：
+
+```bash
+PYTHONPATH=. python -m content_inbox.semantic clusters list --status active
+PYTHONPATH=. python -m content_inbox.semantic clusters show CLUSTER_ID
+PYTHONPATH=. python -m content_inbox.semantic source profile SOURCE_ID
+PYTHONPATH=. python -m content_inbox.semantic source suggestions
+PYTHONPATH=. python -m content_inbox.semantic source set-priority SOURCE_ID high
+PYTHONPATH=. python -m content_inbox.semantic review approve REVIEW_ID
+```
+
+Live DeepSeek semantic calls are disabled by default. Enable them explicitly:
+
+```bash
+export CONTENT_INBOX_LLM_ENABLE_LIVE=1
+export CONTENT_INBOX_LLM_SMALL_MODEL=deepseek-v4-flash
+export CONTENT_INBOX_LLM_STRONG_MODEL=deepseek-v4-pro
+```
+
+Live smoke test uses a temporary SQLite DB unless both `--db-path` and `--write-real-db` are provided:
+
+```bash
+CONTENT_INBOX_LLM_ENABLE_LIVE=1 PYTHONPATH=. python -m content_inbox.semantic live-smoke all --limit 3 --max-calls 10
+```
+
+Semantic LLM calls write audit rows to `llm_call_logs`, including model, prompt/schema version, input fingerprint, latency, status, token usage, cache token fields when returned by the provider, raw output, parsed JSON, and error details. API keys are never logged.
+
+This phase did not change console UI. Future console work can consume the backend-only `/api/semantic/*` endpoints for item semantic detail, relations, clusters, source profiles, review queue, and LLM call log summaries.
+
 ## 测试
 
 ```bash
 cd "/Users/wangrundong/work/infomation-center/content_inbox"
 PYTHONPATH=. pytest -q
+```
+
+Live DeepSeek tests are explicit and skip without live config:
+
+```bash
+CONTENT_INBOX_LLM_ENABLE_LIVE=1 PYTHONPATH=. pytest -q -m live_deepseek
 ```
 
 详细实现设计见 [docs/implementation_design.md](/Users/wangrundong/work/infomation-center/content_inbox/docs/implementation_design.md)。

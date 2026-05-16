@@ -75,6 +75,11 @@ class InboxStore:
             self.ensure_column(conn, "inbox_items", "dedupe_version", "INTEGER DEFAULT 1")
             self.ensure_column(conn, "inbox_items", "latest_raw_json", "TEXT")
             self.ensure_column(conn, "inbox_items", "latest_seen_summary", "TEXT")
+            self.ensure_column(conn, "inbox_items", "semantic_status", "TEXT DEFAULT 'pending'")
+            self.ensure_column(conn, "inbox_items", "primary_cluster_id", "TEXT")
+            self.ensure_column(conn, "inbox_items", "semantic_error", "TEXT")
+            self.ensure_column(conn, "inbox_items", "semantic_attempts", "INTEGER NOT NULL DEFAULT 0")
+            self.ensure_column(conn, "inbox_items", "last_semantic_at", "TEXT")
             conn.execute(
                 """
                 CREATE TABLE IF NOT EXISTS rss_sources (
@@ -204,16 +209,286 @@ class InboxStore:
                     USING vec0(embedding float[{dimensions}] distance_metric=cosine)
                     """
                 )
+            self.ensure_column(conn, "event_clusters", "last_major_update_at", "TEXT")
+            self.ensure_column(conn, "event_clusters", "source_material_item_id", "TEXT")
+            self.ensure_column(conn, "event_clusters", "cluster_card_id", "INTEGER")
+            self.ensure_column(conn, "event_clusters", "created_by", "TEXT DEFAULT 'legacy'")
+            self.ensure_column(conn, "event_clusters", "confidence", "REAL NOT NULL DEFAULT 0.0")
+            self.ensure_column(conn, "event_clusters", "merged_into_cluster_id", "TEXT")
+            self.init_semantic_schema(conn)
             conn.execute("CREATE INDEX IF NOT EXISTS idx_inbox_created_at ON inbox_items(created_at)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_inbox_source_name ON inbox_items(source_name)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_inbox_content_type ON inbox_items(content_type)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_inbox_source_id ON inbox_items(source_id)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_inbox_published_at ON inbox_items(published_at)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_inbox_semantic_status ON inbox_items(semantic_status)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_inbox_primary_cluster_id ON inbox_items(primary_cluster_id)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_rss_sources_status ON rss_sources(status)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_rss_runs_started_at ON rss_ingest_runs(started_at)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_rss_run_sources_run_id ON rss_ingest_run_sources(run_id)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_clusters_status ON event_clusters(status)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_clusters_last_seen ON event_clusters(last_seen_at)")
+
+    def init_semantic_schema(self, conn: sqlite3.Connection) -> None:
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS item_cards (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                item_id TEXT NOT NULL,
+                card_version INTEGER NOT NULL DEFAULT 1,
+                schema_version TEXT NOT NULL,
+                prompt_version TEXT,
+                model TEXT,
+                input_fingerprint TEXT NOT NULL,
+                canonical_title TEXT NOT NULL,
+                language TEXT NOT NULL DEFAULT 'unknown',
+                short_summary TEXT NOT NULL,
+                embedding_text TEXT NOT NULL,
+                entities_json TEXT NOT NULL DEFAULT '[]',
+                event_hint TEXT,
+                content_role TEXT NOT NULL DEFAULT 'unknown',
+                confidence REAL NOT NULL DEFAULT 0.0,
+                warnings_json TEXT NOT NULL DEFAULT '[]',
+                key_facts_json TEXT NOT NULL DEFAULT '[]',
+                key_opinions_json TEXT NOT NULL DEFAULT '[]',
+                cited_sources_json TEXT NOT NULL DEFAULT '[]',
+                source_material_candidates_json TEXT NOT NULL DEFAULT '[]',
+                quality_hints_json TEXT NOT NULL DEFAULT '{}',
+                llm_call_id INTEGER,
+                is_current INTEGER NOT NULL DEFAULT 1,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_item_cards_current
+            ON item_cards(item_id, is_current)
+            WHERE is_current = 1
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS item_relations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                item_a_id TEXT NOT NULL,
+                item_b_id TEXT NOT NULL,
+                primary_relation TEXT NOT NULL,
+                secondary_roles_json TEXT NOT NULL DEFAULT '[]',
+                confidence REAL NOT NULL DEFAULT 0.0,
+                should_fold INTEGER NOT NULL DEFAULT 0,
+                canonical_item_id TEXT,
+                new_information_json TEXT NOT NULL DEFAULT '[]',
+                reason TEXT NOT NULL DEFAULT '',
+                evidence_json TEXT NOT NULL DEFAULT '[]',
+                decision_source TEXT NOT NULL,
+                llm_call_id INTEGER,
+                schema_version TEXT NOT NULL,
+                prompt_version TEXT,
+                model TEXT,
+                input_fingerprint TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                UNIQUE(item_a_id, item_b_id, primary_relation, input_fingerprint)
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS cluster_items (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                cluster_id TEXT NOT NULL,
+                item_id TEXT NOT NULL,
+                primary_relation TEXT NOT NULL,
+                secondary_roles_json TEXT NOT NULL DEFAULT '[]',
+                same_event INTEGER NOT NULL DEFAULT 0,
+                same_topic INTEGER NOT NULL DEFAULT 0,
+                follow_up_event INTEGER NOT NULL DEFAULT 0,
+                confidence REAL NOT NULL DEFAULT 0.0,
+                incremental_value INTEGER NOT NULL DEFAULT 0,
+                report_value INTEGER NOT NULL DEFAULT 0,
+                should_update_cluster_card INTEGER NOT NULL DEFAULT 0,
+                should_notify INTEGER NOT NULL DEFAULT 0,
+                new_facts_json TEXT NOT NULL DEFAULT '[]',
+                new_angles_json TEXT NOT NULL DEFAULT '[]',
+                reason TEXT NOT NULL DEFAULT '',
+                evidence_json TEXT NOT NULL DEFAULT '[]',
+                decision_source TEXT NOT NULL,
+                llm_call_id INTEGER,
+                schema_version TEXT NOT NULL,
+                prompt_version TEXT,
+                model TEXT,
+                input_fingerprint TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                UNIQUE(cluster_id, item_id)
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS cluster_cards (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                cluster_id TEXT NOT NULL,
+                card_version INTEGER NOT NULL DEFAULT 1,
+                schema_version TEXT NOT NULL,
+                prompt_version TEXT,
+                model TEXT,
+                input_fingerprint TEXT NOT NULL,
+                cluster_title TEXT NOT NULL,
+                event_type TEXT,
+                main_entities_json TEXT NOT NULL DEFAULT '[]',
+                core_facts_json TEXT NOT NULL DEFAULT '[]',
+                known_angles_json TEXT NOT NULL DEFAULT '[]',
+                representative_items_json TEXT NOT NULL DEFAULT '[]',
+                source_items_json TEXT NOT NULL DEFAULT '[]',
+                open_questions_json TEXT NOT NULL DEFAULT '[]',
+                first_seen_at TEXT,
+                last_major_update_at TEXT,
+                confidence REAL NOT NULL DEFAULT 0.0,
+                llm_call_id INTEGER,
+                is_current INTEGER NOT NULL DEFAULT 1,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_cluster_cards_current
+            ON cluster_cards(cluster_id, is_current)
+            WHERE is_current = 1
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS cluster_relations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                from_cluster_id TEXT NOT NULL,
+                to_cluster_id TEXT NOT NULL,
+                relation_type TEXT NOT NULL,
+                confidence REAL NOT NULL DEFAULT 0.0,
+                reason TEXT NOT NULL DEFAULT '',
+                decision_source TEXT NOT NULL DEFAULT 'rule',
+                llm_call_id INTEGER,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                UNIQUE(from_cluster_id, to_cluster_id, relation_type)
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS source_signals (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                source_id TEXT NOT NULL,
+                item_id TEXT NOT NULL,
+                cluster_id TEXT,
+                originality_delta INTEGER NOT NULL DEFAULT 0,
+                duplicate_signal INTEGER NOT NULL DEFAULT 0,
+                near_duplicate_signal INTEGER NOT NULL DEFAULT 0,
+                new_event_signal INTEGER NOT NULL DEFAULT 0,
+                incremental_value INTEGER NOT NULL DEFAULT 0,
+                report_value INTEGER NOT NULL DEFAULT 0,
+                source_role TEXT NOT NULL DEFAULT 'unknown',
+                llm_call_id INTEGER,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                UNIQUE(source_id, item_id)
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS source_profiles (
+                source_id TEXT PRIMARY KEY,
+                total_items INTEGER NOT NULL DEFAULT 0,
+                llm_processed_items INTEGER NOT NULL DEFAULT 0,
+                duplicate_rate REAL NOT NULL DEFAULT 0.0,
+                near_duplicate_rate REAL NOT NULL DEFAULT 0.0,
+                new_event_rate REAL NOT NULL DEFAULT 0.0,
+                incremental_value_avg REAL NOT NULL DEFAULT 0.0,
+                report_value_avg REAL NOT NULL DEFAULT 0.0,
+                source_item_rate REAL NOT NULL DEFAULT 0.0,
+                representative_item_rate REAL NOT NULL DEFAULT 0.0,
+                llm_total_tokens INTEGER NOT NULL DEFAULT 0,
+                llm_high_value_outputs INTEGER NOT NULL DEFAULT 0,
+                llm_yield_score REAL NOT NULL DEFAULT 0.0,
+                llm_priority TEXT NOT NULL DEFAULT 'new_source_under_evaluation',
+                priority_suggestion TEXT,
+                review_status TEXT NOT NULL DEFAULT 'none',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS llm_call_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_type TEXT NOT NULL,
+                model TEXT NOT NULL,
+                prompt_version TEXT,
+                schema_version TEXT,
+                input_fingerprint TEXT NOT NULL,
+                latency_ms INTEGER,
+                status TEXT NOT NULL,
+                prompt_tokens INTEGER,
+                completion_tokens INTEGER,
+                total_tokens INTEGER,
+                cache_hit_tokens INTEGER,
+                cache_miss_tokens INTEGER,
+                request_json TEXT,
+                raw_output TEXT,
+                parsed_output_json TEXT,
+                error TEXT,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS review_queue (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                review_type TEXT NOT NULL,
+                target_type TEXT NOT NULL,
+                target_id TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'pending',
+                suggestion_json TEXT NOT NULL DEFAULT '{}',
+                reason TEXT NOT NULL DEFAULT '',
+                llm_call_id INTEGER,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                reviewed_at TEXT,
+                reviewer TEXT,
+                review_note TEXT
+            )
+            """
+        )
+        indexes = [
+            "CREATE INDEX IF NOT EXISTS idx_item_cards_item ON item_cards(item_id)",
+            "CREATE INDEX IF NOT EXISTS idx_item_cards_fingerprint ON item_cards(input_fingerprint)",
+            "CREATE INDEX IF NOT EXISTS idx_item_relations_item_a ON item_relations(item_a_id)",
+            "CREATE INDEX IF NOT EXISTS idx_item_relations_item_b ON item_relations(item_b_id)",
+            "CREATE INDEX IF NOT EXISTS idx_item_relations_primary ON item_relations(primary_relation)",
+            "CREATE INDEX IF NOT EXISTS idx_cluster_items_cluster ON cluster_items(cluster_id)",
+            "CREATE INDEX IF NOT EXISTS idx_cluster_items_item ON cluster_items(item_id)",
+            "CREATE INDEX IF NOT EXISTS idx_cluster_items_primary ON cluster_items(primary_relation)",
+            "CREATE INDEX IF NOT EXISTS idx_cluster_cards_cluster ON cluster_cards(cluster_id)",
+            "CREATE INDEX IF NOT EXISTS idx_cluster_relations_from ON cluster_relations(from_cluster_id)",
+            "CREATE INDEX IF NOT EXISTS idx_cluster_relations_to ON cluster_relations(to_cluster_id)",
+            "CREATE INDEX IF NOT EXISTS idx_source_signals_source ON source_signals(source_id)",
+            "CREATE INDEX IF NOT EXISTS idx_source_profiles_priority ON source_profiles(llm_priority)",
+            "CREATE INDEX IF NOT EXISTS idx_llm_call_logs_task ON llm_call_logs(task_type)",
+            "CREATE INDEX IF NOT EXISTS idx_llm_call_logs_status ON llm_call_logs(status)",
+            "CREATE INDEX IF NOT EXISTS idx_llm_call_logs_fingerprint ON llm_call_logs(input_fingerprint)",
+            "CREATE INDEX IF NOT EXISTS idx_review_queue_status ON review_queue(status)",
+            "CREATE INDEX IF NOT EXISTS idx_review_queue_target ON review_queue(target_type, target_id)",
+        ]
+        for sql in indexes:
+            conn.execute(sql)
 
     def ensure_column(
         self, conn: sqlite3.Connection, table_name: str, column_name: str, column_type: str
@@ -1047,6 +1322,11 @@ def row_to_item(row: sqlite3.Row) -> dict[str, Any]:
         "dedupe_version": row["dedupe_version"],
         "latest_raw_json": row["latest_raw_json"],
         "latest_seen_summary": row["latest_seen_summary"],
+        "semantic_status": row["semantic_status"],
+        "primary_cluster_id": row["primary_cluster_id"],
+        "semantic_error": row["semantic_error"],
+        "semantic_attempts": row["semantic_attempts"],
+        "last_semantic_at": row["last_semantic_at"],
         "created_at": row["created_at"],
         "updated_at": row["updated_at"],
         "last_seen_at": row["last_seen_at"],
@@ -1111,6 +1391,12 @@ def row_to_cluster(row: sqlite3.Row) -> dict[str, Any]:
         "last_seen_at": row["last_seen_at"],
         "item_count": row["item_count"],
         "status": row["status"],
+        "last_major_update_at": row["last_major_update_at"],
+        "source_material_item_id": row["source_material_item_id"],
+        "cluster_card_id": row["cluster_card_id"],
+        "created_by": row["created_by"],
+        "confidence": row["confidence"],
+        "merged_into_cluster_id": row["merged_into_cluster_id"],
         "cluster_vector": json.loads(row["cluster_vector_json"] or "[]"),
         "embedding_model": row["embedding_model"],
     }

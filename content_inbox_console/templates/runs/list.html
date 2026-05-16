@@ -5,41 +5,86 @@
 {% block content %}
 <h1>Runs</h1>
 
+{% if show_db_runs %}
+<p><small>Showing database ingest runs from rss_ingest_runs.</small></p>
+{% elif show_file_runs %}
+<article class="warning-banner">
+  <p>No database run history found in rss_ingest_runs.</p>
+  <p>Showing file-based run reports from outputs/runs on disk.</p>
+</article>
+{% endif %}
+
+{% if show_db_runs or show_file_runs %}
+
+{% if show_db_runs %}
 <form hx-get="/runs/rows" hx-target="#runs-table-body" hx-trigger="submit" hx-indicator="#loading-indicator">
   <input type="hidden" name="page" value="{{ filters.page or 1 }}">
   <input type="hidden" name="page_size" value="{{ filters.page_size or 30 }}">
 </form>
 <span id="loading-indicator" class="htmx-indicator">Loading...</span>
+{% endif %}
 
-{% if not runs %}
-{% include "components/empty_state.html" with context %}
-{% set message = "No runs recorded yet." %}
-{% set hint = "Run content_inbox batch ingestion to populate run history." %}
-{% else %}
 <div class="table-container">
 <table class="striped" id="runs-table">
   <thead>
     <tr>
-      <th>Run ID</th>
-      <th>Trigger</th>
-      <th>Status</th>
-      <th>Started</th>
-      <th>Duration</th>
-      <th>Sources</th>
-      <th>New</th>
-      <th>Dup</th>
-      <th>Failed</th>
+      <th>{% if show_db_runs %}Run ID{% else %}Directory{% endif %}</th>
+      {% if show_db_runs %}<th>Trigger</th>{% endif %}
+      <th>{% if show_db_runs %}Status{% else %}Report{% endif %}</th>
+      <th>{% if show_db_runs %}Started{% else %}Modified{% endif %}</th>
+      {% if show_db_runs %}<th>Duration</th>{% endif %}
+      {% if show_db_runs %}<th>Sources</th>{% endif %}
+      {% if show_db_runs %}<th>New</th>{% endif %}
+      {% if show_db_runs %}<th>Dup</th>{% endif %}
+      {% if show_db_runs %}<th>Failed</th>{% endif %}
+      {% if show_file_runs %}<th>Metrics</th>{% endif %}
     </tr>
   </thead>
   <tbody id="runs-table-body">
-    {% include "runs/_rows.html" %}
+    {% if show_db_runs %}
+      {% include "runs/_rows.html" %}
+    {% elif show_file_runs %}
+      {% for fr in file_runs %}
+      <tr>
+        <td><a href="/runs/{{ fr.run_dir_name }}"><code>{{ fr.run_dir_name | truncate(30) }}</code></a></td>
+        <td>
+          {% if fr.has_final_report %}
+          <mark class="status-active">report</mark>
+          {% else %}
+          <mark>--</mark>
+          {% endif %}
+        </td>
+        <td><small>{{ fr.mtime or '-' }}{% if fr.mtime %}{% endif %}</small></td>
+        <td>
+          {% if fr.metrics %}
+            {% if fr.metrics.opml_sources %}<small>src:{{ fr.metrics.opml_sources }}</small>{% endif %}
+            {% if fr.metrics.first_pass_new is defined %}<small>new:{{ fr.metrics.first_pass_new }}</small>{% endif %}
+            {% if fr.metrics.first_pass_duplicate is defined %}<small>dup:{{ fr.metrics.first_pass_duplicate }}</small>{% endif %}
+            {% if fr.metrics.success_count is defined %}<small>ok:{{ fr.metrics.success_count }}</small>{% endif %}
+            {% if fr.metrics.failure_count is defined %}<small>fail:{{ fr.metrics.failure_count }}</small>{% endif %}
+          {% else %}
+            <small>--</small>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    {% endif %}
   </tbody>
 </table>
 </div>
+
+{% if show_db_runs %}
 {% set total = total_runs %}{% set page = filters.page | int %}{% set page_size = filters.page_size | int %}
 {% set base_url = "/runs?" %}
 {% set hx_target = "#runs-table-body" %}
 {% include "components/pagination.html" with context %}
+{% endif %}
+
+{% else %}
+<article class="empty-state">
+  <p>No run history found in database or outputs/runs.</p>
+  <small>Run an ingest job or check CONTENT_INBOX_OUTPUTS_PATH.</small>
+</article>
 {% endif %}
 
 {% endblock %}

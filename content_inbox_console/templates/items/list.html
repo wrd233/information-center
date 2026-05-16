@@ -5,40 +5,21 @@
 {% block content %}
 <h1>Items</h1>
 
+{% if filters.observed_source %}
+<p><small>Filtering by observed source: <code>{{ filters.observed_source }}</code> <a href="/items">Clear &times;</a></small></p>
+{% endif %}
+
 <form id="item-filters" hx-get="/items/rows" hx-target="#items-table-body" hx-trigger="submit, change delay:300ms" hx-indicator="#loading-indicator">
   <div class="grid">
-    <label>
-      Source ID
-      <input type="text" name="source_id" value="{{ filters.source_id or '' }}" placeholder="Filter by source id">
-    </label>
-    <label>
-      Source Name
-      <input type="text" name="source_name" value="{{ filters.source_name or '' }}" placeholder="Filter by source name">
-    </label>
-    <label>
-      Category
-      <input type="text" name="source_category" value="{{ filters.source_category or '' }}" placeholder="Filter by category">
-    </label>
-    <label>
-      Content Type
-      <input type="text" name="content_type" value="{{ filters.content_type or '' }}" placeholder="content_type">
-    </label>
-    <label>
-      Keyword
-      <input type="search" name="keyword" value="{{ filters.keyword or '' }}" placeholder="Search title, summary, URL">
-    </label>
-    <label>
-      Date From
-      <input type="date" name="date_from" value="{{ filters.date_from or '' }}">
-    </label>
-    <label>
-      Date To
-      <input type="date" name="date_to" value="{{ filters.date_to or '' }}">
-    </label>
-    <label>
-      Min Score
-      <input type="number" name="min_score" value="{{ filters.min_score or '' }}" placeholder="0-10" min="0" max="10" step="0.5">
-    </label>
+    <label>Source ID <input type="text" name="source_id" value="{{ filters.source_id or '' }}" placeholder="Filter by source id"></label>
+    <label>Source Name <input type="text" name="source_name" value="{{ filters.source_name or '' }}" placeholder="Filter by source name"></label>
+    <label>Observed Source <input type="text" name="observed_source" value="{{ filters.observed_source or '' }}" placeholder="Observed source key"></label>
+    <label>Category <input type="text" name="source_category" value="{{ filters.source_category or '' }}" placeholder="Filter by category"></label>
+    <label>Content Type <input type="text" name="content_type" value="{{ filters.content_type or '' }}" placeholder="content_type"></label>
+    <label>Keyword <input type="search" name="keyword" value="{{ filters.keyword or '' }}" placeholder="Search title, summary, URL"></label>
+    <label>Date From <input type="date" name="date_from" value="{{ filters.date_from or '' }}"></label>
+    <label>Date To <input type="date" name="date_to" value="{{ filters.date_to or '' }}"></label>
+    <label>Min Score <input type="number" name="min_score" value="{{ filters.min_score or '' }}" placeholder="0-10" min="0" max="10" step="0.5"></label>
   </div>
   <input type="hidden" name="page" value="{{ filters.page or 1 }}">
   <input type="hidden" name="page_size" value="{{ filters.page_size or 50 }}">
@@ -54,12 +35,7 @@
 <table class="striped" id="items-table">
   <thead>
     <tr>
-      <th>Title</th>
-      <th>Source</th>
-      <th>Category</th>
-      <th>Published</th>
-      <th>Created</th>
-      <th>Type</th>
+      <th>Title</th><th>Source</th><th>Category</th><th>Published</th><th>Created</th><th>Type</th>
     </tr>
   </thead>
   <tbody id="items-table-body">
@@ -68,7 +44,7 @@
 </table>
 </div>
 {% set total = total_items %}{% set page = filters.page | int %}{% set page_size = filters.page_size | int %}
-{% set base_url = "/items?source_id=" + (filters.source_id or '') + "&source_name=" + (filters.source_name or '') + "&source_category=" + (filters.source_category or '') + "&content_type=" + (filters.content_type or '') + "&keyword=" + (filters.keyword or '') + "&date_from=" + (filters.date_from or '') + "&date_to=" + (filters.date_to or '') + "&min_score=" + (filters.min_score or '') %}
+{% set base_url = "/items?" + ("observed_source=" + (filters.observed_source or '') + "&") + ("source_id=" + (filters.source_id or '') + "&source_name=" + (filters.source_name or '') + "&source_category=" + (filters.source_category or '') + "&content_type=" + (filters.content_type or '') + "&keyword=" + (filters.keyword or '') + "&date_from=" + (filters.date_from or '') + "&date_to=" + (filters.date_to or '') + "&min_score=" + (filters.min_score or '')) %}
 {% set hx_target = "#items-table-body" %}
 {% include "components/pagination.html" with context %}
 {% endif %}

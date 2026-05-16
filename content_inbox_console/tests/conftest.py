@@ -233,3 +233,64 @@ def populated_client(populated_db: Path) -> TestClient:
 
     app.dependency_overrides.clear()
     app.state.settings.database_path = original_path
+
+
+@pytest.fixture
+def legacy_db(db_path: Path) -> Path:
+    """Database with inbox_items having source_name but empty rss_sources and rss_ingest_runs."""
+    conn = sqlite3.connect(str(db_path))
+
+    conn.execute(
+        "INSERT OR REPLACE INTO inbox_items(item_id, dedupe_key, title, source_name, source_category, content_type, screening_json, created_at, updated_at, last_seen_at) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'), datetime('now'))",
+        ("item_a", "dedupe_a", "Article A", "Blog A", "tech", "article", '{"value_score": 5}'),
+    )
+    conn.execute(
+        "INSERT OR REPLACE INTO inbox_items(item_id, dedupe_key, title, source_name, source_category, content_type, screening_json, created_at, updated_at, last_seen_at) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'), datetime('now'))",
+        ("item_b", "dedupe_b", "Article B", "Blog A", "tech", "article", '{"value_score": 3}'),
+    )
+    conn.execute(
+        "INSERT OR REPLACE INTO inbox_items(item_id, dedupe_key, title, source_name, source_category, content_type, screening_json, created_at, updated_at, last_seen_at) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'), datetime('now'))",
+        ("item_c", "dedupe_c", "Article C", "Blog B", "ai", "article", '{"value_score": 8}'),
+    )
+
+    conn.commit()
+    conn.close()
+    return db_path
+
+
+@pytest.fixture
+def legacy_client(legacy_db: Path, tmp_path: Path) -> TestClient:
+    """TestClient with legacy database (no rss_sources, but items have source_name)."""
+    app = create_app()
+    app.state.db_available = True
+    original_path = app.state.settings.database_path
+    app.state.settings.database_path = legacy_db
+
+    outputs_dir = tmp_path / "outputs" / "runs"
+    outputs_dir.mkdir(parents=True)
+    run_dir = outputs_dir / "rss_run_20260101_120000"
+    run_dir.mkdir()
+    (run_dir / "final_report.md").write_text("# Run Report\n\nOPML sources: 50\nFirst pass new: 200\nFirst pass dup: 50\nSuccess: 48\nFail: 2\n")
+    original_outputs = app.state.settings.outputs_path
+    app.state.settings.outputs_path = outputs_dir
+
+    def _override_get_db():
+        conn = sqlite3.connect(str(legacy_db), timeout=5)
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA query_only = 1")
+        try:
+            yield conn
+        finally:
+            conn.close()
+
+    app.dependency_overrides[get_db_connection] = _override_get_db
+
+    with TestClient(app) as client:
+        yield client
+
+    app.dependency_overrides.clear()
+    app.state.settings.database_path = original_path
+    app.state.settings.outputs_path = original_outputs

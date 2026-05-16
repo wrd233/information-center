@@ -5,10 +5,22 @@
 {% block content %}
 <h1>Sources</h1>
 
+{% if show_registered %}
+<p><small>Showing sources from the rss_sources registry.</small></p>
+{% elif show_observed %}
+<article class="warning-banner">
+  <p>No registered sources found in the rss_sources table.</p>
+  <p>Sources below are derived from inbox item metadata (observed sources).</p>
+  <p><small>To populate the registry, run the content_inbox OPML/source import flow against this same database.</small></p>
+</article>
+{% endif %}
+
+{% if show_registered or show_observed %}
+
+{% if show_registered %}
 <form id="source-filters" hx-get="/sources/rows" hx-target="#sources-table-body" hx-trigger="submit, change delay:300ms" hx-indicator="#loading-indicator">
   <div class="grid">
-    <label>
-      Status
+    <label>Status
       <select name="status">
         <option value="">All</option>
         <option value="active" {% if filters.status == 'active' %}selected{% endif %}>Active</option>
@@ -17,12 +29,8 @@
         <option value="disabled" {% if filters.status == 'disabled' %}selected{% endif %}>Disabled</option>
       </select>
     </label>
-    <label>
-      Keyword
-      <input type="search" name="keyword" value="{{ filters.keyword or '' }}" placeholder="Search name or URL">
-    </label>
-    <label>
-      Sort By
+    <label>Keyword <input type="search" name="keyword" value="{{ filters.keyword or '' }}" placeholder="Search name or URL"></label>
+    <label>Sort By
       <select name="sort_by">
         <option value="source_name" {% if filters.sort_by == 'source_name' %}selected{% endif %}>Name</option>
         <option value="last_fetch_at" {% if filters.sort_by == 'last_fetch_at' %}selected{% endif %}>Last Fetch</option>
@@ -34,33 +42,54 @@
   <input type="hidden" name="page_size" value="{{ filters.page_size or 50 }}">
 </form>
 <span id="loading-indicator" class="htmx-indicator">Loading...</span>
+{% endif %}
 
-{% if not sources %}
-{% include "components/empty_state.html" with context %}
-{% set message = "No sources found." %}
-{% set hint = "Import sources via the content_inbox API or CLI." %}
-{% else %}
 <div class="table-container">
 <table class="striped" id="sources-table">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Status</th>
-      <th>Priority</th>
-      <th>Last Fetch</th>
-      <th>Failures</th>
-      <th>Last Error</th>
+      <th>{% if show_observed %}Observed Source{% else %}Name{% endif %}</th>
+      {% if show_registered %}<th>Status</th>{% endif %}
+      {% if show_registered %}<th>Priority</th>{% endif %}
+      <th>Items</th>
+      <th>Latest Item</th>
+      {% if show_registered %}<th>Failures</th>{% endif %}
+      {% if show_registered %}<th>Last Error</th>{% endif %}
     </tr>
   </thead>
   <tbody id="sources-table-body">
-    {% include "sources/_rows.html" %}
+    {% if show_registered %}
+      {% include "sources/_rows.html" %}
+    {% elif show_observed %}
+      {% for src in observed_sources %}
+      <tr>
+        <td>
+          <a href="/sources/{{ src.observed_source_key }}">
+            {{ src.source_name | truncate(40) if src.source_name else src.observed_source_key | truncate(40) }}
+          </a>
+          {% if src.example_title %}<br><small>{{ src.example_title | truncate(60) }}</small>{% endif %}
+        </td>
+        <td>{{ src.item_count }}</td>
+        <td><small>{{ src.latest_item_at or '-' }}</small></td>
+      </tr>
+      {% endfor %}
+    {% endif %}
   </tbody>
 </table>
 </div>
+
+{% if show_registered %}
 {% set total = total_sources %}{% set page = filters.page | int %}{% set page_size = filters.page_size | int %}
 {% set base_url = "/sources?status=" + (filters.status or '') + "&keyword=" + (filters.keyword or '') + "&sort_by=" + (filters.sort_by or '') %}
 {% set hx_target = "#sources-table-body" %}
 {% include "components/pagination.html" with context %}
+{% endif %}
+
+{% else %}
+<article class="empty-state">
+  <p>No registered or observed sources found.</p>
+  <small>This database contains no rss_sources rows and no source metadata in inbox_items. Check whether CONTENT_INBOX_CONSOLE_DB points to the intended SQLite database.</small>
+</article>
 {% endif %}
 
 {% endblock %}

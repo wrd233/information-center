@@ -1580,3 +1580,7 @@ INFO:     127.0.0.1:64732 - "GET /api/inbox?limit=100&from=2026-05-16T08%3A29%3A
 INFO:     127.0.0.1:64746 - "GET /api/rss/sources?limit=1000&offset=0 HTTP/1.1" 422 Unprocessable Entity
 INFO:     127.0.0.1:64747 - "GET /api/rss/runs?limit=20&offset=0 HTTP/1.1" 200 OK
 INFO:     127.0.0.1:65386 - "GET /api/inbox?limit=5&offset=0&from=2026-05-15T16%3A00%3A00%2B00%3A00&to=2026-05-16T15%3A59%3A59.999999%2B00%3A00&view=all HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [27086]

@@ -453,6 +453,10 @@ class ConsoleRepository:
         rows = conn.execute(sql, [limit]).fetchall()
         return [dict(r) for r in rows]
 
+    def count_observed_sources(self, conn: sqlite3.Connection) -> int:
+        from app.repositories.observed_sources import count_observed_sources as _cos
+        return _cos(conn)
+
 
 def _score_meets(screening_raw: Optional[str], min_score: float) -> bool:
     screening = _safe_json(screening_raw, {})

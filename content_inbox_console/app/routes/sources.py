@@ -8,6 +8,7 @@ from typing import Optional
 from app.dependencies import get_db_connection, get_settings
 from app.config import Settings
 from app.repository import ConsoleRepository
+from app.repositories.observed_sources import list_observed_sources, list_observed_source_items
 
 router = APIRouter()
 
@@ -38,17 +39,34 @@ def list_sources(
     if not db_available:
         return templates.TemplateResponse("sources/list.html", {
             "request": request, "db_available": False, "db_path": str(settings.database_path),
-            "active_page": "sources", "sources": [], "total_sources": 0, "filters": filters,
+            "active_page": "sources", "sources": [], "total_sources": 0,
+            "observed_sources": [], "total_observed": 0,
+            "show_registered": False, "show_observed": False, "filters": filters,
         })
 
-    sources, total = repo.list_sources(
+    registered, reg_total = repo.list_sources(
         conn, status=status, keyword=keyword, sort_by=sort_by,
         limit=filters["page_size"], offset=(filters["page"] - 1) * filters["page_size"],
     )
 
+    show_observed = False
+    observed: list[dict] = []
+    obs_total = 0
+    if reg_total == 0:
+        show_observed = True
+        observed, obs_total = list_observed_sources(
+            conn, keyword=keyword,
+            limit=filters["page_size"], offset=(filters["page"] - 1) * filters["page_size"],
+        )
+
     return templates.TemplateResponse("sources/list.html", {
         "request": request, "db_available": True, "db_path": str(settings.database_path),
-        "active_page": "sources", "sources": sources, "total_sources": total, "filters": filters,
+        "active_page": "sources",
+        "sources": registered, "total_sources": reg_total,
+        "observed_sources": observed, "total_observed": obs_total,
+        "show_registered": reg_total > 0,
+        "show_observed": show_observed,
+        "filters": filters,
     })
 
 
@@ -103,6 +121,25 @@ def source_detail(
 
     src = repo.get_source(conn, source_id)
     if not src:
+        # Check if it's an observed source key
+        obs_sources, obs_total = list_observed_sources(conn, keyword=None)
+        observed_match = None
+        for obs in obs_sources:
+            if obs.get("observed_source_key") == source_id or obs.get("source_name") == source_id:
+                observed_match = obs
+                break
+
+        if observed_match:
+            obs_items, obs_item_total = list_observed_source_items(conn, observed_match["observed_source_key"], limit=50)
+            return templates.TemplateResponse("sources/detail.html", {
+                "request": request, "db_available": True, "db_path": str(settings.database_path),
+                "active_page": "sources",
+                "src": observed_match,
+                "is_observed": True,
+                "recent_items": obs_items,
+                "status": "observed",
+            })
+
         return templates.TemplateResponse("sources/detail.html", {
             "request": request, "db_available": True, "db_path": str(settings.database_path),
             "active_page": "sources", "src": None, "not_found": True, "source_id": source_id,
@@ -113,5 +150,6 @@ def source_detail(
     return templates.TemplateResponse("sources/detail.html", {
         "request": request, "db_available": True, "db_path": str(settings.database_path),
         "active_page": "sources", "src": src, "recent_items": recent_items,
+        "is_observed": False,
         "status": src.get("status", ""),
     })

@@ -1,9 +1,52 @@
 {% extends "base.html" %}
 {% set active_page = "sources" %}
-{% block title %}{{ src.source_name }} - Inbox Console{% endblock %}
+{% block title %}{% if is_observed %}{{ src.source_name | truncate(40) }}{% else %}{{ src.source_name }}{% endif %} - Inbox Console{% endblock %}
 
 {% block content %}
 <p><a href="/sources">&larr; Back to Sources</a></p>
+
+{% if is_observed %}
+<h1>{{ src.source_name or src.observed_source_key }}</h1>
+<article class="warning-banner">
+  <p><strong>Observed Source</strong> — derived from inbox item metadata, not from the rss_sources registry.</p>
+  <p>This source key (<code>{{ src.observed_source_key }}</code>) was inferred from the <code>source_name</code> field in inbox items.</p>
+</article>
+
+<h2>Derived Info</h2>
+<table class="striped">
+  <tbody>
+    <tr><th>Observed Key</th><td><code>{{ src.observed_source_key }}</code></td></tr>
+    {% if src.source_id %}<tr><th>Source ID</th><td><code>{{ src.source_id }}</code></td></tr>{% endif %}
+    <tr><th>Source Name</th><td>{{ src.source_name or '-' }}</td></tr>
+    {% if src.feed_url %}<tr><th>Feed URL</th><td><small>{{ src.feed_url }}</small></td></tr>{% endif %}
+    <tr><th>Item Count</th><td>{{ src.item_count }}</td></tr>
+    <tr><th>First Item</th><td>{{ src.first_item_at or '-' }}</td></tr>
+    <tr><th>Latest Item</th><td>{{ src.latest_item_at or '-' }}</td></tr>
+    {% if src.latest_published_at %}<tr><th>Latest Published</th><td>{{ src.latest_published_at }}</td></tr>{% endif %}
+    {% if src.example_title %}<tr><th>Example Title</th><td>{{ src.example_title }}</td></tr>{% endif %}
+  </tbody>
+</table>
+
+{% if recent_items %}
+<h2>Recent Items ({{ recent_items | length }})</h2>
+<table class="striped">
+  <thead>
+    <tr><th>Title</th><th>Published</th><th>Created</th></tr>
+  </thead>
+  <tbody>
+    {% for item in recent_items %}
+    <tr>
+      <td><a href="/items/{{ item.item_id }}">{{ item.title | truncate(80) }}</a></td>
+      <td><small>{{ item.published_at or '-' }}</small></td>
+      <td><small>{{ item.created_at or '-' }}</small></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<p><a href="/items?observed_source={{ src.observed_source_key }}">View all items with this source key &rarr;</a></p>
+{% endif %}
+
+{% else %}
 
 <h1>{{ src.source_name }}</h1>
 {% include "components/status_badge.html" %}
@@ -27,11 +70,7 @@
 
 {% if src.tags_json %}
 <h2>Tags</h2>
-<div>
-  {% for tag in src.tags_json %}
-  <mark>{{ tag }}</mark>
-  {% endfor %}
-</div>
+<div>{% for tag in src.tags_json %}<mark>{{ tag }}</mark>{% endfor %}</div>
 {% endif %}
 
 {% if src.notes %}
@@ -45,11 +84,8 @@
     <tr><th>Last Fetch</th><td>{{ src.last_fetch_at or src.last_ingest_at or '-' }}</td></tr>
     <tr><th>Last Success</th><td>{{ src.last_success_at or '-' }}</td></tr>
     <tr><th>Last Failure</th><td>{{ src.last_failure_at or '-' }}</td></tr>
-    <tr><th>Last Error Code</th><td>{{ src.last_error_code or '-' }}</td></tr>
-    <tr><th>Last Error Message</th><td><small>{{ src.last_error_message or '-' }}</small></td></tr>
+    <tr><th>Last Error</th><td><small>{{ src.last_error_message or src.last_error_code or '-' }}</small></td></tr>
     <tr><th>Failure Count</th><td>{{ src.failure_count or src.consecutive_failure_count or src.consecutive_failures or 0 }}</td></tr>
-    <tr><th>Retryable</th><td>{{ src.last_error_retryable if src.last_error_retryable is not none else '-' }}</td></tr>
-    <tr><th>Last Duration</th><td>{% if src.last_duration_ms %}{{ (src.last_duration_ms / 1000) | round(1) }}s{% else %}-{% endif %}</td></tr>
   </tbody>
 </table>
 
@@ -59,19 +95,8 @@
     <tr><th>Last New Items</th><td>{{ src.last_new_items_count or src.last_new_items or 0 }}</td></tr>
     <tr><th>Last Duplicates</th><td>{{ src.last_duplicate_items_count or src.last_duplicate_items or 0 }}</td></tr>
     <tr><th>Last Processed</th><td>{{ src.last_processed_items_count or src.last_processed_items or 0 }}</td></tr>
-    <tr><th>Feed Items Seen</th><td>{{ src.last_feed_items_seen or 0 }}</td></tr>
   </tbody>
 </table>
-
-{% if src.last_incremental_decision %}
-<h2>Incremental Info</h2>
-<table class="striped">
-  <tbody>
-    <tr><th>Decision</th><td>{{ src.last_incremental_decision }}</td></tr>
-    <tr><th>Anchor Found</th><td>{{ 'Yes' if src.last_anchor_found else 'No' }}</td></tr>
-  </tbody>
-</table>
-{% endif %}
 
 {% if recent_items %}
 <h2>Recent Items ({{ recent_items | length }})</h2>
@@ -95,9 +120,8 @@
 <h2>Actions</h2>
 <div class="grid">
   <button disabled title="Not implemented yet">Fetch Now</button>
-  <button disabled title="Not implemented yet">
-    {% if src.status == 'active' %}Pause Source{% else %}Resume Source{% endif %}
-  </button>
+  <button disabled title="Not implemented yet">{% if src.status == 'active' %}Pause Source{% else %}Resume Source{% endif %}</button>
 </div>
 
+{% endif %}
 {% endblock %}

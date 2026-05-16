@@ -21,6 +21,14 @@ from app.rss_errors import classify_exception, error_payload, error_response, re
 from app.rss_ingest import ingest_registered_source, source_status_summary
 from app.rss_runner import analyze_one_rss_source
 from app.screener import audit_screen_content, configure_llm_dump, reconfigure_llm_semaphore, reconfigure_screening_mode
+from app.semantic.cards import generate_item_cards
+from app.semantic.clusters import list_clusters as semantic_list_clusters
+from app.semantic.clusters import process_item_clusters, show_cluster as semantic_show_cluster
+from app.semantic.db import get_current_item_card, list_llm_logs
+from app.semantic.relations import process_item_relations
+from app.semantic.review import decide_review, list_reviews
+from app.semantic.source_profiles import get_profile as semantic_get_source_profile
+from app.semantic.source_profiles import recompute_source_profiles
 from app.source_backfill import backfill_items
 from app.storage import InboxStore
 
@@ -441,6 +449,106 @@ def get_inbox(
             "items": items,
         }
     )
+
+
+@app.get("/api/semantic/items/{item_id}")
+def get_item_semantic_detail(
+    item_id: str, inbox_store: Annotated[InboxStore, Depends(get_store)] = store
+) -> JSONResponse:
+    with inbox_store.connect() as conn:
+        item = conn.execute("SELECT item_id, title, semantic_status, primary_cluster_id FROM inbox_items WHERE item_id = ?", (item_id,)).fetchone()
+        relations = conn.execute("SELECT * FROM item_relations WHERE item_a_id = ? OR item_b_id = ? ORDER BY created_at DESC", (item_id, item_id)).fetchall()
+        cluster_items = conn.execute("SELECT * FROM cluster_items WHERE item_id = ? ORDER BY created_at DESC", (item_id,)).fetchall()
+    if not item:
+        return error_response("source_not_found", "Item not found", status_code=404)
+    return JSONResponse(
+        {
+            "ok": True,
+            "item": dict(item),
+            "item_card": get_current_item_card(inbox_store, item_id),
+            "item_relations": [dict(row) for row in relations],
+            "cluster_items": [dict(row) for row in cluster_items],
+        }
+    )
+
+
+@app.post("/api/semantic/process/cards")
+def run_semantic_cards(limit: int = 100, live: bool = False, inbox_store: Annotated[InboxStore, Depends(get_store)] = store) -> dict[str, Any]:
+    return generate_item_cards(inbox_store, limit=limit, live=live)
+
+
+@app.post("/api/semantic/process/dedupe")
+def run_semantic_dedupe(limit: int = 100, live: bool = False, inbox_store: Annotated[InboxStore, Depends(get_store)] = store) -> dict[str, Any]:
+    return process_item_relations(inbox_store, limit=limit, live=live)
+
+
+@app.post("/api/semantic/process/cluster")
+def run_semantic_cluster(limit: int = 100, live: bool = False, inbox_store: Annotated[InboxStore, Depends(get_store)] = store) -> dict[str, Any]:
+    return process_item_clusters(inbox_store, limit=limit, live=live)
+
+
+@app.get("/api/semantic/clusters")
+def list_semantic_clusters(
+    status: str | None = None,
+    limit: int = Query(default=50, ge=1, le=200),
+    inbox_store: Annotated[InboxStore, Depends(get_store)] = store,
+) -> dict[str, Any]:
+    return {"ok": True, "clusters": semantic_list_clusters(inbox_store, status=status, limit=limit)}
+
+
+@app.get("/api/semantic/clusters/{cluster_id}")
+def get_semantic_cluster(
+    cluster_id: str, inbox_store: Annotated[InboxStore, Depends(get_store)] = store
+) -> JSONResponse:
+    cluster = semantic_show_cluster(inbox_store, cluster_id)
+    if not cluster:
+        return error_response("source_not_found", "Cluster not found", status_code=404)
+    return JSONResponse({"ok": True, "cluster": cluster})
+
+
+@app.get("/api/semantic/sources/{source_id}/profile")
+def get_semantic_source_profile(
+    source_id: str, inbox_store: Annotated[InboxStore, Depends(get_store)] = store
+) -> dict[str, Any]:
+    return {"ok": True, "profile": semantic_get_source_profile(inbox_store, source_id)}
+
+
+@app.post("/api/semantic/source-profiles/recompute")
+def run_semantic_source_profile_recompute(
+    inbox_store: Annotated[InboxStore, Depends(get_store)] = store
+) -> dict[str, Any]:
+    return recompute_source_profiles(inbox_store)
+
+
+@app.get("/api/semantic/review")
+def list_semantic_reviews(
+    status: str = "pending",
+    limit: int = Query(default=50, ge=1, le=200),
+    inbox_store: Annotated[InboxStore, Depends(get_store)] = store,
+) -> dict[str, Any]:
+    return {"ok": True, "reviews": list_reviews(inbox_store, status=status, limit=limit)}
+
+
+@app.post("/api/semantic/review/{review_id}/approve")
+def approve_semantic_review(
+    review_id: int, inbox_store: Annotated[InboxStore, Depends(get_store)] = store
+) -> dict[str, Any]:
+    return decide_review(inbox_store, review_id, "approved", reviewer="api")
+
+
+@app.post("/api/semantic/review/{review_id}/reject")
+def reject_semantic_review(
+    review_id: int, inbox_store: Annotated[InboxStore, Depends(get_store)] = store
+) -> dict[str, Any]:
+    return decide_review(inbox_store, review_id, "rejected", reviewer="api")
+
+
+@app.get("/api/semantic/llm-call-logs")
+def list_semantic_llm_logs(
+    limit: int = Query(default=20, ge=1, le=200),
+    inbox_store: Annotated[InboxStore, Depends(get_store)] = store,
+) -> dict[str, Any]:
+    return {"ok": True, "logs": list_llm_logs(inbox_store, limit=limit)}
 
 
 def resolve_date_filters(
