@@ -1,0 +1,32 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260504_004404
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 482
+[INFO] Selected sources: 3
+[INFO] Pending sources this invocation: 3
+[INFO] URL mode: docker-host
+[INFO] Screen enabled: True
+[INFO] Concurrency: 1
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": false, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1"}, "_status": 200}
+[SUBMIT] 001/003 Hi, DIYgod
+         category=Articles feed_url=https://diygod.cc/feed
+[DONE] 001/003 Hi, DIYgod status=success total_items=2 new_items=2 duplicate_items=0
+[SUBMIT] 002/003 图书推荐 – 书伴
+         category=SocialMedia feed_url=http://host.docker.internal:1200/bookfere/books
+[DONE] 002/003 图书推荐 – 书伴 status=failed error_type=network_error error_message={"detail": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"}
+[SUBMIT] 003/003 AI Foundations
+         category=Videos feed_url=https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g
+[DONE] 003/003 AI Foundations status=success total_items=2 new_items=2 duplicate_items=0
+
+[SUMMARY]
+Processed sources: 3
+Successful sources: 2
+Failed sources: 1
+Skipped known failed sources: 0
+New items: 4
+Recommended items from API responses: 4
+Final inbox items from this run: 0
+Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260504_004404/report.md
+Run state path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260504_004404/run_state.json
+
+[FAILED SOURCES]
+- 图书推荐 – 书伴 | http://host.docker.internal:1200/bookfere/books | network_error | {"detail": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"}

@@ -35,6 +35,7 @@ class RSSBatchRunner:
         source = payload.sources[index]
         source_payload = RSSAnalyzeRequest(
             feed_url=source.feed_url,
+            source_id=source.source_id,
             source_name=source.source_name,
             source_category=source.source_category,
             limit=source.limit if source.limit is not None else payload.limit_per_source,

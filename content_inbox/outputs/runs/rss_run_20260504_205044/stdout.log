@@ -1,0 +1,50 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260504_205044
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 482
+[INFO] Selected sources: 10
+[INFO] Pending sources this invocation: 10
+[INFO] URL mode: docker-host
+[INFO] Screen enabled: True
+[INFO] Concurrency: 2
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": true, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1"}, "_status": 200}
+[SUBMIT] 001/010 Hi, DIYgod
+         category=Articles feed_url=https://diygod.cc/feed
+[SUBMIT] 002/010 图书推荐 – 书伴
+         category=SocialMedia feed_url=http://host.docker.internal:1200/bookfere/books
+[DONE] 002/010 图书推荐 – 书伴 status=success total_items=2 new_items=0 duplicate_items=2
+[SUBMIT] 003/010 AI Foundations
+         category=Videos feed_url=https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g
+[DONE] 001/010 Hi, DIYgod status=success total_items=2 new_items=0 duplicate_items=2
+[SUBMIT] 004/010 Rolen's Blog
+         category=个人博客-人生 feed_url=https://rolen.wiki/feed/
+[DONE] 003/010 AI Foundations status=success total_items=2 new_items=0 duplicate_items=2
+[SUBMIT] 005/010 最新发布_共产党员网
+         category=党政信息 feed_url=http://host.docker.internal:1200/12371/zxfb
+[DONE] 004/010 Rolen's Blog status=success total_items=2 new_items=0 duplicate_items=2
+[SUBMIT] 006/010 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台
+         category=其他 feed_url=https://51cg1.com/feed/
+[DONE] 006/010 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台 status=success total_items=2 new_items=0 duplicate_items=2
+[SUBMIT] 007/010 一觉醒来发生了什么 - 即刻圈子
+         category=国内外资讯 feed_url=http://host.docker.internal:1200/jike/topic/553870e8e4b0cafb0a1bef68
+[DONE] 005/010 最新发布_共产党员网 status=success total_items=2 new_items=0 duplicate_items=2
+[SUBMIT] 008/010 - 政府文件库
+         category=国内政策 feed_url=http://host.docker.internal:1200/gov/zhengce/zhengceku/bmwj
+[DONE] 007/010 一觉醒来发生了什么 - 即刻圈子 status=success total_items=2 new_items=0 duplicate_items=2
+[SUBMIT] 009/010 猴猴说话
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3279284299.atom
+[DONE] 008/010 - 政府文件库 status=success total_items=2 new_items=0 duplicate_items=2
+[SUBMIT] 010/010 小宇宙 Podcast 643928f99361a4e7c38a9555
+         category=播客 feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/643928f99361a4e7c38a9555
+[DONE] 009/010 猴猴说话 status=success total_items=2 new_items=0 duplicate_items=2
+[DONE] 010/010 小宇宙 Podcast 643928f99361a4e7c38a9555 status=success total_items=2 new_items=0 duplicate_items=2
+
+[SUMMARY]
+Processed sources: 10
+Successful sources: 10
+Failed sources: 0
+Skipped known failed sources: 0
+New items: 0
+Recommended items from API responses: 6
+Final inbox items from this run: 0
+Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260504_205044/report.md
+Run state path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260504_205044/run_state.json

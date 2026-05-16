@@ -1,0 +1,94 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260504_143527
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 482
+[INFO] Selected sources: 100
+[INFO] Pending sources this invocation: 100
+[INFO] URL mode: docker-host
+[INFO] Screen enabled: True
+[INFO] Concurrency: 5
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": true, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1"}, "_status": 200}
+[SUBMIT] 001/100 Hi, DIYgod
+         category=Articles feed_url=https://diygod.cc/feed
+[SUBMIT] 002/100 图书推荐 – 书伴
+         category=SocialMedia feed_url=http://host.docker.internal:1200/bookfere/books
+[SUBMIT] 003/100 AI Foundations
+         category=Videos feed_url=https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g
+[SUBMIT] 004/100 Rolen's Blog
+         category=个人博客-人生 feed_url=https://rolen.wiki/feed/
+[SUBMIT] 005/100 最新发布_共产党员网
+         category=党政信息 feed_url=http://host.docker.internal:1200/12371/zxfb
+[DONE] 003/100 AI Foundations status=failed error_type=unknown error_message={"detail": "HTTP Error 404: Not Found"}
+[DONE] 001/100 Hi, DIYgod status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 006/100 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台
+         category=其他 feed_url=https://51cg1.com/feed/
+[SUBMIT] 007/100 一觉醒来发生了什么 - 即刻圈子
+         category=国内外资讯 feed_url=http://host.docker.internal:1200/jike/topic/553870e8e4b0cafb0a1bef68
+[DONE] 002/100 图书推荐 – 书伴 status=success total_items=4 new_items=4 duplicate_items=0
+[SUBMIT] 008/100 - 政府文件库
+         category=国内政策 feed_url=http://host.docker.internal:1200/gov/zhengce/zhengceku/bmwj
+[DONE] 004/100 Rolen's Blog status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 009/100 猴猴说话
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3279284299.atom
+[DONE] 006/100 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台 status=success total_items=4 new_items=4 duplicate_items=0
+[SUBMIT] 010/100 小宇宙 Podcast 643928f99361a4e7c38a9555
+         category=播客 feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/643928f99361a4e7c38a9555
+[DONE] 005/100 最新发布_共产党员网 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 011/100 波士顿圆脸
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/346563107
+[DONE] 007/100 一觉醒来发生了什么 - 即刻圈子 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 012/100 飞鸟手札
+         category=短知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/1366786686
+[DONE] 008/100 - 政府文件库 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 013/100 Vista看天下
+         category=社评 feed_url=https://plink.anyfeeder.com/weixin/vistaweek
+[DONE] 009/100 猴猴说话 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 014/100 小众软件
+         category=科技与编程 feed_url=https://www.appinn.com/feed/
+[DONE] 010/100 小宇宙 Podcast 643928f99361a4e7c38a9555 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 015/100 猫眼看足球
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/456249922
+[DONE] 011/100 波士顿圆脸 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 016/100 simonwillison.net
+         category=英文博客 feed_url=https://simonwillison.net/atom/everything/
+[DONE] 012/100 飞鸟手札 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 017/100 你不知道的行业内幕 - 即刻圈子
+         category=资讯 feed_url=http://host.docker.internal:1200/jike/topic/5699f451d3e8351200bffdc8
+[DONE] 013/100 Vista看天下 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 018/100 AliAbdaal
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/3546581580122806
+[DONE] 014/100 小众软件 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 019/100 tanscp
+         category=Articles feed_url=https://tanscp.com/feed/
+[DONE] 015/100 猫眼看足球 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 020/100 每周一书 – 书伴
+         category=SocialMedia feed_url=http://host.docker.internal:1200/bookfere/weekly
+[DONE] 016/100 simonwillison.net status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 021/100 Ben's Love
+         category=个人博客-人生 feed_url=https://bens.love/feed
+[DONE] 017/100 你不知道的行业内幕 - 即刻圈子 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 022/100 新华社新闻_新华网
+         category=党政信息 feed_url=https://plink.anyfeeder.com/newscn/whxw
+[DONE] 018/100 AliAbdaal status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 023/100 潦草学者
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3239649460.atom
+[DONE] 019/100 tanscp status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 024/100 小宇宙 Podcast 61cbaac48bb4cd867fcabe22
+         category=播客 feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/61cbaac48bb4cd867fcabe22
+[DONE] 020/100 每周一书 – 书伴 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 025/100 瓶子君152
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/730732
+[DONE] 021/100 Ben's Love status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 026/100 英语播客党
+         category=短知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/3537109151386355
+[DONE] 022/100 新华社新闻_新华网 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 027/100 Tinyfool的个人网站
+         category=社评 feed_url=https://codechina.org/feed/
+[DONE] 023/100 潦草学者 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 028/100 HelloGithub - 月刊
+         category=科技与编程 feed_url=http://host.docker.internal:1200/hellogithub/volume
+[DONE] 024/100 小宇宙 Podcast 61cbaac48bb4cd867fcabe22 status=failed error_type=timeout error_message="timed out"
+[SUBMIT] 029/100 陈大东瓜
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/269288799
+[DONE] 025/100 瓶子君152 status=failed error_type=timeout error_message="timed out"
+[DONE] 026/100 英语播客党 status=failed error_type=timeout error_message="timed out"
+[DONE] 027/100 Tinyfool的个人网站 status=failed error_type=timeout error_message="timed out"

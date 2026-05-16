@@ -1,0 +1,66 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260505_101904
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 482
+[INFO] Selected sources: 10
+[INFO] Pending sources this invocation: 10
+[INFO] URL mode: docker-host
+[INFO] Screen enabled: True
+[INFO] Concurrency: 1
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": true, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1", "llm_max_concurrency": 2, "screening_mode": "merged"}, "_status": 200}
+[INFO] Setting service LLM max concurrency to 2 ...
+[INFO] Service LLM max concurrency set to 2
+[INFO] Setting service screening mode to merged ...
+[INFO] Service screening mode set to merged
+[SUBMIT] 001/010 Hi, DIYgod
+         category=Articles feed_url=https://diygod.cc/feed
+[DONE] 001/010 Hi, DIYgod status=success total_items=5 new_items=1 duplicate_items=4
+[SUBMIT] 002/010 图书推荐 – 书伴
+         category=SocialMedia feed_url=http://host.docker.internal:1200/bookfere/books
+[DONE] 002/010 图书推荐 – 书伴 status=success total_items=15 new_items=7 duplicate_items=8
+[SUBMIT] 003/010 AI Foundations
+         category=Videos feed_url=https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g
+[DONE] 003/010 AI Foundations status=success total_items=15 new_items=11 duplicate_items=4
+[SUBMIT] 004/010 Rolen's Blog
+         category=个人博客-人生 feed_url=https://rolen.wiki/feed/
+[DONE] 004/010 Rolen's Blog status=success total_items=10 new_items=6 duplicate_items=4
+[SUBMIT] 005/010 最新发布_共产党员网
+         category=党政信息 feed_url=http://host.docker.internal:1200/12371/zxfb
+[DONE] 005/010 最新发布_共产党员网 status=success total_items=15 new_items=11 duplicate_items=4
+[SUBMIT] 006/010 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台
+         category=其他 feed_url=https://51cg1.com/feed/
+[DONE] 006/010 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台 status=success total_items=10 new_items=10 duplicate_items=0
+[SUBMIT] 007/010 一觉醒来发生了什么 - 即刻圈子
+         category=国内外资讯 feed_url=http://host.docker.internal:1200/jike/topic/553870e8e4b0cafb0a1bef68
+[DONE] 007/010 一觉醒来发生了什么 - 即刻圈子 status=success total_items=10 new_items=6 duplicate_items=4
+[SUBMIT] 008/010 - 政府文件库
+         category=国内政策 feed_url=http://host.docker.internal:1200/gov/zhengce/zhengceku/bmwj
+[DONE] 008/010 - 政府文件库 status=success total_items=20 new_items=16 duplicate_items=4
+[SUBMIT] 009/010 猴猴说话
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3279284299.atom
+[DONE] 009/010 猴猴说话 status=success total_items=20 new_items=16 duplicate_items=4
+[SUBMIT] 010/010 小宇宙 Podcast 643928f99361a4e7c38a9555
+         category=播客 feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/643928f99361a4e7c38a9555
+[DONE] 010/010 小宇宙 Podcast 643928f99361a4e7c38a9555 status=success total_items=15 new_items=11 duplicate_items=4
+
+[SUMMARY]
+Processed sources: 10
+Successful sources: 10
+Failed sources: 0
+Skipped known failed sources: 0
+New items: 95
+Recommended items from API responses: 46
+Final inbox items from this run: 22
+Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260505_101904/report.md
+Run state path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260505_101904/run_state.json
+
+[TOP INBOX ITEMS]
+- [5] [full_push] Vol.24 张鹏对谈李开复：AI创业进入洗牌阶段了吗？ — 小宇宙 Podcast 643928f99361a4e7c38a9555
+- [4] [full_push] AGI 2024特辑06 | 对话杨植麟：聚焦 Kimi 一个产品，聚焦生产力场景 — 小宇宙 Podcast 643928f99361a4e7c38a9555
+- [4] [full_push] AGI 2024特辑05 | 创新工场汪华：别焦虑，AI创业刚刚起步 — 小宇宙 Podcast 643928f99361a4e7c38a9555
+- [4] [full_push] AGI 2024特辑04 | 阳萌对谈杨健勃：AI 硬件领域会出现第二个「手机」吗？ — 小宇宙 Podcast 643928f99361a4e7c38a9555
+- [4] [full_push] AGI 2024特辑03 |对话面壁智能李大海：AGI是千里江山图，咱刚打开一条缝 — 小宇宙 Podcast 643928f99361a4e7c38a9555
+- [5] [full_push] AGI 2024特辑02｜对话王小川：除了杀时间、省时间，「加时间」才是 AI 应用的好赛道 — 小宇宙 Podcast 643928f99361a4e7c38a9555
+- [4] [full_push] AGI 2024特辑01 | 对话爱诗科技王长虎：AI创业不做平台，是因为不想吗？ — 小宇宙 Podcast 643928f99361a4e7c38a9555
+- [5] [full_push] Vol.23 对谈蜂巢科技夏勇峰：佩戴超过10小时的智能眼镜，才是最好的AI硬件 — 小宇宙 Podcast 643928f99361a4e7c38a9555
+- [5] [full_push] Vol.22 对话汪华、袁进辉：C.AI并购事件对中国AI创业者意味着什么？ — 小宇宙 Podcast 643928f99361a4e7c38a9555
+- [4] [full_push] Vol.21 对话无限光年漆远：AGI 的标准是打造「AI 的爱因斯坦」，Scaling Law 不通往 AGI — 小宇宙 Podcast 643928f99361a4e7c38a9555

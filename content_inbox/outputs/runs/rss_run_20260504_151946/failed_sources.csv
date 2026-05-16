@@ -1,0 +1,4 @@
+source_name,source_category,local_xml_url,xml_url,feed_url,error_message,error_type
+刘夙的科技世界,社评,,https://wewe-rss.jerrylf.uk/feeds/MP_WXS_3002603832.json,https://wewe-rss.jerrylf.uk/feeds/MP_WXS_3002603832.json,"{""detail"": ""failed to parse feed: <unknown>:2:0: not well-formed (invalid token)""}",feed_parse_error
+StarYuhen,Articles,,https://www.yuhenm.top/feed/,https://www.yuhenm.top/feed/,"{""detail"": ""HTTP Error 403: Forbidden""}",unknown
+今日热榜,Articles,,https://web2rss.cc/feed/rebang.today?preview=true,https://web2rss.cc/feed/rebang.today?preview=true,"{""detail"": ""<urlopen error [Errno -2] Name or service not known>""}",network_error

@@ -1,0 +1,83 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260504_004344
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 482
+[INFO] Selected sources: 482
+[INFO] Pending sources this invocation: 482
+[INFO] URL mode: docker-host
+[INFO] Screen enabled: True
+[INFO] Concurrency: 1
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": false, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1"}, "_status": 200}
+[INFO] Selected source preview:
+  001. [Articles] Hi, DIYgod (xml_url) -> https://diygod.cc/feed
+  002. [Articles] tanscp (xml_url) -> https://tanscp.com/feed/
+  003. [Articles] Airing 的博客 (xml_url) -> https://ursb.me/blog/feed.xml
+  004. [个人博客-人生] Rolen's Blog (xml_url) -> https://rolen.wiki/feed/
+  005. [个人博客-人生] Ben's Love (xml_url) -> https://bens.love/feed
+  006. [个人博客-人生] 莫比乌斯 (xml_url) -> https://mobius.blog/feed/
+  007. [个人博客-人生] 白熊阿丸的小屋 (xml_url) -> https://blog.bxaw.name/feed/
+  008. [个人博客-人生] 草稿拾遗 (xml_url) -> https://kill-the-newsletter.com/feeds/t87xbbj6p4iwfhsi.xml
+  009. [Articles] Paradise Lost (xml_url) -> https://2890.ltd/feed/
+  010. [Articles] 笨方法学写作 (xml_url) -> https://www.cnfeat.com/feed.xml
+  011. [Articles] StarYuhen (xml_url) -> https://www.yuhenm.top/feed/
+  012. [Articles] Experimental History (xml_url) -> https://www.experimental-history.com/feed
+  013. [Articles] Blog - Remote Work Prep (xml_url) -> https://www.remoteworkprep.com/blog?format=rss
+  014. [Articles] EVANGELION:ALL (xml_url) -> https://www.eva-all.com/news/feed/
+  015. [其他] 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台 (xml_url) -> https://51cg1.com/feed/
+  016. [Articles] 今日热榜 (xml_url) -> https://web2rss.cc/feed/rebang.today?preview=true
+  017. [Articles] 安全代码 (xml_url) -> https://www.usmacd.com/atom.xml
+  018. [Articles] 老T博客 (xml_url) -> https://lawtee.com/index.xml
+  019. [科技与编程] 小众软件 (xml_url) -> https://www.appinn.com/feed/
+  020. [科技与编程] HelloGithub - 月刊 (local_xml_url) -> http://host.docker.internal:1200/hellogithub/volume
+  021. [科技与编程] 宝玉的分享 (xml_url) -> https://s.baoyu.io/feed.xml
+  022. [科技与编程] 阮一峰的网络日志 (xml_url) -> https://feeds.feedburner.com/ruanyifeng
+  023. [科技与编程] 龙爪槐守望者 (xml_url) -> https://www.ftium4.com/rss.xml
+  024. [科技与编程] 十年之约聚合订阅 (xml_url) -> https://tool.bcrjl.com/snzy-rss/
+  025. [科技与编程] #UNTAG (xml_url) -> https://rss.utgd.net/feed/
+  026. [科技与编程] 混沌周刊 (xml_url) -> https://weekly.love/feed/atom
+  027. [科技与编程] 🔔科技频道[奇诺分享-ccino.org]⚡️ (xml_url) -> https://channel.ccino.org/rss.xml
+  028. [微信公众号] 猴猴说话 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3279284299.atom
+  029. [微信公众号] 潦草学者 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3239649460.atom
+  030. [微信公众号] L先生说 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3015646136.atom
+  031. [微信公众号] 常青说 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3944297233.atom
+  032. [微信公众号] 啊桂实验室 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3097885397.atom
+  033. [微信公众号] 大问题Dialectic (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_2391461928.atom
+  034. [微信公众号] ONE字幕组 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3220087653.atom
+  035. [微信公众号] everystep (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_2396013984.atom
+  036. [微信公众号] 走路 (local_xml_url) -> http://host.docker.internal:8003/feed/MP_WXS_3097360004.atom
+  037. [社评] Vista看天下 (xml_url) -> https://plink.anyfeeder.com/weixin/vistaweek
+  038. [社评] Tinyfool的个人网站 (xml_url) -> https://codechina.org/feed/
+  039. [社评] 刘夙的科技世界 (xml_url) -> https://wewe-rss.jerrylf.uk/feeds/MP_WXS_3002603832.json
+  040. [社评] 三联生活周刊 Lifeweek (xml_url) -> https://the.bi/s/rawbbyu2zgmy32
+  041. [国内外资讯] 一觉醒来发生了什么 - 即刻圈子 (local_xml_url) -> http://host.docker.internal:1200/jike/topic/553870e8e4b0cafb0a1bef68
+  042. [国内政策] - 政府文件库 (local_xml_url) -> http://host.docker.internal:1200/gov/zhengce/zhengceku/bmwj
+  043. [Articles] 不如读书 (xml_url) -> https://wuyagege.substack.com/feed
+  044. [Articles] Lukas Petersson’s blog (xml_url) -> https://lukaspetersson.com/feed.xml
+  045. [Articles] 偷懒爱好者周刊 (xml_url) -> https://toolight.cn/open/p/weekly/atom.xml
+  046. [Articles] GeekPlux Letters (xml_url) -> https://letters.geekplux.com/rss/
+  047. [Articles] 信息差——独立开发者出海周刊 (xml_url) -> https://gapis.money/rss.xml
+  048. [Articles] joojen Zhou 的网站 (xml_url) -> https://joojen.com/feed
+  049. [Articles] 周刊 归档 - 酷口家数字花园 (xml_url) -> https://weqoocu.com/feed
+  050. [Articles] 莫尔索随笔 (xml_url) -> https://liduos.com/atom.xml
+  051. [Articles] Ahead of AI (xml_url) -> https://magazine.sebastianraschka.com/feed
+  052. [Articles] 歸藏的AI工具箱 (xml_url) -> https://wechat2rss.bestblogs.dev/feed/1fc32fedbf5da37e8e819a9298ae80724c12cb03.xml
+  053. [Articles] Kubernetes Blog (xml_url) -> https://kubernetes.io/feed.xml
+  054. [Articles] AI洞察日报 RSS Feed (xml_url) -> https://justlovemaki.github.io/CloudFlare-AI-Insight-Daily/rss.xml
+  055. [党政信息] 最新发布_共产党员网 (local_xml_url) -> http://host.docker.internal:1200/12371/zxfb
+  056. [党政信息] 新华社新闻_新华网 (xml_url) -> https://plink.anyfeeder.com/newscn/whxw
+  057. [党政信息] 半月谈快报 (xml_url) -> https://data.getpodcast.xyz/data/ximalaya/9604235.xml
+  058. [党政信息] - 求是网 (xml_url) -> https://plink.anyfeeder.com/qstheory
+  059. [Articles] 学习一下订阅源 (local_xml_url) -> http://host.docker.internal:1200/follow/profile/158883963341209600
+  060. [Articles] Lex Fridman Podcast (xml_url) -> https://lexfridman.com/feed/podcast/
+  061. [Articles] Podnews Daily - podcast industry news (xml_url) -> https://podnews.net/rss
+  062. [Articles] 新智元 (xml_url) -> https://raw.githubusercontent.com/osnsyc/Wechat-Scholar/main/channels/gh_108f2a2a27f4.xml
+  063. [Articles] 机器之心 (xml_url) -> https://www.jiqizhixin.com/rss
+  064. [Articles] 腾讯研究院 (xml_url) -> https://wechat2rss.bestblogs.dev/feed/6152301e0978bffb0a8284cab339262b9764dcfb.xml
+  065. [Articles] 极客公园 (xml_url) -> https://www.geekpark.net/rss
+  066. [Articles] 极客公园 (xml_url) -> https://wechat2rss.xlab.app/feed/1a5aec98e71c707c8ca092bc2c255b9d4bac477d.xml
+  067. [SocialMedia] 图书推荐 – 书伴 (local_xml_url) -> http://host.docker.internal:1200/bookfere/books
+  068. [SocialMedia] 每周一书 – 书伴 (local_xml_url) -> http://host.docker.internal:1200/bookfere/weekly
+  069. [SocialMedia] 笔记交流站 - 即刻圈子 (local_xml_url) -> http://host.docker.internal:1200/jike/topic/660165c504703c909c6d8b2e
+  070. [资讯] 你不知道的行业内幕 - 即刻圈子 (local_xml_url) -> http://host.docker.internal:1200/jike/topic/5699f451d3e8351200bffdc8
+  071. [SocialMedia] Mike Krieger(@mikeyk) (xml_url) -> https://api.xgo.ing/rss/user/78d7b99318b04b309b04000f7e24da29
+  072. [SocialMedia] Richard Socher(@RichardSocher) (xml_url) -> https://api.xgo.ing/rss/user/4d2d4165a7524217a08d3f57f27fa190
+  073. [SocialMedia] Hugging Face(@huggingface) (xml_url) -> https://api.xgo.ing/rss/user/fc16750ce50741f1b1f05ea1fb29436f

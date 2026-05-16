@@ -1,0 +1,1497 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260505_121708
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 482
+[INFO] Selected sources: 482
+[INFO] Pending sources this invocation: 482
+[INFO] URL mode: docker-host
+[INFO] Screen enabled: True
+[INFO] Concurrency: 8
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": true, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1", "llm_max_concurrency": 6, "screening_mode": "merged"}, "_status": 200}
+[INFO] Setting service LLM max concurrency to 6 ...
+[INFO] Service LLM max concurrency set to 6
+[INFO] Setting service screening mode to merged ...
+[INFO] Service screening mode set to merged
+[SUBMIT] 001/482 Hi, DIYgod
+         category=Articles feed_url=https://diygod.cc/feed
+[SUBMIT] 002/482 tanscp
+         category=Articles feed_url=https://tanscp.com/feed/
+[SUBMIT] 003/482 Airing 的博客
+         category=Articles feed_url=https://ursb.me/blog/feed.xml
+[SUBMIT] 004/482 Rolen's Blog
+         category=个人博客-人生 feed_url=https://rolen.wiki/feed/
+[SUBMIT] 005/482 Ben's Love
+         category=个人博客-人生 feed_url=https://bens.love/feed
+[SUBMIT] 006/482 莫比乌斯
+         category=个人博客-人生 feed_url=https://mobius.blog/feed/
+[SUBMIT] 007/482 白熊阿丸的小屋
+         category=个人博客-人生 feed_url=https://blog.bxaw.name/feed/
+[SUBMIT] 008/482 草稿拾遗
+         category=个人博客-人生 feed_url=https://kill-the-newsletter.com/feeds/t87xbbj6p4iwfhsi.xml
+[DONE] 007/482 白熊阿丸的小屋 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 001/482 Hi, DIYgod status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 004/482 Rolen's Blog status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 003/482 Airing 的博客 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 005/482 Ben's Love status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 006/482 莫比乌斯 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 009/482 Paradise Lost
+         category=Articles feed_url=https://2890.ltd/feed/
+[SUBMIT] 010/482 笨方法学写作
+         category=Articles feed_url=https://www.cnfeat.com/feed.xml
+[SUBMIT] 011/482 StarYuhen
+         category=Articles feed_url=https://www.yuhenm.top/feed/
+[SUBMIT] 012/482 Experimental History
+         category=Articles feed_url=https://www.experimental-history.com/feed
+[SUBMIT] 013/482 Blog - Remote Work Prep
+         category=Articles feed_url=https://www.remoteworkprep.com/blog?format=rss
+[SUBMIT] 014/482 EVANGELION:ALL
+         category=Articles feed_url=https://www.eva-all.com/news/feed/
+[DONE] 013/482 Blog - Remote Work Prep status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 008/482 草稿拾遗 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 002/482 tanscp status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 009/482 Paradise Lost status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 010/482 笨方法学写作 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 011/482 StarYuhen status=failed error_type=unknown error_message={"detail": "HTTP Error 403: Forbidden"}
+[DONE] 012/482 Experimental History status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 015/482 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台
+         category=其他 feed_url=https://51cg1.com/feed/
+[SUBMIT] 016/482 今日热榜
+         category=Articles feed_url=https://web2rss.cc/feed/rebang.today?preview=true
+[SUBMIT] 017/482 安全代码
+         category=Articles feed_url=https://www.usmacd.com/atom.xml
+[SUBMIT] 018/482 老T博客
+         category=Articles feed_url=https://lawtee.com/index.xml
+[SUBMIT] 019/482 小众软件
+         category=科技与编程 feed_url=https://www.appinn.com/feed/
+[SUBMIT] 020/482 HelloGithub - 月刊
+         category=科技与编程 feed_url=http://host.docker.internal:1200/hellogithub/volume
+[SUBMIT] 021/482 宝玉的分享
+         category=科技与编程 feed_url=https://s.baoyu.io/feed.xml
+[DONE] 016/482 今日热榜 status=failed error_type=network_error error_message={"detail": "<urlopen error [Errno -2] Name or service not known>"}
+[DONE] 017/482 安全代码 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 014/482 EVANGELION:ALL status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 018/482 老T博客 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 019/482 小众软件 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 022/482 阮一峰的网络日志
+         category=科技与编程 feed_url=https://feeds.feedburner.com/ruanyifeng
+[SUBMIT] 023/482 龙爪槐守望者
+         category=科技与编程 feed_url=https://www.ftium4.com/rss.xml
+[SUBMIT] 024/482 十年之约聚合订阅
+         category=科技与编程 feed_url=https://tool.bcrjl.com/snzy-rss/
+[SUBMIT] 025/482 #UNTAG
+         category=科技与编程 feed_url=https://rss.utgd.net/feed/
+[SUBMIT] 026/482 混沌周刊
+         category=科技与编程 feed_url=https://weekly.love/feed/atom
+[DONE] 025/482 #UNTAG status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 021/482 宝玉的分享 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 022/482 阮一峰的网络日志 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 024/482 十年之约聚合订阅 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 020/482 HelloGithub - 月刊 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 023/482 龙爪槐守望者 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 027/482 🔔科技频道[奇诺分享-ccino.org]⚡️
+         category=科技与编程 feed_url=https://channel.ccino.org/rss.xml
+[SUBMIT] 028/482 猴猴说话
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3279284299.atom
+[SUBMIT] 029/482 潦草学者
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3239649460.atom
+[SUBMIT] 030/482 L先生说
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3015646136.atom
+[SUBMIT] 031/482 常青说
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3944297233.atom
+[SUBMIT] 032/482 啊桂实验室
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3097885397.atom
+[DONE] 026/482 混沌周刊 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 028/482 猴猴说话 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 031/482 常青说 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 030/482 L先生说 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 029/482 潦草学者 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 032/482 啊桂实验室 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 033/482 大问题Dialectic
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_2391461928.atom
+[SUBMIT] 034/482 ONE字幕组
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3220087653.atom
+[SUBMIT] 035/482 everystep
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_2396013984.atom
+[SUBMIT] 036/482 走路
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3097360004.atom
+[SUBMIT] 037/482 Vista看天下
+         category=社评 feed_url=https://plink.anyfeeder.com/weixin/vistaweek
+[SUBMIT] 038/482 Tinyfool的个人网站
+         category=社评 feed_url=https://codechina.org/feed/
+[DONE] 033/482 大问题Dialectic status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 036/482 走路 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 034/482 ONE字幕组 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 035/482 everystep status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 037/482 Vista看天下 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 039/482 刘夙的科技世界
+         category=社评 feed_url=https://wewe-rss.jerrylf.uk/feeds/MP_WXS_3002603832.json
+[SUBMIT] 040/482 三联生活周刊 Lifeweek
+         category=社评 feed_url=https://the.bi/s/rawbbyu2zgmy32
+[SUBMIT] 041/482 一觉醒来发生了什么 - 即刻圈子
+         category=国内外资讯 feed_url=http://host.docker.internal:1200/jike/topic/553870e8e4b0cafb0a1bef68
+[SUBMIT] 042/482 - 政府文件库
+         category=国内政策 feed_url=http://host.docker.internal:1200/gov/zhengce/zhengceku/bmwj
+[SUBMIT] 043/482 不如读书
+         category=Articles feed_url=https://wuyagege.substack.com/feed
+[DONE] 040/482 三联生活周刊 Lifeweek status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 042/482 - 政府文件库 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 041/482 一觉醒来发生了什么 - 即刻圈子 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 038/482 Tinyfool的个人网站 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 044/482 Lukas Petersson’s blog
+         category=Articles feed_url=https://lukaspetersson.com/feed.xml
+[SUBMIT] 045/482 偷懒爱好者周刊
+         category=Articles feed_url=https://toolight.cn/open/p/weekly/atom.xml
+[SUBMIT] 046/482 GeekPlux Letters
+         category=Articles feed_url=https://letters.geekplux.com/rss/
+[SUBMIT] 047/482 信息差——独立开发者出海周刊
+         category=Articles feed_url=https://gapis.money/rss.xml
+[DONE] 046/482 GeekPlux Letters status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 045/482 偷懒爱好者周刊 status=failed error_type=unknown error_message={"detail": "HTTP Error 404: Not Found"}
+[DONE] 044/482 Lukas Petersson’s blog status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 048/482 joojen Zhou 的网站
+         category=Articles feed_url=https://joojen.com/feed
+[SUBMIT] 049/482 周刊 归档 - 酷口家数字花园
+         category=Articles feed_url=https://weqoocu.com/feed
+[SUBMIT] 050/482 莫尔索随笔
+         category=Articles feed_url=https://liduos.com/atom.xml
+[DONE] 047/482 信息差——独立开发者出海周刊 status=failed error_type=feed_parse_error error_message={"detail": "failed to parse feed: <unknown>:28:5120: not well-formed (invalid token)"}
+[DONE] 048/482 joojen Zhou 的网站 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 051/482 Ahead of AI
+         category=Articles feed_url=https://magazine.sebastianraschka.com/feed
+[SUBMIT] 052/482 歸藏的AI工具箱
+         category=Articles feed_url=https://wechat2rss.bestblogs.dev/feed/1fc32fedbf5da37e8e819a9298ae80724c12cb03.xml
+[DONE] 050/482 莫尔索随笔 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 052/482 歸藏的AI工具箱 status=failed error_type=content_inbox_error error_message={"detail": "HTTP Error 500: Internal Server Error"}
+[SUBMIT] 053/482 Kubernetes Blog
+         category=Articles feed_url=https://kubernetes.io/feed.xml
+[SUBMIT] 054/482 AI洞察日报 RSS Feed
+         category=Articles feed_url=https://justlovemaki.github.io/CloudFlare-AI-Insight-Daily/rss.xml
+[DONE] 051/482 Ahead of AI status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 055/482 最新发布_共产党员网
+         category=党政信息 feed_url=http://host.docker.internal:1200/12371/zxfb
+[DONE] 054/482 AI洞察日报 RSS Feed status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 053/482 Kubernetes Blog status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 056/482 新华社新闻_新华网
+         category=党政信息 feed_url=https://plink.anyfeeder.com/newscn/whxw
+[SUBMIT] 057/482 半月谈快报
+         category=党政信息 feed_url=https://data.getpodcast.xyz/data/ximalaya/9604235.xml
+[DONE] 055/482 最新发布_共产党员网 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 058/482 - 求是网
+         category=党政信息 feed_url=https://plink.anyfeeder.com/qstheory
+[DONE] 057/482 半月谈快报 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 059/482 学习一下订阅源
+         category=Articles feed_url=http://host.docker.internal:1200/follow/profile/158883963341209600
+[DONE] 058/482 - 求是网 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 060/482 Lex Fridman Podcast
+         category=Articles feed_url=https://lexfridman.com/feed/podcast/
+[DONE] 059/482 学习一下订阅源 status=failed error_type=rsshub_503 error_message={"detail": "HTTP Error 503: Service Unavailable"}
+[SUBMIT] 061/482 Podnews Daily - podcast industry news
+         category=Articles feed_url=https://podnews.net/rss
+[DONE] 049/482 周刊 归档 - 酷口家数字花园 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 062/482 新智元
+         category=Articles feed_url=https://raw.githubusercontent.com/osnsyc/Wechat-Scholar/main/channels/gh_108f2a2a27f4.xml
+[DONE] 060/482 Lex Fridman Podcast status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 063/482 机器之心
+         category=Articles feed_url=https://www.jiqizhixin.com/rss
+[DONE] 062/482 新智元 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 061/482 Podnews Daily - podcast industry news status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 064/482 腾讯研究院
+         category=Articles feed_url=https://wechat2rss.bestblogs.dev/feed/6152301e0978bffb0a8284cab339262b9764dcfb.xml
+[SUBMIT] 065/482 极客公园
+         category=Articles feed_url=https://www.geekpark.net/rss
+[DONE] 063/482 机器之心 status=failed error_type=feed_parse_error error_message={"detail": "failed to parse feed: <unknown>:12:244: mismatched tag"}
+[SUBMIT] 066/482 极客公园
+         category=Articles feed_url=https://wechat2rss.xlab.app/feed/1a5aec98e71c707c8ca092bc2c255b9d4bac477d.xml
+[DONE] 064/482 腾讯研究院 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 067/482 图书推荐 – 书伴
+         category=SocialMedia feed_url=http://host.docker.internal:1200/bookfere/books
+[DONE] 065/482 极客公园 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 068/482 每周一书 – 书伴
+         category=SocialMedia feed_url=http://host.docker.internal:1200/bookfere/weekly
+[DONE] 068/482 每周一书 – 书伴 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 066/482 极客公园 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 039/482 刘夙的科技世界 status=failed error_type=feed_parse_error error_message={"detail": "failed to parse feed: <unknown>:2:0: not well-formed (invalid token)"}
+[SUBMIT] 069/482 笔记交流站 - 即刻圈子
+         category=SocialMedia feed_url=http://host.docker.internal:1200/jike/topic/660165c504703c909c6d8b2e
+[SUBMIT] 070/482 你不知道的行业内幕 - 即刻圈子
+         category=资讯 feed_url=http://host.docker.internal:1200/jike/topic/5699f451d3e8351200bffdc8
+[SUBMIT] 071/482 Mike Krieger(@mikeyk)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/78d7b99318b04b309b04000f7e24da29
+[DONE] 067/482 图书推荐 – 书伴 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 069/482 笔记交流站 - 即刻圈子 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 072/482 Richard Socher(@RichardSocher)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4d2d4165a7524217a08d3f57f27fa190
+[SUBMIT] 073/482 Hugging Face(@huggingface)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/fc16750ce50741f1b1f05ea1fb29436f
+[DONE] 072/482 Richard Socher(@RichardSocher) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 071/482 Mike Krieger(@mikeyk) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 070/482 你不知道的行业内幕 - 即刻圈子 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 074/482 小互(@imxiaohu)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/74e542992cf7441390c708f5601071d4
+[SUBMIT] 075/482 AI at Meta(@AIatMeta)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/ef7c70f9568d45f4915169fef4ce90b4
+[SUBMIT] 076/482 Mistral AI(@MistralAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/8d2d03aea8af49818096da4ea00409d1
+[DONE] 074/482 小互(@imxiaohu) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 073/482 Hugging Face(@huggingface) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 075/482 AI at Meta(@AIatMeta) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 077/482 xAI(@xai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/3953aa71e87a422eb9d7bf6ff1c7c43e
+[SUBMIT] 078/482 Dia(@diabrowser)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/6384ee3c656c48fea5e8b3cdacece4d0
+[SUBMIT] 079/482 AI Breakfast(@AiBreakfast)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/0e3ebaf288014c45b0d24b71fe37312b
+[DONE] 077/482 xAI(@xai) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 076/482 Mistral AI(@MistralAI) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 078/482 Dia(@diabrowser) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 080/482 DeepSeek(@deepseek_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/68b610deb24b47ae9a236811563cda86
+[SUBMIT] 081/482 Jim Fan(@DrJimFan)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/c6cfe7c0d6b74849997073233fdea840
+[SUBMIT] 082/482 Akshay Kothari(@akothari)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/3434c0d56ee0446f991fb6af42bfac4b
+[DONE] 080/482 DeepSeek(@deepseek_ai) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 081/482 Jim Fan(@DrJimFan) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 079/482 AI Breakfast(@AiBreakfast) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 083/482 歸藏(guizang.ai)(@op7418)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/831fac36aa0a49a9af79f35dc1c9b5d9
+[SUBMIT] 084/482 Notion(@NotionHQ)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f97a26863aec4425b021720d4f8e4ede
+[SUBMIT] 085/482 Replicate(@replicate)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/12eba9c3db4940c5ab2a72bd00f9ff2c
+[DONE] 084/482 Notion(@NotionHQ) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 083/482 歸藏(guizang.ai)(@op7418) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 082/482 Akshay Kothari(@akothari) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 086/482 lmarena.ai(@lmarena_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f01b088d5a39473e854b07143df77ec5
+[SUBMIT] 087/482 Poe(@poe_platform)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/17687b1051204b2dbaed4ea4c9178f28
+[SUBMIT] 088/482 Ray Dalio(@RayDalio)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4838204097ed422eac24ad48e68dc3ff
+[DONE] 087/482 Poe(@poe_platform) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 086/482 lmarena.ai(@lmarena_ai) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 085/482 Replicate(@replicate) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 089/482 Arthur Mensch(@arthurmensch)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/d8121d969fb34c7daad2dd2aac4ba270
+[SUBMIT] 090/482 Paul Graham(@paulg)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/900549ddadf04e839d3f7a17ebaba3fc
+[SUBMIT] 091/482 Browser Use(@browser_use)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/b8d7530f0b294405825013bbc1cc198f
+[DONE] 090/482 Paul Graham(@paulg) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 088/482 Ray Dalio(@RayDalio) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 089/482 Arthur Mensch(@arthurmensch) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 092/482 The Rundown AI(@TheRundownAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/83b1ea38940b4a1d81ea57d1ffb12ad7
+[SUBMIT] 093/482 AI Will(@FinanceYF5)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/aa74321087f9405a872fd9a76b743bf8
+[SUBMIT] 094/482 Guillermo Rauch(@rauchg)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/e8750659b8154dbfa0489f451e044af1
+[DONE] 093/482 AI Will(@FinanceYF5) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 092/482 The Rundown AI(@TheRundownAI) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 091/482 Browser Use(@browser_use) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 095/482 向阳乔木(@vista8)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/9de19c78f7454ad08c956c1a00d237fe
+[SUBMIT] 096/482 Nick St. Pierre(@nickfloats)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/6ebdf0d91eef4c149acd0ef110635866
+[SUBMIT] 097/482 Sahil Lavingia(@shl)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/baad3713defe4182844d2756b4c2c9ed
+[DONE] 096/482 Nick St. Pierre(@nickfloats) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 094/482 Guillermo Rauch(@rauchg) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 095/482 向阳乔木(@vista8) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 098/482 Jan Leike(@janleike)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/dceb5cd131b34c72a8376cba8ea5d864
+[SUBMIT] 099/482 Gary Marcus(@GaryMarcus)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/35a38c5646d946fb894d8c30c1d9629e
+[SUBMIT] 100/482 Monica_IM(@hey_im_monica)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/5d749cc613ec4069bb2a47334739e1b6
+[DONE] 097/482 Sahil Lavingia(@shl) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 098/482 Jan Leike(@janleike) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 099/482 Gary Marcus(@GaryMarcus) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 101/482 Lenny Rachitsky(@lennysan)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/77d5ce4736854b0ebae603e4b54d3095
+[SUBMIT] 102/482 Kling AI(@Kling_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/564237c3de274d58a04f064920817888
+[SUBMIT] 103/482 Lilian Weng(@lilianweng)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a8f7e2238039461cbc8bf55f5f194498
+[DONE] 100/482 Monica_IM(@hey_im_monica) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 101/482 Lenny Rachitsky(@lennysan) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 102/482 Kling AI(@Kling_ai) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 104/482 Aadit Sheth(@aaditsh)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/179bcc4b8e5d4274b6e9e935f9fd4434
+[SUBMIT] 105/482 Augment Code(@augmentcode)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/e153fdd077df458b8298d975c060dcc3
+[SUBMIT] 106/482 Skywork(@Skywork_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/6d7d398dd80b48d79669c92745d32cf6
+[DONE] 105/482 Augment Code(@augmentcode) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 015/482 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台 status=success total_items=10 new_items=10 duplicate_items=0
+[DONE] 104/482 Aadit Sheth(@aaditsh) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 103/482 Lilian Weng(@lilianweng) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 107/482 Firecrawl(@firecrawl_dev)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/c04abb206bbf4f91b22795024d6c0614
+[SUBMIT] 108/482 Adam D'Angelo(@adamdangelo)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/3042b6f912b24f64982cc23f7bd59681
+[SUBMIT] 109/482 Suhail(@Suhail)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/c961547e08df4396b3ab69367a07a1cd
+[SUBMIT] 110/482 Sualeh Asif(@sualehasif996)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/fafa6df3c67644b1a367a177240e0173
+[DONE] 109/482 Suhail(@Suhail) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 106/482 Skywork(@Skywork_ai) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 108/482 Adam D'Angelo(@adamdangelo) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 107/482 Firecrawl(@firecrawl_dev) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 111/482 Anthropic(@AnthropicAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/fc28a211471b496682feff329ec616e5
+[SUBMIT] 112/482 AI Engineer(@aiDotEngineer)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/7d19a619a1cc4a9896129211269d2c85
+[SUBMIT] 113/482 Hailuo AI (MiniMax)(@Hailuo_AI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/e65b5e59fcb544918c1ba17f5758f0f8
+[SUBMIT] 114/482 Fireworks AI(@FireworksAI_HQ)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/9f35c76341554bd78c2b9e63dc4fa5d8
+[DONE] 113/482 Hailuo AI (MiniMax)(@Hailuo_AI) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 111/482 Anthropic(@AnthropicAI) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 112/482 AI Engineer(@aiDotEngineer) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 110/482 Sualeh Asif(@sualehasif996) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 115/482 Justine Moore(@venturetwins)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/c61046471f174d86bc0eb76cb44a21c3
+[SUBMIT] 116/482 OpenAI Developers(@OpenAIDevs)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/971dc1fc90da449bac23e5fad8a33d55
+[SUBMIT] 117/482 bolt.new(@boltdotnew)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/760ab7cd9708452c9ce1f9144b92a430
+[SUBMIT] 118/482 Midjourney(@midjourney)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/72dd496bfd9d44c5a5761a974630376d
+[DONE] 116/482 OpenAI Developers(@OpenAIDevs) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 115/482 Justine Moore(@venturetwins) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 114/482 Fireworks AI(@FireworksAI_HQ) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 117/482 bolt.new(@boltdotnew) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 119/482 eric zakariasson(@ericzakariasson)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/65f321be670b4ffba7f40d0afd38c94d
+[SUBMIT] 120/482 Sam Altman(@sama)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/e30d4cd223f44bed9d404807105c8927
+[SUBMIT] 121/482 clem &#129303;(@ClementDelangue)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/5dbd038a8f5140938d0877511571797b
+[SUBMIT] 122/482 LangChain(@LangChainAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/862fee50a745423c87e2633b274caf1d
+[DONE] 120/482 Sam Altman(@sama) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 121/482 clem &#129303;(@ClementDelangue) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 119/482 eric zakariasson(@ericzakariasson) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 043/482 不如读书 status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 118/482 Midjourney(@midjourney) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 123/482 orange.ai(@oran_ge)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/0277b0bbefd54df7bc6b7880122da8f7
+[SUBMIT] 124/482 Dario Amodei(@DarioAmodei)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/49666ce6fe3e4cb786c6574684542ec5
+[SUBMIT] 125/482 Geoffrey Hinton(@geoffreyhinton)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/cb6169815e2e447e8e6148a4af3f9686
+[SUBMIT] 126/482 Harrison Chase(@hwchase17)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f299207df53745bca04a03db8d11c5aa
+[SUBMIT] 127/482 Kevin Weil &#127482;&#127480;(@kevinweil)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/3ca3c7698fd04611a0e7d14fae93c84c
+[DONE] 125/482 Geoffrey Hinton(@geoffreyhinton) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 122/482 LangChain(@LangChainAI) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 124/482 Dario Amodei(@DarioAmodei) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 123/482 orange.ai(@oran_ge) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 126/482 Harrison Chase(@hwchase17) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 128/482 Jeff Dean(@JeffDean)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/b1013166769c49f8aa3fbdc222867054
+[SUBMIT] 129/482 Perplexity(@perplexity_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/fdd601ea751949e7bec9e4cdad7c8e6c
+[SUBMIT] 130/482 ChatGPT(@ChatGPTapp)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f7992687b8d74b14bf2341eb3a0a5ec4
+[SUBMIT] 131/482 Berkeley AI Research(@berkeley_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/6bbf31cac345443585c3280320ba9009
+[SUBMIT] 132/482 Paul Couvert(@itsPaulAi)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/b9912ac9a29042cf8c834419dc44cb1f
+[DONE] 130/482 ChatGPT(@ChatGPTapp) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 129/482 Perplexity(@perplexity_ai) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 131/482 Berkeley AI Research(@berkeley_ai) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 127/482 Kevin Weil &#127482;&#127480;(@kevinweil) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 128/482 Jeff Dean(@JeffDean) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 133/482 Barsee &#128054;(@heyBarsee)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/244eb9fa77ce4fa3b7fa5ceba80027a4
+[SUBMIT] 134/482 OpenAI(@OpenAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/0c0856a69f9f49cf961018c32a0b0049
+[SUBMIT] 135/482 Binyuan Hui(@huybery)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f54b2b40185943ce8f48a880110b7bc2
+[SUBMIT] 136/482 cohere(@cohere)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/462aa134ed914f98b3491680ad9b36ed
+[SUBMIT] 137/482 Aman Sanger(@amanrsanger)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a02496979a0e4d86baf2b72c24db52a4
+[DONE] 133/482 Barsee &#128054;(@heyBarsee) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 135/482 Binyuan Hui(@huybery) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 132/482 Paul Couvert(@itsPaulAi) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 134/482 OpenAI(@OpenAI) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 136/482 cohere(@cohere) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 138/482 Simon Willison(@simonw)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/30ad80be93c84e44acc37d5ddf31db57
+[SUBMIT] 139/482 Microsoft Research(@MSFTResearch)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/61f4b78554fb4b8fa5653ec5d924d15a
+[SUBMIT] 140/482 Yann LeCun(@ylecun)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f5f4f928dede472ea55053672ad27ab6
+[SUBMIT] 141/482 Junyang Lin(@JustinLin610)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/082097117b4543e9a741cd2580f936d3
+[SUBMIT] 142/482 Alex Albert(@alexalbert__)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/524525de0d69407b80f0a7d891fdc8df
+[DONE] 138/482 Simon Willison(@simonw) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 137/482 Aman Sanger(@amanrsanger) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 139/482 Microsoft Research(@MSFTResearch) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 141/482 Junyang Lin(@JustinLin610) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 140/482 Yann LeCun(@ylecun) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 143/482 Aravind Srinivas(@AravSrinivas)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/59e6b63ae9684d11be0ae13d9e7420f2
+[SUBMIT] 144/482 Genspark(@genspark_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/71ffd342cb5d478185ef7d55bdfca011
+[SUBMIT] 145/482 Greg Brockman(@gdb)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/af19d054e26a49129f23abfa82d9e268
+[SUBMIT] 146/482 elvis(@omarsar0)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/931d6e88e067496cac6bf23f69d60f33
+[SUBMIT] 147/482 Google AI(@GoogleAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4de0bd2d5cef4333a0260dc8157054a7
+[DONE] 146/482 elvis(@omarsar0) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 145/482 Greg Brockman(@gdb) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 143/482 Aravind Srinivas(@AravSrinivas) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 142/482 Alex Albert(@alexalbert__) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 144/482 Genspark(@genspark_ai) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 148/482 LlamaIndex &#129433;(@llama_index)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/67e259bd5be544ce84bbc867eace54c2
+[SUBMIT] 149/482 Jerry Liu(@jerryjliu0)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/b3d904c0d7c446558ef3a1e7f2eb362b
+[SUBMIT] 150/482 Marc Andreessen &#127482;&#127480;(@pmarca)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/63316630d94543f5a6480f230f483008
+[SUBMIT] 151/482 Justin Welsh(@thejustinwelsh)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/58894bf2934a426ca833c682da2bc810
+[SUBMIT] 152/482 Pika(@pika_labs)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/3306d8b253ec4e03aca3c2e9967e7119
+[DONE] 056/482 新华社新闻_新华网 status=success total_items=8 new_items=8 duplicate_items=0
+[DONE] 150/482 Marc Andreessen &#127482;&#127480;(@pmarca) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 149/482 Jerry Liu(@jerryjliu0) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 148/482 LlamaIndex &#129433;(@llama_index) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 151/482 Justin Welsh(@thejustinwelsh) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 147/482 Google AI(@GoogleAI) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 153/482 Sundar Pichai(@sundarpichai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/8324d65a63dc42c584a8c08cc8323c9f
+[SUBMIT] 154/482 Lovable(@lovable_dev)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/639cd13d44284e10ac89fbd1c5399767
+[SUBMIT] 155/482 cat(@_catwu)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/66a6b39ddcfa42e39621e0ab293c1bdd
+[SUBMIT] 156/482 Anton Osika – eu/acc(@antonosika)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/5f13b32b124a41cfb659f903a84032b1
+[SUBMIT] 157/482 Replit ⠕(@Replit)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/613f859e4bc440c5a28f40732840f5cf
+[SUBMIT] 158/482 FlowiseAI(@FlowiseAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/be74da51698d4cefb12b39830d6cd201
+[DONE] 152/482 Pika(@pika_labs) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 156/482 Anton Osika – eu/acc(@antonosika) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 157/482 Replit ⠕(@Replit) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 153/482 Sundar Pichai(@sundarpichai) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 155/482 cat(@_catwu) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 154/482 Lovable(@lovable_dev) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 159/482 a16z(@a16z)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f3fedf817599470dbf8d8d11f0872475
+[SUBMIT] 160/482 李继刚(@lijigang_com)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/ca2fa444b6ea4b8b974fe148056e497a
+[SUBMIT] 161/482 Jina AI(@JinaAI_)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f510f6e7eecf456ca7e2895a46752888
+[SUBMIT] 162/482 v0(@v0)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/dbf37973e6fc4eae91d4be9669a78fc7
+[SUBMIT] 163/482 Andrej Karpathy(@karpathy)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/edf707b5c0b248579085f66d7a3c5524
+[SUBMIT] 164/482 Fei-Fei Li(@drfeifei)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a4bfe44bfc0d4c949da21ebd3f5f42a5
+[DONE] 161/482 Jina AI(@JinaAI_) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 162/482 v0(@v0) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 163/482 Andrej Karpathy(@karpathy) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 159/482 a16z(@a16z) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 160/482 李继刚(@lijigang_com) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 158/482 FlowiseAI(@FlowiseAI) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 165/482 DeepLearning.AI(@DeepLearningAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/42e6b4901b97498eab2ab64c07d56177
+[SUBMIT] 166/482 Rowan Cheung(@rowancheung)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a636de3cbda0495daabd15b9fd298614
+[SUBMIT] 167/482 Latent.Space(@latentspacepod)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a7be8b61a1264ea7984abfaea3eff686
+[SUBMIT] 168/482 Ideogram(@ideogram_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a719880fe66e4156a111187f50dae91b
+[SUBMIT] 169/482 Demis Hassabis(@demishassabis)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4a884d5e2f3740c5a26c9c093de6388a
+[SUBMIT] 170/482 Cognition(@cognition_labs)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4cc14cbd15c74e189d537c415369e1a7
+[DONE] 165/482 DeepLearning.AI(@DeepLearningAI) status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 164/482 Fei-Fei Li(@drfeifei) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 171/482 andrew chen(@andrewchen)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a3eb6beb2d894da3a9b7ab6d2e46790e
+[SUBMIT] 172/482 NVIDIA AI(@NVIDIAAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/05f1492e43514dc3862a076d3697c390
+[DONE] 166/482 Rowan Cheung(@rowancheung) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 173/482 Stanford AI Lab(@StanfordAILab)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/d5fc365556e641cba2278f501e8c6f92
+[DONE] 169/482 Demis Hassabis(@demishassabis) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 174/482 Varun Mohan(@_mohansolo)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/7794c4268a504019a94af1778857a703
+[DONE] 168/482 Ideogram(@ideogram_ai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 175/482 Logan Kilpatrick(@OfficialLoganK)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4f63d960de644aeebd0aa97e4994dafe
+[DONE] 172/482 NVIDIA AI(@NVIDIAAI) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 176/482 Qdrant(@qdrant_engine)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a55f6e33dd224235aabaabaaf9d58a06
+[DONE] 171/482 andrew chen(@andrewchen) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 177/482 OpenRouter(@OpenRouterAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/e503a90c035c4b1d8f8dd34907d15bf4
+[DONE] 167/482 Latent.Space(@latentspacepod) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 178/482 Thomas Wolf(@Thom_Wolf)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4918efb13c47459b8dcaa79cfdf72d09
+[DONE] 170/482 Cognition(@cognition_labs) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 179/482 mem0(@mem0ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/94bb691baeff461686326af619beb116
+[DONE] 027/482 🔔科技频道[奇诺分享-ccino.org]⚡️ status=success total_items=20 new_items=20 duplicate_items=0
+[SUBMIT] 180/482 Scott Wu(@ScottWu46)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/5fca8ccd87344d388bc863304ed6fd86
+[DONE] 175/482 Logan Kilpatrick(@OfficialLoganK) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 181/482 Recraft(@recraftai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/acc648327c614d9b985b9fc3d737165b
+[DONE] 173/482 Stanford AI Lab(@StanfordAILab) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 182/482 Hunyuan(@TXhunyuan)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/6e8e7b42cb434818810f87bcf77d86fb
+[DONE] 177/482 OpenRouter(@OpenRouterAI) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 183/482 Google DeepMind(@GoogleDeepMind)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a99538443a484fcc846bdcc8f50745ec
+[DONE] 174/482 Varun Mohan(@_mohansolo) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 184/482 Mustafa Suleyman(@mustafasuleyman)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/394acfaff8c44e09936f5bc0b8504f2c
+[DONE] 178/482 Thomas Wolf(@Thom_Wolf) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 185/482 Y Combinator(@ycombinator)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/b1ab109f6afd42ab8ea32e17a19a3a3e
+[DONE] 180/482 Scott Wu(@ScottWu46) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 186/482 Lex Fridman(@lexfridman)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/adf65931519340f795e2336910b4cd15
+[DONE] 179/482 mem0(@mem0ai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 187/482 Fellou(@FellouAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/326763c2f6154826babcfd71c5ab0f70
+[DONE] 176/482 Qdrant(@qdrant_engine) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 188/482 Runway(@runwayml)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/e6bb4f612dd24db5bc1a6811e6dd5820
+[DONE] 181/482 Recraft(@recraftai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 189/482 Julien Chaumond(@julien_c)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/44d9fa384087448a94d3c8595f8d535e
+[DONE] 182/482 Hunyuan(@TXhunyuan) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 190/482 宝玉(@dotey)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/97f1484ae48c430fbbf3438099743674
+[DONE] 183/482 Google DeepMind(@GoogleDeepMind) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 191/482 Milvus(@milvusio)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/424e67b19eed4500b7a440976bbd2ade
+[DONE] 184/482 Mustafa Suleyman(@mustafasuleyman) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 192/482 Ian Goodfellow(@goodfellow_ian)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/57831559d22440debbfb2f2528e4ba84
+[DONE] 185/482 Y Combinator(@ycombinator) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 193/482 Taranjeet(@taranjeetio)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/2de92402f4a24c90bb27e7580b93a878
+[DONE] 187/482 Fellou(@FellouAI) status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 186/482 Lex Fridman(@lexfridman) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 194/482 Figma(@figma)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f8a106a09a7d404fb8de7eb0c5ddd2a2
+[SUBMIT] 195/482 Patrick Loeber(@patloeber)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/c65c68f3713747bba863f92d6b5e996f
+[DONE] 189/482 Julien Chaumond(@julien_c) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 196/482 Windsurf(@windsurf_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4a8273800ed34a069eecdb6c5c1b9ccf
+[DONE] 188/482 Runway(@runwayml) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 197/482 Google AI Developers(@googleaidevs)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/69d925d4a8d44221b03eecbe07bd0f74
+[DONE] 191/482 Milvus(@milvusio) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 198/482 Qwen(@Alibaba_Qwen)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/80032d016d654eb4afe741ff34b7643d
+[DONE] 190/482 宝玉(@dotey) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 199/482 Satya Nadella(@satyanadella)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/baa68dbd9a9e461a96fd9b2e3f35dcbf
+[DONE] 192/482 Ian Goodfellow(@goodfellow_ian) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 200/482 Andrew Ng(@AndrewYNg)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/08b5488b20bc437c8bfc317a52e5c26d
+[DONE] 195/482 Patrick Loeber(@patloeber) status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 194/482 Figma(@figma) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 201/482 AI SDK(@aisdk)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/22af005b21ec45b1a4503acca777b7f0
+[SUBMIT] 202/482 HeyGen(@HeyGen_Official)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a9aff6b016c143ed8728dd86eb70d7db
+[DONE] 197/482 Google AI Developers(@googleaidevs) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 203/482 Fish Audio(@FishAudio)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4900b3dcd592424687582ff9e0f148ea
+[DONE] 193/482 Taranjeet(@taranjeetio) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 204/482 ElevenLabs(@elevenlabsio)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/1897eed387064dfab443764d6da50bc6
+[DONE] 196/482 Windsurf(@windsurf_ai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 205/482 ollama(@ollama)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/6326c63a2dfa445bbde88bea0c3112c2
+[DONE] 199/482 Satya Nadella(@satyanadella) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 206/482 Philipp Schmid(@_philschmid)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/ce352bbf72e44033985bc756db2ee0e2
+[DONE] 201/482 AI SDK(@aisdk) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 207/482 Cursor(@cursor_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/5287b4e0e13a4ab7ab7b1d56f9d88960
+[DONE] 198/482 Qwen(@Alibaba_Qwen) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 208/482 Google Gemini App(@GeminiApp)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/6fb337feeec44ca38b79491b971d868d
+[DONE] 202/482 HeyGen(@HeyGen_Official) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 209/482 Amjad Masad(@amasad)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/5fb1814c610c4af2911caa98c5c5ef82
+[DONE] 203/482 Fish Audio(@FishAudio) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 210/482 AK(@_akhaliq)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/341f7b9f8d9b477e8bb200caa7f32c6e
+[DONE] 200/482 Andrew Ng(@AndrewYNg) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 211/482 Groq Inc(@GroqInc)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/771b32075fe54a83bdb6966de9647b4f
+[DONE] 204/482 ElevenLabs(@elevenlabsio) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 212/482 ManusAI(@ManusAI_HQ)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/320181c4651a41a08015946b55f704ab
+[DONE] 205/482 ollama(@ollama) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 213/482 meng shao(@shao__meng)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/48aae530e0bf413aa7d44380f418e2e3
+[DONE] 206/482 Philipp Schmid(@_philschmid) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 214/482 Weaviate • vector database(@weaviate_io)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/2f1035ec6b28475987af06b600e1d04c
+[DONE] 207/482 Cursor(@cursor_ai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 215/482 LovartAI(@lovart_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/db648e4d4eae4822aa0d34f0faef7ad2
+[DONE] 208/482 Google Gemini App(@GeminiApp) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 216/482 Character.AI(@character_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/3877c31cdb554cffb750b3b683c98c4d
+[DONE] 209/482 Amjad Masad(@amasad) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 217/482 NotebookLM(@NotebookLM)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/221a88341acb475db221a12fed8208d0
+[DONE] 211/482 Groq Inc(@GroqInc) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 218/482 Dify(@dify_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/0be252fedbe84ad7bea21be44b18da89
+[DONE] 210/482 AK(@_akhaliq) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 219/482 Eric Jing(@ericjing_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/ddfdcdd4e390495c942f0b5da62af0fb
+[DONE] 212/482 ManusAI(@ManusAI_HQ) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 220/482 Naval(@naval)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/b43bc203409e4c5a9c3ae86fe1ac00c9
+[DONE] 213/482 meng shao(@shao__meng) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 221/482 Lee Robinson(@leerob)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/dc2426bc8348495189b45451d1707a1c
+[DONE] 215/482 LovartAI(@lovart_ai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 222/482 AliAbdaal
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/3546581580122806
+[DONE] 222/482 AliAbdaal status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 223/482 食事史馆
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/53737196
+[DONE] 223/482 食事史馆 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 224/482 毕导
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/254463269
+[DONE] 224/482 毕导 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 225/482 CoCoVii
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/9142182
+[DONE] 225/482 CoCoVii status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 226/482 下班的三爷
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/589388395
+[DONE] 226/482 下班的三爷 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 227/482 本子在隔壁
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/593251783
+[DONE] 227/482 本子在隔壁 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 228/482 岱川博士
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/584630077
+[DONE] 228/482 岱川博士 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 229/482 退役编辑雨上
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/1105429038
+[DONE] 229/482 退役编辑雨上 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 230/482 与书籍度过漫长岁月
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/252099076
+[DONE] 214/482 Weaviate • vector database(@weaviate_io) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 231/482 智能路障
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/79577853
+[DONE] 230/482 与书籍度过漫长岁月 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 232/482 Nenly同学
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/1814756990
+[DONE] 219/482 Eric Jing(@ericjing_ai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 233/482 大问题Dialectic
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/1871365234
+[DONE] 217/482 NotebookLM(@NotebookLM) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 234/482 英语播客狗
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/7671890
+[DONE] 216/482 Character.AI(@character_ai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 235/482 林川登罗
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/3798056
+[DONE] 221/482 Lee Robinson(@leerob) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 236/482 人间自习室
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/29240784
+[DONE] 220/482 Naval(@naval) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 237/482 漫士沉思录
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/266765166
+[DONE] 218/482 Dify(@dify_ai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 238/482 银屏系漫游指南
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/674180538
+[DONE] 231/482 智能路障 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 239/482 浮世叁千问
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/435061656
+[DONE] 233/482 大问题Dialectic status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 240/482 LunaticMosfet
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/1297592012
+[DONE] 236/482 人间自习室 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 241/482 歌白说Geslook
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/315846984
+[DONE] 232/482 Nenly同学 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 242/482 Larry想做技术大佬
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/19873195
+[DONE] 235/482 林川登罗 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 243/482 赏味不足
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/44497027
+[DONE] 234/482 英语播客狗 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 244/482 西山在何许
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/2515311
+[DONE] 242/482 Larry想做技术大佬 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 245/482 坚果熊说博弈
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/388394328
+[DONE] 237/482 漫士沉思录 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 246/482 罗明落ny
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/405303082
+[DONE] 238/482 银屏系漫游指南 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 247/482 汤质看本质
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/362588980
+[DONE] 239/482 浮世叁千问 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 248/482 要素分析
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/14262056
+[DONE] 240/482 LunaticMosfet status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 249/482 蒙克MK_
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/1060986358
+[DONE] 243/482 赏味不足 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 250/482 Morpheus红丸主义
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/445634559
+[DONE] 241/482 歌白说Geslook status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 251/482 慢慢学的四饼
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/95240876
+[DONE] 244/482 西山在何许 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 252/482 辰星杂谈
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/41018196
+[DONE] 246/482 罗明落ny status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 253/482 非卿漫谈
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/2690044
+[DONE] 245/482 坚果熊说博弈 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 254/482 拣尽南枝
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/39597640
+[DONE] 247/482 汤质看本质 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 255/482 硬核学长2077
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/1195497797
+[DONE] 248/482 要素分析 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 256/482 海林A读书
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/3494374304385046
+[DONE] 249/482 蒙克MK_ status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 257/482 机器人夏先生1号
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/31656484
+[DONE] 250/482 Morpheus红丸主义 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 258/482 知识共享者
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/406068046
+[DONE] 251/482 慢慢学的四饼 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 259/482 Maki的完美算术教室
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/391930545
+[DONE] 252/482 辰星杂谈 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 260/482 心河摆渡
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/230983435
+[DONE] 254/482 拣尽南枝 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 261/482 猴猴说话
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/31728620
+[DONE] 253/482 非卿漫谈 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 262/482 3Blue1Brown
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/88461692
+[DONE] 259/482 Maki的完美算术教室 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 263/482 思维实验室
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/14583962
+[DONE] 256/482 海林A读书 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 264/482 是落拓呀
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/43276908
+[DONE] 257/482 机器人夏先生1号 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 265/482 学院派Academia
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/96639395
+[DONE] 255/482 硬核学长2077 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 266/482 和张程一起学习吧
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/631899631
+[DONE] 260/482 心河摆渡 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 267/482 读书的Harry
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/611092306
+[DONE] 258/482 知识共享者 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 268/482 小波心理
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/1033890839
+[DONE] 261/482 猴猴说话 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 269/482 科幻视界
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/25073738
+[DONE] 263/482 思维实验室 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 270/482 差评君
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/19319172
+[DONE] 262/482 3Blue1Brown status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 271/482 迷因水母
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/1858861103
+[DONE] 264/482 是落拓呀 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 272/482 努力戒咕的coco锤
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/470585121
+[DONE] 265/482 学院派Academia status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 273/482 河口超人Aper
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/1288663494
+[DONE] 268/482 小波心理 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 274/482 荒野初研园
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/252411834
+[DONE] 266/482 和张程一起学习吧 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 275/482 二次元的Datawhale
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/431850986
+[DONE] 267/482 读书的Harry status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 276/482 白染one
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/476051104
+[DONE] 269/482 科幻视界 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 277/482 卡纸大寨主
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/17780825
+[DONE] 270/482 差评君 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 278/482 向杨Alan君
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/495979610
+[DONE] 273/482 河口超人Aper status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 279/482 奥德修斯的绳索
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/14004258
+[DONE] 271/482 迷因水母 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 280/482 岺玖贰叁
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/521296768
+[DONE] 272/482 努力戒咕的coco锤 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 281/482 新石器公园
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/489640651
+[DONE] 280/482 岺玖贰叁 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 282/482 载脑体
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/1850874570
+[DONE] 275/482 二次元的Datawhale status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 283/482 YouTube深度访谈
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/3493286931073848
+[DONE] 276/482 白染one status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 284/482 天才简史
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/213845897
+[DONE] 274/482 荒野初研园 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 285/482 这是个令人疑惑的星球
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/409842788
+[DONE] 277/482 卡纸大寨主 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 286/482 周侃侃plus
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/600428973
+[DONE] 286/482 周侃侃plus status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 287/482 focus2flow
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/17549684
+[DONE] 279/482 奥德修斯的绳索 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 288/482 飞鸟手札
+         category=短知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/1366786686
+[DONE] 288/482 飞鸟手札 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 289/482 英语播客党
+         category=短知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/3537109151386355
+[DONE] 289/482 英语播客党 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 290/482 波士顿圆脸
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/346563107
+[DONE] 282/482 载脑体 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 291/482 瓶子君152
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/730732
+[DONE] 290/482 波士顿圆脸 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 292/482 Super也好君
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/1372433
+[DONE] 291/482 瓶子君152 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 283/482 YouTube深度访谈 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 293/482 负面能量转换器
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/281127303
+[SUBMIT] 294/482 靠谱电竞
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/279991456
+[DONE] 292/482 Super也好君 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 295/482 火兰朋克
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/508215481
+[DONE] 293/482 负面能量转换器 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 296/482 馆长刘下饭_环球档案
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/369564778
+[DONE] 294/482 靠谱电竞 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 297/482 老实憨厚的笑笑
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/8739477
+[DONE] 295/482 火兰朋克 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 298/482 冲击波工作室
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/1567045834
+[DONE] 296/482 馆长刘下饭_环球档案 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 278/482 向杨Alan君 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 299/482 邵艾伦Alan
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/4029133
+[SUBMIT] 300/482 柯洁
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/525952604
+[DONE] 298/482 冲击波工作室 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 301/482 逗比的雀巢
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/5294454
+[DONE] 281/482 新石器公园 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 302/482 大祥哥来了
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/2920960
+[DONE] 300/482 柯洁 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 303/482 Norah脱口秀
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/29404012
+[DONE] 297/482 老实憨厚的笑笑 status=success total_items=1 new_items=1 duplicate_items=0
+[SUBMIT] 304/482 巅峰球迷汇
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/365372809
+[DONE] 285/482 这是个令人疑惑的星球 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 305/482 MrBeast官方账号
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/1027737427
+[DONE] 287/482 focus2flow status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 306/482 泛式
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/63231
+[DONE] 284/482 天才简史 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 307/482 贝拉kira
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/672353429
+[DONE] 299/482 邵艾伦Alan status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 308/482 -LKs-
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/125526
+[DONE] 301/482 逗比的雀巢 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 309/482 真实球迷汇
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/108618052
+[DONE] 303/482 Norah脱口秀 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 310/482 李滇滇
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/3546676667091128
+[DONE] 304/482 巅峰球迷汇 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 311/482 影视飓风
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/946974
+[DONE] 302/482 大祥哥来了 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 312/482 猫眼看足球
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/456249922
+[DONE] 312/482 猫眼看足球 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 313/482 陈大东瓜
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/269288799
+[DONE] 313/482 陈大东瓜 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 314/482 司马尘
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/334932680
+[DONE] 305/482 MrBeast官方账号 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 315/482 是啤酒鸭-梗图
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/1073153713
+[DONE] 314/482 司马尘 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 316/482 MOJi辞書
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/6697975
+[DONE] 316/482 MOJi辞書 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 317/482 Gray格雷老师
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/591610354
+[DONE] 317/482 Gray格雷老师 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 318/482 你是想气死1酱么
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/375040863
+[DONE] 307/482 贝拉kira status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 319/482 Boo布姐自译
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/3493128048740395
+[DONE] 319/482 Boo布姐自译 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 320/482 冲男阿凉
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/239060440
+[DONE] 318/482 你是想气死1酱么 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 321/482 杰克森Jackson_
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/13174980
+[DONE] 320/482 冲男阿凉 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 322/482 半只笨猪
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/498505577
+[DONE] 306/482 泛式 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 323/482 脱口秀_Talk_Show
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/514207628
+[DONE] 315/482 是啤酒鸭-梗图 status=success total_items=1 new_items=1 duplicate_items=0
+[SUBMIT] 324/482 罗翔说刑法
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/517327498
+[DONE] 322/482 半只笨猪 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 325/482 付航脱口秀精选
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/3493286857673111
+[DONE] 308/482 -LKs- status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 326/482 戴建业老师
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/532741557
+[DONE] 321/482 杰克森Jackson_ status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 327/482 听泉赏宝
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/3546592976046554
+[DONE] 327/482 听泉赏宝 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 328/482 灯果
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/4748646
+[DONE] 309/482 真实球迷汇 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 329/482 隔壁红魔
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/432174249
+[DONE] 310/482 李滇滇 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 330/482 管泽元
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/271338616
+[DONE] 311/482 影视飓风 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 331/482 白马繁华
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/251054248
+[DONE] 323/482 脱口秀_Talk_Show status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 332/482 咖啡醉足球
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/436553623
+[DONE] 324/482 罗翔说刑法 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 333/482 单弦震脉
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/5316213
+[DONE] 326/482 戴建业老师 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 334/482 米国脱口秀
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/142371069
+[DONE] 325/482 付航脱口秀精选 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 335/482 付航脱口秀
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/57592895
+[DONE] 328/482 灯果 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 336/482 峡谷玄学家
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/3493128455587886
+[DONE] 336/482 峡谷玄学家 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 337/482 AI Foundations
+         category=Videos feed_url=https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g
+[DONE] 337/482 AI Foundations status=failed error_type=unknown error_message={"detail": "HTTP Error 404: Not Found"}
+[SUBMIT] 338/482 simonwillison.net
+         category=英文博客 feed_url=https://simonwillison.net/atom/everything/
+[DONE] 338/482 simonwillison.net status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 339/482 jeffgeerling.com
+         category=英文博客 feed_url=https://www.jeffgeerling.com/blog.xml
+[DONE] 335/482 付航脱口秀 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 340/482 seangoedecke.com
+         category=英文博客 feed_url=https://www.seangoedecke.com/rss.xml
+[DONE] 339/482 jeffgeerling.com status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 341/482 krebsonsecurity.com
+         category=英文博客 feed_url=https://krebsonsecurity.com/feed/
+[DONE] 340/482 seangoedecke.com status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 342/482 daringfireball.net
+         category=英文博客 feed_url=https://daringfireball.net/feeds/main
+[DONE] 341/482 krebsonsecurity.com status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 343/482 ericmigi.com
+         category=英文博客 feed_url=https://ericmigi.com/rss.xml
+[DONE] 330/482 管泽元 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 344/482 antirez.com
+         category=英文博客 feed_url=http://antirez.com/rss
+[DONE] 343/482 ericmigi.com status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 345/482 idiallo.com
+         category=英文博客 feed_url=https://idiallo.com/feed.rss
+[DONE] 345/482 idiallo.com status=success total_items=1 new_items=1 duplicate_items=0
+[SUBMIT] 346/482 maurycyz.com
+         category=英文博客 feed_url=https://maurycyz.com/index.xml
+[DONE] 346/482 maurycyz.com status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 347/482 pluralistic.net
+         category=英文博客 feed_url=https://pluralistic.net/feed/
+[DONE] 329/482 隔壁红魔 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 348/482 shkspr.mobi
+         category=英文博客 feed_url=https://shkspr.mobi/blog/feed/
+[DONE] 344/482 antirez.com status=success total_items=1 new_items=1 duplicate_items=0
+[SUBMIT] 349/482 lcamtuf.substack.com
+         category=英文博客 feed_url=https://lcamtuf.substack.com/feed
+[DONE] 331/482 白马繁华 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 350/482 mitchellh.com
+         category=英文博客 feed_url=https://mitchellh.com/feed.xml
+[DONE] 333/482 单弦震脉 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 351/482 dynomight.net
+         category=英文博客 feed_url=https://dynomight.net/feed.xml
+[DONE] 332/482 咖啡醉足球 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 352/482 utcc.utoronto.ca/~cks
+         category=英文博客 feed_url=https://utcc.utoronto.ca/~cks/space/blog/?atom
+[DONE] 334/482 米国脱口秀 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 353/482 xeiaso.net
+         category=英文博客 feed_url=https://xeiaso.net/blog.rss
+[DONE] 348/482 shkspr.mobi status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 354/482 devblogs.microsoft.com/oldnewthing
+         category=英文博客 feed_url=https://devblogs.microsoft.com/oldnewthing/feed
+[DONE] 347/482 pluralistic.net status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 355/482 righto.com
+         category=英文博客 feed_url=https://www.righto.com/feeds/posts/default
+[DONE] 350/482 mitchellh.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 356/482 lucumr.pocoo.org
+         category=英文博客 feed_url=https://lucumr.pocoo.org/feed.atom
+[DONE] 349/482 lcamtuf.substack.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 357/482 skyfall.dev
+         category=英文博客 feed_url=https://skyfall.dev/rss.xml
+[DONE] 351/482 dynomight.net status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 358/482 garymarcus.substack.com
+         category=英文博客 feed_url=https://garymarcus.substack.com/feed
+[DONE] 353/482 xeiaso.net status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 359/482 rachelbythebay.com
+         category=英文博客 feed_url=https://rachelbythebay.com/w/atom.xml
+[DONE] 352/482 utcc.utoronto.ca/~cks status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 360/482 overreacted.io
+         category=英文博客 feed_url=https://overreacted.io/rss.xml
+[DONE] 359/482 rachelbythebay.com status=success total_items=1 new_items=1 duplicate_items=0
+[SUBMIT] 361/482 timsh.org
+         category=英文博客 feed_url=https://timsh.org/rss/
+[DONE] 355/482 righto.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 362/482 johndcook.com
+         category=英文博客 feed_url=https://www.johndcook.com/blog/feed/
+[DONE] 354/482 devblogs.microsoft.com/oldnewthing status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 363/482 gilesthomas.com
+         category=英文博客 feed_url=https://gilesthomas.com/feed/rss.xml
+[DONE] 358/482 garymarcus.substack.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 364/482 matklad.github.io
+         category=英文博客 feed_url=https://matklad.github.io/feed.xml
+[DONE] 357/482 skyfall.dev status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 365/482 derekthompson.org
+         category=英文博客 feed_url=https://www.theatlantic.com/feed/author/derek-thompson/
+[DONE] 356/482 lucumr.pocoo.org status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 366/482 evanhahn.com
+         category=英文博客 feed_url=https://evanhahn.com/feed.xml
+[DONE] 342/482 daringfireball.net status=success total_items=13 new_items=13 duplicate_items=0
+[SUBMIT] 367/482 terriblesoftware.org
+         category=英文博客 feed_url=https://terriblesoftware.org/feed/
+[DONE] 360/482 overreacted.io status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 368/482 rakhim.exotext.com
+         category=英文博客 feed_url=https://rakhim.exotext.com/rss.xml
+[DONE] 361/482 timsh.org status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 369/482 joanwestenberg.com
+         category=英文博客 feed_url=https://joanwestenberg.com/rss
+[DONE] 362/482 johndcook.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 370/482 xania.org
+         category=英文博客 feed_url=https://xania.org/feed
+[DONE] 363/482 gilesthomas.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 371/482 micahflee.com
+         category=英文博客 feed_url=https://micahflee.com/feed/
+[DONE] 364/482 matklad.github.io status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 372/482 nesbitt.io
+         category=英文博客 feed_url=https://nesbitt.io/feed.xml
+[DONE] 365/482 derekthompson.org status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 373/482 construction-physics.com
+         category=英文博客 feed_url=https://www.construction-physics.com/feed
+[DONE] 368/482 rakhim.exotext.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 374/482 tedium.co
+         category=英文博客 feed_url=https://feed.tedium.co/
+[DONE] 366/482 evanhahn.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 375/482 susam.net
+         category=英文博客 feed_url=https://susam.net/feed.xml
+[DONE] 367/482 terriblesoftware.org status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 376/482 entropicthoughts.com
+         category=英文博客 feed_url=https://entropicthoughts.com/feed.xml
+[DONE] 369/482 joanwestenberg.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 377/482 buttondown.com/hillelwayne
+         category=英文博客 feed_url=https://buttondown.com/hillelwayne/rss
+[DONE] 370/482 xania.org status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 378/482 dwarkesh.com
+         category=英文博客 feed_url=https://www.dwarkeshpatel.com/feed
+[DONE] 375/482 susam.net status=success total_items=2 new_items=2 duplicate_items=0
+[SUBMIT] 379/482 borretti.me
+         category=英文博客 feed_url=https://borretti.me/feed.xml
+[DONE] 371/482 micahflee.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 380/482 wheresyoured.at
+         category=英文博客 feed_url=https://www.wheresyoured.at/rss/
+[DONE] 376/482 entropicthoughts.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 381/482 jayd.ml
+         category=英文博客 feed_url=https://jayd.ml/feed.xml
+[DONE] 372/482 nesbitt.io status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 382/482 minimaxir.com
+         category=英文博客 feed_url=https://minimaxir.com/index.xml
+[DONE] 374/482 tedium.co status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 383/482 geohot.github.io
+         category=英文博客 feed_url=https://geohot.github.io/blog/feed.xml
+[DONE] 373/482 construction-physics.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 384/482 paulgraham.com
+         category=英文博客 feed_url=http://www.aaronsw.com/2002/feeds/pgessays.rss
+[DONE] 378/482 dwarkesh.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 385/482 filfre.net
+         category=英文博客 feed_url=https://www.filfre.net/feed/
+[DONE] 377/482 buttondown.com/hillelwayne status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 386/482 blog.jim-nielsen.com
+         category=英文博客 feed_url=https://blog.jim-nielsen.com/feed.xml
+[DONE] 379/482 borretti.me status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 387/482 dfarq.homeip.net
+         category=英文博客 feed_url=https://dfarq.homeip.net/feed/
+[DONE] 387/482 dfarq.homeip.net status=failed error_type=feed_parse_error error_message={"detail": "failed to parse feed: <unknown>:2:0: not well-formed (invalid token)"}
+[SUBMIT] 388/482 jyn.dev
+         category=英文博客 feed_url=https://jyn.dev/atom.xml
+[DONE] 381/482 jayd.ml status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 389/482 geoffreylitt.com
+         category=英文博客 feed_url=https://www.geoffreylitt.com/feed.xml
+[DONE] 384/482 paulgraham.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 390/482 downtowndougbrown.com
+         category=英文博客 feed_url=https://www.downtowndougbrown.com/feed/
+[DONE] 383/482 geohot.github.io status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 391/482 brutecat.com
+         category=英文博客 feed_url=https://brutecat.com/rss.xml
+[DONE] 380/482 wheresyoured.at status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 392/482 eli.thegreenplace.net
+         category=英文博客 feed_url=https://eli.thegreenplace.net/feeds/all.atom.xml
+[DONE] 382/482 minimaxir.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 393/482 abortretry.fail
+         category=英文博客 feed_url=https://www.abortretry.fail/feed
+[DONE] 385/482 filfre.net status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 394/482 fabiensanglard.net
+         category=英文博客 feed_url=https://fabiensanglard.net/rss.xml
+[DONE] 386/482 blog.jim-nielsen.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 395/482 oldvcr.blogspot.com
+         category=英文博客 feed_url=https://oldvcr.blogspot.com/feeds/posts/default
+[DONE] 388/482 jyn.dev status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 396/482 bogdanthegeek.github.io
+         category=英文博客 feed_url=https://bogdanthegeek.github.io/blog/index.xml
+[DONE] 390/482 downtowndougbrown.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 397/482 hugotunius.se
+         category=英文博客 feed_url=https://hugotunius.se/feed.xml
+[DONE] 391/482 brutecat.com status=success total_items=4 new_items=4 duplicate_items=0
+[SUBMIT] 398/482 gwern.net
+         category=英文博客 feed_url=https://gwern.substack.com/feed
+[DONE] 392/482 eli.thegreenplace.net status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 399/482 berthub.eu
+         category=英文博客 feed_url=https://berthub.eu/articles/index.xml
+[DONE] 393/482 abortretry.fail status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 400/482 chadnauseam.com
+         category=英文博客 feed_url=https://chadnauseam.com/rss.xml
+[DONE] 389/482 geoffreylitt.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 401/482 simone.org
+         category=英文博客 feed_url=https://simone.org/feed/
+[DONE] 394/482 fabiensanglard.net status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 402/482 it-notes.dragas.net
+         category=英文博客 feed_url=https://it-notes.dragas.net/feed/
+[DONE] 396/482 bogdanthegeek.github.io status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 403/482 beej.us
+         category=英文博客 feed_url=https://beej.us/blog/rss.xml
+[DONE] 400/482 chadnauseam.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 404/482 hey.paris
+         category=英文博客 feed_url=https://hey.paris/index.xml
+[DONE] 395/482 oldvcr.blogspot.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 405/482 danielwirtz.com
+         category=英文博客 feed_url=https://danielwirtz.com/rss.xml
+[DONE] 397/482 hugotunius.se status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 406/482 matduggan.com
+         category=英文博客 feed_url=https://matduggan.com/rss/
+[DONE] 399/482 berthub.eu status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 407/482 refactoringenglish.com
+         category=英文博客 feed_url=https://refactoringenglish.com/index.xml
+[DONE] 401/482 simone.org status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 408/482 worksonmymachine.substack.com
+         category=英文博客 feed_url=https://worksonmymachine.substack.com/feed
+[DONE] 398/482 gwern.net status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 409/482 philiplaine.com
+         category=英文博客 feed_url=https://philiplaine.com/index.xml
+[DONE] 403/482 beej.us status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 410/482 steveblank.com
+         category=英文博客 feed_url=https://steveblank.com/feed/
+[DONE] 402/482 it-notes.dragas.net status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 411/482 bernsteinbear.com
+         category=英文博客 feed_url=https://bernsteinbear.com/feed.xml
+[DONE] 404/482 hey.paris status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 412/482 danieldelaney.net
+         category=英文博客 feed_url=https://danieldelaney.net/feed
+[DONE] 405/482 danielwirtz.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 413/482 troyhunt.com
+         category=英文博客 feed_url=https://www.troyhunt.com/rss/
+[DONE] 407/482 refactoringenglish.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 414/482 herman.bearblog.dev
+         category=英文博客 feed_url=https://herman.bearblog.dev/feed/
+[DONE] 406/482 matduggan.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 415/482 tomrenner.com
+         category=英文博客 feed_url=https://tomrenner.com/index.xml
+[DONE] 409/482 philiplaine.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 416/482 blog.pixelmelt.dev
+         category=英文博客 feed_url=https://blog.pixelmelt.dev/rss/
+[DONE] 416/482 blog.pixelmelt.dev status=failed error_type=unknown error_message={"detail": "HTTP Error 530: <none>"}
+[SUBMIT] 417/482 martinalderson.com
+         category=英文博客 feed_url=https://martinalderson.com/feed.xml
+[DONE] 408/482 worksonmymachine.substack.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 418/482 danielchasehooper.com
+         category=英文博客 feed_url=https://danielchasehooper.com/feed.xml
+[DONE] 411/482 bernsteinbear.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 419/482 chiark.greenend.org.uk/~sgtatham
+         category=英文博客 feed_url=https://www.chiark.greenend.org.uk/~sgtatham/quasiblog/feed.xml
+[DONE] 412/482 danieldelaney.net status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 420/482 grantslatton.com
+         category=英文博客 feed_url=https://grantslatton.com/rss.xml
+[DONE] 413/482 troyhunt.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 421/482 anildash.com
+         category=英文博客 feed_url=https://anildash.com/feed.xml
+[DONE] 410/482 steveblank.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 422/482 aresluna.org
+         category=英文博客 feed_url=https://aresluna.org/main.rss
+[DONE] 415/482 tomrenner.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 423/482 michael.stapelberg.ch
+         category=英文博客 feed_url=https://michael.stapelberg.ch/feed.xml
+[DONE] 417/482 martinalderson.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 424/482 miguelgrinberg.com
+         category=英文博客 feed_url=https://blog.miguelgrinberg.com/feed
+[DONE] 414/482 herman.bearblog.dev status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 425/482 keygen.sh
+         category=英文博客 feed_url=https://keygen.sh/blog/feed.xml
+[DONE] 418/482 danielchasehooper.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 426/482 mjg59.dreamwidth.org
+         category=英文博客 feed_url=https://mjg59.dreamwidth.org/data/rss
+[DONE] 419/482 chiark.greenend.org.uk/~sgtatham status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 427/482 computer.rip
+         category=英文博客 feed_url=https://computer.rip/rss.xml
+[DONE] 426/482 mjg59.dreamwidth.org status=failed error_type=timeout error_message={"detail": "The read operation timed out"}
+[SUBMIT] 428/482 tedunangst.com
+         category=英文博客 feed_url=https://www.tedunangst.com/flak/rss
+[DONE] 420/482 grantslatton.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 429/482 小宇宙 Podcast 643928f99361a4e7c38a9555
+         category=播客 feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/643928f99361a4e7c38a9555
+[DONE] 422/482 aresluna.org status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 430/482 小宇宙 Podcast 61cbaac48bb4cd867fcabe22
+         category=播客 feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/61cbaac48bb4cd867fcabe22
+[DONE] 428/482 tedunangst.com status=failed error_type=timeout error_message={"detail": "<urlopen error _ssl.c:999: The handshake operation timed out>"}
+[SUBMIT] 431/482 小宇宙 Podcast 648b0b641c48983391a63f98
+         category=播客 feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/648b0b641c48983391a63f98
+[DONE] 429/482 小宇宙 Podcast 643928f99361a4e7c38a9555 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 432/482 小宇宙 Podcast 5e5c52c9418a84a04625e6cc
+         category=播客 feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/5e5c52c9418a84a04625e6cc
+[DONE] 430/482 小宇宙 Podcast 61cbaac48bb4cd867fcabe22 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 433/482 小宇宙 Podcast 63b7dd49289d2739647d9587
+         category=播客 feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/63b7dd49289d2739647d9587
+[DONE] 431/482 小宇宙 Podcast 648b0b641c48983391a63f98 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 434/482 小宇宙 Podcast 6507bc165c88d2412626b401
+         category=播客 feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/6507bc165c88d2412626b401
+[DONE] 432/482 小宇宙 Podcast 5e5c52c9418a84a04625e6cc status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 435/482 Lil'Log
+         category=英文博客 feed_url=https://lilianweng.github.io/index.xml
+[DONE] 433/482 小宇宙 Podcast 63b7dd49289d2739647d9587 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 436/482 Very Small Woods
+         category=英文博客 feed_url=https://www.verysmallwoods.com/feed.xml
+[DONE] 434/482 小宇宙 Podcast 6507bc165c88d2412626b401 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 437/482 数字生命卡兹克
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3223096120.atom
+[DONE] 421/482 anildash.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 438/482 AGI Hunt
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3087832081.atom
+[DONE] 425/482 keygen.sh status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 439/482 卡尔的AI沃茨
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3871977637.atom
+[DONE] 424/482 miguelgrinberg.com status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 440/482 赛博禅心
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3934419561.atom
+[DONE] 427/482 computer.rip status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 441/482 AI产品黄叔
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_2398553439.atom
+[DONE] 423/482 michael.stapelberg.ch status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 442/482 网罗灯下黑
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3565037632.atom
+[DONE] 435/482 Lil'Log status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 443/482 苍何
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3585152880.atom
+[DONE] 436/482 Very Small Woods status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 444/482 饼干哥哥AGI
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_2394281674.atom
+[DONE] 440/482 赛博禅心 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 445/482 刘聪NLP
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3891555159.atom
+[DONE] 438/482 AGI Hunt status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 446/482 AI产品阿颖
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3892772220.atom
+[DONE] 437/482 数字生命卡兹克 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 447/482 01Founder
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3927644787.atom
+[DONE] 441/482 AI产品黄叔 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 448/482 AI故事计划
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3917501995.atom
+[DONE] 439/482 卡尔的AI沃茨 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 449/482 十字路口Crossing
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3010319264.atom
+[DONE] 442/482 网罗灯下黑 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 450/482 沃垠AI
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3201599457.atom
+[DONE] 443/482 苍何 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 451/482 阿伦AI学习笔记
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3957475902.atom
+[DONE] 444/482 饼干哥哥AGI status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 452/482 胡说成理
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3297021519.atom
+[DONE] 446/482 AI产品阿颖 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 453/482 云中江树
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3016599109.atom
+[DONE] 448/482 AI故事计划 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 454/482 秋芝2046
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3930567871.atom
+[DONE] 449/482 十字路口Crossing status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 455/482 AI产品银海
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3913528478.atom
+[DONE] 450/482 沃垠AI status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 456/482 哥飞
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_2399233620.atom
+[DONE] 445/482 刘聪NLP status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 457/482 探索AGI
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3916725964.atom
+[DONE] 447/482 01Founder status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 458/482 新智元
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3271041950.atom
+[DONE] 453/482 云中江树 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 459/482 量子位
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3236757533.atom
+[DONE] 451/482 阿伦AI学习笔记 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 460/482 APPSO
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_2392024520.atom
+[DONE] 456/482 哥飞 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 461/482 智东西
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3081486433.atom
+[DONE] 452/482 胡说成理 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 462/482 雷峰网
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_1368348621.atom
+[DONE] 454/482 秋芝2046 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 463/482 PaperWeekly
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3201788143.atom
+[DONE] 455/482 AI产品银海 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 464/482 甲子光年
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3599245772.atom
+[DONE] 457/482 探索AGI status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 465/482 逛逛GitHub
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3516884134.atom
+[DONE] 458/482 新智元 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 466/482 开源AI项目落地
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3921606804.atom
+[DONE] 459/482 量子位 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 467/482 夕小瑶科技说
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3207765945.atom
+[DONE] 460/482 APPSO status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 468/482 Datawhale
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3226363426.atom
+[DONE] 461/482 智东西 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 469/482 极客公园
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_1304308441.atom
+[DONE] 462/482 雷峰网 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 470/482 AIGC开放社区
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3873892677.atom
+[DONE] 463/482 PaperWeekly status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 471/482 AI前线
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3554086560.atom
+[DONE] 465/482 逛逛GitHub status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 472/482 AI科技评论
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3098132220.atom
+[DONE] 466/482 开源AI项目落地 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 473/482 脑极体
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3515522183.atom
+[DONE] 464/482 甲子光年 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 474/482 硅星人Pro
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3926568365.atom
+[DONE] 468/482 Datawhale status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 475/482 特工宇宙
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3621654047.atom
+[DONE] 467/482 夕小瑶科技说 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 476/482 光子星球
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3082518302.atom
+[DONE] 470/482 AIGC开放社区 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 477/482 CVer
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3516712416.atom
+[DONE] 471/482 AI前线 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 478/482 Z Potentials
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3285810954.atom
+[DONE] 469/482 极客公园 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 479/482 Z Finance
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3077513391.atom
+[DONE] 473/482 脑极体 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 480/482 晚点LatePost
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3572959446.atom
+[DONE] 472/482 AI科技评论 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 481/482 InfoQ
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_2390142780.atom
+[DONE] 474/482 硅星人Pro status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 482/482 机器之心
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3073282833.atom
+[DONE] 477/482 CVer status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 475/482 特工宇宙 status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 476/482 光子星球 status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 479/482 Z Finance status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 478/482 Z Potentials status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 480/482 晚点LatePost status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 481/482 InfoQ status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 482/482 机器之心 status=success total_items=5 new_items=5 duplicate_items=0
+
+[SUMMARY]
+Processed sources: 482
+Successful sources: 469
+Failed sources: 13
+Skipped known failed sources: 0
+New items: 1392
+Recommended items from API responses: 583
+Final inbox items from this run: 61
+Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260505_121708/report.md
+Run state path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260505_121708/run_state.json
+
+[FAILED SOURCES]
+- StarYuhen | https://www.yuhenm.top/feed/ | unknown | {"detail": "HTTP Error 403: Forbidden"}
+- 今日热榜 | https://web2rss.cc/feed/rebang.today?preview=true | network_error | {"detail": "<urlopen error [Errno -2] Name or service not known>"}
+- 刘夙的科技世界 | https://wewe-rss.jerrylf.uk/feeds/MP_WXS_3002603832.json | feed_parse_error | {"detail": "failed to parse feed: <unknown>:2:0: not well-formed (invalid token)"}
+- 偷懒爱好者周刊 | https://toolight.cn/open/p/weekly/atom.xml | unknown | {"detail": "HTTP Error 404: Not Found"}
+- 信息差——独立开发者出海周刊 | https://gapis.money/rss.xml | feed_parse_error | {"detail": "failed to parse feed: <unknown>:28:5120: not well-formed (invalid token)"}
+- 歸藏的AI工具箱 | https://wechat2rss.bestblogs.dev/feed/1fc32fedbf5da37e8e819a9298ae80724c12cb03.xml | content_inbox_error | {"detail": "HTTP Error 500: Internal Server Error"}
+- 学习一下订阅源 | http://host.docker.internal:1200/follow/profile/158883963341209600 | rsshub_503 | {"detail": "HTTP Error 503: Service Unavailable"}
+- 机器之心 | https://www.jiqizhixin.com/rss | feed_parse_error | {"detail": "failed to parse feed: <unknown>:12:244: mismatched tag"}
+- AI Foundations | https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g | unknown | {"detail": "HTTP Error 404: Not Found"}
+- dfarq.homeip.net | https://dfarq.homeip.net/feed/ | feed_parse_error | {"detail": "failed to parse feed: <unknown>:2:0: not well-formed (invalid token)"}
+- blog.pixelmelt.dev | https://blog.pixelmelt.dev/rss/ | unknown | {"detail": "HTTP Error 530: <none>"}
+- mjg59.dreamwidth.org | https://mjg59.dreamwidth.org/data/rss | timeout | {"detail": "The read operation timed out"}
+- tedunangst.com | https://www.tedunangst.com/flak/rss | timeout | {"detail": "<urlopen error _ssl.c:999: The handshake operation timed out>"}
+
+[TOP INBOX ITEMS]
+- [5] [full_push] 别问树模型了！死磕结构化数据，清华团队把大模型表格理解推到极限 — 机器之心
+- [4] [full_push] 在大厂，token用少了不“健康” — InfoQ
+- [4] [full_push] Meta超级智能实验室又发论文，模型混一混，性能直接SOTA — 机器之心
+- [4] [full_push] 超越 VTM-RA！快手双向智能视频编码器BRHVC亮相NeurIPS2025 — 机器之心
+- [4] [full_push] Z Tech｜世界模型真正的壁垒，可能是表征压缩，对话李智昊、王雨飞 — Z Potentials
+- [4] [full_push] 深度｜对话a16z：当Bot比真人还多，互联网必须重建「人籍」认证系统 — Z Finance
+- [4] [incremental_push] “如果你不用更多Token，就永远逃不出底层”：AI竞赛开始变成资源战争 — InfoQ
+- [4] [full_push] 速递｜2026年OpenAI多月销售目标未达成，企业端被Anthropic反超，CFO内部预警1.4万亿算力承诺 — Z Potentials
+- [4] [full_push] 深度｜对话红杉资本：SEO 已死，未来三年不懂 Agent 的营销人将被淘汰 — Z Finance
+- [4] [full_push] 五一假期，花半天装个 Claude Code 玩玩？ — 特工宇宙

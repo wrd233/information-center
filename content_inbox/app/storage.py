@@ -9,7 +9,7 @@ from typing import Any
 
 from app.config import settings
 from app.models import ClusteringResult, NormalizedContent, ScreeningResult
-from app.utils import utc_now
+from app.utils import normalize_url, stable_hash, utc_now
 
 
 class InboxStore:
@@ -68,6 +68,40 @@ class InboxStore:
             self.ensure_column(conn, "inbox_items", "clustering_json", "TEXT")
             self.ensure_column(conn, "inbox_items", "embedding_text", "TEXT")
             self.ensure_column(conn, "inbox_items", "embedding_model", "TEXT")
+            self.ensure_column(conn, "inbox_items", "source_id", "TEXT")
+            self.ensure_column(conn, "inbox_items", "feed_url", "TEXT")
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS rss_sources (
+                    source_id TEXT PRIMARY KEY,
+                    source_name TEXT NOT NULL,
+                    source_category TEXT,
+                    feed_url TEXT NOT NULL,
+                    normalized_feed_url TEXT NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'active',
+                    priority INTEGER NOT NULL DEFAULT 3,
+                    tags_json TEXT NOT NULL DEFAULT '[]',
+                    notes TEXT,
+                    config_json TEXT NOT NULL DEFAULT '{}',
+                    last_fetch_at TEXT,
+                    last_success_at TEXT,
+                    last_failure_at TEXT,
+                    last_error_code TEXT,
+                    last_error_message TEXT,
+                    consecutive_failures INTEGER NOT NULL DEFAULT 0,
+                    last_run_id TEXT,
+                    last_new_items INTEGER NOT NULL DEFAULT 0,
+                    last_duplicate_items INTEGER NOT NULL DEFAULT 0,
+                    last_processed_items INTEGER NOT NULL DEFAULT 0,
+                    last_feed_items_seen INTEGER NOT NULL DEFAULT 0,
+                    last_incremental_decision TEXT,
+                    last_anchor_found INTEGER,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    UNIQUE(normalized_feed_url)
+                )
+                """
+            )
             conn.execute(
                 """
                 CREATE TABLE IF NOT EXISTS event_clusters (
@@ -133,7 +167,14 @@ class InboxStore:
             ).fetchone()
         return row_to_item(row) if row else None
 
-    def has_source_history(self, source_name: str, source_category: str | None) -> bool:
+    def has_source_history(
+        self,
+        source_name: str,
+        source_category: str | None,
+        *,
+        source_id: str | None = None,
+        feed_url: str | None = None,
+    ) -> bool:
         """Check whether any items from this source exist in the database.
 
         Source identity is determined by source_name + source_category.
@@ -143,6 +184,20 @@ class InboxStore:
         sources from old sources), this is acceptable.
         """
         with self.connect() as conn:
+            if source_id:
+                row = conn.execute(
+                    "SELECT 1 FROM inbox_items WHERE source_id = ?", (source_id,)
+                ).fetchone()
+                if row is not None:
+                    return True
+            if feed_url:
+                normalized_feed_url = normalize_url(feed_url) or feed_url.strip()
+                row = conn.execute(
+                    "SELECT 1 FROM inbox_items WHERE feed_url = ?",
+                    (normalized_feed_url,),
+                ).fetchone()
+                if row is not None:
+                    return True
             if source_category is not None:
                 row = conn.execute(
                     "SELECT 1 FROM inbox_items WHERE source_name = ? AND source_category = ?",
@@ -185,18 +240,20 @@ class InboxStore:
             conn.execute(
                 """
                 INSERT INTO inbox_items (
-                    item_id, dedupe_key, url, guid, title, source_name, source_category,
+                    item_id, dedupe_key, url, guid, source_id, feed_url, title, source_name, source_category,
                     content_type, published_at, author, summary, content_text,
                     screening_json, clustering_json, embedding_text, embedding_model,
                     raw_json, created_at, updated_at, last_seen_at, seen_count
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
                 """,
                 (
                     item_id,
                     dedupe_key,
                     payload.get("url"),
                     payload.get("guid"),
+                    payload.get("source_id"),
+                    payload.get("feed_url"),
                     payload["title"],
                     payload["source_name"],
                     payload.get("source_category"),
@@ -217,6 +274,229 @@ class InboxStore:
             )
             row = conn.execute("SELECT * FROM inbox_items WHERE item_id = ?", (item_id,)).fetchone()
         return row_to_item(row)
+
+    def generate_source_id(self, feed_url: str) -> str:
+        normalized = normalize_url(feed_url) or feed_url.strip()
+        return f"rss_{stable_hash('feed-url:' + normalized)[:16]}"
+
+    def create_rss_source(self, payload: dict[str, Any]) -> tuple[dict[str, Any], bool]:
+        feed_url = str(payload["feed_url"]).strip()
+        normalized_feed_url = normalize_url(feed_url) or feed_url
+        source_id = (payload.get("source_id") or self.generate_source_id(feed_url)).strip()
+        now = utc_now()
+        tags = payload.get("tags") or []
+        config = payload.get("config") or {}
+        with self.connect() as conn:
+            if conn.execute(
+                "SELECT 1 FROM rss_sources WHERE source_id = ?", (source_id,)
+            ).fetchone():
+                raise ValueError("source_id_conflict")
+            if conn.execute(
+                "SELECT 1 FROM rss_sources WHERE normalized_feed_url = ?",
+                (normalized_feed_url,),
+            ).fetchone():
+                raise ValueError("feed_url_conflict")
+            conn.execute(
+                """
+                INSERT INTO rss_sources (
+                    source_id, source_name, source_category, feed_url, normalized_feed_url,
+                    status, priority, tags_json, notes, config_json, created_at, updated_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    source_id,
+                    payload["source_name"],
+                    payload.get("source_category"),
+                    feed_url,
+                    normalized_feed_url,
+                    payload.get("status", "active"),
+                    int(payload.get("priority", 3)),
+                    json.dumps(tags, ensure_ascii=False),
+                    payload.get("notes"),
+                    json.dumps(config, ensure_ascii=False),
+                    now,
+                    now,
+                ),
+            )
+            row = conn.execute(
+                "SELECT * FROM rss_sources WHERE source_id = ?", (source_id,)
+            ).fetchone()
+        return row_to_source(row), True
+
+    def get_rss_source(self, source_id: str) -> dict[str, Any] | None:
+        with self.connect() as conn:
+            row = conn.execute(
+                "SELECT * FROM rss_sources WHERE source_id = ?", (source_id,)
+            ).fetchone()
+        return row_to_source(row) if row else None
+
+    def list_rss_sources(self, filters: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, int]]:
+        clauses: list[str] = []
+        params: list[Any] = []
+        if filters.get("status"):
+            clauses.append("status = ?")
+            params.append(filters["status"])
+        if filters.get("category"):
+            clauses.append("source_category LIKE ?")
+            params.append(f"%{filters['category']}%")
+        where_sql = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        limit = int(filters.get("limit", 100))
+        offset = int(filters.get("offset", 0))
+        with self.connect() as conn:
+            rows = conn.execute(
+                f"""
+                SELECT * FROM rss_sources
+                {where_sql}
+                ORDER BY priority ASC, source_name ASC
+                LIMIT ? OFFSET ?
+                """,
+                (*params, limit, offset),
+            ).fetchall()
+            stats_row = conn.execute(
+                """
+                SELECT
+                    COUNT(*) AS total,
+                    SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) AS active,
+                    SUM(CASE WHEN status = 'paused' THEN 1 ELSE 0 END) AS paused,
+                    SUM(CASE WHEN status = 'disabled' THEN 1 ELSE 0 END) AS disabled,
+                    SUM(CASE WHEN status = 'broken' THEN 1 ELSE 0 END) AS broken
+                FROM rss_sources
+                """
+            ).fetchone()
+        stats = {
+            "total": int(stats_row["total"] or 0),
+            "active": int(stats_row["active"] or 0),
+            "paused": int(stats_row["paused"] or 0),
+            "disabled": int(stats_row["disabled"] or 0),
+            "broken": int(stats_row["broken"] or 0),
+        }
+        return [row_to_source(row) for row in rows], stats
+
+    def update_rss_source(self, source_id: str, updates: dict[str, Any]) -> dict[str, Any] | None:
+        current = self.get_rss_source(source_id)
+        if current is None:
+            return None
+        assignments: list[str] = []
+        params: list[Any] = []
+        field_map = {
+            "source_name": "source_name",
+            "source_category": "source_category",
+            "status": "status",
+            "priority": "priority",
+            "notes": "notes",
+        }
+        for key, column in field_map.items():
+            if key in updates:
+                assignments.append(f"{column} = ?")
+                params.append(updates[key])
+        if "feed_url" in updates:
+            feed_url = str(updates["feed_url"]).strip()
+            normalized_feed_url = normalize_url(feed_url) or feed_url
+            with self.connect() as conn:
+                row = conn.execute(
+                    """
+                    SELECT source_id FROM rss_sources
+                    WHERE normalized_feed_url = ? AND source_id != ?
+                    """,
+                    (normalized_feed_url, source_id),
+                ).fetchone()
+            if row:
+                raise ValueError("feed_url_conflict")
+            assignments.extend(["feed_url = ?", "normalized_feed_url = ?"])
+            params.extend([feed_url, normalized_feed_url])
+        if "tags" in updates:
+            assignments.append("tags_json = ?")
+            params.append(json.dumps(updates["tags"] or [], ensure_ascii=False))
+        if "config" in updates:
+            assignments.append("config_json = ?")
+            params.append(json.dumps(updates["config"] or {}, ensure_ascii=False))
+        if not assignments:
+            return current
+        assignments.append("updated_at = ?")
+        params.append(utc_now())
+        params.append(source_id)
+        with self.connect() as conn:
+            conn.execute(
+                f"UPDATE rss_sources SET {', '.join(assignments)} WHERE source_id = ?",
+                params,
+            )
+            row = conn.execute(
+                "SELECT * FROM rss_sources WHERE source_id = ?", (source_id,)
+            ).fetchone()
+        return row_to_source(row)
+
+    def disable_rss_source(self, source_id: str) -> dict[str, Any] | None:
+        return self.update_rss_source(source_id, {"status": "disabled"})
+
+    def record_rss_source_success(
+        self,
+        source_id: str,
+        *,
+        run_id: str,
+        finished_at: str,
+        new_items: int,
+        duplicate_items: int,
+        processed_items: int,
+        feed_items_seen: int,
+        incremental_decision: str | None,
+        anchor_found: bool | None,
+    ) -> dict[str, Any] | None:
+        with self.connect() as conn:
+            conn.execute(
+                """
+                UPDATE rss_sources
+                SET last_fetch_at = ?, last_success_at = ?, last_failure_at = NULL,
+                    last_error_code = NULL, last_error_message = NULL,
+                    consecutive_failures = 0, last_run_id = ?, last_new_items = ?,
+                    last_duplicate_items = ?, last_processed_items = ?,
+                    last_feed_items_seen = ?, last_incremental_decision = ?,
+                    last_anchor_found = ?, updated_at = ?
+                WHERE source_id = ?
+                """,
+                (
+                    finished_at,
+                    finished_at,
+                    run_id,
+                    new_items,
+                    duplicate_items,
+                    processed_items,
+                    feed_items_seen,
+                    incremental_decision,
+                    None if anchor_found is None else int(anchor_found),
+                    finished_at,
+                    source_id,
+                ),
+            )
+            row = conn.execute(
+                "SELECT * FROM rss_sources WHERE source_id = ?", (source_id,)
+            ).fetchone()
+        return row_to_source(row) if row else None
+
+    def record_rss_source_failure(
+        self,
+        source_id: str,
+        *,
+        run_id: str,
+        finished_at: str,
+        error_code: str,
+        error_message: str,
+    ) -> dict[str, Any] | None:
+        with self.connect() as conn:
+            conn.execute(
+                """
+                UPDATE rss_sources
+                SET last_fetch_at = ?, last_failure_at = ?, last_error_code = ?,
+                    last_error_message = ?, consecutive_failures = consecutive_failures + 1,
+                    last_run_id = ?, updated_at = ?
+                WHERE source_id = ?
+                """,
+                (finished_at, finished_at, error_code, error_message, run_id, finished_at, source_id),
+            )
+            row = conn.execute(
+                "SELECT * FROM rss_sources WHERE source_id = ?", (source_id,)
+            ).fetchone()
+        return row_to_source(row) if row else None
 
     def update_item_clustering(self, item_id: str, clustering: ClusteringResult) -> dict[str, Any]:
         now = utc_now()
@@ -410,6 +690,8 @@ def row_to_item(row: sqlite3.Row) -> dict[str, Any]:
         "title": row["title"],
         "url": row["url"],
         "guid": row["guid"],
+        "source_id": row["source_id"],
+        "feed_url": row["feed_url"],
         "source_name": row["source_name"],
         "source_category": row["source_category"],
         "content_type": row["content_type"],
@@ -425,6 +707,38 @@ def row_to_item(row: sqlite3.Row) -> dict[str, Any]:
         "updated_at": row["updated_at"],
         "last_seen_at": row["last_seen_at"],
         "seen_count": row["seen_count"],
+    }
+
+
+def row_to_source(row: sqlite3.Row) -> dict[str, Any]:
+    return {
+        "source_id": row["source_id"],
+        "source_name": row["source_name"],
+        "source_category": row["source_category"],
+        "feed_url": row["feed_url"],
+        "normalized_feed_url": row["normalized_feed_url"],
+        "status": row["status"],
+        "priority": row["priority"],
+        "tags": json.loads(row["tags_json"] or "[]"),
+        "notes": row["notes"],
+        "config": json.loads(row["config_json"] or "{}"),
+        "last_fetch_at": row["last_fetch_at"],
+        "last_success_at": row["last_success_at"],
+        "last_failure_at": row["last_failure_at"],
+        "last_error_code": row["last_error_code"],
+        "last_error_message": row["last_error_message"],
+        "consecutive_failures": row["consecutive_failures"],
+        "last_run_id": row["last_run_id"],
+        "last_new_items": row["last_new_items"],
+        "last_duplicate_items": row["last_duplicate_items"],
+        "last_processed_items": row["last_processed_items"],
+        "last_feed_items_seen": row["last_feed_items_seen"],
+        "last_incremental_decision": row["last_incremental_decision"],
+        "last_anchor_found": None
+        if row["last_anchor_found"] is None
+        else bool(row["last_anchor_found"]),
+        "created_at": row["created_at"],
+        "updated_at": row["updated_at"],
     }
 
 
@@ -584,6 +898,8 @@ def public_item(item: dict[str, Any]) -> dict[str, Any]:
         "item_id": item["item_id"],
         "title": item["title"],
         "url": item["url"],
+        "source_id": item.get("source_id"),
+        "feed_url": item.get("feed_url"),
         "source_name": item["source_name"],
         "source_category": item["source_category"],
         "content_type": item["content_type"],

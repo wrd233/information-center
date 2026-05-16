@@ -1,0 +1,3 @@
+source_name,source_category,local_xml_url,xml_url,feed_url,error_message,error_type
+图书推荐 – 书伴,SocialMedia,http://127.0.0.1:1200/bookfere/books,https://macmini-rsshub.tail99ecfa.ts.net/bookfere/books,http://host.docker.internal:1200/bookfere/books,"{""detail"": ""<urlopen error [Errno 8] nodename nor servname provided, or not known>""}",network_error
+最新发布_共产党员网,党政信息,http://127.0.0.1:1200/12371/zxfb,https://macmini-rsshub.tail99ecfa.ts.net/12371/zxfb,http://host.docker.internal:1200/12371/zxfb,"{""detail"": ""<urlopen error [Errno 8] nodename nor servname provided, or not known>""}",network_error

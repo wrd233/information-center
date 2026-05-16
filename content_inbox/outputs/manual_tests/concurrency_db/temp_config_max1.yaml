@@ -1,0 +1,66 @@
+clustering:
+  archive_after_days: 7
+  cluster_min_personal_relevance: 3
+  cluster_min_value_score: 3
+  cluster_vector_strategy: summary_embedding
+  duplicate_threshold: 0.97
+  enabled: true
+  high_overlap_entity_ratio: 0.6
+  new_event_threshold: 0.85
+  top_k: 5
+embedding:
+  api_key_env: CONTENT_INBOX_EMBEDDING_API_KEY
+  base_url: https://yunwu.apifox.cn/v1
+  dimensions: 1536
+  enabled: true
+  max_input_chars: 3000
+  model: text-embedding-3-small
+  provider: yunwu
+  timeout_seconds: 60
+llm:
+  api_key_env: CONTENT_INBOX_DEEPSEEK_API_KEY
+  base_url: https://api.deepseek.com
+  max_concurrency: 1
+  max_tokens: 1200
+  model: deepseek-v4-flash
+  prompt_version: screening_v1
+  provider: deepseek
+  temperature: 0.2
+  timeout_seconds: 60
+notification:
+  full_push_for_new_event: true
+  full_push_min_personal_relevance: 3
+  full_push_min_value_score: 4
+  include_score_3_in_full_push: false
+  include_silent_in_default_inbox: false
+  incremental_push_min_value_score: 4
+  incremental_push_when_has_new_info: true
+  manual_review_when_uncertain: true
+  silent_duplicates: true
+score_policy:
+  ignore_below_value_score: 2
+  manual_review_confidence_below: 0.6
+  read_min_personal_relevance: 3
+  read_min_value_score: 4
+  save_min_personal_relevance: 4
+  save_min_value_score: 4
+  transcribe_min_personal_relevance: 3
+  transcribe_min_value_score: 4
+screening:
+  categories:
+  - "AI\u524D\u6CBF"
+  - "AI\u5DE5\u5177"
+  - "\u4FE1\u606F\u7BA1\u7406"
+  - "\u6280\u672F\u5B66\u4E60"
+  - "\u5DE5\u7A0B\u5B9E\u8DF5"
+  - "\u793E\u4F1A\u89C2\u5BDF"
+  - "\u4EBA\u751F\u7ECF\u9A8C"
+  - "\u5546\u4E1A\u4EA7\u54C1"
+  - "\u5A31\u4E50\u5185\u5BB9"
+  - "\u65B0\u95FB\u8D44\u8BAF"
+  - "\u4F4E\u8D28\u8425\u9500"
+  - "\u5176\u4ED6"
+  enabled: true
+  max_input_chars: 4000
+  merged_max_tokens: 3000
+  mode: two_stage

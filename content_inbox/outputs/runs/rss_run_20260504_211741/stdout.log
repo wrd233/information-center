@@ -1,0 +1,80 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260504_211741
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 482
+[INFO] Selected sources: 20
+[INFO] Pending sources this invocation: 20
+[INFO] URL mode: docker-host
+[INFO] Screen enabled: True
+[INFO] Concurrency: 4
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": true, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1", "llm_max_concurrency": 4}, "_status": 200}
+[SUBMIT] 001/020 Hi, DIYgod
+         category=Articles feed_url=https://diygod.cc/feed
+[SUBMIT] 002/020 图书推荐 – 书伴
+         category=SocialMedia feed_url=http://host.docker.internal:1200/bookfere/books
+[SUBMIT] 003/020 AI Foundations
+         category=Videos feed_url=https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g
+[SUBMIT] 004/020 Rolen's Blog
+         category=个人博客-人生 feed_url=https://rolen.wiki/feed/
+[DONE] 002/020 图书推荐 – 书伴 status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 005/020 最新发布_共产党员网
+         category=党政信息 feed_url=http://host.docker.internal:1200/12371/zxfb
+[DONE] 003/020 AI Foundations status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 006/020 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台
+         category=其他 feed_url=https://51cg1.com/feed/
+[DONE] 001/020 Hi, DIYgod status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 007/020 一觉醒来发生了什么 - 即刻圈子
+         category=国内外资讯 feed_url=http://host.docker.internal:1200/jike/topic/553870e8e4b0cafb0a1bef68
+[DONE] 004/020 Rolen's Blog status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 008/020 - 政府文件库
+         category=国内政策 feed_url=http://host.docker.internal:1200/gov/zhengce/zhengceku/bmwj
+[DONE] 006/020 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台 status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 009/020 猴猴说话
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3279284299.atom
+[DONE] 009/020 猴猴说话 status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 010/020 小宇宙 Podcast 643928f99361a4e7c38a9555
+         category=播客 feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/643928f99361a4e7c38a9555
+[DONE] 007/020 一觉醒来发生了什么 - 即刻圈子 status=success total_items=4 new_items=0 duplicate_items=4
+[DONE] 005/020 最新发布_共产党员网 status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 011/020 波士顿圆脸
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/346563107
+[SUBMIT] 012/020 飞鸟手札
+         category=短知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/1366786686
+[DONE] 008/020 - 政府文件库 status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 013/020 Vista看天下
+         category=社评 feed_url=https://plink.anyfeeder.com/weixin/vistaweek
+[DONE] 010/020 小宇宙 Podcast 643928f99361a4e7c38a9555 status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 014/020 小众软件
+         category=科技与编程 feed_url=https://www.appinn.com/feed/
+[DONE] 013/020 Vista看天下 status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 015/020 猫眼看足球
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/456249922
+[DONE] 014/020 小众软件 status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 016/020 simonwillison.net
+         category=英文博客 feed_url=https://simonwillison.net/atom/everything/
+[DONE] 016/020 simonwillison.net status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 017/020 你不知道的行业内幕 - 即刻圈子
+         category=资讯 feed_url=http://host.docker.internal:1200/jike/topic/5699f451d3e8351200bffdc8
+[DONE] 011/020 波士顿圆脸 status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 018/020 AliAbdaal
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/3546581580122806
+[DONE] 012/020 飞鸟手札 status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 019/020 tanscp
+         category=Articles feed_url=https://tanscp.com/feed/
+[DONE] 018/020 AliAbdaal status=success total_items=4 new_items=0 duplicate_items=4
+[SUBMIT] 020/020 每周一书 – 书伴
+         category=SocialMedia feed_url=http://host.docker.internal:1200/bookfere/weekly
+[DONE] 019/020 tanscp status=success total_items=4 new_items=0 duplicate_items=4
+[DONE] 020/020 每周一书 – 书伴 status=success total_items=4 new_items=0 duplicate_items=4
+[DONE] 015/020 猫眼看足球 status=success total_items=4 new_items=1 duplicate_items=3
+[DONE] 017/020 你不知道的行业内幕 - 即刻圈子 status=success total_items=4 new_items=1 duplicate_items=3
+
+[SUMMARY]
+Processed sources: 20
+Successful sources: 20
+Failed sources: 0
+Skipped known failed sources: 0
+New items: 2
+Recommended items from API responses: 36
+Final inbox items from this run: 0
+Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260504_211741/report.md
+Run state path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260504_211741/run_state.json

@@ -30,6 +30,7 @@ def fetch_feed(feed_url: str) -> bytes:
 
 def parse_feed(
     feed_url: str,
+    source_id: str | None = None,
     source_name: str | None = None,
     source_category: str | None = None,
     limit: int | None = None,
@@ -49,6 +50,8 @@ def parse_feed(
         items.append(
             ContentAnalyzeRequest(
                 url=entry.get("link"),
+                source_id=source_id,
+                feed_url=feed_url,
                 title=entry.get("title"),
                 source_name=source_name or feed_title,
                 source_category=source_category,
@@ -86,4 +89,3 @@ def parse_entry_datetime(entry: dict[str, Any]) -> str | None:
         return parsedate_to_datetime(value).isoformat()
     except (TypeError, ValueError, IndexError, OverflowError):
         return value
-

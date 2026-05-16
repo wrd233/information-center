@@ -1,0 +1,2 @@
+source_name,source_category,local_xml_url,xml_url,feed_url,error_message,error_type
+飞鸟手札,短知识,http://127.0.0.1:1200/bilibili/user/video/1366786686,https://macmini-rsshub.tail99ecfa.ts.net/bilibili/user/video/1366786686,http://host.docker.internal:1200/bilibili/user/video/1366786686,"{""detail"": ""<urlopen error [Errno 101] Network is unreachable>""}",network_error

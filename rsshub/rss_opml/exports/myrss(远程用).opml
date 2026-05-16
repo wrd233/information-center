@@ -2,7 +2,7 @@
 <opml version="2.0">
     <head>
         <title>My RSS</title>
-        <dateCreated>2026-05-02T04:48:57+00:00</dateCreated>
+        <dateCreated>2026-05-05T02:17:26+00:00</dateCreated>
     </head>
     <body>
         <outline text="Articles">
@@ -46,15 +46,61 @@
                 <outline text="🔔科技频道[奇诺分享-ccino.org]⚡️" title="🔔科技频道[奇诺分享-ccino.org]⚡️" xmlUrl="https://channel.ccino.org/rss.xml" type="rss" htmlUrl="https://channel.ccino.org/" />
             </outline>
             <outline text="微信公众号">
-                <outline text="猴猴说话" title="猴猴说话" xmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_3279284299.atom" type="rss" htmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_3279284299.atom" />
-                <outline text="潦草学者" title="潦草学者" xmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_3239649460.atom" type="rss" htmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_3239649460.atom" />
-                <outline text="L先生说" title="L先生说" xmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_3015646136.atom" type="rss" htmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_3015646136.atom" />
-                <outline text="常青说" title="常青说" xmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_3944297233.atom" type="rss" htmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_3944297233.atom" />
-                <outline text="啊桂的实验室" title="啊桂的实验室" xmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_3097885397.atom" type="rss" htmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_3097885397.atom" />
-                <outline text="大问题Dialectic" title="大问题Dialectic" xmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_2391461928.atom" type="rss" htmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_2391461928.atom" />
-                <outline text="ONE字幕组" title="ONE字幕组" xmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_3220087653.atom" type="rss" htmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_3220087653.atom" />
-                <outline text="everystep" title="everystep" xmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_2396013984.atom" type="rss" htmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_2396013984.atom" />
-                <outline text="走路" title="走路" xmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_3097360004.atom" type="rss" htmlUrl="https://myweixinrss.zeabur.app/feeds/MP_WXS_3097360004.atom" />
+                <outline text="猴猴说话" title="猴猴说话" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3279284299.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3279284299.atom" />
+                <outline text="潦草学者" title="潦草学者" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3239649460.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3239649460.atom" />
+                <outline text="L先生说" title="L先生说" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3015646136.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3015646136.atom" />
+                <outline text="常青说" title="常青说" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3944297233.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3944297233.atom" />
+                <outline text="啊桂实验室" title="啊桂实验室" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3097885397.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3097885397.atom" />
+                <outline text="大问题Dialectic" title="大问题Dialectic" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_2391461928.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_2391461928.atom" />
+                <outline text="ONE字幕组" title="ONE字幕组" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3220087653.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3220087653.atom" />
+                <outline text="everystep" title="everystep" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_2396013984.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_2396013984.atom" />
+                <outline text="走路" title="走路" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3097360004.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3097360004.atom" />
+                <outline text="数字生命卡兹克" title="数字生命卡兹克" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3223096120.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3223096120.atom" />
+                <outline text="AGI Hunt" title="AGI Hunt" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3087832081.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3087832081.atom" />
+                <outline text="卡尔的AI沃茨" title="卡尔的AI沃茨" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3871977637.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3871977637.atom" />
+                <outline text="赛博禅心" title="赛博禅心" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3934419561.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3934419561.atom" />
+                <outline text="AI产品黄叔" title="AI产品黄叔" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_2398553439.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_2398553439.atom" />
+                <outline text="网罗灯下黑" title="网罗灯下黑" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3565037632.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3565037632.atom" />
+                <outline text="苍何" title="苍何" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3585152880.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3585152880.atom" />
+                <outline text="饼干哥哥AGI" title="饼干哥哥AGI" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_2394281674.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_2394281674.atom" />
+                <outline text="刘聪NLP" title="刘聪NLP" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3891555159.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3891555159.atom" />
+                <outline text="AI产品阿颖" title="AI产品阿颖" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3892772220.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3892772220.atom" />
+                <outline text="01Founder" title="01Founder" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3927644787.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3927644787.atom" />
+                <outline text="AI故事计划" title="AI故事计划" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3917501995.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3917501995.atom" />
+                <outline text="十字路口Crossing" title="十字路口Crossing" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3010319264.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3010319264.atom" />
+                <outline text="沃垠AI" title="沃垠AI" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3201599457.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3201599457.atom" />
+                <outline text="阿伦AI学习笔记" title="阿伦AI学习笔记" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3957475902.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3957475902.atom" />
+                <outline text="胡说成理" title="胡说成理" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3297021519.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3297021519.atom" />
+                <outline text="云中江树" title="云中江树" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3016599109.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3016599109.atom" />
+                <outline text="秋芝2046" title="秋芝2046" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3930567871.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3930567871.atom" />
+                <outline text="AI产品银海" title="AI产品银海" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3913528478.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3913528478.atom" />
+                <outline text="哥飞" title="哥飞" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_2399233620.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_2399233620.atom" />
+                <outline text="探索AGI" title="探索AGI" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3916725964.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3916725964.atom" />
+                <outline text="新智元" title="新智元" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3271041950.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3271041950.atom" />
+                <outline text="量子位" title="量子位" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3236757533.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3236757533.atom" />
+                <outline text="APPSO" title="APPSO" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_2392024520.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_2392024520.atom" />
+                <outline text="智东西" title="智东西" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3081486433.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3081486433.atom" />
+                <outline text="雷峰网" title="雷峰网" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_1368348621.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_1368348621.atom" />
+                <outline text="PaperWeekly" title="PaperWeekly" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3201788143.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3201788143.atom" />
+                <outline text="甲子光年" title="甲子光年" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3599245772.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3599245772.atom" />
+                <outline text="逛逛GitHub" title="逛逛GitHub" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3516884134.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3516884134.atom" />
+                <outline text="开源AI项目落地" title="开源AI项目落地" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3921606804.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3921606804.atom" />
+                <outline text="夕小瑶科技说" title="夕小瑶科技说" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3207765945.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3207765945.atom" />
+                <outline text="Datawhale" title="Datawhale" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3226363426.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3226363426.atom" />
+                <outline text="极客公园" title="极客公园" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_1304308441.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_1304308441.atom" />
+                <outline text="AIGC开放社区" title="AIGC开放社区" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3873892677.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3873892677.atom" />
+                <outline text="AI前线" title="AI前线" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3554086560.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3554086560.atom" />
+                <outline text="AI科技评论" title="AI科技评论" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3098132220.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3098132220.atom" />
+                <outline text="脑极体" title="脑极体" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3515522183.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3515522183.atom" />
+                <outline text="硅星人Pro" title="硅星人Pro" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3926568365.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3926568365.atom" />
+                <outline text="特工宇宙" title="特工宇宙" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3621654047.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3621654047.atom" />
+                <outline text="光子星球" title="光子星球" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3082518302.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3082518302.atom" />
+                <outline text="CVer" title="CVer" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3516712416.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3516712416.atom" />
+                <outline text="Z Potentials" title="Z Potentials" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3285810954.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3285810954.atom" />
+                <outline text="Z Finance" title="Z Finance" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3077513391.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3077513391.atom" />
+                <outline text="晚点LatePost" title="晚点LatePost" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3572959446.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3572959446.atom" />
+                <outline text="InfoQ" title="InfoQ" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_2390142780.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_2390142780.atom" />
+                <outline text="机器之心" title="机器之心" xmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3073282833.atom" type="rss" htmlUrl="http://192.168.1.6:8003/feed/MP_WXS_3073282833.atom" />
             </outline>
             <outline text="社评">
                 <outline text="Vista看天下" title="Vista看天下" xmlUrl="https://plink.anyfeeder.com/weixin/vistaweek" type="rss" htmlUrl="http://weixin.sogou.com/weixin?type=1&amp;s_from=input&amp;query=Vista%E7%9C%8B%E5%A4%A9%E4%B8%8B" />

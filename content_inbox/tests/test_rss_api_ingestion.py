@@ -89,4 +89,4 @@ def test_rss_analyze_malformed_feed_returns_400_with_detail(tmp_path: Path) -> N
     )
 
     assert response.status_code == 400
-    assert "failed to parse feed" in response.json()["detail"]
+    assert response.json()["error"]["error_code"] == "rss_parse_error"

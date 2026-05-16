@@ -1,0 +1,626 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260505_112224
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 482
+[INFO] Selected sources: 482
+[INFO] Pending sources this invocation: 482
+[INFO] URL mode: docker-host
+[INFO] Screen enabled: True
+[INFO] Concurrency: 8
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": true, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1", "llm_max_concurrency": 2, "screening_mode": "merged"}, "_status": 200}
+[INFO] Setting service LLM max concurrency to 6 ...
+[INFO] Service LLM max concurrency set to 6
+[INFO] Setting service screening mode to merged ...
+[INFO] Service screening mode set to merged
+[SUBMIT] 001/482 Hi, DIYgod
+         category=Articles feed_url=https://diygod.cc/feed
+[SUBMIT] 002/482 tanscp
+         category=Articles feed_url=https://tanscp.com/feed/
+[SUBMIT] 003/482 Airing 的博客
+         category=Articles feed_url=https://ursb.me/blog/feed.xml
+[SUBMIT] 004/482 Rolen's Blog
+         category=个人博客-人生 feed_url=https://rolen.wiki/feed/
+[SUBMIT] 005/482 Ben's Love
+         category=个人博客-人生 feed_url=https://bens.love/feed
+[SUBMIT] 006/482 莫比乌斯
+         category=个人博客-人生 feed_url=https://mobius.blog/feed/
+[SUBMIT] 007/482 白熊阿丸的小屋
+         category=个人博客-人生 feed_url=https://blog.bxaw.name/feed/
+[SUBMIT] 008/482 草稿拾遗
+         category=个人博客-人生 feed_url=https://kill-the-newsletter.com/feeds/t87xbbj6p4iwfhsi.xml
+[DONE] 005/482 Ben's Love status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 001/482 Hi, DIYgod status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 004/482 Rolen's Blog status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 002/482 tanscp status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 003/482 Airing 的博客 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 006/482 莫比乌斯 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 007/482 白熊阿丸的小屋 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 009/482 Paradise Lost
+         category=Articles feed_url=https://2890.ltd/feed/
+[SUBMIT] 010/482 笨方法学写作
+         category=Articles feed_url=https://www.cnfeat.com/feed.xml
+[SUBMIT] 011/482 StarYuhen
+         category=Articles feed_url=https://www.yuhenm.top/feed/
+[SUBMIT] 012/482 Experimental History
+         category=Articles feed_url=https://www.experimental-history.com/feed
+[SUBMIT] 013/482 Blog - Remote Work Prep
+         category=Articles feed_url=https://www.remoteworkprep.com/blog?format=rss
+[SUBMIT] 014/482 EVANGELION:ALL
+         category=Articles feed_url=https://www.eva-all.com/news/feed/
+[SUBMIT] 015/482 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台
+         category=其他 feed_url=https://51cg1.com/feed/
+[DONE] 012/482 Experimental History status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 008/482 草稿拾遗 status=failed error_type=rate_limit error_message={"detail": "HTTP Error 429: Too Many Requests"}
+[DONE] 009/482 Paradise Lost status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 010/482 笨方法学写作 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 011/482 StarYuhen status=failed error_type=unknown error_message={"detail": "HTTP Error 403: Forbidden"}
+[SUBMIT] 016/482 今日热榜
+         category=Articles feed_url=https://web2rss.cc/feed/rebang.today?preview=true
+[SUBMIT] 017/482 安全代码
+         category=Articles feed_url=https://www.usmacd.com/atom.xml
+[SUBMIT] 018/482 老T博客
+         category=Articles feed_url=https://lawtee.com/index.xml
+[SUBMIT] 019/482 小众软件
+         category=科技与编程 feed_url=https://www.appinn.com/feed/
+[SUBMIT] 020/482 HelloGithub - 月刊
+         category=科技与编程 feed_url=http://host.docker.internal:1200/hellogithub/volume
+[DONE] 014/482 EVANGELION:ALL status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 016/482 今日热榜 status=failed error_type=network_error error_message={"detail": "<urlopen error [Errno -2] Name or service not known>"}
+[DONE] 019/482 小众软件 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 021/482 宝玉的分享
+         category=科技与编程 feed_url=https://s.baoyu.io/feed.xml
+[SUBMIT] 022/482 阮一峰的网络日志
+         category=科技与编程 feed_url=https://feeds.feedburner.com/ruanyifeng
+[SUBMIT] 023/482 龙爪槐守望者
+         category=科技与编程 feed_url=https://www.ftium4.com/rss.xml
+[DONE] 021/482 宝玉的分享 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 023/482 龙爪槐守望者 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 020/482 HelloGithub - 月刊 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 024/482 十年之约聚合订阅
+         category=科技与编程 feed_url=https://tool.bcrjl.com/snzy-rss/
+[SUBMIT] 025/482 #UNTAG
+         category=科技与编程 feed_url=https://rss.utgd.net/feed/
+[SUBMIT] 026/482 混沌周刊
+         category=科技与编程 feed_url=https://weekly.love/feed/atom
+[DONE] 013/482 Blog - Remote Work Prep status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 027/482 🔔科技频道[奇诺分享-ccino.org]⚡️
+         category=科技与编程 feed_url=https://channel.ccino.org/rss.xml
+[DONE] 026/482 混沌周刊 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 028/482 猴猴说话
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3279284299.atom
+[DONE] 028/482 猴猴说话 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 029/482 潦草学者
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3239649460.atom
+[DONE] 029/482 潦草学者 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 030/482 L先生说
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3015646136.atom
+[DONE] 030/482 L先生说 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 031/482 常青说
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3944297233.atom
+[DONE] 031/482 常青说 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 032/482 啊桂实验室
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3097885397.atom
+[DONE] 015/482 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台 status=failed error_type=network_error error_message={"detail": "<urlopen error [Errno 101] Network is unreachable>"}
+[DONE] 032/482 啊桂实验室 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 033/482 大问题Dialectic
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_2391461928.atom
+[SUBMIT] 034/482 ONE字幕组
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3220087653.atom
+[DONE] 025/482 #UNTAG status=success total_items=1 new_items=1 duplicate_items=0
+[DONE] 033/482 大问题Dialectic status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 034/482 ONE字幕组 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 035/482 everystep
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_2396013984.atom
+[SUBMIT] 036/482 走路
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3097360004.atom
+[SUBMIT] 037/482 Vista看天下
+         category=社评 feed_url=https://plink.anyfeeder.com/weixin/vistaweek
+[DONE] 036/482 走路 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 035/482 everystep status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 038/482 Tinyfool的个人网站
+         category=社评 feed_url=https://codechina.org/feed/
+[SUBMIT] 039/482 刘夙的科技世界
+         category=社评 feed_url=https://wewe-rss.jerrylf.uk/feeds/MP_WXS_3002603832.json
+[DONE] 022/482 阮一峰的网络日志 status=failed error_type=timeout error_message={"detail": "<urlopen error timed out>"}
+[DONE] 037/482 Vista看天下 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 040/482 三联生活周刊 Lifeweek
+         category=社评 feed_url=https://the.bi/s/rawbbyu2zgmy32
+[SUBMIT] 041/482 一觉醒来发生了什么 - 即刻圈子
+         category=国内外资讯 feed_url=http://host.docker.internal:1200/jike/topic/553870e8e4b0cafb0a1bef68
+[DONE] 041/482 一觉醒来发生了什么 - 即刻圈子 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 038/482 Tinyfool的个人网站 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 042/482 - 政府文件库
+         category=国内政策 feed_url=http://host.docker.internal:1200/gov/zhengce/zhengceku/bmwj
+[SUBMIT] 043/482 不如读书
+         category=Articles feed_url=https://wuyagege.substack.com/feed
+[DONE] 042/482 - 政府文件库 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 044/482 Lukas Petersson’s blog
+         category=Articles feed_url=https://lukaspetersson.com/feed.xml
+[DONE] 040/482 三联生活周刊 Lifeweek status=failed error_type=network_error error_message={"detail": "<urlopen error [Errno 101] Network is unreachable>"}
+[SUBMIT] 045/482 偷懒爱好者周刊
+         category=Articles feed_url=https://toolight.cn/open/p/weekly/atom.xml
+[DONE] 045/482 偷懒爱好者周刊 status=failed error_type=unknown error_message={"detail": "HTTP Error 404: Not Found"}
+[SUBMIT] 046/482 GeekPlux Letters
+         category=Articles feed_url=https://letters.geekplux.com/rss/
+[DONE] 043/482 不如读书 status=failed error_type=network_error error_message={"detail": "<urlopen error [Errno 101] Network is unreachable>"}
+[SUBMIT] 047/482 信息差——独立开发者出海周刊
+         category=Articles feed_url=https://gapis.money/rss.xml
+[DONE] 047/482 信息差——独立开发者出海周刊 status=failed error_type=feed_parse_error error_message={"detail": "failed to parse feed: <unknown>:28:5120: not well-formed (invalid token)"}
+[SUBMIT] 048/482 joojen Zhou 的网站
+         category=Articles feed_url=https://joojen.com/feed
+[DONE] 039/482 刘夙的科技世界 status=failed error_type=feed_parse_error error_message={"detail": "failed to parse feed: <unknown>:2:0: not well-formed (invalid token)"}
+[SUBMIT] 049/482 周刊 归档 - 酷口家数字花园
+         category=Articles feed_url=https://weqoocu.com/feed
+[DONE] 017/482 安全代码 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 050/482 莫尔索随笔
+         category=Articles feed_url=https://liduos.com/atom.xml
+[DONE] 018/482 老T博客 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 051/482 Ahead of AI
+         category=Articles feed_url=https://magazine.sebastianraschka.com/feed
+[DONE] 044/482 Lukas Petersson’s blog status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 052/482 歸藏的AI工具箱
+         category=Articles feed_url=https://wechat2rss.bestblogs.dev/feed/1fc32fedbf5da37e8e819a9298ae80724c12cb03.xml
+[DONE] 052/482 歸藏的AI工具箱 status=failed error_type=content_inbox_error error_message={"detail": "HTTP Error 500: Internal Server Error"}
+[SUBMIT] 053/482 Kubernetes Blog
+         category=Articles feed_url=https://kubernetes.io/feed.xml
+[DONE] 048/482 joojen Zhou 的网站 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 054/482 AI洞察日报 RSS Feed
+         category=Articles feed_url=https://justlovemaki.github.io/CloudFlare-AI-Insight-Daily/rss.xml
+[DONE] 046/482 GeekPlux Letters status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 055/482 最新发布_共产党员网
+         category=党政信息 feed_url=http://host.docker.internal:1200/12371/zxfb
+[DONE] 055/482 最新发布_共产党员网 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 056/482 新华社新闻_新华网
+         category=党政信息 feed_url=https://plink.anyfeeder.com/newscn/whxw
+[DONE] 056/482 新华社新闻_新华网 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 057/482 半月谈快报
+         category=党政信息 feed_url=https://data.getpodcast.xyz/data/ximalaya/9604235.xml
+[DONE] 057/482 半月谈快报 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 058/482 - 求是网
+         category=党政信息 feed_url=https://plink.anyfeeder.com/qstheory
+[DONE] 058/482 - 求是网 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 059/482 学习一下订阅源
+         category=Articles feed_url=http://host.docker.internal:1200/follow/profile/158883963341209600
+[DONE] 059/482 学习一下订阅源 status=failed error_type=rsshub_503 error_message={"detail": "HTTP Error 503: Service Unavailable"}
+[SUBMIT] 060/482 Lex Fridman Podcast
+         category=Articles feed_url=https://lexfridman.com/feed/podcast/
+[DONE] 049/482 周刊 归档 - 酷口家数字花园 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 061/482 Podnews Daily - podcast industry news
+         category=Articles feed_url=https://podnews.net/rss
+[DONE] 051/482 Ahead of AI status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 062/482 新智元
+         category=Articles feed_url=https://raw.githubusercontent.com/osnsyc/Wechat-Scholar/main/channels/gh_108f2a2a27f4.xml
+[DONE] 050/482 莫尔索随笔 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 063/482 机器之心
+         category=Articles feed_url=https://www.jiqizhixin.com/rss
+[DONE] 063/482 机器之心 status=failed error_type=feed_parse_error error_message={"detail": "failed to parse feed: <unknown>:12:244: mismatched tag"}
+[SUBMIT] 064/482 腾讯研究院
+         category=Articles feed_url=https://wechat2rss.bestblogs.dev/feed/6152301e0978bffb0a8284cab339262b9764dcfb.xml
+[DONE] 053/482 Kubernetes Blog status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 065/482 极客公园
+         category=Articles feed_url=https://www.geekpark.net/rss
+[DONE] 060/482 Lex Fridman Podcast status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 066/482 极客公园
+         category=Articles feed_url=https://wechat2rss.xlab.app/feed/1a5aec98e71c707c8ca092bc2c255b9d4bac477d.xml
+[DONE] 054/482 AI洞察日报 RSS Feed status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 067/482 图书推荐 – 书伴
+         category=SocialMedia feed_url=http://host.docker.internal:1200/bookfere/books
+[DONE] 061/482 Podnews Daily - podcast industry news status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 068/482 每周一书 – 书伴
+         category=SocialMedia feed_url=http://host.docker.internal:1200/bookfere/weekly
+[DONE] 067/482 图书推荐 – 书伴 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 068/482 每周一书 – 书伴 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 069/482 笔记交流站 - 即刻圈子
+         category=SocialMedia feed_url=http://host.docker.internal:1200/jike/topic/660165c504703c909c6d8b2e
+[SUBMIT] 070/482 你不知道的行业内幕 - 即刻圈子
+         category=资讯 feed_url=http://host.docker.internal:1200/jike/topic/5699f451d3e8351200bffdc8
+[DONE] 069/482 笔记交流站 - 即刻圈子 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 071/482 Mike Krieger(@mikeyk)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/78d7b99318b04b309b04000f7e24da29
+[DONE] 071/482 Mike Krieger(@mikeyk) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 072/482 Richard Socher(@RichardSocher)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4d2d4165a7524217a08d3f57f27fa190
+[DONE] 070/482 你不知道的行业内幕 - 即刻圈子 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 073/482 Hugging Face(@huggingface)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/fc16750ce50741f1b1f05ea1fb29436f
+[DONE] 072/482 Richard Socher(@RichardSocher) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 074/482 小互(@imxiaohu)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/74e542992cf7441390c708f5601071d4
+[DONE] 073/482 Hugging Face(@huggingface) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 075/482 AI at Meta(@AIatMeta)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/ef7c70f9568d45f4915169fef4ce90b4
+[DONE] 075/482 AI at Meta(@AIatMeta) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 076/482 Mistral AI(@MistralAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/8d2d03aea8af49818096da4ea00409d1
+[DONE] 076/482 Mistral AI(@MistralAI) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 077/482 xAI(@xai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/3953aa71e87a422eb9d7bf6ff1c7c43e
+[DONE] 077/482 xAI(@xai) status=success total_items=2 new_items=2 duplicate_items=0
+[SUBMIT] 078/482 Dia(@diabrowser)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/6384ee3c656c48fea5e8b3cdacece4d0
+[DONE] 062/482 新智元 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 079/482 AI Breakfast(@AiBreakfast)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/0e3ebaf288014c45b0d24b71fe37312b
+[DONE] 027/482 🔔科技频道[奇诺分享-ccino.org]⚡️ status=success total_items=20 new_items=20 duplicate_items=0
+[SUBMIT] 080/482 DeepSeek(@deepseek_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/68b610deb24b47ae9a236811563cda86
+[DONE] 024/482 十年之约聚合订阅 status=success total_items=20 new_items=20 duplicate_items=0
+[SUBMIT] 081/482 Jim Fan(@DrJimFan)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/c6cfe7c0d6b74849997073233fdea840
+[DONE] 064/482 腾讯研究院 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 082/482 Akshay Kothari(@akothari)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/3434c0d56ee0446f991fb6af42bfac4b
+[DONE] 066/482 极客公园 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 083/482 歸藏(guizang.ai)(@op7418)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/831fac36aa0a49a9af79f35dc1c9b5d9
+[DONE] 074/482 小互(@imxiaohu) status=success total_items=3 new_items=3 duplicate_items=0
+[SUBMIT] 084/482 Notion(@NotionHQ)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f97a26863aec4425b021720d4f8e4ede
+[DONE] 065/482 极客公园 status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 085/482 Replicate(@replicate)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/12eba9c3db4940c5ab2a72bd00f9ff2c
+[DONE] 079/482 AI Breakfast(@AiBreakfast) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 086/482 lmarena.ai(@lmarena_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f01b088d5a39473e854b07143df77ec5
+[DONE] 078/482 Dia(@diabrowser) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 087/482 Poe(@poe_platform)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/17687b1051204b2dbaed4ea4c9178f28
+[DONE] 082/482 Akshay Kothari(@akothari) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 088/482 Ray Dalio(@RayDalio)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4838204097ed422eac24ad48e68dc3ff
+[DONE] 080/482 DeepSeek(@deepseek_ai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 089/482 Arthur Mensch(@arthurmensch)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/d8121d969fb34c7daad2dd2aac4ba270
+[DONE] 081/482 Jim Fan(@DrJimFan) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 090/482 Paul Graham(@paulg)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/900549ddadf04e839d3f7a17ebaba3fc
+[DONE] 083/482 歸藏(guizang.ai)(@op7418) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 091/482 Browser Use(@browser_use)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/b8d7530f0b294405825013bbc1cc198f
+[DONE] 084/482 Notion(@NotionHQ) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 092/482 The Rundown AI(@TheRundownAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/83b1ea38940b4a1d81ea57d1ffb12ad7
+[DONE] 088/482 Ray Dalio(@RayDalio) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 093/482 AI Will(@FinanceYF5)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/aa74321087f9405a872fd9a76b743bf8
+[DONE] 086/482 lmarena.ai(@lmarena_ai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 094/482 Guillermo Rauch(@rauchg)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/e8750659b8154dbfa0489f451e044af1
+[DONE] 085/482 Replicate(@replicate) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 095/482 向阳乔木(@vista8)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/9de19c78f7454ad08c956c1a00d237fe
+[DONE] 090/482 Paul Graham(@paulg) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 096/482 Nick St. Pierre(@nickfloats)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/6ebdf0d91eef4c149acd0ef110635866
+[DONE] 089/482 Arthur Mensch(@arthurmensch) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 097/482 Sahil Lavingia(@shl)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/baad3713defe4182844d2756b4c2c9ed
+[DONE] 087/482 Poe(@poe_platform) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 098/482 Jan Leike(@janleike)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/dceb5cd131b34c72a8376cba8ea5d864
+[DONE] 092/482 The Rundown AI(@TheRundownAI) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 099/482 Gary Marcus(@GaryMarcus)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/35a38c5646d946fb894d8c30c1d9629e
+[DONE] 091/482 Browser Use(@browser_use) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 100/482 Monica_IM(@hey_im_monica)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/5d749cc613ec4069bb2a47334739e1b6
+[DONE] 096/482 Nick St. Pierre(@nickfloats) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 101/482 Lenny Rachitsky(@lennysan)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/77d5ce4736854b0ebae603e4b54d3095
+[DONE] 094/482 Guillermo Rauch(@rauchg) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 102/482 Kling AI(@Kling_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/564237c3de274d58a04f064920817888
+[DONE] 093/482 AI Will(@FinanceYF5) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 103/482 Lilian Weng(@lilianweng)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a8f7e2238039461cbc8bf55f5f194498
+[DONE] 095/482 向阳乔木(@vista8) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 104/482 Aadit Sheth(@aaditsh)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/179bcc4b8e5d4274b6e9e935f9fd4434
+[DONE] 097/482 Sahil Lavingia(@shl) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 105/482 Augment Code(@augmentcode)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/e153fdd077df458b8298d975c060dcc3
+[DONE] 098/482 Jan Leike(@janleike) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 106/482 Skywork(@Skywork_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/6d7d398dd80b48d79669c92745d32cf6
+[DONE] 100/482 Monica_IM(@hey_im_monica) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 107/482 Firecrawl(@firecrawl_dev)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/c04abb206bbf4f91b22795024d6c0614
+[DONE] 099/482 Gary Marcus(@GaryMarcus) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 108/482 Adam D'Angelo(@adamdangelo)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/3042b6f912b24f64982cc23f7bd59681
+[DONE] 103/482 Lilian Weng(@lilianweng) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 109/482 Suhail(@Suhail)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/c961547e08df4396b3ab69367a07a1cd
+[DONE] 104/482 Aadit Sheth(@aaditsh) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 110/482 Sualeh Asif(@sualehasif996)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/fafa6df3c67644b1a367a177240e0173
+[DONE] 101/482 Lenny Rachitsky(@lennysan) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 111/482 Anthropic(@AnthropicAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/fc28a211471b496682feff329ec616e5
+[DONE] 105/482 Augment Code(@augmentcode) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 112/482 AI Engineer(@aiDotEngineer)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/7d19a619a1cc4a9896129211269d2c85
+[DONE] 102/482 Kling AI(@Kling_ai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 113/482 Hailuo AI (MiniMax)(@Hailuo_AI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/e65b5e59fcb544918c1ba17f5758f0f8
+[DONE] 106/482 Skywork(@Skywork_ai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 114/482 Fireworks AI(@FireworksAI_HQ)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/9f35c76341554bd78c2b9e63dc4fa5d8
+[DONE] 108/482 Adam D'Angelo(@adamdangelo) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 115/482 Justine Moore(@venturetwins)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/c61046471f174d86bc0eb76cb44a21c3
+[DONE] 107/482 Firecrawl(@firecrawl_dev) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 116/482 OpenAI Developers(@OpenAIDevs)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/971dc1fc90da449bac23e5fad8a33d55
+[DONE] 109/482 Suhail(@Suhail) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 117/482 bolt.new(@boltdotnew)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/760ab7cd9708452c9ce1f9144b92a430
+[DONE] 111/482 Anthropic(@AnthropicAI) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 118/482 Midjourney(@midjourney)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/72dd496bfd9d44c5a5761a974630376d
+[DONE] 110/482 Sualeh Asif(@sualehasif996) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 119/482 eric zakariasson(@ericzakariasson)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/65f321be670b4ffba7f40d0afd38c94d
+[DONE] 113/482 Hailuo AI (MiniMax)(@Hailuo_AI) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 120/482 Sam Altman(@sama)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/e30d4cd223f44bed9d404807105c8927
+[DONE] 112/482 AI Engineer(@aiDotEngineer) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 121/482 clem &#129303;(@ClementDelangue)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/5dbd038a8f5140938d0877511571797b
+[DONE] 115/482 Justine Moore(@venturetwins) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 122/482 LangChain(@LangChainAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/862fee50a745423c87e2633b274caf1d
+[DONE] 118/482 Midjourney(@midjourney) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 123/482 orange.ai(@oran_ge)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/0277b0bbefd54df7bc6b7880122da8f7
+[DONE] 116/482 OpenAI Developers(@OpenAIDevs) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 124/482 Dario Amodei(@DarioAmodei)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/49666ce6fe3e4cb786c6574684542ec5
+[DONE] 114/482 Fireworks AI(@FireworksAI_HQ) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 125/482 Geoffrey Hinton(@geoffreyhinton)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/cb6169815e2e447e8e6148a4af3f9686
+[DONE] 117/482 bolt.new(@boltdotnew) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 126/482 Harrison Chase(@hwchase17)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f299207df53745bca04a03db8d11c5aa
+[DONE] 120/482 Sam Altman(@sama) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 127/482 Kevin Weil &#127482;&#127480;(@kevinweil)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/3ca3c7698fd04611a0e7d14fae93c84c
+[DONE] 119/482 eric zakariasson(@ericzakariasson) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 128/482 Jeff Dean(@JeffDean)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/b1013166769c49f8aa3fbdc222867054
+[DONE] 121/482 clem &#129303;(@ClementDelangue) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 129/482 Perplexity(@perplexity_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/fdd601ea751949e7bec9e4cdad7c8e6c
+[DONE] 123/482 orange.ai(@oran_ge) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 130/482 ChatGPT(@ChatGPTapp)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f7992687b8d74b14bf2341eb3a0a5ec4
+[DONE] 122/482 LangChain(@LangChainAI) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 131/482 Berkeley AI Research(@berkeley_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/6bbf31cac345443585c3280320ba9009
+[DONE] 125/482 Geoffrey Hinton(@geoffreyhinton) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 132/482 Paul Couvert(@itsPaulAi)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/b9912ac9a29042cf8c834419dc44cb1f
+[DONE] 124/482 Dario Amodei(@DarioAmodei) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 133/482 Barsee &#128054;(@heyBarsee)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/244eb9fa77ce4fa3b7fa5ceba80027a4
+[DONE] 127/482 Kevin Weil &#127482;&#127480;(@kevinweil) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 134/482 OpenAI(@OpenAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/0c0856a69f9f49cf961018c32a0b0049
+[DONE] 126/482 Harrison Chase(@hwchase17) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 135/482 Binyuan Hui(@huybery)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f54b2b40185943ce8f48a880110b7bc2
+[DONE] 128/482 Jeff Dean(@JeffDean) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 136/482 cohere(@cohere)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/462aa134ed914f98b3491680ad9b36ed
+[DONE] 130/482 ChatGPT(@ChatGPTapp) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 137/482 Aman Sanger(@amanrsanger)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a02496979a0e4d86baf2b72c24db52a4
+[DONE] 129/482 Perplexity(@perplexity_ai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 138/482 Simon Willison(@simonw)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/30ad80be93c84e44acc37d5ddf31db57
+[DONE] 131/482 Berkeley AI Research(@berkeley_ai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 139/482 Microsoft Research(@MSFTResearch)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/61f4b78554fb4b8fa5653ec5d924d15a
+[DONE] 134/482 OpenAI(@OpenAI) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 140/482 Yann LeCun(@ylecun)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f5f4f928dede472ea55053672ad27ab6
+[DONE] 133/482 Barsee &#128054;(@heyBarsee) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 141/482 Junyang Lin(@JustinLin610)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/082097117b4543e9a741cd2580f936d3
+[DONE] 135/482 Binyuan Hui(@huybery) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 142/482 Alex Albert(@alexalbert__)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/524525de0d69407b80f0a7d891fdc8df
+[DONE] 136/482 cohere(@cohere) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 143/482 Aravind Srinivas(@AravSrinivas)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/59e6b63ae9684d11be0ae13d9e7420f2
+[DONE] 132/482 Paul Couvert(@itsPaulAi) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 144/482 Genspark(@genspark_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/71ffd342cb5d478185ef7d55bdfca011
+[DONE] 137/482 Aman Sanger(@amanrsanger) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 145/482 Greg Brockman(@gdb)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/af19d054e26a49129f23abfa82d9e268
+[DONE] 138/482 Simon Willison(@simonw) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 146/482 elvis(@omarsar0)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/931d6e88e067496cac6bf23f69d60f33
+[DONE] 139/482 Microsoft Research(@MSFTResearch) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 147/482 Google AI(@GoogleAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4de0bd2d5cef4333a0260dc8157054a7
+[DONE] 140/482 Yann LeCun(@ylecun) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 148/482 LlamaIndex &#129433;(@llama_index)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/67e259bd5be544ce84bbc867eace54c2
+[DONE] 141/482 Junyang Lin(@JustinLin610) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 149/482 Jerry Liu(@jerryjliu0)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/b3d904c0d7c446558ef3a1e7f2eb362b
+[DONE] 142/482 Alex Albert(@alexalbert__) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 150/482 Marc Andreessen &#127482;&#127480;(@pmarca)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/63316630d94543f5a6480f230f483008
+[DONE] 143/482 Aravind Srinivas(@AravSrinivas) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 151/482 Justin Welsh(@thejustinwelsh)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/58894bf2934a426ca833c682da2bc810
+[DONE] 144/482 Genspark(@genspark_ai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 152/482 Pika(@pika_labs)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/3306d8b253ec4e03aca3c2e9967e7119
+[DONE] 145/482 Greg Brockman(@gdb) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 153/482 Sundar Pichai(@sundarpichai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/8324d65a63dc42c584a8c08cc8323c9f
+[DONE] 146/482 elvis(@omarsar0) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 154/482 Lovable(@lovable_dev)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/639cd13d44284e10ac89fbd1c5399767
+[DONE] 147/482 Google AI(@GoogleAI) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 155/482 cat(@_catwu)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/66a6b39ddcfa42e39621e0ab293c1bdd
+[DONE] 151/482 Justin Welsh(@thejustinwelsh) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 156/482 Anton Osika – eu/acc(@antonosika)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/5f13b32b124a41cfb659f903a84032b1
+[DONE] 150/482 Marc Andreessen &#127482;&#127480;(@pmarca) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 157/482 Replit ⠕(@Replit)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/613f859e4bc440c5a28f40732840f5cf
+[DONE] 148/482 LlamaIndex &#129433;(@llama_index) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 158/482 FlowiseAI(@FlowiseAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/be74da51698d4cefb12b39830d6cd201
+[DONE] 149/482 Jerry Liu(@jerryjliu0) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 159/482 a16z(@a16z)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f3fedf817599470dbf8d8d11f0872475
+[DONE] 153/482 Sundar Pichai(@sundarpichai) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 160/482 李继刚(@lijigang_com)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/ca2fa444b6ea4b8b974fe148056e497a
+[DONE] 154/482 Lovable(@lovable_dev) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 161/482 Jina AI(@JinaAI_)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/f510f6e7eecf456ca7e2895a46752888
+[DONE] 152/482 Pika(@pika_labs) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 162/482 v0(@v0)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/dbf37973e6fc4eae91d4be9669a78fc7
+[DONE] 156/482 Anton Osika – eu/acc(@antonosika) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 163/482 Andrej Karpathy(@karpathy)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/edf707b5c0b248579085f66d7a3c5524
+[DONE] 155/482 cat(@_catwu) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 164/482 Fei-Fei Li(@drfeifei)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a4bfe44bfc0d4c949da21ebd3f5f42a5
+[DONE] 157/482 Replit ⠕(@Replit) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 165/482 DeepLearning.AI(@DeepLearningAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/42e6b4901b97498eab2ab64c07d56177
+[DONE] 159/482 a16z(@a16z) status=success total_items=5 new_items=5 duplicate_items=0
+[SUBMIT] 166/482 Rowan Cheung(@rowancheung)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a636de3cbda0495daabd15b9fd298614
+[DONE] 166/482 Rowan Cheung(@rowancheung) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 167/482 Latent.Space(@latentspacepod)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a7be8b61a1264ea7984abfaea3eff686
+[DONE] 167/482 Latent.Space(@latentspacepod) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 168/482 Ideogram(@ideogram_ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a719880fe66e4156a111187f50dae91b
+[DONE] 168/482 Ideogram(@ideogram_ai) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 169/482 Demis Hassabis(@demishassabis)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4a884d5e2f3740c5a26c9c093de6388a
+[DONE] 169/482 Demis Hassabis(@demishassabis) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 170/482 Cognition(@cognition_labs)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4cc14cbd15c74e189d537c415369e1a7
+[DONE] 170/482 Cognition(@cognition_labs) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 171/482 andrew chen(@andrewchen)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a3eb6beb2d894da3a9b7ab6d2e46790e
+[DONE] 171/482 andrew chen(@andrewchen) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 172/482 NVIDIA AI(@NVIDIAAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/05f1492e43514dc3862a076d3697c390
+[DONE] 172/482 NVIDIA AI(@NVIDIAAI) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 173/482 Stanford AI Lab(@StanfordAILab)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/d5fc365556e641cba2278f501e8c6f92
+[DONE] 173/482 Stanford AI Lab(@StanfordAILab) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 174/482 Varun Mohan(@_mohansolo)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/7794c4268a504019a94af1778857a703
+[DONE] 174/482 Varun Mohan(@_mohansolo) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 175/482 Logan Kilpatrick(@OfficialLoganK)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4f63d960de644aeebd0aa97e4994dafe
+[DONE] 175/482 Logan Kilpatrick(@OfficialLoganK) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 176/482 Qdrant(@qdrant_engine)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a55f6e33dd224235aabaabaaf9d58a06
+[DONE] 176/482 Qdrant(@qdrant_engine) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 177/482 OpenRouter(@OpenRouterAI)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/e503a90c035c4b1d8f8dd34907d15bf4
+[DONE] 177/482 OpenRouter(@OpenRouterAI) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 178/482 Thomas Wolf(@Thom_Wolf)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/4918efb13c47459b8dcaa79cfdf72d09
+[DONE] 178/482 Thomas Wolf(@Thom_Wolf) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 179/482 mem0(@mem0ai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/94bb691baeff461686326af619beb116
+[DONE] 179/482 mem0(@mem0ai) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 180/482 Scott Wu(@ScottWu46)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/5fca8ccd87344d388bc863304ed6fd86
+[DONE] 180/482 Scott Wu(@ScottWu46) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 181/482 Recraft(@recraftai)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/acc648327c614d9b985b9fc3d737165b
+[DONE] 181/482 Recraft(@recraftai) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 182/482 Hunyuan(@TXhunyuan)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/6e8e7b42cb434818810f87bcf77d86fb
+[DONE] 182/482 Hunyuan(@TXhunyuan) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 183/482 Google DeepMind(@GoogleDeepMind)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/a99538443a484fcc846bdcc8f50745ec
+[DONE] 183/482 Google DeepMind(@GoogleDeepMind) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 184/482 Mustafa Suleyman(@mustafasuleyman)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/394acfaff8c44e09936f5bc0b8504f2c
+[DONE] 184/482 Mustafa Suleyman(@mustafasuleyman) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[SUBMIT] 185/482 Y Combinator(@ycombinator)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/b1ab109f6afd42ab8ea32e17a19a3a3e
+[DONE] 185/482 Y Combinator(@ycombinator) status=failed error_type=network_error error_message={"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+[DONE] 158/482 FlowiseAI(@FlowiseAI) status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 160/482 李继刚(@lijigang_com) status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 161/482 Jina AI(@JinaAI_) status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 163/482 Andrej Karpathy(@karpathy) status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 164/482 Fei-Fei Li(@drfeifei) status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 162/482 v0(@v0) status=success total_items=5 new_items=5 duplicate_items=0
+[DONE] 165/482 DeepLearning.AI(@DeepLearningAI) status=success total_items=5 new_items=5 duplicate_items=0
+
+[SUMMARY]
+Processed sources: 185
+Successful sources: 152
+Failed sources: 33
+Skipped known failed sources: 0
+New items: 566
+Recommended items from API responses: 313
+Final inbox items from this run: 38
+Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260505_112224/report.md
+Run state path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260505_112224/run_state.json
+
+[FAILED SOURCES]
+- 草稿拾遗 | https://kill-the-newsletter.com/feeds/t87xbbj6p4iwfhsi.xml | rate_limit | {"detail": "HTTP Error 429: Too Many Requests"}
+- StarYuhen | https://www.yuhenm.top/feed/ | unknown | {"detail": "HTTP Error 403: Forbidden"}
+- 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台 | https://51cg1.com/feed/ | network_error | {"detail": "<urlopen error [Errno 101] Network is unreachable>"}
+- 今日热榜 | https://web2rss.cc/feed/rebang.today?preview=true | network_error | {"detail": "<urlopen error [Errno -2] Name or service not known>"}
+- 阮一峰的网络日志 | https://feeds.feedburner.com/ruanyifeng | timeout | {"detail": "<urlopen error timed out>"}
+- 刘夙的科技世界 | https://wewe-rss.jerrylf.uk/feeds/MP_WXS_3002603832.json | feed_parse_error | {"detail": "failed to parse feed: <unknown>:2:0: not well-formed (invalid token)"}
+- 三联生活周刊 Lifeweek | https://the.bi/s/rawbbyu2zgmy32 | network_error | {"detail": "<urlopen error [Errno 101] Network is unreachable>"}
+- 不如读书 | https://wuyagege.substack.com/feed | network_error | {"detail": "<urlopen error [Errno 101] Network is unreachable>"}
+- 偷懒爱好者周刊 | https://toolight.cn/open/p/weekly/atom.xml | unknown | {"detail": "HTTP Error 404: Not Found"}
+- 信息差——独立开发者出海周刊 | https://gapis.money/rss.xml | feed_parse_error | {"detail": "failed to parse feed: <unknown>:28:5120: not well-formed (invalid token)"}
+- 歸藏的AI工具箱 | https://wechat2rss.bestblogs.dev/feed/1fc32fedbf5da37e8e819a9298ae80724c12cb03.xml | content_inbox_error | {"detail": "HTTP Error 500: Internal Server Error"}
+- 学习一下订阅源 | http://host.docker.internal:1200/follow/profile/158883963341209600 | rsshub_503 | {"detail": "HTTP Error 503: Service Unavailable"}
+- 机器之心 | https://www.jiqizhixin.com/rss | feed_parse_error | {"detail": "failed to parse feed: <unknown>:12:244: mismatched tag"}
+- Rowan Cheung(@rowancheung) | https://api.xgo.ing/rss/user/a636de3cbda0495daabd15b9fd298614 | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- Latent.Space(@latentspacepod) | https://api.xgo.ing/rss/user/a7be8b61a1264ea7984abfaea3eff686 | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- Ideogram(@ideogram_ai) | https://api.xgo.ing/rss/user/a719880fe66e4156a111187f50dae91b | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- Demis Hassabis(@demishassabis) | https://api.xgo.ing/rss/user/4a884d5e2f3740c5a26c9c093de6388a | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- Cognition(@cognition_labs) | https://api.xgo.ing/rss/user/4cc14cbd15c74e189d537c415369e1a7 | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- andrew chen(@andrewchen) | https://api.xgo.ing/rss/user/a3eb6beb2d894da3a9b7ab6d2e46790e | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- NVIDIA AI(@NVIDIAAI) | https://api.xgo.ing/rss/user/05f1492e43514dc3862a076d3697c390 | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- Stanford AI Lab(@StanfordAILab) | https://api.xgo.ing/rss/user/d5fc365556e641cba2278f501e8c6f92 | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- Varun Mohan(@_mohansolo) | https://api.xgo.ing/rss/user/7794c4268a504019a94af1778857a703 | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- Logan Kilpatrick(@OfficialLoganK) | https://api.xgo.ing/rss/user/4f63d960de644aeebd0aa97e4994dafe | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- Qdrant(@qdrant_engine) | https://api.xgo.ing/rss/user/a55f6e33dd224235aabaabaaf9d58a06 | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- OpenRouter(@OpenRouterAI) | https://api.xgo.ing/rss/user/e503a90c035c4b1d8f8dd34907d15bf4 | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- Thomas Wolf(@Thom_Wolf) | https://api.xgo.ing/rss/user/4918efb13c47459b8dcaa79cfdf72d09 | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- mem0(@mem0ai) | https://api.xgo.ing/rss/user/94bb691baeff461686326af619beb116 | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- Scott Wu(@ScottWu46) | https://api.xgo.ing/rss/user/5fca8ccd87344d388bc863304ed6fd86 | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- Recraft(@recraftai) | https://api.xgo.ing/rss/user/acc648327c614d9b985b9fc3d737165b | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- Hunyuan(@TXhunyuan) | https://api.xgo.ing/rss/user/6e8e7b42cb434818810f87bcf77d86fb | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- Google DeepMind(@GoogleDeepMind) | https://api.xgo.ing/rss/user/a99538443a484fcc846bdcc8f50745ec | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- Mustafa Suleyman(@mustafasuleyman) | https://api.xgo.ing/rss/user/394acfaff8c44e09936f5bc0b8504f2c | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+- Y Combinator(@ycombinator) | https://api.xgo.ing/rss/user/b1ab109f6afd42ab8ea32e17a19a3a3e | network_error | {"detail": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)>"}
+
+[TOP INBOX ITEMS]
+- [4] [full_push] Stop just asking AI for basic advice. It’s time to actually solve your problems. 💡 We recently kic... — DeepLearning.AI(@DeepLearningAI)
+- [4] [full_push] Making improvements one step at a time for Marble. In the case of generating bigger worlds, it's qui... — Fei-Fei Li(@drfeifei)
+- [4] [full_push] You can now use Opus 4.7 in v0. Anthropic's newest model. 50% off for the next two weeks. — v0(@v0)
+- [4] [full_push] At AI Dev 26, Carter Rabasa (@crtr0) from @Box showed how file systems can act as the foundation for... — DeepLearning.AI(@DeepLearningAI)
+- [5] [full_push] Fireside chat at Sequoia Ascent 2026 from a ~week ago. Some highlights: The first theme I tried to ... — Andrej Karpathy(@karpathy)
+- [4] [full_push] 日读论文： https://t.co/ypqznEy9Ev From Context to Skills: Can Language Models Learn from Context Skill... — 李继刚(@lijigang_com)
+- [4] [full_push] v0 Auto picks the right model for your prompt, whether that's Mini for quick edits, Pro for most tas... — v0(@v0)
+- [4] [full_push] From the stage at AI Dev 26: Dan Maloney, CEO of @LandingAI, on the Future of Software Engineering:... — DeepLearning.AI(@DeepLearningAI)
+- [4] [full_push] AI can generate 100 million splats, but it’s one creator’s imagination that made this uniquely beaut... — Fei-Fei Li(@drfeifei)
+- [5] [full_push] Yes it's the tractable form of brain upload. There's a ton of scifi on brain uploads that requires w... — Andrej Karpathy(@karpathy)

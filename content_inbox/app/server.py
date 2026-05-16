@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+import time as monotonic_time
 from datetime import date, datetime, time, timezone
 from pathlib import Path
 from typing import Annotated, Any
@@ -11,8 +13,10 @@ from pydantic import BaseModel, Field
 from app.batch_runner import RSSBatchRunner
 from app.config import settings
 from app.models import ContentAnalyzeRequest, RSSAnalyzeRequest, RSSBatchAnalyzeRequest
+from app.models import RSSSourceCreateRequest, RSSSourceIngestRequest, RSSSourceUpdateRequest
 from app.processor import normalize_content, process_content_thread_safe
 from app.rss import parse_feed
+from app.rss_errors import classify_exception, error_payload, error_response, retryable_for
 from app.rss_runner import analyze_one_rss_source
 from app.screener import audit_screen_content, configure_llm_dump, reconfigure_llm_semaphore, reconfigure_screening_mode
 from app.storage import InboxStore
@@ -76,6 +80,186 @@ def set_screening_mode(payload: ScreeningModeRequest) -> dict[str, Any]:
     }
 
 
+@app.post("/api/rss/sources")
+def create_rss_source(
+    payload: RSSSourceCreateRequest, inbox_store: Annotated[InboxStore, Depends(get_store)]
+) -> JSONResponse:
+    try:
+        source, created = inbox_store.create_rss_source(payload.model_dump())
+    except ValueError as exc:
+        return error_response(
+            "source_conflict",
+            str(exc),
+            status_code=409,
+            source_id=payload.source_id,
+            feed_url=payload.feed_url,
+        )
+    return JSONResponse({"ok": True, "source": source, "created": created})
+
+
+@app.get("/api/rss/sources")
+def list_rss_sources(
+    status: str | None = None,
+    category: str | None = None,
+    limit: int = Query(default=100, ge=1, le=500),
+    offset: int = Query(default=0, ge=0),
+    inbox_store: Annotated[InboxStore, Depends(get_store)] = store,
+) -> dict[str, Any]:
+    sources, stats = inbox_store.list_rss_sources(
+        {"status": status, "category": category, "limit": limit, "offset": offset}
+    )
+    return {"ok": True, "sources": sources, "stats": stats}
+
+
+@app.get("/api/rss/sources/{source_id}")
+def get_rss_source(
+    source_id: str, inbox_store: Annotated[InboxStore, Depends(get_store)]
+) -> JSONResponse:
+    source = inbox_store.get_rss_source(source_id)
+    if not source:
+        return error_response("source_not_found", "RSS source not found", status_code=404, source_id=source_id)
+    return JSONResponse({"ok": True, "source": source})
+
+
+@app.patch("/api/rss/sources/{source_id}")
+def update_rss_source(
+    source_id: str,
+    payload: RSSSourceUpdateRequest,
+    inbox_store: Annotated[InboxStore, Depends(get_store)],
+) -> JSONResponse:
+    updates = payload.model_dump(exclude_unset=True)
+    try:
+        source = inbox_store.update_rss_source(source_id, updates)
+    except ValueError as exc:
+        return error_response("source_conflict", str(exc), status_code=409, source_id=source_id)
+    if not source:
+        return error_response("source_not_found", "RSS source not found", status_code=404, source_id=source_id)
+    return JSONResponse({"ok": True, "source": source})
+
+
+@app.delete("/api/rss/sources/{source_id}")
+def delete_rss_source(
+    source_id: str, inbox_store: Annotated[InboxStore, Depends(get_store)]
+) -> JSONResponse:
+    source = inbox_store.disable_rss_source(source_id)
+    if not source:
+        return error_response("source_not_found", "RSS source not found", status_code=404, source_id=source_id)
+    return JSONResponse({"ok": True, "source_id": source_id, "status": "disabled"})
+
+
+@app.post("/api/rss/sources/{source_id}/ingest")
+def ingest_rss_source(
+    source_id: str,
+    payload: RSSSourceIngestRequest,
+    inbox_store: Annotated[InboxStore, Depends(get_store)],
+) -> JSONResponse:
+    source = inbox_store.get_rss_source(source_id)
+    if not source:
+        return error_response("source_not_found", "RSS source not found", status_code=404, source_id=source_id)
+    if source["status"] == "disabled":
+        return error_response(
+            "source_disabled",
+            "RSS source is disabled",
+            status_code=409,
+            source_id=source_id,
+            feed_url=source["feed_url"],
+        )
+
+    started_at = datetime.now(timezone.utc)
+    t0 = monotonic_time.monotonic()
+    run_id = build_rss_run_id(started_at, source_id)
+    config = source.get("config") or {}
+    request = RSSAnalyzeRequest(
+        feed_url=source["feed_url"],
+        source_id=source_id,
+        source_name=source["source_name"],
+        source_category=source["source_category"],
+        limit=payload.limit if payload.limit is not None else int(config.get("limit", 20)),
+        screen=payload.screen if payload.screen is not None else bool(config.get("screen", True)),
+        incremental_mode=payload.incremental_mode or config.get("incremental_mode", "fixed_limit"),
+        probe_limit=payload.probe_limit if payload.probe_limit is not None else int(config.get("probe_limit", 20)),
+        new_source_initial_limit=(
+            payload.new_source_initial_limit
+            if payload.new_source_initial_limit is not None
+            else int(config.get("new_source_initial_limit", 5))
+        ),
+        old_source_no_anchor_limit=(
+            payload.old_source_no_anchor_limit
+            if payload.old_source_no_anchor_limit is not None
+            else int(config.get("old_source_no_anchor_limit", 20))
+        ),
+    )
+
+    try:
+        analysis = analyze_one_rss_source(
+            inbox_store,
+            request,
+            include_items=payload.include_items,
+            preserve_source_entry_order=True,
+        )
+        if analysis.get("ok") is False:
+            raise RuntimeError("content processing failed")
+        finished_at = datetime.now(timezone.utc)
+        processed_items = int(analysis.get("new_items", 0)) + int(analysis.get("duplicate_items", 0))
+        run = build_run_result(
+            run_id,
+            source_id,
+            started_at,
+            finished_at,
+            t0,
+            "success",
+            analysis,
+        )
+        updated_source = inbox_store.record_rss_source_success(
+            source_id,
+            run_id=run_id,
+            finished_at=finished_at.isoformat(),
+            new_items=int(analysis.get("new_items", 0)),
+            duplicate_items=int(analysis.get("duplicate_items", 0)),
+            processed_items=processed_items,
+            feed_items_seen=int(analysis.get("feed_items_seen", analysis.get("total_items", 0)) or 0),
+            incremental_decision=analysis.get("incremental_decision"),
+            anchor_found=analysis.get("anchor_found"),
+        )
+        return JSONResponse(
+            {
+                "ok": True,
+                "run": run,
+                "source": source_status_summary(updated_source or source),
+                "items": analysis.get("items", []),
+            }
+        )
+    except Exception as exc:
+        error_code, message = classify_exception(exc)
+        finished_at = datetime.now(timezone.utc)
+        run = build_run_result(
+            run_id,
+            source_id,
+            started_at,
+            finished_at,
+            t0,
+            "failed",
+            {},
+            error_code=error_code,
+            error_message=message,
+        )
+        updated_source = inbox_store.record_rss_source_failure(
+            source_id,
+            run_id=run_id,
+            finished_at=finished_at.isoformat(),
+            error_code=error_code,
+            error_message=message,
+        )
+        return JSONResponse(
+            status_code=400,
+            content={
+                **error_payload(error_code, message, source_id=source_id, feed_url=source["feed_url"]),
+                "run": run,
+                "source": source_status_summary(updated_source or source),
+            },
+        )
+
+
 @app.post("/api/content/analyze")
 def analyze_content(
     payload: ContentAnalyzeRequest, inbox_store: Annotated[InboxStore, Depends(get_store)]
@@ -107,6 +291,7 @@ def analyze_rss(
     if payload.audit_prompt:
         meta, entries = parse_feed(
             payload.feed_url,
+            source_id=payload.source_id,
             source_name=payload.source_name,
             source_category=payload.source_category,
             limit=payload.limit,
@@ -136,7 +321,8 @@ def analyze_rss(
             preserve_source_entry_order=True,
         )
     except Exception as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+        error_code, message = classify_exception(exc)
+        return error_response(error_code, message, status_code=400, source_id=payload.source_id, feed_url=payload.feed_url)
     finally:
         if payload.dump_llm_prompt:
             configure_llm_dump(enabled=False)
@@ -285,6 +471,68 @@ def build_stats(items: list[dict[str, Any]]) -> dict[str, int]:
         if relation in stats:
             stats[relation] += 1
     return stats
+
+
+def build_rss_run_id(started_at: datetime, source_id: str) -> str:
+    safe_source = re.sub(r"[^A-Za-z0-9_.-]+", "-", source_id).strip("-") or "source"
+    return f"rss_{started_at.strftime('%Y%m%d_%H%M%S')}_{safe_source}"
+
+
+def build_run_result(
+    run_id: str,
+    source_id: str,
+    started_at: datetime,
+    finished_at: datetime,
+    monotonic_started_at: float,
+    status: str,
+    analysis: dict[str, Any],
+    *,
+    error_code: str | None = None,
+    error_message: str | None = None,
+) -> dict[str, Any]:
+    return {
+        "run_id": run_id,
+        "source_id": source_id,
+        "status": status,
+        "started_at": started_at.isoformat(),
+        "finished_at": finished_at.isoformat(),
+        "duration_seconds": round(monotonic_time.monotonic() - monotonic_started_at, 3),
+        "error_code": error_code,
+        "error_message": error_message,
+        "retryable": retryable_for(error_code or ""),
+        "stats": {
+            "feed_items_seen": int(analysis.get("feed_items_seen", analysis.get("total_items", 0)) or 0),
+            "selected_items_for_processing": int(
+                analysis.get("selected_items_for_processing", analysis.get("total_items", 0)) or 0
+            ),
+            "processed_items": int(analysis.get("new_items", 0) or 0)
+            + int(analysis.get("duplicate_items", 0) or 0),
+            "new_items": int(analysis.get("new_items", 0) or 0),
+            "duplicate_items": int(analysis.get("duplicate_items", 0) or 0),
+            "failed_items": int(analysis.get("failed_items", 0) or 0),
+        },
+        "incremental": {
+            "incremental_mode": analysis.get("incremental_mode", "fixed_limit"),
+            "incremental_decision": analysis.get("incremental_decision"),
+            "source_has_history": analysis.get("source_has_history"),
+            "anchor_found": analysis.get("anchor_found"),
+            "anchor_index": analysis.get("anchor_index"),
+            "warnings": analysis.get("warnings", []),
+        },
+    }
+
+
+def source_status_summary(source: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "source_id": source["source_id"],
+        "status": source["status"],
+        "last_fetch_at": source.get("last_fetch_at"),
+        "last_success_at": source.get("last_success_at"),
+        "last_failure_at": source.get("last_failure_at"),
+        "consecutive_failures": source.get("consecutive_failures", 0),
+        "last_error_code": source.get("last_error_code"),
+        "last_error_message": source.get("last_error_message"),
+    }
 
 
 def main() -> None:

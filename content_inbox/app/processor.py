@@ -22,6 +22,8 @@ def normalize_content(payload: ContentAnalyzeRequest) -> NormalizedContent:
     return NormalizedContent(
         title=truncate(title, 500) or "Untitled",
         url=normalize_url(payload.url),
+        source_id=clean_text(payload.source_id),
+        feed_url=normalize_url(payload.feed_url),
         source_name=clean_text(payload.source_name) or "Unknown",
         source_category=clean_text(payload.source_category),
         content_type=(payload.content_type or "unknown").strip() or "unknown",
@@ -85,6 +87,8 @@ def process_content(
             normalized=NormalizedContent(
                 title=updated["title"],
                 url=updated["url"],
+                source_id=updated.get("source_id"),
+                feed_url=updated.get("feed_url"),
                 source_name=updated["source_name"],
                 source_category=updated["source_category"],
                 content_type=updated["content_type"],
@@ -143,6 +147,8 @@ def _build_duplicate_result(updated: dict[str, Any]) -> ProcessResult:
             normalized=NormalizedContent(
                 title=updated["title"],
                 url=updated["url"],
+                source_id=updated.get("source_id"),
+                feed_url=updated.get("feed_url"),
                 source_name=updated["source_name"],
                 source_category=updated["source_category"],
                 content_type=updated["content_type"],
@@ -162,9 +168,11 @@ def _build_duplicate_result(updated: dict[str, Any]) -> ProcessResult:
         item_id=updated["item_id"],
         is_duplicate=True,
         normalized=NormalizedContent(
-            title=updated["title"],
-            url=updated["url"],
-            source_name=updated["source_name"],
+        title=updated["title"],
+        url=updated["url"],
+        source_id=updated.get("source_id"),
+        feed_url=updated.get("feed_url"),
+        source_name=updated["source_name"],
             source_category=updated["source_category"],
             content_type=updated["content_type"],
             published_at=updated["published_at"],

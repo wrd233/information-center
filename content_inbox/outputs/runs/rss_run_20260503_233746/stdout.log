@@ -1,0 +1,15 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_233746
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 501
+[INFO] Selected sources: 3
+[INFO] Pending sources this invocation: 3
+[INFO] URL mode: remote
+[INFO] Screen enabled: True
+[INFO] Concurrency: 2
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": false, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1"}, "_status": 200}
+[INFO] Selected source preview:
+  001. [Articles] Hi, DIYgod (xml_url) -> https://diygod.cc/feed
+  002. [SocialMedia] 图书推荐 – 书伴 (xml_url) -> https://macmini-rsshub.tail99ecfa.ts.net/bookfere/books
+  003. [Videos] AI Foundations (xml_url) -> https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g
+[INFO] Dry run concurrency: 2
+[INFO] Dry run finished. No API calls were made. Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_233746/report.md

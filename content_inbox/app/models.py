@@ -20,10 +20,26 @@ NotificationDecision = Literal["full_push", "incremental_push", "silent", "manua
 EvidenceLevel = Literal["title_only", "summary", "partial_text", "full_text"]
 NeedDecision = Literal["include", "maybe", "exclude"]
 NeedPriority = Literal["P0", "P1", "P2", "P3"]
+RSSSourceStatus = Literal["active", "paused", "disabled", "broken"]
+RSSErrorCode = Literal[
+    "source_not_found",
+    "source_conflict",
+    "source_disabled",
+    "rss_fetch_timeout",
+    "rss_fetch_http_error",
+    "rss_fetch_not_found",
+    "rss_fetch_connection_error",
+    "rss_parse_error",
+    "rss_empty_feed",
+    "content_processing_error",
+    "storage_error",
+    "unknown_error",
+]
 
 
 class RSSAnalyzeRequest(BaseModel):
     feed_url: str
+    source_id: str | None = None
     source_name: str | None = None
     source_category: str | None = None
     limit: int | None = Field(default=20, ge=1, le=200)
@@ -69,6 +85,8 @@ class RSSBatchAnalyzeRequest(BaseModel):
 
 class ContentAnalyzeRequest(BaseModel):
     url: str | None = None
+    source_id: str | None = None
+    feed_url: str | None = None
     title: str | None = None
     source_name: str | None = None
     source_category: str | None = None
@@ -94,6 +112,8 @@ class ContentAnalyzeRequest(BaseModel):
 class NormalizedContent(BaseModel):
     title: str
     url: str | None = None
+    source_id: str | None = None
+    feed_url: str | None = None
     source_name: str
     source_category: str | None = None
     content_type: str
@@ -186,3 +206,92 @@ class ProcessResult(BaseModel):
     notification_decision: NotificationDecision = "manual_review"
     cluster_relation: ClusterRelation = "disabled"
     incremental_summary: str = ""
+
+
+class RSSSourceCreateRequest(BaseModel):
+    source_id: str | None = None
+    source_name: str
+    source_category: str | None = None
+    feed_url: str
+    status: RSSSourceStatus = "active"
+    priority: int = Field(default=3, ge=0)
+    tags: list[str] = Field(default_factory=list)
+    notes: str | None = None
+    config: dict[str, Any] = Field(default_factory=dict)
+
+
+class RSSSourceUpdateRequest(BaseModel):
+    source_name: str | None = None
+    source_category: str | None = None
+    feed_url: str | None = None
+    status: RSSSourceStatus | None = None
+    priority: int | None = Field(default=None, ge=0)
+    tags: list[str] | None = None
+    notes: str | None = None
+    config: dict[str, Any] | None = None
+
+
+class RSSSourceResponse(BaseModel):
+    source_id: str
+    source_name: str
+    source_category: str | None = None
+    feed_url: str
+    normalized_feed_url: str
+    status: RSSSourceStatus
+    priority: int
+    tags: list[str] = Field(default_factory=list)
+    notes: str | None = None
+    config: dict[str, Any] = Field(default_factory=dict)
+    last_fetch_at: str | None = None
+    last_success_at: str | None = None
+    last_failure_at: str | None = None
+    last_error_code: str | None = None
+    last_error_message: str | None = None
+    consecutive_failures: int = 0
+    last_run_id: str | None = None
+    last_new_items: int = 0
+    last_duplicate_items: int = 0
+    last_processed_items: int = 0
+    last_feed_items_seen: int = 0
+    last_incremental_decision: str | None = None
+    last_anchor_found: bool | None = None
+    created_at: str
+    updated_at: str
+
+
+class RSSSourceListResponse(BaseModel):
+    ok: bool = True
+    sources: list[RSSSourceResponse]
+    stats: dict[str, int]
+
+
+class RSSSourceIngestRequest(BaseModel):
+    limit: int | None = Field(default=None, ge=1, le=200)
+    screen: bool | None = None
+    incremental_mode: Literal["fixed_limit", "until_existing"] | None = None
+    probe_limit: int | None = Field(default=None, ge=1)
+    new_source_initial_limit: int | None = Field(default=None, ge=1)
+    old_source_no_anchor_limit: int | None = Field(default=None, ge=1)
+    include_items: bool = False
+
+
+class RSSStructuredError(BaseModel):
+    error_code: RSSErrorCode
+    message: str
+    retryable: bool
+    source_id: str | None = None
+    feed_url: str | None = None
+
+
+class RSSRunResult(BaseModel):
+    run_id: str
+    source_id: str
+    status: Literal["success", "failed"]
+    started_at: str
+    finished_at: str
+    duration_seconds: float
+    error_code: str | None = None
+    error_message: str | None = None
+    retryable: bool = False
+    stats: dict[str, int]
+    incremental: dict[str, Any]

@@ -1,0 +1,35 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_234003
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 501
+[INFO] Selected sources: 4
+[INFO] Pending sources this invocation: 4
+[INFO] URL mode: remote
+[INFO] Screen enabled: True
+[INFO] Concurrency: 2
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": false, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1"}, "_status": 200}
+[SUBMIT] 001/004 Hi, DIYgod
+         category=Articles feed_url=https://diygod.cc/feed
+[SUBMIT] 002/004 图书推荐 – 书伴
+         category=SocialMedia feed_url=https://macmini-rsshub.tail99ecfa.ts.net/bookfere/books
+[DONE] 002/004 图书推荐 – 书伴 status=failed error_type=network_error error_message={"detail": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"}
+[SUBMIT] 003/004 AI Foundations
+         category=Videos feed_url=https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g
+[DONE] 003/004 AI Foundations status=success total_items=3 new_items=1 duplicate_items=2
+[SUBMIT] 004/004 Rolen's Blog
+         category=个人博客-人生 feed_url=https://rolen.wiki/feed/
+[DONE] 001/004 Hi, DIYgod status=success total_items=3 new_items=0 duplicate_items=3
+[DONE] 004/004 Rolen's Blog status=success total_items=3 new_items=0 duplicate_items=3
+
+[SUMMARY]
+Processed sources: 4
+Successful sources: 3
+Failed sources: 1
+Skipped known failed sources: 0
+New items: 1
+Recommended items from API responses: 6
+Final inbox items from this run: 0
+Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_234003/report.md
+Run state path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260503_234003/run_state.json
+
+[FAILED SOURCES]
+- 图书推荐 – 书伴 | https://macmini-rsshub.tail99ecfa.ts.net/bookfere/books | network_error | {"detail": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"}

@@ -46,6 +46,7 @@ def analyze_one_rss_source(
         # ---- Path A: until_existing mode ----
         meta, all_entries = parse_feed(
             payload.feed_url,
+            source_id=payload.source_id,
             source_name=payload.source_name,
             source_category=payload.source_category,
             limit=None,
@@ -55,6 +56,8 @@ def analyze_one_rss_source(
         source_has_history = inbox_store.has_source_history(
             source_identity_name,
             payload.source_category,
+            source_id=payload.source_id,
+            feed_url=payload.feed_url,
         )
 
         scan_candidates: list[ContentAnalyzeRequest] = []
@@ -120,6 +123,7 @@ def analyze_one_rss_source(
         # ---- Path B: fixed_limit mode (existing logic, unchanged) ----
         meta, entries = parse_feed(
             payload.feed_url,
+            source_id=payload.source_id,
             source_name=payload.source_name,
             source_category=payload.source_category,
             limit=payload.limit,

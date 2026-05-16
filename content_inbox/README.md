@@ -101,6 +101,92 @@ curl -s http://127.0.0.1:8787/api/rss/analyze-batch \
 curl -s 'http://127.0.0.1:8787/api/inbox?min_score=3&suggested_action=read,save&limit=20'
 ```
 
+## RSS 源注册与状态
+
+`content_inbox` 支持把 RSS 源注册为稳定的服务端资源。注册后可查看源状态、按 `source_id` 摄入，并在摄入成功或失败后更新最近运行状态。
+
+注册源：
+
+```bash
+curl -s http://127.0.0.1:8787/api/rss/sources \
+  -H 'content-type: application/json' \
+  -d '{
+    "source_id":"rsshub-36kr",
+    "source_name":"36氪",
+    "source_category":"科技/商业",
+    "feed_url":"http://rsshub:1200/36kr/news/latest",
+    "status":"active",
+    "priority":2,
+    "tags":["tech","business"],
+    "config":{"incremental_mode":"until_existing","screen":false}
+  }'
+```
+
+列出和查看源：
+
+```bash
+curl -s 'http://127.0.0.1:8787/api/rss/sources?status=active&limit=100'
+curl -s http://127.0.0.1:8787/api/rss/sources/rsshub-36kr
+```
+
+更新或停用源：
+
+```bash
+curl -s -X PATCH http://127.0.0.1:8787/api/rss/sources/rsshub-36kr \
+  -H 'content-type: application/json' \
+  -d '{"status":"paused","priority":4}'
+
+curl -s -X DELETE http://127.0.0.1:8787/api/rss/sources/rsshub-36kr
+```
+
+`status` 含义：
+
+| status | 说明 |
+|---|---|
+| `active` | 正常源。 |
+| `paused` | 临时暂停。 |
+| `disabled` | 软停用，默认拒绝按源摄入。 |
+| `broken` | 已知异常或待人工检查。 |
+
+按注册源摄入：
+
+```bash
+curl -s http://127.0.0.1:8787/api/rss/sources/rsshub-36kr/ingest \
+  -H 'content-type: application/json' \
+  -d '{"screen":false,"incremental_mode":"until_existing","probe_limit":20}'
+```
+
+结构化错误示例：
+
+```json
+{
+  "ok": false,
+  "error": {
+    "error_code": "rss_parse_error",
+    "message": "failed to parse feed",
+    "retryable": false,
+    "source_id": "rsshub-36kr",
+    "feed_url": "http://rsshub:1200/36kr/news/latest"
+  }
+}
+```
+
+## Agent CLI
+
+正式 Agent 查询入口是 `python -m app.cli`。JSON 模式下 stdout 只输出 JSON，日志和人类可读错误写 stderr。
+
+```bash
+PYTHONPATH=. python -m app.cli inbox --json --limit 20
+PYTHONPATH=. python -m app.cli inbox --json --today --tz Asia/Shanghai --limit 20
+PYTHONPATH=. python -m app.cli sources list --json
+PYTHONPATH=. python -m app.cli sources get rsshub-36kr --json
+PYTHONPATH=. python -m app.cli sources register --source-id rsshub-36kr --name 36氪 --feed-url http://rsshub:1200/36kr/news/latest --json
+PYTHONPATH=. python -m app.cli sources update rsshub-36kr --status paused --json
+PYTHONPATH=. python -m app.cli sources ingest rsshub-36kr --json --screen false
+```
+
+`scripts/run_rss_sources_to_content_inbox.py` 暂时仍是批量 runner、报告和调试工具，不是正式 Agent 查询 CLI；不要解析它的 stdout 作为稳定 JSON。
+
 ## RSS 增量同步模式
 
 从 v0.2.0 开始，`/api/rss/analyze` 支持两种同步模式：

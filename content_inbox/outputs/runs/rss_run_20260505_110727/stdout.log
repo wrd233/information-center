@@ -1,0 +1,177 @@
+[INFO] Run dir: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260505_110727
+[INFO] CSV: /Users/wangrundong/work/infomation-center/rsshub/rss_opml/rss_sources.csv
+[INFO] Enabled candidate sources: 482
+[INFO] Selected sources: 50
+[INFO] Pending sources this invocation: 50
+[INFO] URL mode: docker-host
+[INFO] Screen enabled: True
+[INFO] Concurrency: 2
+[INFO] content-inbox health OK: {"ok": true, "database_path": "/data/content_inbox.sqlite3", "ai_configured": true, "embedding_configured": true, "sqlite_vec_available": true, "config": {"llm_model": "deepseek-v4-flash", "embedding_model": "text-embedding-3-small", "prompt_version": "reading_needs_v1", "llm_max_concurrency": 2, "screening_mode": "merged"}, "_status": 200}
+[INFO] Setting service LLM max concurrency to 2 ...
+[INFO] Service LLM max concurrency set to 2
+[INFO] Setting service screening mode to merged ...
+[INFO] Service screening mode set to merged
+[SUBMIT] 001/050 Hi, DIYgod
+         category=Articles feed_url=https://diygod.cc/feed
+[SUBMIT] 002/050 图书推荐 – 书伴
+         category=SocialMedia feed_url=http://host.docker.internal:1200/bookfere/books
+[DONE] 001/050 Hi, DIYgod status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 002/050 图书推荐 – 书伴 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 003/050 AI Foundations
+         category=Videos feed_url=https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g
+[SUBMIT] 004/050 Rolen's Blog
+         category=个人博客-人生 feed_url=https://rolen.wiki/feed/
+[DONE] 003/050 AI Foundations status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 005/050 最新发布_共产党员网
+         category=党政信息 feed_url=http://host.docker.internal:1200/12371/zxfb
+[DONE] 004/050 Rolen's Blog status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 006/050 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台
+         category=其他 feed_url=https://51cg1.com/feed/
+[DONE] 005/050 最新发布_共产党员网 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 007/050 一觉醒来发生了什么 - 即刻圈子
+         category=国内外资讯 feed_url=http://host.docker.internal:1200/jike/topic/553870e8e4b0cafb0a1bef68
+[DONE] 006/050 51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 008/050 - 政府文件库
+         category=国内政策 feed_url=http://host.docker.internal:1200/gov/zhengce/zhengceku/bmwj
+[DONE] 007/050 一觉醒来发生了什么 - 即刻圈子 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 009/050 猴猴说话
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3279284299.atom
+[DONE] 008/050 - 政府文件库 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 010/050 小宇宙 Podcast 643928f99361a4e7c38a9555
+         category=播客 feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/643928f99361a4e7c38a9555
+[DONE] 009/050 猴猴说话 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 011/050 波士顿圆脸
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/346563107
+[DONE] 010/050 小宇宙 Podcast 643928f99361a4e7c38a9555 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 012/050 飞鸟手札
+         category=短知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/1366786686
+[DONE] 011/050 波士顿圆脸 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 013/050 Vista看天下
+         category=社评 feed_url=https://plink.anyfeeder.com/weixin/vistaweek
+[DONE] 013/050 Vista看天下 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 014/050 小众软件
+         category=科技与编程 feed_url=https://www.appinn.com/feed/
+[DONE] 012/050 飞鸟手札 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 015/050 猫眼看足球
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/456249922
+[DONE] 014/050 小众软件 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 016/050 simonwillison.net
+         category=英文博客 feed_url=https://simonwillison.net/atom/everything/
+[DONE] 015/050 猫眼看足球 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 017/050 你不知道的行业内幕 - 即刻圈子
+         category=资讯 feed_url=http://host.docker.internal:1200/jike/topic/5699f451d3e8351200bffdc8
+[DONE] 016/050 simonwillison.net status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 018/050 AliAbdaal
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/3546581580122806
+[DONE] 018/050 AliAbdaal status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 019/050 tanscp
+         category=Articles feed_url=https://tanscp.com/feed/
+[DONE] 017/050 你不知道的行业内幕 - 即刻圈子 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 020/050 每周一书 – 书伴
+         category=SocialMedia feed_url=http://host.docker.internal:1200/bookfere/weekly
+[DONE] 019/050 tanscp status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 021/050 Ben's Love
+         category=个人博客-人生 feed_url=https://bens.love/feed
+[DONE] 020/050 每周一书 – 书伴 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 021/050 Ben's Love status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 022/050 新华社新闻_新华网
+         category=党政信息 feed_url=https://plink.anyfeeder.com/newscn/whxw
+[SUBMIT] 023/050 潦草学者
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3239649460.atom
+[DONE] 023/050 潦草学者 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 022/050 新华社新闻_新华网 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 024/050 小宇宙 Podcast 61cbaac48bb4cd867fcabe22
+         category=播客 feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/61cbaac48bb4cd867fcabe22
+[SUBMIT] 025/050 瓶子君152
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/730732
+[DONE] 025/050 瓶子君152 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 024/050 小宇宙 Podcast 61cbaac48bb4cd867fcabe22 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 026/050 英语播客党
+         category=短知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/3537109151386355
+[SUBMIT] 027/050 Tinyfool的个人网站
+         category=社评 feed_url=https://codechina.org/feed/
+[DONE] 026/050 英语播客党 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 028/050 HelloGithub - 月刊
+         category=科技与编程 feed_url=http://host.docker.internal:1200/hellogithub/volume
+[DONE] 027/050 Tinyfool的个人网站 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 028/050 HelloGithub - 月刊 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 029/050 陈大东瓜
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/269288799
+[SUBMIT] 030/050 jeffgeerling.com
+         category=英文博客 feed_url=https://www.jeffgeerling.com/blog.xml
+[DONE] 029/050 陈大东瓜 status=success total_items=0 new_items=0 duplicate_items=0
+[DONE] 030/050 jeffgeerling.com status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 031/050 食事史馆
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/53737196
+[SUBMIT] 032/050 Airing 的博客
+         category=Articles feed_url=https://ursb.me/blog/feed.xml
+[DONE] 032/050 Airing 的博客 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 033/050 笔记交流站 - 即刻圈子
+         category=SocialMedia feed_url=http://host.docker.internal:1200/jike/topic/660165c504703c909c6d8b2e
+[DONE] 031/050 食事史馆 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 034/050 莫比乌斯
+         category=个人博客-人生 feed_url=https://mobius.blog/feed/
+[DONE] 033/050 笔记交流站 - 即刻圈子 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 035/050 半月谈快报
+         category=党政信息 feed_url=https://data.getpodcast.xyz/data/ximalaya/9604235.xml
+[DONE] 035/050 半月谈快报 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 036/050 L先生说
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3015646136.atom
+[DONE] 036/050 L先生说 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 037/050 小宇宙 Podcast 648b0b641c48983391a63f98
+         category=播客 feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/648b0b641c48983391a63f98
+[DONE] 037/050 小宇宙 Podcast 648b0b641c48983391a63f98 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 038/050 Super也好君
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/1372433
+[DONE] 038/050 Super也好君 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 039/050 刘夙的科技世界
+         category=社评 feed_url=https://wewe-rss.jerrylf.uk/feeds/MP_WXS_3002603832.json
+[DONE] 034/050 莫比乌斯 status=success total_items=1 new_items=1 duplicate_items=0
+[SUBMIT] 040/050 宝玉的分享
+         category=科技与编程 feed_url=https://s.baoyu.io/feed.xml
+[DONE] 040/050 宝玉的分享 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 041/050 司马尘
+         category=绝活娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/334932680
+[DONE] 041/050 司马尘 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 042/050 seangoedecke.com
+         category=英文博客 feed_url=https://www.seangoedecke.com/rss.xml
+[DONE] 042/050 seangoedecke.com status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 043/050 毕导
+         category=长知识 feed_url=http://host.docker.internal:1200/bilibili/user/video/254463269
+[DONE] 043/050 毕导 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 044/050 Paradise Lost
+         category=Articles feed_url=https://2890.ltd/feed/
+[DONE] 044/050 Paradise Lost status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 045/050 Mike Krieger(@mikeyk)
+         category=SocialMedia feed_url=https://api.xgo.ing/rss/user/78d7b99318b04b309b04000f7e24da29
+[DONE] 045/050 Mike Krieger(@mikeyk) status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 046/050 白熊阿丸的小屋
+         category=个人博客-人生 feed_url=https://blog.bxaw.name/feed/
+[DONE] 046/050 白熊阿丸的小屋 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 047/050 - 求是网
+         category=党政信息 feed_url=https://plink.anyfeeder.com/qstheory
+[DONE] 047/050 - 求是网 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 048/050 常青说
+         category=微信公众号 feed_url=http://host.docker.internal:8003/feed/MP_WXS_3944297233.atom
+[DONE] 048/050 常青说 status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 049/050 小宇宙 Podcast 5e5c52c9418a84a04625e6cc
+         category=播客 feed_url=http://host.docker.internal:1200/xiaoyuzhou/podcast/5e5c52c9418a84a04625e6cc
+[DONE] 049/050 小宇宙 Podcast 5e5c52c9418a84a04625e6cc status=success total_items=0 new_items=0 duplicate_items=0
+[SUBMIT] 050/050 负面能量转换器
+         category=最娱乐 feed_url=http://host.docker.internal:1200/bilibili/user/video/281127303
+[DONE] 039/050 刘夙的科技世界 status=failed error_type=feed_parse_error error_message={"detail": "failed to parse feed: <unknown>:2:0: not well-formed (invalid token)"}
+[DONE] 050/050 负面能量转换器 status=success total_items=0 new_items=0 duplicate_items=0
+
+[SUMMARY]
+Processed sources: 50
+Successful sources: 49
+Failed sources: 1
+Skipped known failed sources: 0
+New items: 1
+Recommended items from API responses: 1
+Final inbox items from this run: 0
+Report path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260505_110727/report.md
+Run state path: /Users/wangrundong/work/infomation-center/content_inbox/outputs/runs/rss_run_20260505_110727/run_state.json
+
+[FAILED SOURCES]
+- 刘夙的科技世界 | https://wewe-rss.jerrylf.uk/feeds/MP_WXS_3002603832.json | feed_parse_error | {"detail": "failed to parse feed: <unknown>:2:0: not well-formed (invalid token)"}
