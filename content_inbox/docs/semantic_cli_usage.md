@@ -22,6 +22,28 @@ PYTHONPATH=. python -m content_inbox.semantic review reject REVIEW_ID
 
 Use `--db-path` to target a non-default SQLite DB. Live LLM calls need `--live` on processing commands and `CONTENT_INBOX_LLM_ENABLE_LIVE=1`.
 
+Evaluate a real-data sample without writing semantic results to the real DB:
+
+```bash
+PYTHONPATH=. python3 -m content_inbox.semantic evaluate \
+  --db-path content_inbox/data/content_inbox.sqlite3 \
+  --limit 500 \
+  --max-calls 100 \
+  --max-candidates 5 \
+  --concurrency 4 \
+  --live \
+  --dry-run \
+  --output content_inbox/outputs/semantic_eval
+```
+
+Only `--db-path PATH --write-real-db` allows writing to the real DB.
+
+Concurrency:
+
+- `--concurrency` controls concurrent DeepSeek calls for item-card batches and item-item relation judging.
+- Default evaluate concurrency is `4`.
+- Cluster attachment and cluster-card patch orchestration remain conservative to avoid concurrent event-cluster writes.
+
 Live smoke defaults to a temporary DB:
 
 ```bash

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 
 from app.semantic import db
@@ -69,6 +70,9 @@ def process_item_relations(
     max_candidates: int = 5,
     max_calls: int | None = None,
     model: str | None = None,
+    token_budget: int | None = None,
+    global_call_limit: bool = False,
+    concurrency: int = 1,
 ) -> dict[str, Any]:
     generate_item_cards(store, limit=limit, live=False, force=False)
     with store.connect() as conn:
@@ -83,17 +87,26 @@ def process_item_relations(
             """,
             (limit,),
         ).fetchall()
-    client = SemanticLLMClient(store, live=live, model=model, max_calls=max_calls)
     stats = {"selected": len(rows), "written": 0, "folded": 0, "review": 0, "llm_calls": 0}
-    for row in rows:
+
+    def process_one(row: Any) -> dict[str, int]:
+        client = SemanticLLMClient(
+            store,
+            live=live,
+            model=model,
+            max_calls=max_calls,
+            token_budget=token_budget,
+            global_call_limit=global_call_limit,
+        )
+        local = {"written": 0, "folded": 0, "review": 0, "llm_calls": 0}
         item_id = row["item_id"]
         item = db.get_item(store, item_id)
         new_card = db.get_current_item_card(store, item_id)
         if not item or not new_card:
-            continue
+            return local
         candidates = find_relation_candidates(store, item_id, max_candidates)
         if not candidates:
-            continue
+            return local
         hard_written = False
         for candidate_card in candidates:
             candidate_item = db.get_item(store, candidate_card["item_id"])
@@ -118,12 +131,12 @@ def process_item_relations(
                     prompt_version=None,
                     model="rule",
                 )
-                stats["written"] += 1
-                stats["folded"] += 1
+                local["written"] += 1
+                local["folded"] += 1
                 hard_written = True
                 break
         if hard_written:
-            continue
+            return local
         input_data = {
             "new_item_card": card_public(new_card),
             "candidate_item_cards": [card_public(card) for card in candidates],
@@ -135,12 +148,14 @@ def process_item_relations(
             input_data=input_data,
             output_model=ItemRelationOutput,
             max_tokens=1400,
+            item_id=item_id,
+            source_id=item.get("source_id") or item.get("feed_url") or item.get("source_name"),
         )
-        stats["llm_calls"] = client.calls
+        local["llm_calls"] = client.calls
         if not output:
             insert_review(store, "uncertain_relation", "item", item_id, {"reason": "LLM skipped or failed"})
-            stats["review"] += 1
-            continue
+            local["review"] += 1
+            return local
         for relation in output.relations:
             insert_item_relation(
                 store,
@@ -158,12 +173,26 @@ def process_item_relations(
                 prompt_version=ITEM_RELATION_PROMPT_VERSION,
                 model=client.model,
             )
-            stats["written"] += 1
+            local["written"] += 1
             if item_relation_should_fold(relation.primary_relation):
-                stats["folded"] += 1
+                local["folded"] += 1
             if relation.primary_relation == "uncertain":
                 insert_review(store, "uncertain_relation", "item", item_id, relation.model_dump())
-                stats["review"] += 1
+                local["review"] += 1
+        return local
+
+    if concurrency > 1 and len(rows) > 1:
+        with ThreadPoolExecutor(max_workers=max(1, concurrency)) as executor:
+            futures = [executor.submit(process_one, row) for row in rows]
+            for future in as_completed(futures):
+                local = future.result()
+                for key in ["written", "folded", "review", "llm_calls"]:
+                    stats[key] += int(local[key])
+    else:
+        for row in rows:
+            local = process_one(row)
+            for key in ["written", "folded", "review", "llm_calls"]:
+                stats[key] += int(local[key])
     return {"ok": True, "stats": stats}
 
 

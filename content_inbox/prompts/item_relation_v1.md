@@ -43,7 +43,8 @@ Decision rules:
 - duplicate or near_duplicate may be folded for display but never deleted.
 - related_with_new_info must be kept and sent to cluster judging.
 - Do not treat new analysis, firsthand experience, or source material as a duplicate just because it shares the same event.
-- If uncertain, output uncertain.
+- If confidence is low or evidence is insufficient, output uncertain.
+- Do not invent facts or new_information.
 
 Example JSON output:
 {"new_item_id":"item_new","relations":[{"candidate_item_id":"item_old","primary_relation":"related_with_new_info","secondary_roles":["same_event_hint","new_analysis_hint"],"canonical_item_id":"item_old","new_information":["Adds hands-on benchmark observations."],"confidence":0.78,"reason":"Same event, but the new item adds analysis and benchmark details.","evidence":["hands-on benchmark observations"]}]}

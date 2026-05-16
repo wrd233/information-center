@@ -15,6 +15,7 @@ from app.semantic.clusters import (
     show_cluster,
     update_cluster_statuses,
 )
+from app.semantic.evaluate import run_evaluation
 from app.semantic.live_smoke import run_live_smoke
 from app.semantic.relations import process_item_relations
 from app.semantic.review import decide_review, list_reviews
@@ -37,7 +38,9 @@ def add_db_arg(parser: argparse.ArgumentParser) -> None:
 def add_live_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--model")
+    parser.add_argument("--token-budget", type=int, default=0)
     parser.add_argument("--max-calls", type=int)
+    parser.add_argument("--concurrency", type=int, default=1)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -61,6 +64,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_live_args(cluster)
     cluster.add_argument("--limit", type=int, default=100)
     cluster.add_argument("--max-candidates", type=int, default=3)
+    cluster.add_argument("--include-archived", action="store_true")
 
     patch = sub.add_parser("patch-cluster-card")
     add_live_args(patch)
@@ -81,7 +85,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     sp = sub.add_parser("source-profiles")
     sp_sub = sp.add_subparsers(dest="source_profiles_command", required=True)
-    sp_sub.add_parser("recompute")
+    sp_recompute = sp_sub.add_parser("recompute")
+    sp_recompute.add_argument("--json", action="store_true")
+    sp_recompute.add_argument("--output")
 
     source = sub.add_parser("source")
     source_sub = source.add_subparsers(dest="source_command", required=True)
@@ -105,8 +111,24 @@ def build_parser() -> argparse.ArgumentParser:
     smoke = sub.add_parser("live-smoke")
     smoke.add_argument("target", choices=["item-card", "item-relation", "item-cluster", "cluster-card", "source-review", "all"])
     smoke.add_argument("--limit", type=int, default=3)
-    smoke.add_argument("--max-calls", type=int, default=10)
+    smoke.add_argument("--max-calls", type=int, default=50)
     smoke.add_argument("--write-real-db", action="store_true")
+
+    evaluate = sub.add_parser("evaluate")
+    evaluate.add_argument("--db-path", default="")
+    evaluate.add_argument("--limit", "--max-items", dest="limit", type=int, default=100)
+    evaluate.add_argument("--max-calls", type=int, default=100)
+    evaluate.add_argument("--max-candidates", type=int, default=5)
+    evaluate.add_argument("--batch-size", type=int, default=5)
+    evaluate.add_argument("--live", action="store_true")
+    evaluate.add_argument("--dry-run", action="store_true")
+    evaluate.add_argument("--write-real-db", action="store_true")
+    evaluate.add_argument("--model")
+    evaluate.add_argument("--strong-model")
+    evaluate.add_argument("--token-budget", type=int, default=200000)
+    evaluate.add_argument("--concurrency", type=int, default=4)
+    evaluate.add_argument("--include-archived", action="store_true")
+    evaluate.add_argument("--output")
     return parser
 
 
@@ -125,6 +147,25 @@ def main(argv: list[str] | None = None) -> int:
                 )
             )
             return 0
+        if args.command == "evaluate":
+            data = run_evaluation(
+                db_path=args.db_path or None,
+                output=args.output,
+                limit=args.limit,
+                max_calls=args.max_calls,
+                max_candidates=args.max_candidates,
+                batch_size=args.batch_size,
+                live=args.live,
+                dry_run=args.dry_run,
+                write_real_db=args.write_real_db,
+                model=args.model,
+                strong_model=args.strong_model,
+                token_budget=args.token_budget,
+                include_archived=args.include_archived,
+                concurrency=args.concurrency,
+            )
+            write_json(data)
+            return 0 if data.get("ok", True) else 1
         store = store_from_args(args)
         if args.command == "cards":
             data = generate_item_cards(
@@ -136,6 +177,8 @@ def main(argv: list[str] | None = None) -> int:
                 force=args.force,
                 model=args.model,
                 max_calls=args.max_calls,
+                token_budget=args.token_budget or None,
+                concurrency=args.concurrency,
             )
         elif args.command == "dedupe":
             data = process_item_relations(
@@ -145,6 +188,8 @@ def main(argv: list[str] | None = None) -> int:
                 max_candidates=args.max_candidates,
                 max_calls=args.max_calls,
                 model=args.model,
+                token_budget=args.token_budget or None,
+                concurrency=args.concurrency,
             )
         elif args.command == "cluster":
             data = process_item_clusters(
@@ -154,6 +199,8 @@ def main(argv: list[str] | None = None) -> int:
                 max_candidates=args.max_candidates,
                 max_calls=args.max_calls,
                 model=args.model,
+                include_archived=args.include_archived,
+                token_budget=args.token_budget or None,
             )
         elif args.command == "patch-cluster-card":
             data = patch_cluster_card(store, args.cluster_id, live=args.live, model=args.model, max_calls=args.max_calls)
@@ -168,6 +215,8 @@ def main(argv: list[str] | None = None) -> int:
                 data = update_cluster_statuses(store)
         elif args.command == "source-profiles":
             data = recompute_source_profiles(store)
+            if getattr(args, "output", None):
+                Path(args.output).write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
         elif args.command == "source":
             if args.source_command == "suggestions":
                 data = {"ok": True, "suggestions": list_suggestions(store)}

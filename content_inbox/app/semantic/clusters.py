@@ -57,7 +57,13 @@ def show_cluster(store: InboxStore, cluster_id: str) -> dict[str, Any] | None:
     return cluster
 
 
-def candidate_clusters(store: InboxStore, item_card: dict[str, Any], max_candidates: int) -> list[dict[str, Any]]:
+def candidate_clusters(
+    store: InboxStore,
+    item_card: dict[str, Any],
+    max_candidates: int,
+    *,
+    include_archived: bool = False,
+) -> list[dict[str, Any]]:
     clusters = list_clusters(store, status=None, limit=200)
     item_terms = set((item_card["canonical_title"] + " " + (item_card["event_hint"] or "")).lower().split())
     item_entities = set(json.loads(item_card["entities_json"] or "[]"))
@@ -65,10 +71,9 @@ def candidate_clusters(store: InboxStore, item_card: dict[str, Any], max_candida
     for cluster in clusters:
         if cluster["status"] == "merged":
             continue
-        if cluster["status"] == "archived":
-            archived_penalty = -3
-        else:
-            archived_penalty = 0
+        if cluster["status"] == "archived" and not include_archived:
+            continue
+        archived_penalty = -3 if cluster["status"] == "archived" else 0
         title_terms = set((cluster["cluster_title"] + " " + cluster["cluster_summary"]).lower().split())
         score = len(item_terms & title_terms) + len(item_entities & set(cluster["entities"])) * 2 + archived_penalty
         if score > 0:
@@ -87,6 +92,10 @@ def process_item_clusters(
     max_candidates: int = 3,
     max_calls: int | None = None,
     model: str | None = None,
+    include_archived: bool = False,
+    token_budget: int | None = None,
+    global_call_limit: bool = False,
+    patch_cards: bool = True,
 ) -> dict[str, Any]:
     generate_item_cards(store, limit=limit, live=False, force=False)
     with store.connect() as conn:
@@ -102,7 +111,14 @@ def process_item_clusters(
             """,
             (limit,),
         ).fetchall()
-    client = SemanticLLMClient(store, live=live, model=model, max_calls=max_calls)
+    client = SemanticLLMClient(
+        store,
+        live=live,
+        model=model,
+        max_calls=max_calls,
+        token_budget=token_budget,
+        global_call_limit=global_call_limit,
+    )
     stats = {"selected": len(rows), "attached": 0, "created_clusters": 0, "review": 0, "llm_calls": 0}
     for row in rows:
         item_id = row["item_id"]
@@ -110,7 +126,7 @@ def process_item_clusters(
         item = db.get_item(store, item_id)
         if not item or not item_card:
             continue
-        candidates = candidate_clusters(store, item_card, max_candidates)
+        candidates = candidate_clusters(store, item_card, max_candidates, include_archived=include_archived)
         if not candidates:
             cluster_id = create_semantic_cluster(store, item, item_card, created_by="rule")
             insert_cluster_item(
@@ -150,6 +166,8 @@ def process_item_clusters(
             input_data=input_data,
             output_model=ItemClusterOutput,
             max_tokens=1800,
+            item_id=item_id,
+            source_id=item.get("source_id") or item.get("feed_url") or item.get("source_name"),
         )
         stats["llm_calls"] = client.calls
         if not output:
@@ -198,8 +216,16 @@ def process_item_clusters(
             model=client.model,
         )
         stats["attached"] += 1
-        if decision.should_update_cluster_card:
-            patch_cluster_card(store, target_cluster_id, live=live, model=model, max_calls=max_calls)
+        if patch_cards and decision.should_update_cluster_card:
+            patch_cluster_card(
+                store,
+                target_cluster_id,
+                live=live,
+                model=model,
+                max_calls=max_calls,
+                token_budget=token_budget,
+                global_call_limit=global_call_limit,
+            )
     return {"ok": True, "stats": stats}
 
 
@@ -405,6 +431,8 @@ def patch_cluster_card(
     live: bool = False,
     model: str | None = None,
     max_calls: int | None = None,
+    token_budget: int | None = None,
+    global_call_limit: bool = False,
     full_rebuild: bool = False,
 ) -> dict[str, Any]:
     cluster = show_cluster(store, cluster_id)
@@ -423,7 +451,14 @@ def patch_cluster_card(
             (cluster_id, int(full_rebuild)),
         ).fetchall()
     item_cards = [card_public(dict(row)) for row in rows]
-    client = SemanticLLMClient(store, live=live, model=model, max_calls=max_calls)
+    client = SemanticLLMClient(
+        store,
+        live=live,
+        model=model,
+        max_calls=max_calls,
+        token_budget=token_budget,
+        global_call_limit=global_call_limit,
+    )
     input_data = {
         "cluster": {
             "cluster_id": cluster_id,
@@ -442,6 +477,7 @@ def patch_cluster_card(
         input_data=input_data,
         output_model=ClusterCardData,
         max_tokens=1800,
+        cluster_id=cluster_id,
     )
     if output:
         card = output

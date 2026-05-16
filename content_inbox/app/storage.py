@@ -410,6 +410,7 @@ class InboxStore:
                 new_event_rate REAL NOT NULL DEFAULT 0.0,
                 incremental_value_avg REAL NOT NULL DEFAULT 0.0,
                 report_value_avg REAL NOT NULL DEFAULT 0.0,
+                source_material_rate REAL NOT NULL DEFAULT 0.0,
                 source_item_rate REAL NOT NULL DEFAULT 0.0,
                 representative_item_rate REAL NOT NULL DEFAULT 0.0,
                 llm_total_tokens INTEGER NOT NULL DEFAULT 0,
@@ -423,6 +424,7 @@ class InboxStore:
             )
             """
         )
+        self.ensure_column(conn, "source_profiles", "source_material_rate", "REAL NOT NULL DEFAULT 0.0")
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS llm_call_logs (
@@ -439,6 +441,9 @@ class InboxStore:
                 total_tokens INTEGER,
                 cache_hit_tokens INTEGER,
                 cache_miss_tokens INTEGER,
+                item_id TEXT,
+                source_id TEXT,
+                cluster_id TEXT,
                 request_json TEXT,
                 raw_output TEXT,
                 parsed_output_json TEXT,
@@ -448,6 +453,9 @@ class InboxStore:
             )
             """
         )
+        self.ensure_column(conn, "llm_call_logs", "item_id", "TEXT")
+        self.ensure_column(conn, "llm_call_logs", "source_id", "TEXT")
+        self.ensure_column(conn, "llm_call_logs", "cluster_id", "TEXT")
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS review_queue (

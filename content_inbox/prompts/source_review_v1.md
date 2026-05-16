@@ -29,6 +29,8 @@ Output JSON schema:
 
 Rules:
 - Only explain or suggest. Never claim the change is already approved.
+- source_material_rate means original/authoritative material rate; it is not the RSS source identity.
+- new_event_rate means this source tends to create or contribute new event clusters.
 - Use high for sources with sustained high incremental/report value.
 - Use low for highly repetitive or low-yield sources.
 - Use disabled_for_llm only for long-running, very repetitive, very low-yield sources.

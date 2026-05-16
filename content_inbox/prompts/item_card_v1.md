@@ -48,6 +48,7 @@ Rules:
 - Produce exactly one card for each input item_id.
 - Keep the card short and reusable for relation judging.
 - Separate facts from opinions.
+- key_facts must contain verifiable facts only; key_opinions must contain author judgement, prediction, or sentiment.
 - event_hint is the event suggested by the item, not final cluster membership.
 - Use content_role source_material for official announcements, papers, releases, changelogs, original data, or primary material.
 - Use analysis for interpretation, experience for firsthand/hands-on reports, aggregator for link collections, low_signal for marketing or empty summaries.

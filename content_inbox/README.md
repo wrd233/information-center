@@ -377,6 +377,24 @@ Live smoke test uses a temporary SQLite DB unless both `--db-path` and `--write-
 CONTENT_INBOX_LLM_ENABLE_LIVE=1 PYTHONPATH=. python -m content_inbox.semantic live-smoke all --limit 3 --max-calls 10
 ```
 
+真实数据语义质量评估：
+
+```bash
+CONTENT_INBOX_LLM_ENABLE_LIVE=1 PYTHONPATH=. python3 -m content_inbox.semantic evaluate \
+  --db-path content_inbox/data/content_inbox.sqlite3 \
+  --limit 500 \
+  --max-calls 100 \
+  --max-candidates 5 \
+  --concurrency 4 \
+  --live \
+  --dry-run \
+  --output content_inbox/outputs/semantic_eval
+```
+
+`evaluate` 默认读取真实 DB 后写入临时评估 DB，并输出 `semantic_quality_report.md` 与 `semantic_quality_summary.json`。只有同时传入 `--db-path` 和 `--write-real-db` 才会写真实 DB。
+
+`evaluate` 默认额度比 smoke test 更宽：`--max-calls 100`、`--token-budget 200000`、`--concurrency 4`。`--concurrency` 会并发 item-card batch 和 item-item relation 的 DeepSeek 调用；cluster 写入路径保持较保守，避免并发误聚类。
+
 Semantic LLM calls write audit rows to `llm_call_logs`, including model, prompt/schema version, input fingerprint, latency, status, token usage, cache token fields when returned by the provider, raw output, parsed JSON, and error details. API keys are never logged.
 
 This phase did not change console UI. Future console work can consume the backend-only `/api/semantic/*` endpoints for item semantic detail, relations, clusters, source profiles, review queue, and LLM call log summaries.

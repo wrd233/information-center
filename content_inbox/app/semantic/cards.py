@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 
 from app.semantic import db
@@ -78,13 +79,26 @@ def generate_item_cards(
     force: bool = False,
     model: str | None = None,
     max_calls: int | None = None,
+    token_budget: int | None = None,
+    global_call_limit: bool = False,
+    concurrency: int = 1,
 ) -> dict[str, Any]:
     items = db.select_items_without_cards(store, limit, force=force)
-    client = SemanticLLMClient(store, live=live, model=model, max_calls=max_calls, dry_run=dry_run)
     stats = {"selected": len(items), "written": 0, "llm_calls": 0, "skipped": 0, "errors": 0, "dry_run": dry_run}
     results: list[dict[str, Any]] = []
-    for start in range(0, len(items), max(1, batch_size)):
-        batch = items[start : start + max(1, batch_size)]
+    batches = [items[start : start + max(1, batch_size)] for start in range(0, len(items), max(1, batch_size))]
+
+    def process_batch(batch: list[dict[str, Any]]) -> dict[str, Any]:
+        client = SemanticLLMClient(
+            store,
+            live=live,
+            model=model,
+            max_calls=max_calls,
+            dry_run=dry_run,
+            token_budget=token_budget,
+            global_call_limit=global_call_limit,
+        )
+        local = {"written": 0, "llm_calls": 0, "skipped": 0, "errors": 0, "items": []}
         input_data = {
             "task": "item_card_batch",
             "items": [item_payload(item) for item in batch],
@@ -97,7 +111,7 @@ def generate_item_cards(
             output_model=ItemCardBatchOutput,
             max_tokens=1800,
         )
-        stats["llm_calls"] = client.calls
+        local["llm_calls"] = client.calls
         cards_by_id: dict[str, ItemCardData] = {}
         if output:
             cards_by_id = {card.item_id: card for card in output.item_cards}
@@ -105,8 +119,8 @@ def generate_item_cards(
             card = cards_by_id.get(item["item_id"]) or build_heuristic_card(item)
             fingerprint = db.input_fingerprint({"item": item_payload(item), "prompt": ITEM_CARD_PROMPT_VERSION})
             if dry_run:
-                stats["skipped"] += 1
-                results.append(card.model_dump())
+                local["skipped"] += 1
+                local["items"].append(card.model_dump())
                 continue
             try:
                 row = db.upsert_item_card(
@@ -118,11 +132,27 @@ def generate_item_cards(
                     fingerprint=fingerprint,
                     llm_call_id=call_id if output else None,
                 )
-                stats["written"] += 1
-                results.append({"id": row["id"], "item_id": item["item_id"], "source": "llm" if output else "heuristic", "reason": reason})
+                local["written"] += 1
+                local["items"].append({"id": row["id"], "item_id": item["item_id"], "source": "llm" if output else "heuristic", "reason": reason})
             except Exception as exc:
                 mark_item_semantic_error(store, item["item_id"], str(exc))
-                stats["errors"] += 1
+                local["errors"] += 1
+        return local
+
+    if concurrency > 1 and len(batches) > 1:
+        with ThreadPoolExecutor(max_workers=max(1, concurrency)) as executor:
+            futures = [executor.submit(process_batch, batch) for batch in batches]
+            for future in as_completed(futures):
+                local = future.result()
+                for key in ["written", "llm_calls", "skipped", "errors"]:
+                    stats[key] += int(local[key])
+                results.extend(local["items"])
+    else:
+        for batch in batches:
+            local = process_batch(batch)
+            for key in ["written", "llm_calls", "skipped", "errors"]:
+                stats[key] += int(local[key])
+            results.extend(local["items"])
     return {"ok": stats["errors"] == 0, "stats": stats, "items": results}
 
 

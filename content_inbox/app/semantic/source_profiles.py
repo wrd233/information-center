@@ -18,7 +18,18 @@ def recompute_source_profiles(store: InboxStore) -> dict[str, Any]:
             GROUP BY COALESCE(source_id, feed_url, source_name)
             """
         ).fetchall()
-        stats = {"sources": len(source_rows), "suggestions": 0}
+        stats = {
+            "total_sources_processed": len(source_rows),
+            "profiles_created": 0,
+            "profiles_updated": 0,
+            "priority_suggestions_created": 0,
+            "suggestions_unchanged": 0,
+            "pending_review_count": 0,
+            "high_candidates": 0,
+            "low_candidates": 0,
+            "disabled_for_llm_candidates": 0,
+            "warnings": [],
+        }
         for row in source_rows:
             source_id = row["source_id"]
             total_items = int(row["total_items"] or 0)
@@ -36,7 +47,8 @@ def recompute_source_profiles(store: InboxStore) -> dict[str, Any]:
             signals = conn.execute(
                 """
                 SELECT AVG(incremental_value) AS inc_avg, AVG(report_value) AS report_avg,
-                       AVG(CASE WHEN source_role = 'source_material' THEN 1.0 ELSE 0.0 END) AS source_rate,
+                       AVG(CASE WHEN source_role = 'source_material' THEN 1.0 ELSE 0.0 END) AS source_material_rate,
+                       AVG(CASE WHEN new_event_signal = 1 THEN 1.0 ELSE 0.0 END) AS new_event_rate,
                        SUM(CASE WHEN incremental_value >= 4 OR report_value >= 4 THEN 1 ELSE 0 END) AS high_value
                 FROM source_signals
                 WHERE source_id = ?
@@ -45,31 +57,51 @@ def recompute_source_profiles(store: InboxStore) -> dict[str, Any]:
             ).fetchone()
             token_row = conn.execute(
                 """
-                SELECT COALESCE(SUM(total_tokens), 0) AS tokens
-                FROM llm_call_logs
-                WHERE status = 'ok'
+                SELECT COALESCE(SUM(l.total_tokens), 0) AS tokens
+                FROM llm_call_logs l
+                WHERE l.status = 'ok'
+                  AND (
+                    l.source_id = ?
+                    OR l.item_id IN (
+                        SELECT item_id FROM inbox_items
+                        WHERE COALESCE(source_id, feed_url, source_name) = ?
+                    )
+                    OR l.cluster_id IN (
+                        SELECT ci.cluster_id
+                        FROM cluster_items ci
+                        JOIN inbox_items i ON i.item_id = ci.item_id
+                        WHERE COALESCE(i.source_id, i.feed_url, i.source_name) = ?
+                    )
+                  )
                 """
+                ,
+                (source_id, source_id, source_id),
             ).fetchone()
             duplicate_rate = counts.get("duplicate", 0) / max(total_items, 1)
             near_duplicate_rate = counts.get("near_duplicate", 0) / max(total_items, 1)
-            new_event_rate = float(signals["source_rate"] or 0.0)
+            source_material_rate = float(signals["source_material_rate"] or 0.0)
+            new_event_rate = float(signals["new_event_rate"] or 0.0)
             inc_avg = float(signals["inc_avg"] or 0.0)
             report_avg = float(signals["report_avg"] or 0.0)
             high_value = int(signals["high_value"] or 0)
-            yield_score = round((inc_avg + report_avg + new_event_rate * 5.0) / 3.0, 3)
+            yield_score = round((inc_avg + report_avg + source_material_rate * 5.0 + new_event_rate * 5.0) / 4.0, 3)
             suggestion = suggest_priority(duplicate_rate, near_duplicate_rate, yield_score, high_value, total_items)
             old = conn.execute("SELECT * FROM source_profiles WHERE source_id = ?", (source_id,)).fetchone()
             current_priority = old["llm_priority"] if old else "new_source_under_evaluation"
+            if old:
+                stats["profiles_updated"] += 1
+            else:
+                stats["profiles_created"] += 1
             conn.execute(
                 """
                 INSERT OR REPLACE INTO source_profiles (
                     source_id, total_items, llm_processed_items, duplicate_rate, near_duplicate_rate,
                     new_event_rate, incremental_value_avg, report_value_avg, source_item_rate,
-                    representative_item_rate, llm_total_tokens, llm_high_value_outputs,
+                    source_material_rate, representative_item_rate, llm_total_tokens, llm_high_value_outputs,
                     llm_yield_score, llm_priority, priority_suggestion, review_status,
                     created_at, updated_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, COALESCE((SELECT created_at FROM source_profiles WHERE source_id = ?), ?), ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, COALESCE((SELECT created_at FROM source_profiles WHERE source_id = ?), ?), ?)
                 """,
                 (
                     source_id,
@@ -80,7 +112,8 @@ def recompute_source_profiles(store: InboxStore) -> dict[str, Any]:
                     new_event_rate,
                     inc_avg,
                     report_avg,
-                    new_event_rate,
+                    source_material_rate,
+                    source_material_rate,
                     0.0,
                     int(token_row["tokens"] or 0),
                     high_value,
@@ -94,8 +127,24 @@ def recompute_source_profiles(store: InboxStore) -> dict[str, Any]:
                 ),
             )
             if suggestion != current_priority:
-                stats["suggestions"] += 1
-    create_priority_reviews(store)
+                stats["priority_suggestions_created"] += 1
+            else:
+                stats["suggestions_unchanged"] += 1
+            if suggestion == "high":
+                stats["high_candidates"] += 1
+            elif suggestion == "low":
+                stats["low_candidates"] += 1
+            elif suggestion == "disabled_for_llm":
+                stats["disabled_for_llm_candidates"] += 1
+        if any(row["tokens"] is None for row in []):  # pragma: no cover - defensive placeholder
+            stats["warnings"].append("token attribution unavailable for some sources")
+    created_reviews = create_priority_reviews(store)
+    with store.connect() as conn:
+        pending = conn.execute(
+            "SELECT COUNT(*) AS n FROM review_queue WHERE status = 'pending'"
+        ).fetchone()["n"]
+    stats["pending_review_count"] = int(pending or 0)
+    stats["review_entries_created"] = created_reviews
     return {"ok": True, "stats": stats}
 
 
@@ -111,7 +160,8 @@ def suggest_priority(duplicate_rate: float, near_duplicate_rate: float, yield_sc
     return "new_source_under_evaluation"
 
 
-def create_priority_reviews(store: InboxStore) -> None:
+def create_priority_reviews(store: InboxStore) -> int:
+    created = 0
     with store.connect() as conn:
         rows = conn.execute(
             """
@@ -123,6 +173,19 @@ def create_priority_reviews(store: InboxStore) -> None:
             """
         ).fetchall()
     for row in rows:
+        with store.connect() as conn:
+            existing = conn.execute(
+                """
+                SELECT 1 FROM review_queue
+                WHERE status = 'pending'
+                  AND review_type = 'source_priority_suggestion'
+                  AND target_type = 'source'
+                  AND target_id = ?
+                """,
+                (row["source_id"],),
+            ).fetchone()
+        if existing:
+            continue
         insert_review(
             store,
             "source_priority_suggestion",
@@ -138,6 +201,8 @@ def create_priority_reviews(store: InboxStore) -> None:
                 "reason": "source_profile recompute generated a priority suggestion",
             },
         )
+        created += 1
+    return created
 
 
 def list_suggestions(store: InboxStore) -> list[dict[str, Any]]:

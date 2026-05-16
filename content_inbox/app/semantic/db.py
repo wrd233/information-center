@@ -151,6 +151,9 @@ def insert_llm_call_log(
     parsed_output: dict[str, Any] | None = None,
     usage: dict[str, Any] | None = None,
     error: str | None = None,
+    item_id: str | None = None,
+    source_id: str | None = None,
+    cluster_id: str | None = None,
 ) -> int:
     usage = usage or {}
     prompt_tokens = usage.get("prompt_tokens")
@@ -166,10 +169,10 @@ def insert_llm_call_log(
             INSERT INTO llm_call_logs (
                 task_type, model, prompt_version, schema_version, input_fingerprint,
                 latency_ms, status, prompt_tokens, completion_tokens, total_tokens,
-                cache_hit_tokens, cache_miss_tokens, request_json, raw_output,
+                cache_hit_tokens, cache_miss_tokens, item_id, source_id, cluster_id, request_json, raw_output,
                 parsed_output_json, error, created_at, updated_at
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 task_type,
@@ -184,6 +187,9 @@ def insert_llm_call_log(
                 total_tokens,
                 cache_hit,
                 cache_miss,
+                item_id,
+                source_id,
+                cluster_id,
                 dumps(request or {}),
                 raw_output,
                 dumps(parsed_output) if parsed_output is not None else None,
