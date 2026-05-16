@@ -1,0 +1,501 @@
+sequence,source_id,source_name,source_category,local_xml_url,xml_url,feed_url,url_mode,url_source,screen,row_index,status,priority
+1,articles-untag,#UNTAG,Articles/科技与编程,,https://rss.utgd.net/feed/,https://rss.utgd.net/feed/,docker-host,xml_url,False,1,active,0
+2,articles-0d793f4b,- 政府文件库,Articles/国内政策,,http://127.0.0.1:1200/gov/zhengce/zhengceku/bmwj,http://127.0.0.1:1200/gov/zhengce/zhengceku/bmwj,docker-host,xml_url,False,2,active,0
+3,articles-9a6a3f8b,- 求是网,Articles/党政信息,,https://plink.anyfeeder.com/qstheory,https://plink.anyfeeder.com/qstheory,docker-host,xml_url,False,3,active,0
+4,videos-lks,-LKs-,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/125526,http://127.0.0.1:1200/bilibili/user/video/125526,docker-host,xml_url,False,4,active,0
+5,articles-01founder,01Founder,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3927644787.atom,http://127.0.0.1:8003/feed/MP_WXS_3927644787.atom,docker-host,xml_url,False,5,active,0
+6,videos-3blue1brown,3Blue1Brown,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/88461692,http://127.0.0.1:1200/bilibili/user/video/88461692,docker-host,xml_url,False,6,active,0
+7,articles-51,51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台,Articles/其他,,https://51cg1.com/feed/,https://51cg1.com/feed/,docker-host,xml_url,False,7,active,0
+8,articles-agi-hunt,AGI Hunt,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3087832081.atom,http://127.0.0.1:8003/feed/MP_WXS_3087832081.atom,docker-host,xml_url,False,8,active,0
+9,socialmedia-ai-breakfast-aibreakfast,AI Breakfast(@AiBreakfast),SocialMedia,,https://api.xgo.ing/rss/user/0e3ebaf288014c45b0d24b71fe37312b,https://api.xgo.ing/rss/user/0e3ebaf288014c45b0d24b71fe37312b,docker-host,xml_url,False,9,active,0
+10,socialmedia-ai-engineer-aidotengineer,AI Engineer(@aiDotEngineer),SocialMedia,,https://api.xgo.ing/rss/user/7d19a619a1cc4a9896129211269d2c85,https://api.xgo.ing/rss/user/7d19a619a1cc4a9896129211269d2c85,docker-host,xml_url,False,10,active,0
+11,videos-ai-foundations,AI Foundations,Videos,,https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g,https://www.youtube.com/feeds/videos.xml?channel_id=UCWZwfV3ICOt3uEPpW6hYK4g,docker-host,xml_url,False,11,active,0
+12,socialmedia-ai-sdk-aisdk,AI SDK(@aisdk),SocialMedia,,https://api.xgo.ing/rss/user/22af005b21ec45b1a4503acca777b7f0,https://api.xgo.ing/rss/user/22af005b21ec45b1a4503acca777b7f0,docker-host,xml_url,False,12,active,0
+13,socialmedia-ai-will-financeyf5,AI Will(@FinanceYF5),SocialMedia,,https://api.xgo.ing/rss/user/aa74321087f9405a872fd9a76b743bf8,https://api.xgo.ing/rss/user/aa74321087f9405a872fd9a76b743bf8,docker-host,xml_url,False,13,active,0
+14,socialmedia-ai-at-meta-aiatmeta,AI at Meta(@AIatMeta),SocialMedia,,https://api.xgo.ing/rss/user/ef7c70f9568d45f4915169fef4ce90b4,https://api.xgo.ing/rss/user/ef7c70f9568d45f4915169fef4ce90b4,docker-host,xml_url,False,14,active,0
+15,articles-aigc,AIGC开放社区,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3873892677.atom,http://127.0.0.1:8003/feed/MP_WXS_3873892677.atom,docker-host,xml_url,False,15,active,0
+16,articles-ai-fbd288db,AI产品银海,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3913528478.atom,http://127.0.0.1:8003/feed/MP_WXS_3913528478.atom,docker-host,xml_url,False,16,active,0
+17,articles-ai-ff82b753,AI产品阿颖,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3892772220.atom,http://127.0.0.1:8003/feed/MP_WXS_3892772220.atom,docker-host,xml_url,False,17,active,0
+18,articles-ai-cd140649,AI产品黄叔,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_2398553439.atom,http://127.0.0.1:8003/feed/MP_WXS_2398553439.atom,docker-host,xml_url,False,18,active,0
+19,articles-ai-49e2fc93,AI前线,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3554086560.atom,http://127.0.0.1:8003/feed/MP_WXS_3554086560.atom,docker-host,xml_url,False,19,active,0
+20,articles-ai-b036e0a6,AI故事计划,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3917501995.atom,http://127.0.0.1:8003/feed/MP_WXS_3917501995.atom,docker-host,xml_url,False,20,active,0
+21,articles-ai-rss-feed,AI洞察日报 RSS Feed,Articles,,https://justlovemaki.github.io/CloudFlare-AI-Insight-Daily/rss.xml,https://justlovemaki.github.io/CloudFlare-AI-Insight-Daily/rss.xml,docker-host,xml_url,False,21,active,0
+22,articles-ai-72d02b7f,AI科技评论,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3098132220.atom,http://127.0.0.1:8003/feed/MP_WXS_3098132220.atom,docker-host,xml_url,False,22,active,0
+23,socialmedia-ak-akhaliq,AK(@_akhaliq),SocialMedia,,https://api.xgo.ing/rss/user/341f7b9f8d9b477e8bb200caa7f32c6e,https://api.xgo.ing/rss/user/341f7b9f8d9b477e8bb200caa7f32c6e,docker-host,xml_url,False,23,active,0
+24,articles-appso,APPSO,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_2392024520.atom,http://127.0.0.1:8003/feed/MP_WXS_2392024520.atom,docker-host,xml_url,False,24,active,0
+25,socialmedia-aadit-sheth-aaditsh,Aadit Sheth(@aaditsh),SocialMedia,,https://api.xgo.ing/rss/user/179bcc4b8e5d4274b6e9e935f9fd4434,https://api.xgo.ing/rss/user/179bcc4b8e5d4274b6e9e935f9fd4434,docker-host,xml_url,False,25,active,0
+26,socialmedia-adam-d-angelo-adamdangelo,Adam D'Angelo(@adamdangelo),SocialMedia,,https://api.xgo.ing/rss/user/3042b6f912b24f64982cc23f7bd59681,https://api.xgo.ing/rss/user/3042b6f912b24f64982cc23f7bd59681,docker-host,xml_url,False,26,active,0
+27,articles-ahead-of-ai,Ahead of AI,Articles,,https://magazine.sebastianraschka.com/feed,https://magazine.sebastianraschka.com/feed,docker-host,xml_url,False,27,active,0
+28,articles-airing,Airing 的博客,Articles,,https://ursb.me/blog/feed.xml,https://ursb.me/blog/feed.xml,docker-host,xml_url,False,28,active,0
+29,socialmedia-akshay-kothari-akothari,Akshay Kothari(@akothari),SocialMedia,,https://api.xgo.ing/rss/user/3434c0d56ee0446f991fb6af42bfac4b,https://api.xgo.ing/rss/user/3434c0d56ee0446f991fb6af42bfac4b,docker-host,xml_url,False,29,active,0
+30,socialmedia-alex-albert-alexalbert,Alex Albert(@alexalbert__),SocialMedia,,https://api.xgo.ing/rss/user/524525de0d69407b80f0a7d891fdc8df,https://api.xgo.ing/rss/user/524525de0d69407b80f0a7d891fdc8df,docker-host,xml_url,False,30,active,0
+31,videos-aliabdaal,AliAbdaal,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/3546581580122806,http://127.0.0.1:1200/bilibili/user/video/3546581580122806,docker-host,xml_url,False,31,active,0
+32,socialmedia-aman-sanger-amanrsanger,Aman Sanger(@amanrsanger),SocialMedia,,https://api.xgo.ing/rss/user/a02496979a0e4d86baf2b72c24db52a4,https://api.xgo.ing/rss/user/a02496979a0e4d86baf2b72c24db52a4,docker-host,xml_url,False,32,active,0
+33,socialmedia-amjad-masad-amasad,Amjad Masad(@amasad),SocialMedia,,https://api.xgo.ing/rss/user/5fb1814c610c4af2911caa98c5c5ef82,https://api.xgo.ing/rss/user/5fb1814c610c4af2911caa98c5c5ef82,docker-host,xml_url,False,33,active,0
+34,videos-andrej-karpathy-youtube,Andrej Karpathy - YouTube,Videos,,http://127.0.0.1:1200/youtube/user/@AndrejKarpathy,http://127.0.0.1:1200/youtube/user/@AndrejKarpathy,docker-host,xml_url,False,34,active,0
+35,socialmedia-andrej-karpathy-karpathy,Andrej Karpathy(@karpathy),SocialMedia,,https://api.xgo.ing/rss/user/edf707b5c0b248579085f66d7a3c5524,https://api.xgo.ing/rss/user/edf707b5c0b248579085f66d7a3c5524,docker-host,xml_url,False,35,active,0
+36,socialmedia-andrew-ng-andrewyng,Andrew Ng(@AndrewYNg),SocialMedia,,https://api.xgo.ing/rss/user/08b5488b20bc437c8bfc317a52e5c26d,https://api.xgo.ing/rss/user/08b5488b20bc437c8bfc317a52e5c26d,docker-host,xml_url,False,36,active,0
+37,socialmedia-anthropic-anthropicai,Anthropic(@AnthropicAI),SocialMedia,,https://api.xgo.ing/rss/user/fc28a211471b496682feff329ec616e5,https://api.xgo.ing/rss/user/fc28a211471b496682feff329ec616e5,docker-host,xml_url,False,37,active,0
+38,socialmedia-anton-osika-eu-acc-antonosika,Anton Osika – eu/acc(@antonosika),SocialMedia,,https://api.xgo.ing/rss/user/5f13b32b124a41cfb659f903a84032b1,https://api.xgo.ing/rss/user/5f13b32b124a41cfb659f903a84032b1,docker-host,xml_url,False,38,active,0
+39,socialmedia-aravind-srinivas-aravsrinivas,Aravind Srinivas(@AravSrinivas),SocialMedia,,https://api.xgo.ing/rss/user/59e6b63ae9684d11be0ae13d9e7420f2,https://api.xgo.ing/rss/user/59e6b63ae9684d11be0ae13d9e7420f2,docker-host,xml_url,False,39,active,0
+40,socialmedia-arthur-mensch-arthurmensch,Arthur Mensch(@arthurmensch),SocialMedia,,https://api.xgo.ing/rss/user/d8121d969fb34c7daad2dd2aac4ba270,https://api.xgo.ing/rss/user/d8121d969fb34c7daad2dd2aac4ba270,docker-host,xml_url,False,40,active,0
+41,socialmedia-augment-code-augmentcode,Augment Code(@augmentcode),SocialMedia,,https://api.xgo.ing/rss/user/e153fdd077df458b8298d975c060dcc3,https://api.xgo.ing/rss/user/e153fdd077df458b8298d975c060dcc3,docker-host,xml_url,False,41,active,0
+42,socialmedia-barsee-128054-heybarsee,Barsee &#128054;(@heyBarsee),SocialMedia,,https://api.xgo.ing/rss/user/244eb9fa77ce4fa3b7fa5ceba80027a4,https://api.xgo.ing/rss/user/244eb9fa77ce4fa3b7fa5ceba80027a4,docker-host,xml_url,False,42,active,0
+43,articles-ben-s-love,Ben's Love,Articles/个人博客-人生,,https://bens.love/feed,https://bens.love/feed,docker-host,xml_url,False,43,active,0
+44,socialmedia-berkeley-ai-research-berkeley-ai,Berkeley AI Research(@berkeley_ai),SocialMedia,,https://api.xgo.ing/rss/user/6bbf31cac345443585c3280320ba9009,https://api.xgo.ing/rss/user/6bbf31cac345443585c3280320ba9009,docker-host,xml_url,False,44,active,0
+45,socialmedia-binyuan-hui-huybery,Binyuan Hui(@huybery),SocialMedia,,https://api.xgo.ing/rss/user/f54b2b40185943ce8f48a880110b7bc2,https://api.xgo.ing/rss/user/f54b2b40185943ce8f48a880110b7bc2,docker-host,xml_url,False,45,active,0
+46,articles-blog-remote-work-prep,Blog - Remote Work Prep,Articles,,https://www.remoteworkprep.com/blog?format=rss,https://www.remoteworkprep.com/blog?format=rss,docker-host,xml_url,False,46,active,0
+47,videos-boo,Boo布姐自译,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/3493128048740395,http://127.0.0.1:1200/bilibili/user/video/3493128048740395,docker-host,xml_url,False,47,active,0
+48,socialmedia-browser-use-browser-use,Browser Use(@browser_use),SocialMedia,,https://api.xgo.ing/rss/user/b8d7530f0b294405825013bbc1cc198f,https://api.xgo.ing/rss/user/b8d7530f0b294405825013bbc1cc198f,docker-host,xml_url,False,48,active,0
+49,articles-cver,CVer,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3516712416.atom,http://127.0.0.1:8003/feed/MP_WXS_3516712416.atom,docker-host,xml_url,False,49,active,0
+50,socialmedia-character-ai-character-ai,Character.AI(@character_ai),SocialMedia,,https://api.xgo.ing/rss/user/3877c31cdb554cffb750b3b683c98c4d,https://api.xgo.ing/rss/user/3877c31cdb554cffb750b3b683c98c4d,docker-host,xml_url,False,50,active,0
+51,socialmedia-chatgpt-chatgptapp,ChatGPT(@ChatGPTapp),SocialMedia,,https://api.xgo.ing/rss/user/f7992687b8d74b14bf2341eb3a0a5ec4,https://api.xgo.ing/rss/user/f7992687b8d74b14bf2341eb3a0a5ec4,docker-host,xml_url,False,51,active,0
+52,videos-cocovii,CoCoVii,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/9142182,http://127.0.0.1:1200/bilibili/user/video/9142182,docker-host,xml_url,False,52,active,0
+53,socialmedia-cognition-cognition-labs,Cognition(@cognition_labs),SocialMedia,,https://api.xgo.ing/rss/user/4cc14cbd15c74e189d537c415369e1a7,https://api.xgo.ing/rss/user/4cc14cbd15c74e189d537c415369e1a7,docker-host,xml_url,False,53,active,0
+54,socialmedia-cursor-cursor-ai,Cursor(@cursor_ai),SocialMedia,,https://api.xgo.ing/rss/user/5287b4e0e13a4ab7ab7b1d56f9d88960,https://api.xgo.ing/rss/user/5287b4e0e13a4ab7ab7b1d56f9d88960,docker-host,xml_url,False,54,active,0
+55,socialmedia-dario-amodei-darioamodei,Dario Amodei(@DarioAmodei),SocialMedia,,https://api.xgo.ing/rss/user/49666ce6fe3e4cb786c6574684542ec5,https://api.xgo.ing/rss/user/49666ce6fe3e4cb786c6574684542ec5,docker-host,xml_url,False,55,active,0
+56,articles-datawhale,Datawhale,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3226363426.atom,http://127.0.0.1:8003/feed/MP_WXS_3226363426.atom,docker-host,xml_url,False,56,active,0
+57,socialmedia-deeplearning-ai-deeplearningai,DeepLearning.AI(@DeepLearningAI),SocialMedia,,https://api.xgo.ing/rss/user/42e6b4901b97498eab2ab64c07d56177,https://api.xgo.ing/rss/user/42e6b4901b97498eab2ab64c07d56177,docker-host,xml_url,False,57,active,0
+58,socialmedia-deepseek-deepseek-ai,DeepSeek(@deepseek_ai),SocialMedia,,https://api.xgo.ing/rss/user/68b610deb24b47ae9a236811563cda86,https://api.xgo.ing/rss/user/68b610deb24b47ae9a236811563cda86,docker-host,xml_url,False,58,active,0
+59,socialmedia-demis-hassabis-demishassabis,Demis Hassabis(@demishassabis),SocialMedia,,https://api.xgo.ing/rss/user/4a884d5e2f3740c5a26c9c093de6388a,https://api.xgo.ing/rss/user/4a884d5e2f3740c5a26c9c093de6388a,docker-host,xml_url,False,59,active,0
+60,socialmedia-dia-diabrowser,Dia(@diabrowser),SocialMedia,,https://api.xgo.ing/rss/user/6384ee3c656c48fea5e8b3cdacece4d0,https://api.xgo.ing/rss/user/6384ee3c656c48fea5e8b3cdacece4d0,docker-host,xml_url,False,60,active,0
+61,socialmedia-dify-dify-ai,Dify(@dify_ai),SocialMedia,,https://api.xgo.ing/rss/user/0be252fedbe84ad7bea21be44b18da89,https://api.xgo.ing/rss/user/0be252fedbe84ad7bea21be44b18da89,docker-host,xml_url,False,61,active,0
+62,articles-evangelion-all,EVANGELION:ALL,Articles,,https://www.eva-all.com/news/feed/,https://www.eva-all.com/news/feed/,docker-host,xml_url,False,62,active,0
+63,socialmedia-elevenlabs-elevenlabsio,ElevenLabs(@elevenlabsio),SocialMedia,,https://api.xgo.ing/rss/user/1897eed387064dfab443764d6da50bc6,https://api.xgo.ing/rss/user/1897eed387064dfab443764d6da50bc6,docker-host,xml_url,False,63,active,0
+64,socialmedia-eric-jing-ericjing-ai,Eric Jing(@ericjing_ai),SocialMedia,,https://api.xgo.ing/rss/user/ddfdcdd4e390495c942f0b5da62af0fb,https://api.xgo.ing/rss/user/ddfdcdd4e390495c942f0b5da62af0fb,docker-host,xml_url,False,64,active,0
+65,articles-experimental-history,Experimental History,Articles,,https://www.experimental-history.com/feed,https://www.experimental-history.com/feed,docker-host,xml_url,False,65,active,0
+66,socialmedia-fei-fei-li-drfeifei,Fei-Fei Li(@drfeifei),SocialMedia,,https://api.xgo.ing/rss/user/a4bfe44bfc0d4c949da21ebd3f5f42a5,https://api.xgo.ing/rss/user/a4bfe44bfc0d4c949da21ebd3f5f42a5,docker-host,xml_url,False,66,active,0
+67,socialmedia-fellou-fellouai,Fellou(@FellouAI),SocialMedia,,https://api.xgo.ing/rss/user/326763c2f6154826babcfd71c5ab0f70,https://api.xgo.ing/rss/user/326763c2f6154826babcfd71c5ab0f70,docker-host,xml_url,False,67,active,0
+68,socialmedia-figma-figma,Figma(@figma),SocialMedia,,https://api.xgo.ing/rss/user/f8a106a09a7d404fb8de7eb0c5ddd2a2,https://api.xgo.ing/rss/user/f8a106a09a7d404fb8de7eb0c5ddd2a2,docker-host,xml_url,False,68,active,0
+69,socialmedia-firecrawl-firecrawl-dev,Firecrawl(@firecrawl_dev),SocialMedia,,https://api.xgo.ing/rss/user/c04abb206bbf4f91b22795024d6c0614,https://api.xgo.ing/rss/user/c04abb206bbf4f91b22795024d6c0614,docker-host,xml_url,False,69,active,0
+70,socialmedia-fireworks-ai-fireworksai-hq,Fireworks AI(@FireworksAI_HQ),SocialMedia,,https://api.xgo.ing/rss/user/9f35c76341554bd78c2b9e63dc4fa5d8,https://api.xgo.ing/rss/user/9f35c76341554bd78c2b9e63dc4fa5d8,docker-host,xml_url,False,70,active,0
+71,socialmedia-fish-audio-fishaudio,Fish Audio(@FishAudio),SocialMedia,,https://api.xgo.ing/rss/user/4900b3dcd592424687582ff9e0f148ea,https://api.xgo.ing/rss/user/4900b3dcd592424687582ff9e0f148ea,docker-host,xml_url,False,71,active,0
+72,socialmedia-flowiseai-flowiseai,FlowiseAI(@FlowiseAI),SocialMedia,,https://api.xgo.ing/rss/user/be74da51698d4cefb12b39830d6cd201,https://api.xgo.ing/rss/user/be74da51698d4cefb12b39830d6cd201,docker-host,xml_url,False,72,active,0
+73,socialmedia-gary-marcus-garymarcus,Gary Marcus(@GaryMarcus),SocialMedia,,https://api.xgo.ing/rss/user/35a38c5646d946fb894d8c30c1d9629e,https://api.xgo.ing/rss/user/35a38c5646d946fb894d8c30c1d9629e,docker-host,xml_url,False,73,active,0
+74,articles-geekplux-letters,GeekPlux Letters,Articles,,https://letters.geekplux.com/rss/,https://letters.geekplux.com/rss/,docker-host,xml_url,False,74,active,0
+75,socialmedia-genspark-genspark-ai,Genspark(@genspark_ai),SocialMedia,,https://api.xgo.ing/rss/user/71ffd342cb5d478185ef7d55bdfca011,https://api.xgo.ing/rss/user/71ffd342cb5d478185ef7d55bdfca011,docker-host,xml_url,False,75,active,0
+76,socialmedia-geoffrey-hinton-geoffreyhinton,Geoffrey Hinton(@geoffreyhinton),SocialMedia,,https://api.xgo.ing/rss/user/cb6169815e2e447e8e6148a4af3f9686,https://api.xgo.ing/rss/user/cb6169815e2e447e8e6148a4af3f9686,docker-host,xml_url,False,76,active,0
+77,socialmedia-google-ai-developers-googleaidevs,Google AI Developers(@googleaidevs),SocialMedia,,https://api.xgo.ing/rss/user/69d925d4a8d44221b03eecbe07bd0f74,https://api.xgo.ing/rss/user/69d925d4a8d44221b03eecbe07bd0f74,docker-host,xml_url,False,77,active,0
+78,socialmedia-google-ai-googleai,Google AI(@GoogleAI),SocialMedia,,https://api.xgo.ing/rss/user/4de0bd2d5cef4333a0260dc8157054a7,https://api.xgo.ing/rss/user/4de0bd2d5cef4333a0260dc8157054a7,docker-host,xml_url,False,78,active,0
+79,socialmedia-google-deepmind-googledeepmind,Google DeepMind(@GoogleDeepMind),SocialMedia,,https://api.xgo.ing/rss/user/a99538443a484fcc846bdcc8f50745ec,https://api.xgo.ing/rss/user/a99538443a484fcc846bdcc8f50745ec,docker-host,xml_url,False,79,active,0
+80,socialmedia-google-gemini-app-geminiapp,Google Gemini App(@GeminiApp),SocialMedia,,https://api.xgo.ing/rss/user/6fb337feeec44ca38b79491b971d868d,https://api.xgo.ing/rss/user/6fb337feeec44ca38b79491b971d868d,docker-host,xml_url,False,80,active,0
+81,videos-gray,Gray格雷老师,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/591610354,http://127.0.0.1:1200/bilibili/user/video/591610354,docker-host,xml_url,False,81,active,0
+82,socialmedia-greg-brockman-gdb,Greg Brockman(@gdb),SocialMedia,,https://api.xgo.ing/rss/user/af19d054e26a49129f23abfa82d9e268,https://api.xgo.ing/rss/user/af19d054e26a49129f23abfa82d9e268,docker-host,xml_url,False,82,active,0
+83,socialmedia-groq-inc-groqinc,Groq Inc(@GroqInc),SocialMedia,,https://api.xgo.ing/rss/user/771b32075fe54a83bdb6966de9647b4f,https://api.xgo.ing/rss/user/771b32075fe54a83bdb6966de9647b4f,docker-host,xml_url,False,83,active,0
+84,socialmedia-guillermo-rauch-rauchg,Guillermo Rauch(@rauchg),SocialMedia,,https://api.xgo.ing/rss/user/e8750659b8154dbfa0489f451e044af1,https://api.xgo.ing/rss/user/e8750659b8154dbfa0489f451e044af1,docker-host,xml_url,False,84,active,0
+85,socialmedia-hailuo-ai-minimax-hailuo-ai,Hailuo AI (MiniMax)(@Hailuo_AI),SocialMedia,,https://api.xgo.ing/rss/user/e65b5e59fcb544918c1ba17f5758f0f8,https://api.xgo.ing/rss/user/e65b5e59fcb544918c1ba17f5758f0f8,docker-host,xml_url,False,85,active,0
+86,socialmedia-harrison-chase-hwchase17,Harrison Chase(@hwchase17),SocialMedia,,https://api.xgo.ing/rss/user/f299207df53745bca04a03db8d11c5aa,https://api.xgo.ing/rss/user/f299207df53745bca04a03db8d11c5aa,docker-host,xml_url,False,86,active,0
+87,articles-hellogithub,HelloGithub - 月刊,Articles/科技与编程,,http://127.0.0.1:1200/hellogithub/volume,http://127.0.0.1:1200/hellogithub/volume,docker-host,xml_url,False,87,active,0
+88,socialmedia-heygen-heygen-official,HeyGen(@HeyGen_Official),SocialMedia,,https://api.xgo.ing/rss/user/a9aff6b016c143ed8728dd86eb70d7db,https://api.xgo.ing/rss/user/a9aff6b016c143ed8728dd86eb70d7db,docker-host,xml_url,False,88,active,0
+89,articles-hi-diygod,"Hi, DIYgod",Articles,,https://diygod.cc/feed,https://diygod.cc/feed,docker-host,xml_url,False,89,active,0
+90,socialmedia-hugging-face-huggingface,Hugging Face(@huggingface),SocialMedia,,https://api.xgo.ing/rss/user/fc16750ce50741f1b1f05ea1fb29436f,https://api.xgo.ing/rss/user/fc16750ce50741f1b1f05ea1fb29436f,docker-host,xml_url,False,90,active,0
+91,socialmedia-hunyuan-txhunyuan,Hunyuan(@TXhunyuan),SocialMedia,,https://api.xgo.ing/rss/user/6e8e7b42cb434818810f87bcf77d86fb,https://api.xgo.ing/rss/user/6e8e7b42cb434818810f87bcf77d86fb,docker-host,xml_url,False,91,active,0
+92,socialmedia-ian-goodfellow-goodfellow-ian,Ian Goodfellow(@goodfellow_ian),SocialMedia,,https://api.xgo.ing/rss/user/57831559d22440debbfb2f2528e4ba84,https://api.xgo.ing/rss/user/57831559d22440debbfb2f2528e4ba84,docker-host,xml_url,False,92,active,0
+93,socialmedia-ideogram-ideogram-ai,Ideogram(@ideogram_ai),SocialMedia,,https://api.xgo.ing/rss/user/a719880fe66e4156a111187f50dae91b,https://api.xgo.ing/rss/user/a719880fe66e4156a111187f50dae91b,docker-host,xml_url,False,93,active,0
+94,articles-infoq,InfoQ,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_2390142780.atom,http://127.0.0.1:8003/feed/MP_WXS_2390142780.atom,docker-host,xml_url,False,94,active,0
+95,socialmedia-jan-leike-janleike,Jan Leike(@janleike),SocialMedia,,https://api.xgo.ing/rss/user/dceb5cd131b34c72a8376cba8ea5d864,https://api.xgo.ing/rss/user/dceb5cd131b34c72a8376cba8ea5d864,docker-host,xml_url,False,95,active,0
+96,socialmedia-jeff-dean-jeffdean,Jeff Dean(@JeffDean),SocialMedia,,https://api.xgo.ing/rss/user/b1013166769c49f8aa3fbdc222867054,https://api.xgo.ing/rss/user/b1013166769c49f8aa3fbdc222867054,docker-host,xml_url,False,96,active,0
+97,socialmedia-jerry-liu-jerryjliu0,Jerry Liu(@jerryjliu0),SocialMedia,,https://api.xgo.ing/rss/user/b3d904c0d7c446558ef3a1e7f2eb362b,https://api.xgo.ing/rss/user/b3d904c0d7c446558ef3a1e7f2eb362b,docker-host,xml_url,False,97,active,0
+98,socialmedia-jim-fan-drjimfan,Jim Fan(@DrJimFan),SocialMedia,,https://api.xgo.ing/rss/user/c6cfe7c0d6b74849997073233fdea840,https://api.xgo.ing/rss/user/c6cfe7c0d6b74849997073233fdea840,docker-host,xml_url,False,98,active,0
+99,socialmedia-jina-ai-jinaai,Jina AI(@JinaAI_),SocialMedia,,https://api.xgo.ing/rss/user/f510f6e7eecf456ca7e2895a46752888,https://api.xgo.ing/rss/user/f510f6e7eecf456ca7e2895a46752888,docker-host,xml_url,False,99,active,0
+100,socialmedia-julien-chaumond-julien-c,Julien Chaumond(@julien_c),SocialMedia,,https://api.xgo.ing/rss/user/44d9fa384087448a94d3c8595f8d535e,https://api.xgo.ing/rss/user/44d9fa384087448a94d3c8595f8d535e,docker-host,xml_url,False,100,active,0
+101,socialmedia-junyang-lin-justinlin610,Junyang Lin(@JustinLin610),SocialMedia,,https://api.xgo.ing/rss/user/082097117b4543e9a741cd2580f936d3,https://api.xgo.ing/rss/user/082097117b4543e9a741cd2580f936d3,docker-host,xml_url,False,101,active,0
+102,socialmedia-justin-welsh-thejustinwelsh,Justin Welsh(@thejustinwelsh),SocialMedia,,https://api.xgo.ing/rss/user/58894bf2934a426ca833c682da2bc810,https://api.xgo.ing/rss/user/58894bf2934a426ca833c682da2bc810,docker-host,xml_url,False,102,active,0
+103,socialmedia-justine-moore-venturetwins,Justine Moore(@venturetwins),SocialMedia,,https://api.xgo.ing/rss/user/c61046471f174d86bc0eb76cb44a21c3,https://api.xgo.ing/rss/user/c61046471f174d86bc0eb76cb44a21c3,docker-host,xml_url,False,103,active,0
+104,socialmedia-kevin-weil-127482-127480-kevinweil,Kevin Weil &#127482;&#127480;(@kevinweil),SocialMedia,,https://api.xgo.ing/rss/user/3ca3c7698fd04611a0e7d14fae93c84c,https://api.xgo.ing/rss/user/3ca3c7698fd04611a0e7d14fae93c84c,docker-host,xml_url,False,104,active,0
+105,socialmedia-kling-ai-kling-ai,Kling AI(@Kling_ai),SocialMedia,,https://api.xgo.ing/rss/user/564237c3de274d58a04f064920817888,https://api.xgo.ing/rss/user/564237c3de274d58a04f064920817888,docker-host,xml_url,False,105,active,0
+106,articles-kubernetes-blog,Kubernetes Blog,Articles,,https://kubernetes.io/feed.xml,https://kubernetes.io/feed.xml,docker-host,xml_url,False,106,active,0
+107,socialmedia-langchain-langchainai,LangChain(@LangChainAI),SocialMedia,,https://api.xgo.ing/rss/user/862fee50a745423c87e2633b274caf1d,https://api.xgo.ing/rss/user/862fee50a745423c87e2633b274caf1d,docker-host,xml_url,False,107,active,0
+108,videos-larry,Larry想做技术大佬,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/19873195,http://127.0.0.1:1200/bilibili/user/video/19873195,docker-host,xml_url,False,108,active,0
+109,socialmedia-latent-space-latentspacepod,Latent.Space(@latentspacepod),SocialMedia,,https://api.xgo.ing/rss/user/a7be8b61a1264ea7984abfaea3eff686,https://api.xgo.ing/rss/user/a7be8b61a1264ea7984abfaea3eff686,docker-host,xml_url,False,109,active,0
+110,socialmedia-lee-robinson-leerob,Lee Robinson(@leerob),SocialMedia,,https://api.xgo.ing/rss/user/dc2426bc8348495189b45451d1707a1c,https://api.xgo.ing/rss/user/dc2426bc8348495189b45451d1707a1c,docker-host,xml_url,False,110,active,0
+111,socialmedia-lenny-rachitsky-lennysan,Lenny Rachitsky(@lennysan),SocialMedia,,https://api.xgo.ing/rss/user/77d5ce4736854b0ebae603e4b54d3095,https://api.xgo.ing/rss/user/77d5ce4736854b0ebae603e4b54d3095,docker-host,xml_url,False,111,active,0
+112,videos-lex-fridman-youtube,Lex Fridman - YouTube,Videos,,http://127.0.0.1:1200/youtube/user/%40lexfridman,http://127.0.0.1:1200/youtube/user/%40lexfridman,docker-host,xml_url,False,112,active,0
+113,articles-lex-fridman-podcast,Lex Fridman Podcast,Articles,,https://lexfridman.com/feed/podcast/,https://lexfridman.com/feed/podcast/,docker-host,xml_url,False,113,active,0
+114,socialmedia-lex-fridman-lexfridman,Lex Fridman(@lexfridman),SocialMedia,,https://api.xgo.ing/rss/user/adf65931519340f795e2336910b4cd15,https://api.xgo.ing/rss/user/adf65931519340f795e2336910b4cd15,docker-host,xml_url,False,114,active,0
+115,articles-lil-log,Lil'Log,Articles/英文博客,,https://lilianweng.github.io/index.xml,https://lilianweng.github.io/index.xml,docker-host,xml_url,False,115,active,0
+116,socialmedia-lilian-weng-lilianweng,Lilian Weng(@lilianweng),SocialMedia,,https://api.xgo.ing/rss/user/a8f7e2238039461cbc8bf55f5f194498,https://api.xgo.ing/rss/user/a8f7e2238039461cbc8bf55f5f194498,docker-host,xml_url,False,116,active,0
+117,socialmedia-llamaindex-129433-llama-index,LlamaIndex &#129433;(@llama_index),SocialMedia,,https://api.xgo.ing/rss/user/67e259bd5be544ce84bbc867eace54c2,https://api.xgo.ing/rss/user/67e259bd5be544ce84bbc867eace54c2,docker-host,xml_url,False,117,active,0
+118,socialmedia-logan-kilpatrick-officiallogank,Logan Kilpatrick(@OfficialLoganK),SocialMedia,,https://api.xgo.ing/rss/user/4f63d960de644aeebd0aa97e4994dafe,https://api.xgo.ing/rss/user/4f63d960de644aeebd0aa97e4994dafe,docker-host,xml_url,False,118,active,0
+119,socialmedia-lovable-lovable-dev,Lovable(@lovable_dev),SocialMedia,,https://api.xgo.ing/rss/user/639cd13d44284e10ac89fbd1c5399767,https://api.xgo.ing/rss/user/639cd13d44284e10ac89fbd1c5399767,docker-host,xml_url,False,119,active,0
+120,socialmedia-lovartai-lovart-ai,LovartAI(@lovart_ai),SocialMedia,,https://api.xgo.ing/rss/user/db648e4d4eae4822aa0d34f0faef7ad2,https://api.xgo.ing/rss/user/db648e4d4eae4822aa0d34f0faef7ad2,docker-host,xml_url,False,120,active,0
+121,articles-lukas-peterssons-blog,Lukas Petersson’s blog,Articles,,https://lukaspetersson.com/feed.xml,https://lukaspetersson.com/feed.xml,docker-host,xml_url,False,121,active,0
+122,videos-lunaticmosfet,LunaticMosfet,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/1297592012,http://127.0.0.1:1200/bilibili/user/video/1297592012,docker-host,xml_url,False,122,active,0
+123,articles-l,L先生说,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3015646136.atom,http://127.0.0.1:8003/feed/MP_WXS_3015646136.atom,docker-host,xml_url,False,123,active,0
+124,videos-moji,MOJi辞書,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/6697975,http://127.0.0.1:1200/bilibili/user/video/6697975,docker-host,xml_url,False,124,active,0
+125,videos-maki,Maki的完美算术教室,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/391930545,http://127.0.0.1:1200/bilibili/user/video/391930545,docker-host,xml_url,False,125,active,0
+126,socialmedia-manusai-manusai-hq,ManusAI(@ManusAI_HQ),SocialMedia,,https://api.xgo.ing/rss/user/320181c4651a41a08015946b55f704ab,https://api.xgo.ing/rss/user/320181c4651a41a08015946b55f704ab,docker-host,xml_url,False,126,active,0
+127,socialmedia-marc-andreessen-127482-127480-pmarca,Marc Andreessen &#127482;&#127480;(@pmarca),SocialMedia,,https://api.xgo.ing/rss/user/63316630d94543f5a6480f230f483008,https://api.xgo.ing/rss/user/63316630d94543f5a6480f230f483008,docker-host,xml_url,False,127,active,0
+128,socialmedia-microsoft-research-msftresearch,Microsoft Research(@MSFTResearch),SocialMedia,,https://api.xgo.ing/rss/user/61f4b78554fb4b8fa5653ec5d924d15a,https://api.xgo.ing/rss/user/61f4b78554fb4b8fa5653ec5d924d15a,docker-host,xml_url,False,128,active,0
+129,socialmedia-midjourney-midjourney,Midjourney(@midjourney),SocialMedia,,https://api.xgo.ing/rss/user/72dd496bfd9d44c5a5761a974630376d,https://api.xgo.ing/rss/user/72dd496bfd9d44c5a5761a974630376d,docker-host,xml_url,False,129,active,0
+130,socialmedia-mike-krieger-mikeyk,Mike Krieger(@mikeyk),SocialMedia,,https://api.xgo.ing/rss/user/78d7b99318b04b309b04000f7e24da29,https://api.xgo.ing/rss/user/78d7b99318b04b309b04000f7e24da29,docker-host,xml_url,False,130,active,0
+131,socialmedia-milvus-milvusio,Milvus(@milvusio),SocialMedia,,https://api.xgo.ing/rss/user/424e67b19eed4500b7a440976bbd2ade,https://api.xgo.ing/rss/user/424e67b19eed4500b7a440976bbd2ade,docker-host,xml_url,False,131,active,0
+132,socialmedia-mistral-ai-mistralai,Mistral AI(@MistralAI),SocialMedia,,https://api.xgo.ing/rss/user/8d2d03aea8af49818096da4ea00409d1,https://api.xgo.ing/rss/user/8d2d03aea8af49818096da4ea00409d1,docker-host,xml_url,False,132,active,0
+133,socialmedia-monica-im-hey-im-monica,Monica_IM(@hey_im_monica),SocialMedia,,https://api.xgo.ing/rss/user/5d749cc613ec4069bb2a47334739e1b6,https://api.xgo.ing/rss/user/5d749cc613ec4069bb2a47334739e1b6,docker-host,xml_url,False,133,active,0
+134,videos-morpheus,Morpheus红丸主义,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/445634559,http://127.0.0.1:1200/bilibili/user/video/445634559,docker-host,xml_url,False,134,active,0
+135,videos-mrbeast,MrBeast官方账号,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/1027737427,http://127.0.0.1:1200/bilibili/user/video/1027737427,docker-host,xml_url,False,135,active,0
+136,socialmedia-mustafa-suleyman-mustafasuleyman,Mustafa Suleyman(@mustafasuleyman),SocialMedia,,https://api.xgo.ing/rss/user/394acfaff8c44e09936f5bc0b8504f2c,https://api.xgo.ing/rss/user/394acfaff8c44e09936f5bc0b8504f2c,docker-host,xml_url,False,136,active,0
+137,pictures-nasa,NASA中文 - 天文·每日一图,Pictures/星空,,http://127.0.0.1:1200/nasa/apod-cn,http://127.0.0.1:1200/nasa/apod-cn,docker-host,xml_url,False,137,active,0
+138,socialmedia-nvidia-ai-nvidiaai,NVIDIA AI(@NVIDIAAI),SocialMedia,,https://api.xgo.ing/rss/user/05f1492e43514dc3862a076d3697c390,https://api.xgo.ing/rss/user/05f1492e43514dc3862a076d3697c390,docker-host,xml_url,False,138,active,0
+139,socialmedia-naval-naval,Naval(@naval),SocialMedia,,https://api.xgo.ing/rss/user/b43bc203409e4c5a9c3ae86fe1ac00c9,https://api.xgo.ing/rss/user/b43bc203409e4c5a9c3ae86fe1ac00c9,docker-host,xml_url,False,139,active,0
+140,videos-nenly,Nenly同学,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/1814756990,http://127.0.0.1:1200/bilibili/user/video/1814756990,docker-host,xml_url,False,140,active,0
+141,socialmedia-nick-st-pierre-nickfloats,Nick St. Pierre(@nickfloats),SocialMedia,,https://api.xgo.ing/rss/user/6ebdf0d91eef4c149acd0ef110635866,https://api.xgo.ing/rss/user/6ebdf0d91eef4c149acd0ef110635866,docker-host,xml_url,False,141,active,0
+142,videos-norah,Norah脱口秀,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/29404012,http://127.0.0.1:1200/bilibili/user/video/29404012,docker-host,xml_url,False,142,active,0
+143,socialmedia-notebooklm-notebooklm,NotebookLM(@NotebookLM),SocialMedia,,https://api.xgo.ing/rss/user/221a88341acb475db221a12fed8208d0,https://api.xgo.ing/rss/user/221a88341acb475db221a12fed8208d0,docker-host,xml_url,False,143,active,0
+144,socialmedia-notion-notionhq,Notion(@NotionHQ),SocialMedia,,https://api.xgo.ing/rss/user/f97a26863aec4425b021720d4f8e4ede,https://api.xgo.ing/rss/user/f97a26863aec4425b021720d4f8e4ede,docker-host,xml_url,False,144,active,0
+145,articles-one,ONE字幕组,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3220087653.atom,http://127.0.0.1:8003/feed/MP_WXS_3220087653.atom,docker-host,xml_url,False,145,active,0
+146,socialmedia-openai-developers-openaidevs,OpenAI Developers(@OpenAIDevs),SocialMedia,,https://api.xgo.ing/rss/user/971dc1fc90da449bac23e5fad8a33d55,https://api.xgo.ing/rss/user/971dc1fc90da449bac23e5fad8a33d55,docker-host,xml_url,False,146,active,0
+147,socialmedia-openai-openai,OpenAI(@OpenAI),SocialMedia,,https://api.xgo.ing/rss/user/0c0856a69f9f49cf961018c32a0b0049,https://api.xgo.ing/rss/user/0c0856a69f9f49cf961018c32a0b0049,docker-host,xml_url,False,147,active,0
+148,socialmedia-openrouter-openrouterai,OpenRouter(@OpenRouterAI),SocialMedia,,https://api.xgo.ing/rss/user/e503a90c035c4b1d8f8dd34907d15bf4,https://api.xgo.ing/rss/user/e503a90c035c4b1d8f8dd34907d15bf4,docker-host,xml_url,False,148,active,0
+149,articles-paperweekly,PaperWeekly,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3201788143.atom,http://127.0.0.1:8003/feed/MP_WXS_3201788143.atom,docker-host,xml_url,False,149,active,0
+150,articles-paradise-lost,Paradise Lost,Articles,,https://2890.ltd/feed/,https://2890.ltd/feed/,docker-host,xml_url,False,150,active,0
+151,socialmedia-patrick-loeber-patloeber,Patrick Loeber(@patloeber),SocialMedia,,https://api.xgo.ing/rss/user/c65c68f3713747bba863f92d6b5e996f,https://api.xgo.ing/rss/user/c65c68f3713747bba863f92d6b5e996f,docker-host,xml_url,False,151,active,0
+152,socialmedia-paul-couvert-itspaulai,Paul Couvert(@itsPaulAi),SocialMedia,,https://api.xgo.ing/rss/user/b9912ac9a29042cf8c834419dc44cb1f,https://api.xgo.ing/rss/user/b9912ac9a29042cf8c834419dc44cb1f,docker-host,xml_url,False,152,active,0
+153,socialmedia-paul-graham-paulg,Paul Graham(@paulg),SocialMedia,,https://api.xgo.ing/rss/user/900549ddadf04e839d3f7a17ebaba3fc,https://api.xgo.ing/rss/user/900549ddadf04e839d3f7a17ebaba3fc,docker-host,xml_url,False,153,active,0
+154,socialmedia-perplexity-perplexity-ai,Perplexity(@perplexity_ai),SocialMedia,,https://api.xgo.ing/rss/user/fdd601ea751949e7bec9e4cdad7c8e6c,https://api.xgo.ing/rss/user/fdd601ea751949e7bec9e4cdad7c8e6c,docker-host,xml_url,False,154,active,0
+155,socialmedia-philipp-schmid-philschmid,Philipp Schmid(@_philschmid),SocialMedia,,https://api.xgo.ing/rss/user/ce352bbf72e44033985bc756db2ee0e2,https://api.xgo.ing/rss/user/ce352bbf72e44033985bc756db2ee0e2,docker-host,xml_url,False,155,active,0
+156,socialmedia-pika-pika-labs,Pika(@pika_labs),SocialMedia,,https://api.xgo.ing/rss/user/3306d8b253ec4e03aca3c2e9967e7119,https://api.xgo.ing/rss/user/3306d8b253ec4e03aca3c2e9967e7119,docker-host,xml_url,False,156,active,0
+157,articles-podnews-daily-podcast-industry-news,Podnews Daily - podcast industry news,Articles,,https://podnews.net/rss,https://podnews.net/rss,docker-host,xml_url,False,157,active,0
+158,socialmedia-poe-poe-platform,Poe(@poe_platform),SocialMedia,,https://api.xgo.ing/rss/user/17687b1051204b2dbaed4ea4c9178f28,https://api.xgo.ing/rss/user/17687b1051204b2dbaed4ea4c9178f28,docker-host,xml_url,False,158,active,0
+159,socialmedia-qdrant-qdrant-engine,Qdrant(@qdrant_engine),SocialMedia,,https://api.xgo.ing/rss/user/a55f6e33dd224235aabaabaaf9d58a06,https://api.xgo.ing/rss/user/a55f6e33dd224235aabaabaaf9d58a06,docker-host,xml_url,False,159,active,0
+160,socialmedia-qwen-alibaba-qwen,Qwen(@Alibaba_Qwen),SocialMedia,,https://api.xgo.ing/rss/user/80032d016d654eb4afe741ff34b7643d,https://api.xgo.ing/rss/user/80032d016d654eb4afe741ff34b7643d,docker-host,xml_url,False,160,active,0
+161,socialmedia-ray-dalio-raydalio,Ray Dalio(@RayDalio),SocialMedia,,https://api.xgo.ing/rss/user/4838204097ed422eac24ad48e68dc3ff,https://api.xgo.ing/rss/user/4838204097ed422eac24ad48e68dc3ff,docker-host,xml_url,False,161,active,0
+162,socialmedia-recraft-recraftai,Recraft(@recraftai),SocialMedia,,https://api.xgo.ing/rss/user/acc648327c614d9b985b9fc3d737165b,https://api.xgo.ing/rss/user/acc648327c614d9b985b9fc3d737165b,docker-host,xml_url,False,162,active,0
+163,socialmedia-replicate-replicate,Replicate(@replicate),SocialMedia,,https://api.xgo.ing/rss/user/12eba9c3db4940c5ab2a72bd00f9ff2c,https://api.xgo.ing/rss/user/12eba9c3db4940c5ab2a72bd00f9ff2c,docker-host,xml_url,False,163,active,0
+164,socialmedia-replit-replit,Replit ⠕(@Replit),SocialMedia,,https://api.xgo.ing/rss/user/613f859e4bc440c5a28f40732840f5cf,https://api.xgo.ing/rss/user/613f859e4bc440c5a28f40732840f5cf,docker-host,xml_url,False,164,active,0
+165,socialmedia-richard-socher-richardsocher,Richard Socher(@RichardSocher),SocialMedia,,https://api.xgo.ing/rss/user/4d2d4165a7524217a08d3f57f27fa190,https://api.xgo.ing/rss/user/4d2d4165a7524217a08d3f57f27fa190,docker-host,xml_url,False,165,active,0
+166,articles-rolen-s-blog,Rolen's Blog,Articles/个人博客-人生,,https://rolen.wiki/feed/,https://rolen.wiki/feed/,docker-host,xml_url,False,166,active,0
+167,socialmedia-rowan-cheung-rowancheung,Rowan Cheung(@rowancheung),SocialMedia,,https://api.xgo.ing/rss/user/a636de3cbda0495daabd15b9fd298614,https://api.xgo.ing/rss/user/a636de3cbda0495daabd15b9fd298614,docker-host,xml_url,False,167,active,0
+168,socialmedia-runway-runwayml,Runway(@runwayml),SocialMedia,,https://api.xgo.ing/rss/user/e6bb4f612dd24db5bc1a6811e6dd5820,https://api.xgo.ing/rss/user/e6bb4f612dd24db5bc1a6811e6dd5820,docker-host,xml_url,False,168,active,0
+169,socialmedia-sahil-lavingia-shl,Sahil Lavingia(@shl),SocialMedia,,https://api.xgo.ing/rss/user/baad3713defe4182844d2756b4c2c9ed,https://api.xgo.ing/rss/user/baad3713defe4182844d2756b4c2c9ed,docker-host,xml_url,False,169,active,0
+170,socialmedia-sam-altman-sama,Sam Altman(@sama),SocialMedia,,https://api.xgo.ing/rss/user/e30d4cd223f44bed9d404807105c8927,https://api.xgo.ing/rss/user/e30d4cd223f44bed9d404807105c8927,docker-host,xml_url,False,170,active,0
+171,socialmedia-satya-nadella-satyanadella,Satya Nadella(@satyanadella),SocialMedia,,https://api.xgo.ing/rss/user/baa68dbd9a9e461a96fd9b2e3f35dcbf,https://api.xgo.ing/rss/user/baa68dbd9a9e461a96fd9b2e3f35dcbf,docker-host,xml_url,False,171,active,0
+172,socialmedia-scott-wu-scottwu46,Scott Wu(@ScottWu46),SocialMedia,,https://api.xgo.ing/rss/user/5fca8ccd87344d388bc863304ed6fd86,https://api.xgo.ing/rss/user/5fca8ccd87344d388bc863304ed6fd86,docker-host,xml_url,False,172,active,0
+173,socialmedia-simon-willison-simonw,Simon Willison(@simonw),SocialMedia,,https://api.xgo.ing/rss/user/30ad80be93c84e44acc37d5ddf31db57,https://api.xgo.ing/rss/user/30ad80be93c84e44acc37d5ddf31db57,docker-host,xml_url,False,173,active,0
+174,socialmedia-skywork-skywork-ai,Skywork(@Skywork_ai),SocialMedia,,https://api.xgo.ing/rss/user/6d7d398dd80b48d79669c92745d32cf6,https://api.xgo.ing/rss/user/6d7d398dd80b48d79669c92745d32cf6,docker-host,xml_url,False,174,active,0
+175,socialmedia-stanford-ai-lab-stanfordailab,Stanford AI Lab(@StanfordAILab),SocialMedia,,https://api.xgo.ing/rss/user/d5fc365556e641cba2278f501e8c6f92,https://api.xgo.ing/rss/user/d5fc365556e641cba2278f501e8c6f92,docker-host,xml_url,False,175,active,0
+176,articles-staryuhen,StarYuhen,Articles,,https://www.yuhenm.top/feed/,https://www.yuhenm.top/feed/,docker-host,xml_url,False,176,active,0
+177,socialmedia-sualeh-asif-sualehasif996,Sualeh Asif(@sualehasif996),SocialMedia,,https://api.xgo.ing/rss/user/fafa6df3c67644b1a367a177240e0173,https://api.xgo.ing/rss/user/fafa6df3c67644b1a367a177240e0173,docker-host,xml_url,False,177,active,0
+178,socialmedia-suhail-suhail,Suhail(@Suhail),SocialMedia,,https://api.xgo.ing/rss/user/c961547e08df4396b3ab69367a07a1cd,https://api.xgo.ing/rss/user/c961547e08df4396b3ab69367a07a1cd,docker-host,xml_url,False,178,active,0
+179,socialmedia-sundar-pichai-sundarpichai,Sundar Pichai(@sundarpichai),SocialMedia,,https://api.xgo.ing/rss/user/8324d65a63dc42c584a8c08cc8323c9f,https://api.xgo.ing/rss/user/8324d65a63dc42c584a8c08cc8323c9f,docker-host,xml_url,False,179,active,0
+180,videos-super,Super也好君,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/1372433,http://127.0.0.1:1200/bilibili/user/video/1372433,docker-host,xml_url,False,180,active,0
+181,socialmedia-taranjeet-taranjeetio,Taranjeet(@taranjeetio),SocialMedia,,https://api.xgo.ing/rss/user/2de92402f4a24c90bb27e7580b93a878,https://api.xgo.ing/rss/user/2de92402f4a24c90bb27e7580b93a878,docker-host,xml_url,False,181,active,0
+182,socialmedia-the-rundown-ai-therundownai,The Rundown AI(@TheRundownAI),SocialMedia,,https://api.xgo.ing/rss/user/83b1ea38940b4a1d81ea57d1ffb12ad7,https://api.xgo.ing/rss/user/83b1ea38940b4a1d81ea57d1ffb12ad7,docker-host,xml_url,False,182,active,0
+183,socialmedia-thomas-wolf-thom-wolf,Thomas Wolf(@Thom_Wolf),SocialMedia,,https://api.xgo.ing/rss/user/4918efb13c47459b8dcaa79cfdf72d09,https://api.xgo.ing/rss/user/4918efb13c47459b8dcaa79cfdf72d09,docker-host,xml_url,False,183,active,0
+184,articles-tinyfool,Tinyfool的个人网站,Articles/社评,,https://codechina.org/feed/,https://codechina.org/feed/,docker-host,xml_url,False,184,active,0
+185,socialmedia-twitter-pietro-schirano,Twitter @Pietro Schirano,SocialMedia,,http://127.0.0.1:1200/twitter/user/skirano,http://127.0.0.1:1200/twitter/user/skirano,docker-host,xml_url,False,185,active,0
+186,socialmedia-twitter-theo-t3-gg,Twitter @Theo - t3.gg,SocialMedia,,http://127.0.0.1:1200/twitter/user/theo,http://127.0.0.1:1200/twitter/user/theo,docker-host,xml_url,False,186,active,0
+187,socialmedia-twitter-tom-huang,Twitter @Tom Huang,SocialMedia,,http://127.0.0.1:1200/twitter/user/tuturetom,http://127.0.0.1:1200/twitter/user/tuturetom,docker-host,xml_url,False,187,active,0
+188,socialmedia-twitter-tw93,Twitter @Tw93,SocialMedia,,http://127.0.0.1:1200/twitter/user/HiTw93,http://127.0.0.1:1200/twitter/user/HiTw93,docker-host,xml_url,False,188,active,0
+189,socialmedia-twitter-ginobefun,Twitter @ginobefun,SocialMedia,,http://127.0.0.1:1200/twitter/user/hongming731,http://127.0.0.1:1200/twitter/user/hongming731,docker-host,xml_url,False,189,active,0
+190,socialmedia-varun-mohan-mohansolo,Varun Mohan(@_mohansolo),SocialMedia,,https://api.xgo.ing/rss/user/7794c4268a504019a94af1778857a703,https://api.xgo.ing/rss/user/7794c4268a504019a94af1778857a703,docker-host,xml_url,False,190,active,0
+191,articles-very-small-woods,Very Small Woods,Articles/英文博客,,https://www.verysmallwoods.com/feed.xml,https://www.verysmallwoods.com/feed.xml,docker-host,xml_url,False,191,active,0
+192,articles-vista,Vista看天下,Articles/社评,,https://plink.anyfeeder.com/weixin/vistaweek,https://plink.anyfeeder.com/weixin/vistaweek,docker-host,xml_url,False,192,active,0
+193,socialmedia-weaviate-vector-database-weaviate-io,Weaviate • vector database(@weaviate_io),SocialMedia,,https://api.xgo.ing/rss/user/2f1035ec6b28475987af06b600e1d04c,https://api.xgo.ing/rss/user/2f1035ec6b28475987af06b600e1d04c,docker-host,xml_url,False,193,active,0
+194,socialmedia-windsurf-windsurf-ai,Windsurf(@windsurf_ai),SocialMedia,,https://api.xgo.ing/rss/user/4a8273800ed34a069eecdb6c5c1b9ccf,https://api.xgo.ing/rss/user/4a8273800ed34a069eecdb6c5c1b9ccf,docker-host,xml_url,False,194,active,0
+195,socialmedia-y-combinator-ycombinator,Y Combinator(@ycombinator),SocialMedia,,https://api.xgo.ing/rss/user/b1ab109f6afd42ab8ea32e17a19a3a3e,https://api.xgo.ing/rss/user/b1ab109f6afd42ab8ea32e17a19a3a3e,docker-host,xml_url,False,195,active,0
+196,socialmedia-yann-lecun-ylecun,Yann LeCun(@ylecun),SocialMedia,,https://api.xgo.ing/rss/user/f5f4f928dede472ea55053672ad27ab6,https://api.xgo.ing/rss/user/f5f4f928dede472ea55053672ad27ab6,docker-host,xml_url,False,196,active,0
+197,videos-youtube,YouTube深度访谈,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/3493286931073848,http://127.0.0.1:1200/bilibili/user/video/3493286931073848,docker-host,xml_url,False,197,active,0
+198,articles-z-finance,Z Finance,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3077513391.atom,http://127.0.0.1:8003/feed/MP_WXS_3077513391.atom,docker-host,xml_url,False,198,active,0
+199,articles-z-potentials,Z Potentials,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3285810954.atom,http://127.0.0.1:8003/feed/MP_WXS_3285810954.atom,docker-host,xml_url,False,199,active,0
+200,socialmedia-a16z-a16z,a16z(@a16z),SocialMedia,,https://api.xgo.ing/rss/user/f3fedf817599470dbf8d8d11f0872475,https://api.xgo.ing/rss/user/f3fedf817599470dbf8d8d11f0872475,docker-host,xml_url,False,200,active,0
+201,articles-abortretry-fail,abortretry.fail,Articles/英文博客,,https://www.abortretry.fail/feed,https://www.abortretry.fail/feed,docker-host,xml_url,False,201,active,0
+202,socialmedia-andrew-chen-andrewchen,andrew chen(@andrewchen),SocialMedia,,https://api.xgo.ing/rss/user/a3eb6beb2d894da3a9b7ab6d2e46790e,https://api.xgo.ing/rss/user/a3eb6beb2d894da3a9b7ab6d2e46790e,docker-host,xml_url,False,202,active,0
+203,articles-anildash-com,anildash.com,Articles/英文博客,,https://anildash.com/feed.xml,https://anildash.com/feed.xml,docker-host,xml_url,False,203,active,0
+204,articles-antirez-com,antirez.com,Articles/英文博客,,http://antirez.com/rss,http://antirez.com/rss,docker-host,xml_url,False,204,active,0
+205,articles-aresluna-org,aresluna.org,Articles/英文博客,,https://aresluna.org/main.rss,https://aresluna.org/main.rss,docker-host,xml_url,False,205,active,0
+206,articles-beej-us,beej.us,Articles/英文博客,,https://beej.us/blog/rss.xml,https://beej.us/blog/rss.xml,docker-host,xml_url,False,206,active,0
+207,articles-bernsteinbear-com,bernsteinbear.com,Articles/英文博客,,https://bernsteinbear.com/feed.xml,https://bernsteinbear.com/feed.xml,docker-host,xml_url,False,207,active,0
+208,articles-berthub-eu,berthub.eu,Articles/英文博客,,https://berthub.eu/articles/index.xml,https://berthub.eu/articles/index.xml,docker-host,xml_url,False,208,active,0
+209,articles-blog-jim-nielsen-com,blog.jim-nielsen.com,Articles/英文博客,,https://blog.jim-nielsen.com/feed.xml,https://blog.jim-nielsen.com/feed.xml,docker-host,xml_url,False,209,active,0
+210,articles-blog-pixelmelt-dev,blog.pixelmelt.dev,Articles/英文博客,,https://blog.pixelmelt.dev/rss/,https://blog.pixelmelt.dev/rss/,docker-host,xml_url,False,210,active,0
+211,articles-bogdanthegeek-github-io,bogdanthegeek.github.io,Articles/英文博客,,https://bogdanthegeek.github.io/blog/index.xml,https://bogdanthegeek.github.io/blog/index.xml,docker-host,xml_url,False,211,active,0
+212,socialmedia-bolt-new-boltdotnew,bolt.new(@boltdotnew),SocialMedia,,https://api.xgo.ing/rss/user/760ab7cd9708452c9ce1f9144b92a430,https://api.xgo.ing/rss/user/760ab7cd9708452c9ce1f9144b92a430,docker-host,xml_url,False,212,active,0
+213,articles-borretti-me,borretti.me,Articles/英文博客,,https://borretti.me/feed.xml,https://borretti.me/feed.xml,docker-host,xml_url,False,213,active,0
+214,articles-brutecat-com,brutecat.com,Articles/英文博客,,https://brutecat.com/rss.xml,https://brutecat.com/rss.xml,docker-host,xml_url,False,214,active,0
+215,articles-buttondown-com-hillelwayne,buttondown.com/hillelwayne,Articles/英文博客,,https://buttondown.com/hillelwayne/rss,https://buttondown.com/hillelwayne/rss,docker-host,xml_url,False,215,active,0
+216,socialmedia-cat-catwu,cat(@_catwu),SocialMedia,,https://api.xgo.ing/rss/user/66a6b39ddcfa42e39621e0ab293c1bdd,https://api.xgo.ing/rss/user/66a6b39ddcfa42e39621e0ab293c1bdd,docker-host,xml_url,False,216,active,0
+217,articles-chadnauseam-com,chadnauseam.com,Articles/英文博客,,https://chadnauseam.com/rss.xml,https://chadnauseam.com/rss.xml,docker-host,xml_url,False,217,active,0
+218,articles-chiark-greenend-org-uk-sgtatham,chiark.greenend.org.uk/~sgtatham,Articles/英文博客,,https://www.chiark.greenend.org.uk/~sgtatham/quasiblog/feed.xml,https://www.chiark.greenend.org.uk/~sgtatham/quasiblog/feed.xml,docker-host,xml_url,False,218,active,0
+219,socialmedia-clem-129303-clementdelangue,clem &#129303;(@ClementDelangue),SocialMedia,,https://api.xgo.ing/rss/user/5dbd038a8f5140938d0877511571797b,https://api.xgo.ing/rss/user/5dbd038a8f5140938d0877511571797b,docker-host,xml_url,False,219,active,0
+220,socialmedia-cohere-cohere,cohere(@cohere),SocialMedia,,https://api.xgo.ing/rss/user/462aa134ed914f98b3491680ad9b36ed,https://api.xgo.ing/rss/user/462aa134ed914f98b3491680ad9b36ed,docker-host,xml_url,False,220,active,0
+221,articles-computer-rip,computer.rip,Articles/英文博客,,https://computer.rip/rss.xml,https://computer.rip/rss.xml,docker-host,xml_url,False,221,active,0
+222,articles-construction-physics-com,construction-physics.com,Articles/英文博客,,https://www.construction-physics.com/feed,https://www.construction-physics.com/feed,docker-host,xml_url,False,222,active,0
+223,articles-danielchasehooper-com,danielchasehooper.com,Articles/英文博客,,https://danielchasehooper.com/feed.xml,https://danielchasehooper.com/feed.xml,docker-host,xml_url,False,223,active,0
+224,articles-danieldelaney-net,danieldelaney.net,Articles/英文博客,,https://danieldelaney.net/feed,https://danieldelaney.net/feed,docker-host,xml_url,False,224,active,0
+225,articles-danielwirtz-com,danielwirtz.com,Articles/英文博客,,https://danielwirtz.com/rss.xml,https://danielwirtz.com/rss.xml,docker-host,xml_url,False,225,active,0
+226,articles-daringfireball-net,daringfireball.net,Articles/英文博客,,https://daringfireball.net/feeds/main,https://daringfireball.net/feeds/main,docker-host,xml_url,False,226,active,0
+227,articles-derekthompson-org,derekthompson.org,Articles/英文博客,,https://www.theatlantic.com/feed/author/derek-thompson/,https://www.theatlantic.com/feed/author/derek-thompson/,docker-host,xml_url,False,227,active,0
+228,articles-devblogs-microsoft-com-oldnewthing,devblogs.microsoft.com/oldnewthing,Articles/英文博客,,https://devblogs.microsoft.com/oldnewthing/feed,https://devblogs.microsoft.com/oldnewthing/feed,docker-host,xml_url,False,228,active,0
+229,articles-dfarq-homeip-net,dfarq.homeip.net,Articles/英文博客,,https://dfarq.homeip.net/feed/,https://dfarq.homeip.net/feed/,docker-host,xml_url,False,229,active,0
+230,articles-downtowndougbrown-com,downtowndougbrown.com,Articles/英文博客,,https://www.downtowndougbrown.com/feed/,https://www.downtowndougbrown.com/feed/,docker-host,xml_url,False,230,active,0
+231,articles-dwarkesh-com,dwarkesh.com,Articles/英文博客,,https://www.dwarkeshpatel.com/feed,https://www.dwarkeshpatel.com/feed,docker-host,xml_url,False,231,active,0
+232,articles-dynomight-net,dynomight.net,Articles/英文博客,,https://dynomight.net/feed.xml,https://dynomight.net/feed.xml,docker-host,xml_url,False,232,active,0
+233,articles-eli-thegreenplace-net,eli.thegreenplace.net,Articles/英文博客,,https://eli.thegreenplace.net/feeds/all.atom.xml,https://eli.thegreenplace.net/feeds/all.atom.xml,docker-host,xml_url,False,233,active,0
+234,socialmedia-elvis-omarsar0,elvis(@omarsar0),SocialMedia,,https://api.xgo.ing/rss/user/931d6e88e067496cac6bf23f69d60f33,https://api.xgo.ing/rss/user/931d6e88e067496cac6bf23f69d60f33,docker-host,xml_url,False,234,active,0
+235,articles-entropicthoughts-com,entropicthoughts.com,Articles/英文博客,,https://entropicthoughts.com/feed.xml,https://entropicthoughts.com/feed.xml,docker-host,xml_url,False,235,active,0
+236,socialmedia-eric-zakariasson-ericzakariasson,eric zakariasson(@ericzakariasson),SocialMedia,,https://api.xgo.ing/rss/user/65f321be670b4ffba7f40d0afd38c94d,https://api.xgo.ing/rss/user/65f321be670b4ffba7f40d0afd38c94d,docker-host,xml_url,False,236,active,0
+237,articles-ericmigi-com,ericmigi.com,Articles/英文博客,,https://ericmigi.com/rss.xml,https://ericmigi.com/rss.xml,docker-host,xml_url,False,237,active,0
+238,articles-evanhahn-com,evanhahn.com,Articles/英文博客,,https://evanhahn.com/feed.xml,https://evanhahn.com/feed.xml,docker-host,xml_url,False,238,active,0
+239,articles-everystep,everystep,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_2396013984.atom,http://127.0.0.1:8003/feed/MP_WXS_2396013984.atom,docker-host,xml_url,False,239,active,0
+240,articles-fabiensanglard-net,fabiensanglard.net,Articles/英文博客,,https://fabiensanglard.net/rss.xml,https://fabiensanglard.net/rss.xml,docker-host,xml_url,False,240,active,0
+241,articles-filfre-net,filfre.net,Articles/英文博客,,https://www.filfre.net/feed/,https://www.filfre.net/feed/,docker-host,xml_url,False,241,active,0
+242,videos-focus2flow,focus2flow,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/17549684,http://127.0.0.1:1200/bilibili/user/video/17549684,docker-host,xml_url,False,242,active,0
+243,articles-garymarcus-substack-com,garymarcus.substack.com,Articles/英文博客,,https://garymarcus.substack.com/feed,https://garymarcus.substack.com/feed,docker-host,xml_url,False,243,active,0
+244,articles-geoffreylitt-com,geoffreylitt.com,Articles/英文博客,,https://www.geoffreylitt.com/feed.xml,https://www.geoffreylitt.com/feed.xml,docker-host,xml_url,False,244,active,0
+245,articles-geohot-github-io,geohot.github.io,Articles/英文博客,,https://geohot.github.io/blog/feed.xml,https://geohot.github.io/blog/feed.xml,docker-host,xml_url,False,245,active,0
+246,articles-gilesthomas-com,gilesthomas.com,Articles/英文博客,,https://gilesthomas.com/feed/rss.xml,https://gilesthomas.com/feed/rss.xml,docker-host,xml_url,False,246,active,0
+247,articles-grantslatton-com,grantslatton.com,Articles/英文博客,,https://grantslatton.com/rss.xml,https://grantslatton.com/rss.xml,docker-host,xml_url,False,247,active,0
+248,articles-gwern-net,gwern.net,Articles/英文博客,,https://gwern.substack.com/feed,https://gwern.substack.com/feed,docker-host,xml_url,False,248,active,0
+249,articles-herman-bearblog-dev,herman.bearblog.dev,Articles/英文博客,,https://herman.bearblog.dev/feed/,https://herman.bearblog.dev/feed/,docker-host,xml_url,False,249,active,0
+250,articles-hey-paris,hey.paris,Articles/英文博客,,https://hey.paris/index.xml,https://hey.paris/index.xml,docker-host,xml_url,False,250,active,0
+251,articles-hugotunius-se,hugotunius.se,Articles/英文博客,,https://hugotunius.se/feed.xml,https://hugotunius.se/feed.xml,docker-host,xml_url,False,251,active,0
+252,articles-idiallo-com,idiallo.com,Articles/英文博客,,https://idiallo.com/feed.rss,https://idiallo.com/feed.rss,docker-host,xml_url,False,252,active,0
+253,articles-it-notes-dragas-net,it-notes.dragas.net,Articles/英文博客,,https://it-notes.dragas.net/feed/,https://it-notes.dragas.net/feed/,docker-host,xml_url,False,253,active,0
+254,articles-jayd-ml,jayd.ml,Articles/英文博客,,https://jayd.ml/feed.xml,https://jayd.ml/feed.xml,docker-host,xml_url,False,254,active,0
+255,articles-jeffgeerling-com,jeffgeerling.com,Articles/英文博客,,https://www.jeffgeerling.com/blog.xml,https://www.jeffgeerling.com/blog.xml,docker-host,xml_url,False,255,active,0
+256,articles-joanwestenberg-com,joanwestenberg.com,Articles/英文博客,,https://joanwestenberg.com/rss,https://joanwestenberg.com/rss,docker-host,xml_url,False,256,active,0
+257,articles-johndcook-com,johndcook.com,Articles/英文博客,,https://www.johndcook.com/blog/feed/,https://www.johndcook.com/blog/feed/,docker-host,xml_url,False,257,active,0
+258,articles-joojen-zhou,joojen Zhou 的网站,Articles,,https://joojen.com/feed,https://joojen.com/feed,docker-host,xml_url,False,258,active,0
+259,articles-jyn-dev,jyn.dev,Articles/英文博客,,https://jyn.dev/atom.xml,https://jyn.dev/atom.xml,docker-host,xml_url,False,259,active,0
+260,articles-keygen-sh,keygen.sh,Articles/英文博客,,https://keygen.sh/blog/feed.xml,https://keygen.sh/blog/feed.xml,docker-host,xml_url,False,260,active,0
+261,articles-krebsonsecurity-com,krebsonsecurity.com,Articles/英文博客,,https://krebsonsecurity.com/feed/,https://krebsonsecurity.com/feed/,docker-host,xml_url,False,261,active,0
+262,articles-lcamtuf-substack-com,lcamtuf.substack.com,Articles/英文博客,,https://lcamtuf.substack.com/feed,https://lcamtuf.substack.com/feed,docker-host,xml_url,False,262,active,0
+263,socialmedia-lmarena-ai-lmarena-ai,lmarena.ai(@lmarena_ai),SocialMedia,,https://api.xgo.ing/rss/user/f01b088d5a39473e854b07143df77ec5,https://api.xgo.ing/rss/user/f01b088d5a39473e854b07143df77ec5,docker-host,xml_url,False,263,active,0
+264,articles-lucumr-pocoo-org,lucumr.pocoo.org,Articles/英文博客,,https://lucumr.pocoo.org/feed.atom,https://lucumr.pocoo.org/feed.atom,docker-host,xml_url,False,264,active,0
+265,articles-martinalderson-com,martinalderson.com,Articles/英文博客,,https://martinalderson.com/feed.xml,https://martinalderson.com/feed.xml,docker-host,xml_url,False,265,active,0
+266,articles-matduggan-com,matduggan.com,Articles/英文博客,,https://matduggan.com/rss/,https://matduggan.com/rss/,docker-host,xml_url,False,266,active,0
+267,articles-matklad-github-io,matklad.github.io,Articles/英文博客,,https://matklad.github.io/feed.xml,https://matklad.github.io/feed.xml,docker-host,xml_url,False,267,active,0
+268,articles-maurycyz-com,maurycyz.com,Articles/英文博客,,https://maurycyz.com/index.xml,https://maurycyz.com/index.xml,docker-host,xml_url,False,268,active,0
+269,socialmedia-mem0-mem0ai,mem0(@mem0ai),SocialMedia,,https://api.xgo.ing/rss/user/94bb691baeff461686326af619beb116,https://api.xgo.ing/rss/user/94bb691baeff461686326af619beb116,docker-host,xml_url,False,269,active,0
+270,socialmedia-meng-shao-shao-meng,meng shao(@shao__meng),SocialMedia,,https://api.xgo.ing/rss/user/48aae530e0bf413aa7d44380f418e2e3,https://api.xgo.ing/rss/user/48aae530e0bf413aa7d44380f418e2e3,docker-host,xml_url,False,270,active,0
+271,articles-micahflee-com,micahflee.com,Articles/英文博客,,https://micahflee.com/feed/,https://micahflee.com/feed/,docker-host,xml_url,False,271,active,0
+272,articles-michael-stapelberg-ch,michael.stapelberg.ch,Articles/英文博客,,https://michael.stapelberg.ch/feed.xml,https://michael.stapelberg.ch/feed.xml,docker-host,xml_url,False,272,active,0
+273,articles-miguelgrinberg-com,miguelgrinberg.com,Articles/英文博客,,https://blog.miguelgrinberg.com/feed,https://blog.miguelgrinberg.com/feed,docker-host,xml_url,False,273,active,0
+274,articles-minimaxir-com,minimaxir.com,Articles/英文博客,,https://minimaxir.com/index.xml,https://minimaxir.com/index.xml,docker-host,xml_url,False,274,active,0
+275,articles-mitchellh-com,mitchellh.com,Articles/英文博客,,https://mitchellh.com/feed.xml,https://mitchellh.com/feed.xml,docker-host,xml_url,False,275,active,0
+276,articles-mjg59-dreamwidth-org,mjg59.dreamwidth.org,Articles/英文博客,,https://mjg59.dreamwidth.org/data/rss,https://mjg59.dreamwidth.org/data/rss,docker-host,xml_url,False,276,active,0
+277,articles-nesbitt-io,nesbitt.io,Articles/英文博客,,https://nesbitt.io/feed.xml,https://nesbitt.io/feed.xml,docker-host,xml_url,False,277,active,0
+278,articles-oldvcr-blogspot-com,oldvcr.blogspot.com,Articles/英文博客,,https://oldvcr.blogspot.com/feeds/posts/default,https://oldvcr.blogspot.com/feeds/posts/default,docker-host,xml_url,False,278,active,0
+279,socialmedia-ollama-ollama,ollama(@ollama),SocialMedia,,https://api.xgo.ing/rss/user/6326c63a2dfa445bbde88bea0c3112c2,https://api.xgo.ing/rss/user/6326c63a2dfa445bbde88bea0c3112c2,docker-host,xml_url,False,279,active,0
+280,socialmedia-orange-ai-oran-ge,orange.ai(@oran_ge),SocialMedia,,https://api.xgo.ing/rss/user/0277b0bbefd54df7bc6b7880122da8f7,https://api.xgo.ing/rss/user/0277b0bbefd54df7bc6b7880122da8f7,docker-host,xml_url,False,280,active,0
+281,articles-overreacted-io,overreacted.io,Articles/英文博客,,https://overreacted.io/rss.xml,https://overreacted.io/rss.xml,docker-host,xml_url,False,281,active,0
+282,articles-paulgraham-com,paulgraham.com,Articles/英文博客,,http://www.aaronsw.com/2002/feeds/pgessays.rss,http://www.aaronsw.com/2002/feeds/pgessays.rss,docker-host,xml_url,False,282,active,0
+283,articles-philiplaine-com,philiplaine.com,Articles/英文博客,,https://philiplaine.com/index.xml,https://philiplaine.com/index.xml,docker-host,xml_url,False,283,active,0
+284,articles-pluralistic-net,pluralistic.net,Articles/英文博客,,https://pluralistic.net/feed/,https://pluralistic.net/feed/,docker-host,xml_url,False,284,active,0
+285,articles-rachelbythebay-com,rachelbythebay.com,Articles/英文博客,,https://rachelbythebay.com/w/atom.xml,https://rachelbythebay.com/w/atom.xml,docker-host,xml_url,False,285,active,0
+286,articles-rakhim-exotext-com,rakhim.exotext.com,Articles/英文博客,,https://rakhim.exotext.com/rss.xml,https://rakhim.exotext.com/rss.xml,docker-host,xml_url,False,286,active,0
+287,articles-refactoringenglish-com,refactoringenglish.com,Articles/英文博客,,https://refactoringenglish.com/index.xml,https://refactoringenglish.com/index.xml,docker-host,xml_url,False,287,active,0
+288,articles-righto-com,righto.com,Articles/英文博客,,https://www.righto.com/feeds/posts/default,https://www.righto.com/feeds/posts/default,docker-host,xml_url,False,288,active,0
+289,articles-seangoedecke-com,seangoedecke.com,Articles/英文博客,,https://www.seangoedecke.com/rss.xml,https://www.seangoedecke.com/rss.xml,docker-host,xml_url,False,289,active,0
+290,articles-shkspr-mobi,shkspr.mobi,Articles/英文博客,,https://shkspr.mobi/blog/feed/,https://shkspr.mobi/blog/feed/,docker-host,xml_url,False,290,active,0
+291,articles-simone-org,simone.org,Articles/英文博客,,https://simone.org/feed/,https://simone.org/feed/,docker-host,xml_url,False,291,active,0
+292,articles-simonwillison-net,simonwillison.net,Articles/英文博客,,https://simonwillison.net/atom/everything/,https://simonwillison.net/atom/everything/,docker-host,xml_url,False,292,active,0
+293,articles-skyfall-dev,skyfall.dev,Articles/英文博客,,https://skyfall.dev/rss.xml,https://skyfall.dev/rss.xml,docker-host,xml_url,False,293,active,0
+294,articles-steveblank-com,steveblank.com,Articles/英文博客,,https://steveblank.com/feed/,https://steveblank.com/feed/,docker-host,xml_url,False,294,active,0
+295,articles-susam-net,susam.net,Articles/英文博客,,https://susam.net/feed.xml,https://susam.net/feed.xml,docker-host,xml_url,False,295,active,0
+296,articles-tanscp,tanscp,Articles,,https://tanscp.com/feed/,https://tanscp.com/feed/,docker-host,xml_url,False,296,active,0
+297,articles-tedium-co,tedium.co,Articles/英文博客,,https://feed.tedium.co/,https://feed.tedium.co/,docker-host,xml_url,False,297,active,0
+298,articles-tedunangst-com,tedunangst.com,Articles/英文博客,,https://www.tedunangst.com/flak/rss,https://www.tedunangst.com/flak/rss,docker-host,xml_url,False,298,active,0
+299,articles-terriblesoftware-org,terriblesoftware.org,Articles/英文博客,,https://terriblesoftware.org/feed/,https://terriblesoftware.org/feed/,docker-host,xml_url,False,299,active,0
+300,articles-timsh-org,timsh.org,Articles/英文博客,,https://timsh.org/rss/,https://timsh.org/rss/,docker-host,xml_url,False,300,active,0
+301,articles-tomrenner-com,tomrenner.com,Articles/英文博客,,https://tomrenner.com/index.xml,https://tomrenner.com/index.xml,docker-host,xml_url,False,301,active,0
+302,articles-troyhunt-com,troyhunt.com,Articles/英文博客,,https://www.troyhunt.com/rss/,https://www.troyhunt.com/rss/,docker-host,xml_url,False,302,active,0
+303,articles-utcc-utoronto-ca-cks,utcc.utoronto.ca/~cks,Articles/英文博客,,https://utcc.utoronto.ca/~cks/space/blog/?atom,https://utcc.utoronto.ca/~cks/space/blog/?atom,docker-host,xml_url,False,303,active,0
+304,socialmedia-v0-v0,v0(@v0),SocialMedia,,https://api.xgo.ing/rss/user/dbf37973e6fc4eae91d4be9669a78fc7,https://api.xgo.ing/rss/user/dbf37973e6fc4eae91d4be9669a78fc7,docker-host,xml_url,False,304,active,0
+305,articles-wheresyoured-at,wheresyoured.at,Articles/英文博客,,https://www.wheresyoured.at/rss/,https://www.wheresyoured.at/rss/,docker-host,xml_url,False,305,active,0
+306,articles-worksonmymachine-substack-com,worksonmymachine.substack.com,Articles/英文博客,,https://worksonmymachine.substack.com/feed,https://worksonmymachine.substack.com/feed,docker-host,xml_url,False,306,active,0
+307,socialmedia-xai-xai,xAI(@xai),SocialMedia,,https://api.xgo.ing/rss/user/3953aa71e87a422eb9d7bf6ff1c7c43e,https://api.xgo.ing/rss/user/3953aa71e87a422eb9d7bf6ff1c7c43e,docker-host,xml_url,False,307,active,0
+308,articles-xania-org,xania.org,Articles/英文博客,,https://xania.org/feed,https://xania.org/feed,docker-host,xml_url,False,308,active,0
+309,articles-xeiaso-net,xeiaso.net,Articles/英文博客,,https://xeiaso.net/blog.rss,https://xeiaso.net/blog.rss,docker-host,xml_url,False,309,active,0
+310,articles-4ab2f9d2,一亩三分地 - 日本热门帖子,Articles,,http://127.0.0.1:1200/1point3acres/category/%E6%97%A5%E6%9C%AC,http://127.0.0.1:1200/1point3acres/category/%E6%97%A5%E6%9C%AC,docker-host,xml_url,False,310,active,0
+311,articles-845d2397,一觉醒来发生了什么 - 即刻圈子,Articles/国内外资讯,,http://127.0.0.1:1200/jike/topic/553870e8e4b0cafb0a1bef68,http://127.0.0.1:1200/jike/topic/553870e8e4b0cafb0a1bef68,docker-host,xml_url,False,311,active,0
+312,articles-lifeweek,三联生活周刊 Lifeweek,Articles/社评,,https://the.bi/s/rawbbyu2zgmy32,https://the.bi/s/rawbbyu2zgmy32,docker-host,xml_url,False,312,active,0
+313,videos-29423748,下班的三爷,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/589388395,http://127.0.0.1:1200/bilibili/user/video/589388395,docker-host,xml_url,False,313,active,0
+314,articles-31f4db67,不如读书,Articles,,https://wuyagege.substack.com/feed,https://wuyagege.substack.com/feed,docker-host,xml_url,False,314,active,0
+315,videos-f707a3c5,与书籍度过漫长岁月,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/252099076,http://127.0.0.1:1200/bilibili/user/video/252099076,docker-host,xml_url,False,315,active,0
+316,articles-625204ac,东西智库 – 专注中国制造业高质量发展,Articles/国内外资讯,,http://127.0.0.1:1200/dx2025,http://127.0.0.1:1200/dx2025,docker-host,xml_url,False,316,active,0
+317,articles-1859ad11,中国政府网 - 最新政策,Articles/国内政策,,http://127.0.0.1:1200/gov/zhengce/zuixin,http://127.0.0.1:1200/gov/zhengce/zuixin,docker-host,xml_url,False,317,active,0
+318,videos-datawhale,二次元的Datawhale,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/431850986,http://127.0.0.1:1200/bilibili/user/video/431850986,docker-host,xml_url,False,318,active,0
+319,articles-41a254e1,云中江树,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3016599109.atom,http://127.0.0.1:8003/feed/MP_WXS_3016599109.atom,docker-host,xml_url,False,319,active,0
+320,videos-10949b89,人间自习室,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/29240784,http://127.0.0.1:1200/bilibili/user/video/29240784,docker-host,xml_url,False,320,active,0
+321,articles-6eee6aa9,今日热榜,Articles,,https://web2rss.cc/feed/rebang.today?preview=true,https://web2rss.cc/feed/rebang.today?preview=true,docker-host,xml_url,False,321,active,0
+322,videos-bb7539d1,付航脱口秀,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/57592895,http://127.0.0.1:1200/bilibili/user/video/57592895,docker-host,xml_url,False,322,active,0
+323,videos-6ed459a7,付航脱口秀精选,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/3493286857673111,http://127.0.0.1:1200/bilibili/user/video/3493286857673111,docker-host,xml_url,False,323,active,0
+324,socialmedia-79f30bd5,你不知道的行业内幕 - 即刻圈子,SocialMedia/资讯,,http://127.0.0.1:1200/jike/topic/5699f451d3e8351200bffdc8,http://127.0.0.1:1200/jike/topic/5699f451d3e8351200bffdc8,docker-host,xml_url,False,324,active,0
+325,videos-1-cf9b2906,你是想气死1酱么,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/375040863,http://127.0.0.1:1200/bilibili/user/video/375040863,docker-host,xml_url,False,325,active,0
+326,articles-b4b5f239,信息差——独立开发者出海周刊,Articles,,https://gapis.money/rss.xml,https://gapis.money/rss.xml,docker-host,xml_url,False,326,active,0
+327,articles-0ab76289,偷懒爱好者周刊,Articles,,https://toolight.cn/open/p/weekly/atom.xml,https://toolight.cn/open/p/weekly/atom.xml,docker-host,xml_url,False,327,active,0
+328,articles-53d435b2,光子星球,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3082518302.atom,http://127.0.0.1:8003/feed/MP_WXS_3082518302.atom,docker-host,xml_url,False,328,active,0
+329,videos-052f8054,冲击波工作室,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/1567045834,http://127.0.0.1:1200/bilibili/user/video/1567045834,docker-host,xml_url,False,329,active,0
+330,videos-4df4c004,冲男阿凉,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/239060440,http://127.0.0.1:1200/bilibili/user/video/239060440,docker-host,xml_url,False,330,active,0
+331,articles-cf86842b,刘夙的科技世界,Articles/社评,,https://wewe-rss.jerrylf.uk/feeds/MP_WXS_3002603832.json,https://wewe-rss.jerrylf.uk/feeds/MP_WXS_3002603832.json,docker-host,xml_url,False,331,active,0
+332,articles-nlp,刘聪NLP,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3891555159.atom,http://127.0.0.1:8003/feed/MP_WXS_3891555159.atom,docker-host,xml_url,False,332,active,0
+333,videos-coco,努力戒咕的coco锤,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/470585121,http://127.0.0.1:1200/bilibili/user/video/470585121,docker-host,xml_url,False,333,active,0
+334,articles-crossing,十字路口Crossing,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3010319264.atom,http://127.0.0.1:8003/feed/MP_WXS_3010319264.atom,docker-host,xml_url,False,334,active,0
+335,articles-9d27dbe5,十年之约聚合订阅,Articles/科技与编程,,https://tool.bcrjl.com/snzy-rss/,https://tool.bcrjl.com/snzy-rss/,docker-host,xml_url,False,335,active,0
+336,videos-8509566d,半只笨猪,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/498505577,http://127.0.0.1:1200/bilibili/user/video/498505577,docker-host,xml_url,False,336,active,0
+337,articles-98d68260,半月谈快报,Articles/党政信息,,https://data.getpodcast.xyz/data/ximalaya/9604235.xml,https://data.getpodcast.xyz/data/ximalaya/9604235.xml,docker-host,xml_url,False,337,active,0
+338,videos-fe14708b,单弦震脉,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/5316213,http://127.0.0.1:1200/bilibili/user/video/5316213,docker-host,xml_url,False,338,active,0
+339,articles-ai,卡尔的AI沃茨,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3871977637.atom,http://127.0.0.1:8003/feed/MP_WXS_3871977637.atom,docker-host,xml_url,False,339,active,0
+340,videos-9f34f0dc,卡纸大寨主,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/17780825,http://127.0.0.1:1200/bilibili/user/video/17780825,docker-host,xml_url,False,340,active,0
+341,videos-ffbe1ba4,司机社综合周排行榜,Videos,,http://127.0.0.1:1200/xsijishe/rank/weekly,http://127.0.0.1:1200/xsijishe/rank/weekly,docker-host,xml_url,False,341,active,0
+342,videos-bd29fe04,司机社综合月排行榜,Videos,,http://127.0.0.1:1200/xsijishe/rank/monthly,http://127.0.0.1:1200/xsijishe/rank/monthly,docker-host,xml_url,False,342,active,0
+343,videos-9a3b6830,司马尘,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/334932680,http://127.0.0.1:1200/bilibili/user/video/334932680,docker-host,xml_url,False,343,active,0
+344,videos-alan,向杨Alan君,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/495979610,http://127.0.0.1:1200/bilibili/user/video/495979610,docker-host,xml_url,False,344,active,0
+345,socialmedia-vista8,向阳乔木(@vista8),SocialMedia,,https://api.xgo.ing/rss/user/9de19c78f7454ad08c956c1a00d237fe,https://api.xgo.ing/rss/user/9de19c78f7454ad08c956c1a00d237fe,docker-host,xml_url,False,345,active,0
+346,videos-597f580b,听泉赏宝,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/3546592976046554,http://127.0.0.1:1200/bilibili/user/video/3546592976046554,docker-host,xml_url,False,346,active,0
+347,videos-plus,周侃侃plus,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/600428973,http://127.0.0.1:1200/bilibili/user/video/600428973,docker-host,xml_url,False,347,active,0
+348,articles-5416f3fa,周刊 归档 - 酷口家数字花园,Articles,,https://weqoocu.com/feed,https://weqoocu.com/feed,docker-host,xml_url,False,348,active,0
+349,videos-010c8910,和张程一起学习吧,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/631899631,http://127.0.0.1:1200/bilibili/user/video/631899631,docker-host,xml_url,False,349,active,0
+350,videos-320cc06b,咖啡醉足球,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/436553623,http://127.0.0.1:1200/bilibili/user/video/436553623,docker-host,xml_url,False,350,active,0
+351,articles-e6443972,哥飞,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_2399233620.atom,http://127.0.0.1:8003/feed/MP_WXS_2399233620.atom,docker-host,xml_url,False,351,active,0
+352,articles-077c5553,啊桂实验室,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3097885397.atom,http://127.0.0.1:8003/feed/MP_WXS_3097885397.atom,docker-host,xml_url,False,352,active,0
+353,socialmedia,图书推荐 – 书伴,SocialMedia,,http://127.0.0.1:1200/bookfere/books,http://127.0.0.1:1200/bookfere/books,docker-host,xml_url,False,353,active,0
+354,videos-29b1505e,坚果熊说博弈,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/388394328,http://127.0.0.1:1200/bilibili/user/video/388394328,docker-host,xml_url,False,354,active,0
+355,articles-4664adbc,夕小瑶科技说,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3207765945.atom,http://127.0.0.1:8003/feed/MP_WXS_3207765945.atom,docker-host,xml_url,False,355,active,0
+356,videos-d3b18d02,大祥哥来了,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/2920960,http://127.0.0.1:1200/bilibili/user/video/2920960,docker-host,xml_url,False,356,active,0
+357,articles-dialectic,大问题Dialectic,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_2391461928.atom,http://127.0.0.1:8003/feed/MP_WXS_2391461928.atom,docker-host,xml_url,False,357,active,0
+358,videos-dialectic,大问题Dialectic,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/1871365234,http://127.0.0.1:1200/bilibili/user/video/1871365234,docker-host,xml_url,False,358,active,0
+359,videos-3660f027,天才简史,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/213845897,http://127.0.0.1:1200/bilibili/user/video/213845897,docker-host,xml_url,False,359,active,0
+360,videos-25421245,奥德修斯的绳索,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/14004258,http://127.0.0.1:1200/bilibili/user/video/14004258,docker-host,xml_url,False,360,active,0
+361,articles-4b4daed3,学习一下订阅源,Articles,,http://127.0.0.1:1200/follow/profile/158883963341209600,http://127.0.0.1:1200/follow/profile/158883963341209600,docker-host,xml_url,False,361,active,0
+362,videos-academia,学院派Academia,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/96639395,http://127.0.0.1:1200/bilibili/user/video/96639395,docker-host,xml_url,False,362,active,0
+363,articles-50058df8,安全代码,Articles,,https://www.usmacd.com/atom.xml,https://www.usmacd.com/atom.xml,docker-host,xml_url,False,363,active,0
+364,socialmedia-dotey,宝玉(@dotey),SocialMedia,,https://api.xgo.ing/rss/user/97f1484ae48c430fbbf3438099743674,https://api.xgo.ing/rss/user/97f1484ae48c430fbbf3438099743674,docker-host,xml_url,False,364,active,0
+365,articles-233fcbeb,宝玉的分享,Articles/科技与编程,,https://s.baoyu.io/feed.xml,https://s.baoyu.io/feed.xml,docker-host,xml_url,False,365,active,0
+366,socialmedia-imxiaohu,小互(@imxiaohu),SocialMedia,,https://api.xgo.ing/rss/user/74e542992cf7441390c708f5601071d4,https://api.xgo.ing/rss/user/74e542992cf7441390c708f5601071d4,docker-host,xml_url,False,366,active,0
+367,articles-a903d37b,小众软件,Articles/科技与编程,,https://www.appinn.com/feed/,https://www.appinn.com/feed/,docker-host,xml_url,False,367,active,0
+368,articles-podcast-5e5c52c9418a84a04625e6cc,小宇宙 Podcast 5e5c52c9418a84a04625e6cc,Articles/播客,,http://127.0.0.1:1200/xiaoyuzhou/podcast/5e5c52c9418a84a04625e6cc,http://127.0.0.1:1200/xiaoyuzhou/podcast/5e5c52c9418a84a04625e6cc,docker-host,xml_url,False,368,active,0
+369,articles-podcast-61cbaac48bb4cd867fcabe22,小宇宙 Podcast 61cbaac48bb4cd867fcabe22,Articles/播客,,http://127.0.0.1:1200/xiaoyuzhou/podcast/61cbaac48bb4cd867fcabe22,http://127.0.0.1:1200/xiaoyuzhou/podcast/61cbaac48bb4cd867fcabe22,docker-host,xml_url,False,369,active,0
+370,articles-podcast-63b7dd49289d2739647d9587,小宇宙 Podcast 63b7dd49289d2739647d9587,Articles/播客,,http://127.0.0.1:1200/xiaoyuzhou/podcast/63b7dd49289d2739647d9587,http://127.0.0.1:1200/xiaoyuzhou/podcast/63b7dd49289d2739647d9587,docker-host,xml_url,False,370,active,0
+371,articles-podcast-643928f99361a4e7c38a9555,小宇宙 Podcast 643928f99361a4e7c38a9555,Articles/播客,,http://127.0.0.1:1200/xiaoyuzhou/podcast/643928f99361a4e7c38a9555,http://127.0.0.1:1200/xiaoyuzhou/podcast/643928f99361a4e7c38a9555,docker-host,xml_url,False,371,active,0
+372,articles-podcast-648b0b641c48983391a63f98,小宇宙 Podcast 648b0b641c48983391a63f98,Articles/播客,,http://127.0.0.1:1200/xiaoyuzhou/podcast/648b0b641c48983391a63f98,http://127.0.0.1:1200/xiaoyuzhou/podcast/648b0b641c48983391a63f98,docker-host,xml_url,False,372,active,0
+373,articles-podcast-6507bc165c88d2412626b401,小宇宙 Podcast 6507bc165c88d2412626b401,Articles/播客,,http://127.0.0.1:1200/xiaoyuzhou/podcast/6507bc165c88d2412626b401,http://127.0.0.1:1200/xiaoyuzhou/podcast/6507bc165c88d2412626b401,docker-host,xml_url,False,373,active,0
+374,videos-b6e88840,小波心理,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/1033890839,http://127.0.0.1:1200/bilibili/user/video/1033890839,docker-host,xml_url,False,374,active,0
+375,articles-4f25584f,少数派,Articles/优质信息源,,http://127.0.0.1:1200/sspai/index,http://127.0.0.1:1200/sspai/index,docker-host,xml_url,False,375,active,0
+376,articles-matrix,少数派 -- Matrix,Articles/优质信息源,,http://127.0.0.1:1200/sspai/matrix,http://127.0.0.1:1200/sspai/matrix,docker-host,xml_url,False,376,active,0
+377,videos-a2576d22,岱川博士,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/584630077,http://127.0.0.1:1200/bilibili/user/video/584630077,docker-host,xml_url,False,377,active,0
+378,videos-228c15a2,岺玖贰叁,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/521296768,http://127.0.0.1:1200/bilibili/user/video/521296768,docker-host,xml_url,False,378,active,0
+379,videos-81d2bd04,峡谷玄学家,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/3493128455587886,http://127.0.0.1:1200/bilibili/user/video/3493128455587886,docker-host,xml_url,False,379,active,0
+380,videos-7d4d5202,巅峰球迷汇,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/365372809,http://127.0.0.1:1200/bilibili/user/video/365372809,docker-host,xml_url,False,380,active,0
+381,videos-38d3abd1,差评君,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/19319172,http://127.0.0.1:1200/bilibili/user/video/19319172,docker-host,xml_url,False,381,active,0
+382,articles-0116a9b4,常青说,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3944297233.atom,http://127.0.0.1:8003/feed/MP_WXS_3944297233.atom,docker-host,xml_url,False,382,active,0
+383,articles-ai-da70da0e,开源AI项目落地,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3921606804.atom,http://127.0.0.1:8003/feed/MP_WXS_3921606804.atom,docker-host,xml_url,False,383,active,0
+384,videos-473300ff,影视飓风,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/946974,http://127.0.0.1:1200/bilibili/user/video/946974,docker-host,xml_url,False,384,active,0
+385,videos-1134c99b,心河摆渡,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/230983435,http://127.0.0.1:1200/bilibili/user/video/230983435,docker-host,xml_url,False,385,active,0
+386,videos-7008e0e9,思维实验室,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/14583962,http://127.0.0.1:1200/bilibili/user/video/14583962,docker-host,xml_url,False,386,active,0
+387,videos-a259b3dc,慢慢学的四饼,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/95240876,http://127.0.0.1:1200/bilibili/user/video/95240876,docker-host,xml_url,False,387,active,0
+388,videos-23b9d7b4,戴建业老师,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/532741557,http://127.0.0.1:1200/bilibili/user/video/532741557,docker-host,xml_url,False,388,active,0
+389,videos-23dacd94,拣尽南枝,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/39597640,http://127.0.0.1:1200/bilibili/user/video/39597640,docker-host,xml_url,False,389,active,0
+390,articles-agi-1b9f0040,探索AGI,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3916725964.atom,http://127.0.0.1:8003/feed/MP_WXS_3916725964.atom,docker-host,xml_url,False,390,active,0
+391,articles-4048f66e,数字生命卡兹克,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3223096120.atom,http://127.0.0.1:8003/feed/MP_WXS_3223096120.atom,docker-host,xml_url,False,391,active,0
+392,articles-d9d68e78,新华社新闻_新华网,Articles/党政信息,,https://plink.anyfeeder.com/newscn/whxw,https://plink.anyfeeder.com/newscn/whxw,docker-host,xml_url,False,392,active,0
+393,articles-f85c92dd,新智元,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3271041950.atom,http://127.0.0.1:8003/feed/MP_WXS_3271041950.atom,docker-host,xml_url,False,393,active,0
+394,articles-c37253a5,新智元,Articles,,https://raw.githubusercontent.com/osnsyc/Wechat-Scholar/main/channels/gh_108f2a2a27f4.xml,https://raw.githubusercontent.com/osnsyc/Wechat-Scholar/main/channels/gh_108f2a2a27f4.xml,docker-host,xml_url,False,394,active,0
+395,videos-d27d49e7,新石器公园,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/489640651,http://127.0.0.1:1200/bilibili/user/video/489640651,docker-host,xml_url,False,395,active,0
+396,articles-dfa99bd5,时代观察 - 乌有之乡网刊,Articles/社评,,http://127.0.0.1:1200/wyzxwk/article,http://127.0.0.1:1200/wyzxwk/article,docker-host,xml_url,False,396,active,0
+397,videos-21b8a546,是啤酒鸭-梗图,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/1073153713,http://127.0.0.1:1200/bilibili/user/video/1073153713,docker-host,xml_url,False,397,active,0
+398,videos-51174438,是落拓呀,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/43276908,http://127.0.0.1:1200/bilibili/user/video/43276908,docker-host,xml_url,False,398,active,0
+399,articles-latepost,晚点LatePost,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3572959446.atom,http://127.0.0.1:8003/feed/MP_WXS_3572959446.atom,docker-host,xml_url,False,399,active,0
+400,articles-12d011df,智东西,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3081486433.atom,http://127.0.0.1:8003/feed/MP_WXS_3081486433.atom,docker-host,xml_url,False,400,active,0
+401,videos-89504017,智能路障,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/79577853,http://127.0.0.1:1200/bilibili/user/video/79577853,docker-host,xml_url,False,401,active,0
+402,articles-9cbfc807,最新发布_共产党员网,Articles/党政信息,,http://127.0.0.1:1200/12371/zxfb,http://127.0.0.1:1200/12371/zxfb,docker-host,xml_url,False,402,active,0
+403,videos-d48b679b,本子在隔壁,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/593251783,http://127.0.0.1:1200/bilibili/user/video/593251783,docker-host,xml_url,False,403,active,0
+404,articles-67800c28,机器之心,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3073282833.atom,http://127.0.0.1:8003/feed/MP_WXS_3073282833.atom,docker-host,xml_url,False,404,active,0
+405,articles-f5d6d15c,机器之心,Articles,,https://www.jiqizhixin.com/rss,https://www.jiqizhixin.com/rss,docker-host,xml_url,False,405,active,0
+406,videos-1,机器人夏先生1号,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/31656484,http://127.0.0.1:1200/bilibili/user/video/31656484,docker-host,xml_url,False,406,active,0
+407,videos-c6a038ca,李滇滇,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/3546676667091128,http://127.0.0.1:1200/bilibili/user/video/3546676667091128,docker-host,xml_url,False,407,active,0
+408,socialmedia-lijigang-com,李继刚(@lijigang_com),SocialMedia,,https://api.xgo.ing/rss/user/ca2fa444b6ea4b8b974fe148056e497a,https://api.xgo.ing/rss/user/ca2fa444b6ea4b8b974fe148056e497a,docker-host,xml_url,False,408,active,0
+409,videos-jackson,杰克森Jackson_,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/13174980,http://127.0.0.1:1200/bilibili/user/video/13174980,docker-host,xml_url,False,409,active,0
+410,articles-fe754459,极客公园,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_1304308441.atom,http://127.0.0.1:8003/feed/MP_WXS_1304308441.atom,docker-host,xml_url,False,410,active,0
+411,articles-8a492afd,极客公园,Articles,,https://www.geekpark.net/rss,https://www.geekpark.net/rss,docker-host,xml_url,False,411,active,0
+412,articles-72de26a2,极客公园,Articles,,https://wechat2rss.xlab.app/feed/1a5aec98e71c707c8ca092bc2c255b9d4bac477d.xml,https://wechat2rss.xlab.app/feed/1a5aec98e71c707c8ca092bc2c255b9d4bac477d.xml,docker-host,xml_url,False,412,active,0
+413,videos-0745883d,林川登罗,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/3798056,http://127.0.0.1:1200/bilibili/user/video/3798056,docker-host,xml_url,False,413,active,0
+414,videos-04b142c7,柯洁,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/525952604,http://127.0.0.1:1200/bilibili/user/video/525952604,docker-host,xml_url,False,414,active,0
+415,videos-geslook,歌白说Geslook,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/315846984,http://127.0.0.1:1200/bilibili/user/video/315846984,docker-host,xml_url,False,415,active,0
+416,socialmedia-guizang-ai-op7418,歸藏(guizang.ai)(@op7418),SocialMedia,,https://api.xgo.ing/rss/user/831fac36aa0a49a9af79f35dc1c9b5d9,https://api.xgo.ing/rss/user/831fac36aa0a49a9af79f35dc1c9b5d9,docker-host,xml_url,False,416,active,0
+417,articles-ai-211f08a4,歸藏的AI工具箱,Articles,,https://wechat2rss.bestblogs.dev/feed/1fc32fedbf5da37e8e819a9298ae80724c12cb03.xml,https://wechat2rss.bestblogs.dev/feed/1fc32fedbf5da37e8e819a9298ae80724c12cb03.xml,docker-host,xml_url,False,417,active,0
+418,socialmedia-046f3fca,每周一书 – 书伴,SocialMedia,,http://127.0.0.1:1200/bookfere/weekly,http://127.0.0.1:1200/bookfere/weekly,docker-host,xml_url,False,418,active,0
+419,pictures,每日一图-北京天文馆,Pictures/星空,,http://127.0.0.1:1200/bjp/apod,http://127.0.0.1:1200/bjp/apod,docker-host,xml_url,False,419,active,0
+420,videos-79746aff,毕导,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/254463269,http://127.0.0.1:1200/bilibili/user/video/254463269,docker-host,xml_url,False,420,active,0
+421,videos-90ec6e1b,汤质看本质,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/362588980,http://127.0.0.1:1200/bilibili/user/video/362588980,docker-host,xml_url,False,421,active,0
+422,articles-ai-2a283285,沃垠AI,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3201599457.atom,http://127.0.0.1:8003/feed/MP_WXS_3201599457.atom,docker-host,xml_url,False,422,active,0
+423,videos-aper,河口超人Aper,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/1288663494,http://127.0.0.1:1200/bilibili/user/video/1288663494,docker-host,xml_url,False,423,active,0
+424,videos-de2bf5f4,泛式,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/63231,http://127.0.0.1:1200/bilibili/user/video/63231,docker-host,xml_url,False,424,active,0
+425,videos-841fb856,波士顿圆脸,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/346563107,http://127.0.0.1:1200/bilibili/user/video/346563107,docker-host,xml_url,False,425,active,0
+426,videos-2330599f,浮世叁千问,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/435061656,http://127.0.0.1:1200/bilibili/user/video/435061656,docker-host,xml_url,False,426,active,0
+427,videos-a,海林A读书,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/3494374304385046,http://127.0.0.1:1200/bilibili/user/video/3494374304385046,docker-host,xml_url,False,427,active,0
+428,articles-0a45584e,混沌周刊,Articles/科技与编程,,https://weekly.love/feed/atom,https://weekly.love/feed/atom,docker-host,xml_url,False,428,active,0
+429,videos-b4d40dd5,漫士沉思录,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/266765166,http://127.0.0.1:1200/bilibili/user/video/266765166,docker-host,xml_url,False,429,active,0
+430,articles-b19c322d,潦草学者,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3239649460.atom,http://127.0.0.1:8003/feed/MP_WXS_3239649460.atom,docker-host,xml_url,False,430,active,0
+431,videos-32653978,火兰朋克,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/508215481,http://127.0.0.1:1200/bilibili/user/video/508215481,docker-host,xml_url,False,431,active,0
+432,videos-37d17cdd,灯果,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/4748646,http://127.0.0.1:1200/bilibili/user/video/4748646,docker-host,xml_url,False,432,active,0
+433,articles-6b7efb1a,特工宇宙,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3621654047.atom,http://127.0.0.1:8003/feed/MP_WXS_3621654047.atom,docker-host,xml_url,False,433,active,0
+434,videos-22d77a26,猫眼看足球,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/456249922,http://127.0.0.1:1200/bilibili/user/video/456249922,docker-host,xml_url,False,434,active,0
+435,articles-d6c54d8b,猴猴说话,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3279284299.atom,http://127.0.0.1:8003/feed/MP_WXS_3279284299.atom,docker-host,xml_url,False,435,active,0
+436,videos-82b205f5,猴猴说话,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/31728620,http://127.0.0.1:1200/bilibili/user/video/31728620,docker-host,xml_url,False,436,active,0
+437,videos-152,瓶子君152,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/730732,http://127.0.0.1:1200/bilibili/user/video/730732,docker-host,xml_url,False,437,active,0
+438,articles-5972d638,甲子光年,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3599245772.atom,http://127.0.0.1:8003/feed/MP_WXS_3599245772.atom,docker-host,xml_url,False,438,active,0
+439,videos-one,白染one,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/476051104,http://127.0.0.1:1200/bilibili/user/video/476051104,docker-host,xml_url,False,439,active,0
+440,articles-9270c965,白熊阿丸的小屋,Articles/个人博客-人生,,https://blog.bxaw.name/feed/,https://blog.bxaw.name/feed/,docker-host,xml_url,False,440,active,0
+441,videos-74392673,白马繁华,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/251054248,http://127.0.0.1:1200/bilibili/user/video/251054248,docker-host,xml_url,False,441,active,0
+442,videos-05f8440c,真实球迷汇,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/108618052,http://127.0.0.1:1200/bilibili/user/video/108618052,docker-host,xml_url,False,442,active,0
+443,videos-9d0a7d1e,知识共享者,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/406068046,http://127.0.0.1:1200/bilibili/user/video/406068046,docker-host,xml_url,False,443,active,0
+444,articles-pro,硅星人Pro,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3926568365.atom,http://127.0.0.1:8003/feed/MP_WXS_3926568365.atom,docker-host,xml_url,False,444,active,0
+445,videos-2077,硬核学长2077,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/1195497797,http://127.0.0.1:1200/bilibili/user/video/1195497797,docker-host,xml_url,False,445,active,0
+446,articles-2046,秋芝2046,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3930567871.atom,http://127.0.0.1:8003/feed/MP_WXS_3930567871.atom,docker-host,xml_url,False,446,active,0
+447,videos-f0e8e941,科幻视界,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/25073738,http://127.0.0.1:1200/bilibili/user/video/25073738,docker-host,xml_url,False,447,active,0
+448,socialmedia-a3a5de7c,笔记交流站 - 即刻圈子,SocialMedia,,http://127.0.0.1:1200/jike/topic/660165c504703c909c6d8b2e,http://127.0.0.1:1200/jike/topic/660165c504703c909c6d8b2e,docker-host,xml_url,False,448,active,0
+449,articles-5a87ad32,笨方法学写作,Articles,,https://www.cnfeat.com/feed.xml,https://www.cnfeat.com/feed.xml,docker-host,xml_url,False,449,active,0
+450,videos-1bf739a5,管泽元,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/271338616,http://127.0.0.1:1200/bilibili/user/video/271338616,docker-host,xml_url,False,450,active,0
+451,videos-b174826c,米国脱口秀,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/142371069,http://127.0.0.1:1200/bilibili/user/video/142371069,docker-host,xml_url,False,451,active,0
+452,articles-729090e0,纵横四海,Articles,,http://127.0.0.1:1200/xiaoyuzhou/podcast/62694abdb221dd5908417d1e,http://127.0.0.1:1200/xiaoyuzhou/podcast/62694abdb221dd5908417d1e,docker-host,xml_url,False,452,active,0
+453,articles-b427efe4,网罗灯下黑,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3565037632.atom,http://127.0.0.1:8003/feed/MP_WXS_3565037632.atom,docker-host,xml_url,False,453,active,0
+454,videos-ny,罗明落ny,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/405303082,http://127.0.0.1:1200/bilibili/user/video/405303082,docker-host,xml_url,False,454,active,0
+455,videos-45bc0d59,罗翔说刑法,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/517327498,http://127.0.0.1:1200/bilibili/user/video/517327498,docker-host,xml_url,False,455,active,0
+456,articles-t,老T博客,Articles,,https://lawtee.com/index.xml,https://lawtee.com/index.xml,docker-host,xml_url,False,456,active,0
+457,videos-a29f37e2,老实憨厚的笑笑,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/8739477,http://127.0.0.1:1200/bilibili/user/video/8739477,docker-host,xml_url,False,457,active,0
+458,articles-baec0433,胡说成理,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3297021519.atom,http://127.0.0.1:8003/feed/MP_WXS_3297021519.atom,docker-host,xml_url,False,458,active,0
+459,articles-27a5be11,脑极体,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3515522183.atom,http://127.0.0.1:8003/feed/MP_WXS_3515522183.atom,docker-host,xml_url,False,459,active,0
+460,videos-talk-show,脱口秀_Talk_Show,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/514207628,http://127.0.0.1:1200/bilibili/user/video/514207628,docker-host,xml_url,False,460,active,0
+461,articles-916de7c5,腾讯研究院,Articles,,https://wechat2rss.bestblogs.dev/feed/6152301e0978bffb0a8284cab339262b9764dcfb.xml,https://wechat2rss.bestblogs.dev/feed/6152301e0978bffb0a8284cab339262b9764dcfb.xml,docker-host,xml_url,False,461,active,0
+462,articles-e17791db,苍何,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3585152880.atom,http://127.0.0.1:8003/feed/MP_WXS_3585152880.atom,docker-host,xml_url,False,462,active,0
+463,videos-92a023b1,英语播客党,Videos/短知识,,http://127.0.0.1:1200/bilibili/user/video/3537109151386355,http://127.0.0.1:1200/bilibili/user/video/3537109151386355,docker-host,xml_url,False,463,active,0
+464,videos-db1ec0ff,英语播客狗,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/7671890,http://127.0.0.1:1200/bilibili/user/video/7671890,docker-host,xml_url,False,464,active,0
+465,articles-bae898de,草稿拾遗,Articles/个人博客-人生,,https://kill-the-newsletter.com/feeds/t87xbbj6p4iwfhsi.xml,https://kill-the-newsletter.com/feeds/t87xbbj6p4iwfhsi.xml,docker-host,xml_url,False,465,active,0
+466,videos-c8519b35,荒野初研园,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/252411834,http://127.0.0.1:1200/bilibili/user/video/252411834,docker-host,xml_url,False,466,active,0
+467,articles-40123380,莫尔索随笔,Articles,,https://liduos.com/atom.xml,https://liduos.com/atom.xml,docker-host,xml_url,False,467,active,0
+468,articles,莫比乌斯,Articles/个人博客-人生,,https://mobius.blog/feed/,https://mobius.blog/feed/,docker-host,xml_url,False,468,active,0
+469,videos-mk,蒙克MK_,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/1060986358,http://127.0.0.1:1200/bilibili/user/video/1060986358,docker-host,xml_url,False,469,active,0
+470,videos-51abc540,西山在何许,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/2515311,http://127.0.0.1:1200/bilibili/user/video/2515311,docker-host,xml_url,False,470,active,0
+471,videos-ac9c2d13,要素分析,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/14262056,http://127.0.0.1:1200/bilibili/user/video/14262056,docker-host,xml_url,False,471,active,0
+472,videos-harry,读书的Harry,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/611092306,http://127.0.0.1:1200/bilibili/user/video/611092306,docker-host,xml_url,False,472,active,0
+473,articles-b8d367f8,豆瓣小组-无用美学,Articles,,http://127.0.0.1:1200/douban/group/699356/essence,http://127.0.0.1:1200/douban/group/699356/essence,docker-host,xml_url,False,473,active,0
+474,videos-kira,贝拉kira,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/672353429,http://127.0.0.1:1200/bilibili/user/video/672353429,docker-host,xml_url,False,474,active,0
+475,videos-ea185cec,负面能量转换器,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/281127303,http://127.0.0.1:1200/bilibili/user/video/281127303,docker-host,xml_url,False,475,active,0
+476,videos-5aa0c3e8,赏味不足,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/44497027,http://127.0.0.1:1200/bilibili/user/video/44497027,docker-host,xml_url,False,476,active,0
+477,articles-98cbc862,赛博禅心,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3934419561.atom,http://127.0.0.1:8003/feed/MP_WXS_3934419561.atom,docker-host,xml_url,False,477,active,0
+478,articles-95c2d7b9,走路,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3097360004.atom,http://127.0.0.1:8003/feed/MP_WXS_3097360004.atom,docker-host,xml_url,False,478,active,0
+479,videos-f0fe7293,载脑体,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/1850874570,http://127.0.0.1:1200/bilibili/user/video/1850874570,docker-host,xml_url,False,479,active,0
+480,videos-e1d1d229,辰星杂谈,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/41018196,http://127.0.0.1:1200/bilibili/user/video/41018196,docker-host,xml_url,False,480,active,0
+481,videos-65d6552f,这是个令人疑惑的星球,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/409842788,http://127.0.0.1:1200/bilibili/user/video/409842788,docker-host,xml_url,False,481,active,0
+482,videos-4d5bcef4,迷因水母,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/1858861103,http://127.0.0.1:1200/bilibili/user/video/1858861103,docker-host,xml_url,False,482,active,0
+483,videos-ef2e40e9,退役编辑雨上,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/1105429038,http://127.0.0.1:1200/bilibili/user/video/1105429038,docker-host,xml_url,False,483,active,0
+484,videos-041effb9,逗比的雀巢,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/5294454,http://127.0.0.1:1200/bilibili/user/video/5294454,docker-host,xml_url,False,484,active,0
+485,articles-github,逛逛GitHub,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3516884134.atom,http://127.0.0.1:8003/feed/MP_WXS_3516884134.atom,docker-host,xml_url,False,485,active,0
+486,videos-alan-64175fe2,邵艾伦Alan,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/4029133,http://127.0.0.1:1200/bilibili/user/video/4029133,docker-host,xml_url,False,486,active,0
+487,articles-92e28c80,量子位,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3236757533.atom,http://127.0.0.1:8003/feed/MP_WXS_3236757533.atom,docker-host,xml_url,False,487,active,0
+488,videos-1fe371e3,银屏系漫游指南,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/674180538,http://127.0.0.1:1200/bilibili/user/video/674180538,docker-host,xml_url,False,488,active,0
+489,articles-254c1f8c,阮一峰的网络日志,Articles/科技与编程,,https://feeds.feedburner.com/ruanyifeng,https://feeds.feedburner.com/ruanyifeng,docker-host,xml_url,False,489,active,0
+490,articles-ai-863eb555,阿伦AI学习笔记,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_3957475902.atom,http://127.0.0.1:8003/feed/MP_WXS_3957475902.atom,docker-host,xml_url,False,490,active,0
+491,videos-380c1863,陈大东瓜,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/269288799,http://127.0.0.1:1200/bilibili/user/video/269288799,docker-host,xml_url,False,491,active,0
+492,videos-efea665d,隔壁红魔,Videos/绝活娱乐,,http://127.0.0.1:1200/bilibili/user/video/432174249,http://127.0.0.1:1200/bilibili/user/video/432174249,docker-host,xml_url,False,492,active,0
+493,articles-12d401b3,雷峰网,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_1368348621.atom,http://127.0.0.1:8003/feed/MP_WXS_1368348621.atom,docker-host,xml_url,False,493,active,0
+494,videos-0795ca38,非卿漫谈,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/2690044,http://127.0.0.1:1200/bilibili/user/video/2690044,docker-host,xml_url,False,494,active,0
+495,videos-ae39f674,靠谱电竞,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/279991456,http://127.0.0.1:1200/bilibili/user/video/279991456,docker-host,xml_url,False,495,active,0
+496,videos-9c63823c,飞鸟手札,Videos/短知识,,http://127.0.0.1:1200/bilibili/user/video/1366786686,http://127.0.0.1:1200/bilibili/user/video/1366786686,docker-host,xml_url,False,496,active,0
+497,videos,食事史馆,Videos/长知识,,http://127.0.0.1:1200/bilibili/user/video/53737196,http://127.0.0.1:1200/bilibili/user/video/53737196,docker-host,xml_url,False,497,active,0
+498,articles-agi,饼干哥哥AGI,Articles/微信公众号,,http://127.0.0.1:8003/feed/MP_WXS_2394281674.atom,http://127.0.0.1:8003/feed/MP_WXS_2394281674.atom,docker-host,xml_url,False,498,active,0
+499,videos-c64eda07,馆长刘下饭_环球档案,Videos/最娱乐,,http://127.0.0.1:1200/bilibili/user/video/369564778,http://127.0.0.1:1200/bilibili/user/video/369564778,docker-host,xml_url,False,499,active,0
+500,articles-f5bbe919,龙爪槐守望者,Articles/科技与编程,,https://www.ftium4.com/rss.xml,https://www.ftium4.com/rss.xml,docker-host,xml_url,False,500,active,0

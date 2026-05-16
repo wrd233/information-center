@@ -1,0 +1,7 @@
+OPML sync command: bash rsshub/rss_opml/export_opml.command
+Result: Success
+Exported 501 RSS sources to:
+  - exports/myrss(远程用).opml
+  - exports/myrss(本机用).opml
+  - exports/myrss(远程备用-HTTP).opml
+Generated at: 2026-05-16 16:08 CST

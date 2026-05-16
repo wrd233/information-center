@@ -1,0 +1,91 @@
+{
+  "opml_path": "rsshub/rss_opml/exports/myrss(本机用).opml",
+  "generated_at": "2026-05-16T16:09:46.907952",
+  "file_size_bytes": 98092,
+  "total_feeds": 501,
+  "by_top_category": {
+    "Articles": 219,
+    "SocialMedia": 160,
+    "Pictures": 2,
+    "Videos": 120
+  },
+  "sample_feeds": [
+    {
+      "title": "Hi, DIYgod",
+      "category": "Articles",
+      "url_prefix": "https://diygod.cc/feed"
+    },
+    {
+      "title": "tanscp",
+      "category": "Articles",
+      "url_prefix": "https://tanscp.com/feed/"
+    },
+    {
+      "title": "Airing 的博客",
+      "category": "Articles",
+      "url_prefix": "https://ursb.me/blog/feed.xml"
+    },
+    {
+      "title": "Rolen's Blog",
+      "category": "Articles/个人博客-人生",
+      "url_prefix": "https://rolen.wiki/feed/"
+    },
+    {
+      "title": "Ben's Love",
+      "category": "Articles/个人博客-人生",
+      "url_prefix": "https://bens.love/feed"
+    },
+    {
+      "title": "莫比乌斯",
+      "category": "Articles/个人博客-人生",
+      "url_prefix": "https://mobius.blog/feed/"
+    },
+    {
+      "title": "白熊阿丸的小屋",
+      "category": "Articles/个人博客-人生",
+      "url_prefix": "https://blog.bxaw.name/feed/"
+    },
+    {
+      "title": "草稿拾遗",
+      "category": "Articles/个人博客-人生",
+      "url_prefix": "https://kill-the-newsletter.com/feeds/t87xbbj6p4iwfhsi.xml"
+    },
+    {
+      "title": "Paradise Lost",
+      "category": "Articles",
+      "url_prefix": "https://2890.ltd/feed/"
+    },
+    {
+      "title": "笨方法学写作",
+      "category": "Articles",
+      "url_prefix": "https://www.cnfeat.com/feed.xml"
+    },
+    {
+      "title": "豆瓣小组-无用美学",
+      "category": "Articles",
+      "url_prefix": "http://127.0.0.1:1200/douban/group/699356/essence"
+    },
+    {
+      "title": "StarYuhen",
+      "category": "Articles",
+      "url_prefix": "https://www.yuhenm.top/feed/"
+    },
+    {
+      "title": "少数派",
+      "category": "Articles/优质信息源",
+      "url_prefix": "http://127.0.0.1:1200/sspai/index"
+    },
+    {
+      "title": "少数派 -- Matrix",
+      "category": "Articles/优质信息源",
+      "url_prefix": "http://127.0.0.1:1200/sspai/matrix"
+    },
+    {
+      "title": "Experimental History",
+      "category": "Articles",
+      "url_prefix": "https://www.experimental-history.com/feed"
+    }
+  ],
+  "local_rsshub_feeds": 204,
+  "remote_feeds": 297
+}

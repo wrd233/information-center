@@ -1,0 +1,17 @@
+{
+  "inbox_items_total": 11692,
+  "total_duplicate_hits": 11104,
+  "items_with_duplicates": 11093,
+  "seen_count_distribution": {
+    "1": 599,
+    "2": 11082,
+    "3": 11
+  },
+  "dedupe_version_distribution": {
+    "v2": 11692
+  },
+  "source_status_distribution": {
+    "active": 501
+  },
+  "rss_sources_with_errors": 31
+}
