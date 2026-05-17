@@ -167,8 +167,8 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--token-budget", type=int, default=200000)
     evaluate.add_argument(
         "--stage-budget-profile",
-        choices=["balanced", "relation_heavy", "cluster_heavy", "card_heavy", "phase1_2e_profile"],
-        default="balanced",
+        choices=["balanced", "relation_heavy", "cluster_heavy", "card_heavy", "phase1_2e_profile", "phase1_3_advisory"],
+        default="phase1_3_advisory",
     )
     evaluate.add_argument("--concurrency", type=int, default=4)
     evaluate.add_argument("--include-archived", action="store_true")
@@ -177,6 +177,7 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--evidence-dir")
     evaluate.add_argument("--phase-label", default="semantic_eval")
     evaluate.add_argument("--backup-path")
+    evaluate.add_argument("--confirm-scoped-semantic-write")
     evaluate.add_argument("--source-filter")
     evaluate.add_argument("--source-url-prefix")
     evaluate.add_argument(
@@ -246,6 +247,7 @@ def main(argv: list[str] | None = None) -> int:
                 evidence_dir=args.evidence_dir,
                 phase_label=args.phase_label,
                 backup_path=args.backup_path,
+                confirm_scoped_semantic_write=args.confirm_scoped_semantic_write,
             )
             write_json(data)
             return 0 if data.get("ok", True) else 1

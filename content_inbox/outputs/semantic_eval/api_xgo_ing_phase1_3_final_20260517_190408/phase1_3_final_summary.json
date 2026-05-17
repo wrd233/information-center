@@ -1,0 +1,295 @@
+{
+  "blockers": [
+    {
+      "name": "event_signature_valid_rate",
+      "passed": false,
+      "reason": "signatures are concrete enough",
+      "threshold": ">= 0.7",
+      "value": 0.0
+    },
+    {
+      "name": "effective_multi_item_clusters",
+      "passed": false,
+      "reason": "dry-run produced useful same-event clusters",
+      "threshold": ">= 1",
+      "value": 0
+    },
+    {
+      "name": "small_scoped_real_write_rehearsal",
+      "passed": false,
+      "reason": "production readiness requires a scoped write rehearsal",
+      "threshold": true,
+      "value": false
+    }
+  ],
+  "evaluation_runs": {
+    "round_a_diagnostic_no_live": {
+      "calls": null,
+      "deterministic_minimal": 9,
+      "effective_multi_item_clusters": 0,
+      "event_signature_valid_rate": 0.25,
+      "heuristic_fallback": 11,
+      "items": 20,
+      "must_run_skips": 0,
+      "pair_conflicts": 0,
+      "parse_fallback": 0,
+      "readiness_verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE",
+      "relations": {},
+      "suspect_multi_item_clusters": 0,
+      "tokens": null,
+      "tokens_per_item": null
+    },
+    "round_b_live_20_tuned": {
+      "calls": 12,
+      "deterministic_minimal": 9,
+      "effective_multi_item_clusters": 0,
+      "event_signature_valid_rate": 0.05,
+      "heuristic_fallback": 0,
+      "items": 20,
+      "must_run_skips": 0,
+      "pair_conflicts": 0,
+      "parse_fallback": 0,
+      "readiness_verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE",
+      "relations": {
+        "different": 12
+      },
+      "suspect_multi_item_clusters": 0,
+      "tokens": 39343,
+      "tokens_per_item": 1967.15
+    },
+    "round_c_live_80_tuned": {
+      "calls": 52,
+      "deterministic_minimal": 35,
+      "effective_multi_item_clusters": 0,
+      "event_signature_valid_rate": 0.1375,
+      "heuristic_fallback": 0,
+      "items": 80,
+      "must_run_skips": 0,
+      "pair_conflicts": 0,
+      "parse_fallback": 0,
+      "readiness_verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE",
+      "relations": {
+        "different": 60,
+        "near_duplicate": 1,
+        "same_product_different_event": 1
+      },
+      "suspect_multi_item_clusters": 0,
+      "tokens": 141955,
+      "tokens_per_item": 1774.438
+    },
+    "round_d_live_20_promptfix": {
+      "calls": 11,
+      "deterministic_minimal": 9,
+      "effective_multi_item_clusters": 0,
+      "event_signature_valid_rate": 0.0,
+      "heuristic_fallback": 0,
+      "items": 20,
+      "must_run_skips": 0,
+      "pair_conflicts": 0,
+      "parse_fallback": 0,
+      "readiness_verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE",
+      "relations": {
+        "different": 14
+      },
+      "suspect_multi_item_clusters": 0,
+      "tokens": 35301,
+      "tokens_per_item": 1765.05
+    }
+  },
+  "final_run_dir": "outputs/semantic_eval/api_xgo_ing_phase1_3_final_20260517_190408",
+  "final_verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE",
+  "larger_recall_run": "outputs/semantic_eval/api_xgo_ing_phase1_3_round_c_80_live_tuned",
+  "notes": [
+    "Latest live prompt-fix run had zero llm_errors and zero relation_conflicts.",
+    "Larger 80-item run showed controlled card fallback and no must-run skips, but did not recover effective multi-item clusters.",
+    "Event signature extraction is now stricter; on the final 20-item low-signal sample it accepted no concrete signatures, which is safer but still not sufficient for recall.",
+    "No scoped real-write rehearsal was attempted because readiness gates failed."
+  ],
+  "phase": "phase1_3_final",
+  "phase_comparison": {
+    "phase1_2e_full_300": {
+      "calls": 234,
+      "deterministic_minimal": null,
+      "effective_multi_item_clusters": null,
+      "event_signature_valid_rate": null,
+      "heuristic_fallback": 18,
+      "items": 300,
+      "must_run_skips": null,
+      "pair_conflicts": null,
+      "parse_fallback": null,
+      "readiness_verdict": null,
+      "relations": {
+        "different": 314,
+        "near_duplicate": 4,
+        "related_with_new_info": 3
+      },
+      "suspect_multi_item_clusters": null,
+      "tokens": 728728,
+      "tokens_per_item": null
+    },
+    "phase1_2f_full_300": {
+      "calls": 63,
+      "deterministic_minimal": null,
+      "effective_multi_item_clusters": null,
+      "event_signature_valid_rate": null,
+      "heuristic_fallback": 99,
+      "items": 300,
+      "must_run_skips": null,
+      "pair_conflicts": null,
+      "parse_fallback": null,
+      "readiness_verdict": null,
+      "relations": {
+        "different": 72,
+        "near_duplicate": 2,
+        "related_with_new_info": 2
+      },
+      "suspect_multi_item_clusters": null,
+      "tokens": 220918,
+      "tokens_per_item": null
+    },
+    "phase1_3_round_c_80": {
+      "calls": 52,
+      "deterministic_minimal": 35,
+      "effective_multi_item_clusters": 0,
+      "event_signature_valid_rate": 0.1375,
+      "heuristic_fallback": 0,
+      "items": 80,
+      "must_run_skips": 0,
+      "pair_conflicts": 0,
+      "parse_fallback": 0,
+      "readiness_verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE",
+      "relations": {
+        "different": 60,
+        "near_duplicate": 1,
+        "same_product_different_event": 1
+      },
+      "suspect_multi_item_clusters": 0,
+      "tokens": 141955,
+      "tokens_per_item": 1774.438
+    },
+    "phase1_3_round_d_20": {
+      "calls": 11,
+      "deterministic_minimal": 9,
+      "effective_multi_item_clusters": 0,
+      "event_signature_valid_rate": 0.0,
+      "heuristic_fallback": 0,
+      "items": 20,
+      "must_run_skips": 0,
+      "pair_conflicts": 0,
+      "parse_fallback": 0,
+      "readiness_verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE",
+      "relations": {
+        "different": 14
+      },
+      "suspect_multi_item_clusters": 0,
+      "tokens": 35301,
+      "tokens_per_item": 1765.05
+    }
+  },
+  "primary_readiness_run": "outputs/semantic_eval/api_xgo_ing_phase1_3_round_d_20_live_promptfix",
+  "readiness": {
+    "blockers": [
+      {
+        "name": "event_signature_valid_rate",
+        "passed": false,
+        "reason": "signatures are concrete enough",
+        "threshold": ">= 0.7",
+        "value": 0.0
+      },
+      {
+        "name": "effective_multi_item_clusters",
+        "passed": false,
+        "reason": "dry-run produced useful same-event clusters",
+        "threshold": ">= 1",
+        "value": 0
+      },
+      {
+        "name": "small_scoped_real_write_rehearsal",
+        "passed": false,
+        "reason": "production readiness requires a scoped write rehearsal",
+        "threshold": true,
+        "value": false
+      }
+    ],
+    "gates": [
+      {
+        "name": "heuristic_fallback_rate",
+        "passed": true,
+        "reason": "heuristic emergency fallback must stay low",
+        "threshold": "< 0.1",
+        "value": 0.0
+      },
+      {
+        "name": "parse_failure_fallback_rate",
+        "passed": true,
+        "reason": "parse failures must not dominate cards",
+        "threshold": "< 0.03",
+        "value": 0.0
+      },
+      {
+        "name": "budget_skip_fallback_rate",
+        "passed": true,
+        "reason": "budget fallback must not starve candidate-bearing cards",
+        "threshold": "< 0.05",
+        "value": 0.0
+      },
+      {
+        "name": "skipped_must_run_candidates",
+        "passed": true,
+        "reason": "must-run candidates are protected",
+        "threshold": 0,
+        "value": 0
+      },
+      {
+        "name": "pair_relation_conflicts",
+        "passed": true,
+        "reason": "canonical pair verdicts cannot conflict",
+        "threshold": 0,
+        "value": 0
+      },
+      {
+        "name": "db_lock_errors",
+        "passed": true,
+        "reason": "no DB lock errors",
+        "threshold": 0,
+        "value": 0
+      },
+      {
+        "name": "event_signature_valid_rate",
+        "passed": false,
+        "reason": "signatures are concrete enough",
+        "threshold": ">= 0.7",
+        "value": 0.0
+      },
+      {
+        "name": "effective_multi_item_clusters",
+        "passed": false,
+        "reason": "dry-run produced useful same-event clusters",
+        "threshold": ">= 1",
+        "value": 0
+      },
+      {
+        "name": "suspect_multi_item_clusters",
+        "passed": true,
+        "reason": "no suspect multi-item clusters accepted",
+        "threshold": 0,
+        "value": 0
+      },
+      {
+        "name": "small_scoped_real_write_rehearsal",
+        "passed": false,
+        "reason": "production readiness requires a scoped write rehearsal",
+        "threshold": true,
+        "value": false
+      }
+    ],
+    "ready": false,
+    "verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE"
+  },
+  "real_db_writes": {
+    "backup_paths": [],
+    "ingest_write_performed": false,
+    "reason_semantic_write_not_run": "Readiness gates failed before scoped real-write rehearsal.",
+    "semantic_write_performed": false
+  }
+}

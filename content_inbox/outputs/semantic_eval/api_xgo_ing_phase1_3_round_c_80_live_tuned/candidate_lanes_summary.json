@@ -1,0 +1,28 @@
+{
+  "high_count": 5,
+  "lane_distribution": {
+    "exploratory_recall": 1120,
+    "near_title": 2,
+    "same_thread": 50,
+    "suppressed": 28,
+    "unknown": 344
+  },
+  "lane_priority_distribution": {
+    "exploratory_recall:low": 1062,
+    "exploratory_recall:medium": 58,
+    "near_title:high": 2,
+    "same_thread:low": 50,
+    "suppressed:suppress": 28,
+    "unknown:high": 3,
+    "unknown:low": 290,
+    "unknown:medium": 51
+  },
+  "must_run_count": 0,
+  "priority_distribution": {
+    "high": 5,
+    "low": 1402,
+    "medium": 109,
+    "suppress": 28
+  },
+  "suppressed_count": 28
+}

@@ -8,6 +8,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 
 from app.semantic import db
+from app.semantic.card_policy import card_limits, choose_card_tier as policy_choose_card_tier, fallback_classification
 from app.semantic.llm_client import SemanticLLMClient
 from app.semantic.schemas import ITEM_CARD_PROMPT_VERSION, SCHEMA_VERSION, ItemCardBatchOutput, ItemCardData
 from app.storage import InboxStore
@@ -20,7 +21,7 @@ AI_ENTITY_RE = re.compile(
 )
 
 
-def build_heuristic_card(item: dict[str, Any], *, tier: str = "heuristic") -> ItemCardData:
+def build_heuristic_card(item: dict[str, Any], *, tier: str = "heuristic", fallback_reason: str | None = None) -> ItemCardData:
     title = item.get("title") or "Untitled"
     body = item.get("summary") or item.get("content_text") or title
     entities = []
@@ -38,7 +39,13 @@ def build_heuristic_card(item: dict[str, Any], *, tier: str = "heuristic") -> It
     summary = truncate(" ".join(str(body).split()), 360) or title
     event_hint = truncate(title, 160)
     embedding_text = "\n".join([f"title: {title}", f"summary: {summary}", f"entities: {', '.join(entities)}"])
-    warnings = ["heuristic_card"] if tier == "heuristic" else ["minimal_card"]
+    if tier in {"minimal", "deterministic_minimal"}:
+        fallback_type = "fallback_deterministic_minimal"
+        warnings = ["deterministic_minimal_card"]
+        tier = "minimal"
+    else:
+        fallback_type = fallback_classification(source="heuristic", reason=fallback_reason)
+        warnings = ["heuristic_card", fallback_type]
     return ItemCardData(
         item_id=item["item_id"],
         canonical_title=truncate(title, 180) or title,
@@ -50,27 +57,23 @@ def build_heuristic_card(item: dict[str, Any], *, tier: str = "heuristic") -> It
         content_role=role,  # type: ignore[arg-type]
         confidence=0.55,
         warnings=warnings,
-        quality_hints={"card_tier": tier},
+        quality_hints={"card_tier": tier, "fallback_type": fallback_type, "fallback_reason": fallback_reason or ""},
     )
 
 
 def choose_card_tier(item: dict[str, Any]) -> str:
+    tier = policy_choose_card_tier(item)
+    if tier == "minimal":
+        return "minimal"
     title = item.get("title") or ""
     summary = item.get("summary") or ""
     content = item.get("content_text") or ""
     text = f"{title}\n{summary}\n{content}".strip()
-    length = len(text)
-    source = f"{item.get('source_name') or ''} {item.get('source_id') or ''}".lower()
-    is_social = "socialmedia" in source or "(@" in (item.get("source_name") or "")
     has_ai_entity = bool(AI_ENTITY_RE.search(text))
     official_hint = any(word in text.lower() for word in ["release", "launch", "announc", "paper", "benchmark", "open-source", "api", "model"])
-    if length <= 260 and (is_social or not content):
-        return "minimal"
-    if length <= 700 and is_social and not (has_ai_entity and official_hint):
-        return "minimal"
-    if length >= 1800 or (has_ai_entity and official_hint):
+    if has_ai_entity and official_hint:
         return "full"
-    return "standard"
+    return tier
 
 
 def detect_language(text: str) -> str:
@@ -92,8 +95,7 @@ def is_transient_or_parse_failure(reason: str | None) -> bool:
 
 def item_payload(item: dict[str, Any]) -> dict[str, Any]:
     tier = choose_card_tier(item)
-    summary_limit = 420 if tier == "minimal" else 900 if tier == "standard" else 1400
-    content_limit = 0 if tier == "minimal" else 900 if tier == "standard" else 2200
+    summary_limit, content_limit = card_limits(tier)
     return {
         "item_id": item["item_id"],
         "card_tier": tier,
@@ -134,6 +136,10 @@ def generate_item_cards(
         "dry_run": dry_run,
         "card_tiers": dict(tier_counts),
         "local_minimal_cards": 0,
+        "deterministic_minimal_cards": 0,
+        "heuristic_fallback_count": 0,
+        "parse_error_fallback_count": 0,
+        "budget_skip_fallback_count": 0,
         "failed_batch_count": 0,
         "split_retry_success_count": 0,
         "single_retry_success_count": 0,
@@ -144,21 +150,21 @@ def generate_item_cards(
     batches = [llm_items[start : start + max(1, batch_size)] for start in range(0, len(llm_items), max(1, batch_size))]
 
     def write_local_minimal(item: dict[str, Any]) -> dict[str, Any]:
-        card = build_heuristic_card(item, tier="minimal")
+        card = build_heuristic_card(item, tier="deterministic_minimal", fallback_reason="local deterministic minimal card")
         fingerprint = db.input_fingerprint({"item": item_payload(item), "prompt": "item_card_minimal_rule"})
         call_id = None
         if not live:
             call_id = db.insert_llm_call_log(
                 store,
                 task_type="item_card",
-                model="minimal_rule",
-                prompt_version="item_card_minimal_rule",
+                model="deterministic_minimal",
+                prompt_version="item_card_deterministic_minimal_rule",
                 schema_version=SCHEMA_VERSION,
                 fingerprint=fingerprint,
                 latency_ms=0,
                 status="skipped",
-                request={"reason": "local minimal card"},
-                error="local minimal card",
+                request={"reason": "local deterministic minimal card", "fallback_type": "fallback_deterministic_minimal"},
+                error="local deterministic minimal card",
                 item_id=item["item_id"],
                 source_id=item.get("source_id") or item.get("feed_url") or item.get("source_name"),
             )
@@ -169,12 +175,12 @@ def generate_item_cards(
                 store,
                 card.model_dump(),
                 schema_version=SCHEMA_VERSION,
-                prompt_version="item_card_minimal_rule",
-                model="minimal_rule",
+                prompt_version="item_card_deterministic_minimal_rule",
+                model="deterministic_minimal",
                 fingerprint=fingerprint,
                 llm_call_id=call_id,
             )
-            return {"skipped": 0, "written": 1, "errors": 0, "item": {"id": row["id"], "item_id": item["item_id"], "source": "minimal_rule", "reason": "local minimal card"}}
+            return {"skipped": 0, "written": 1, "errors": 0, "item": {"id": row["id"], "item_id": item["item_id"], "source": "deterministic_minimal", "reason": "local deterministic minimal card"}}
         except Exception as exc:
             mark_item_semantic_error(store, item["item_id"], str(exc))
             return {"skipped": 0, "written": 0, "errors": 1, "item": {"item_id": item["item_id"], "error": str(exc)}}
@@ -266,7 +272,8 @@ def generate_item_cards(
                 final_reason_by_item[item["item_id"]] = single_reason
         local["llm_calls"] = client.calls
         for item in batch:
-            card = cards_by_id.get(item["item_id"]) or build_heuristic_card(item)
+            fallback_reason = final_reason_by_item.get(item["item_id"])
+            card = cards_by_id.get(item["item_id"]) or build_heuristic_card(item, fallback_reason=fallback_reason)
             fingerprint = db.input_fingerprint({"item": item_payload(item), "prompt": ITEM_CARD_PROMPT_VERSION})
             if dry_run:
                 local["skipped"] += 1
@@ -276,6 +283,15 @@ def generate_item_cards(
                 card_data = card.model_dump()
                 card_data.setdefault("quality_hints", {})
                 card_data["quality_hints"]["card_tier"] = choose_card_tier(item)
+                if item["item_id"] not in cards_by_id:
+                    fallback_type = fallback_classification(source="heuristic", reason=fallback_reason)
+                    card_data["quality_hints"]["fallback_type"] = fallback_type
+                    if fallback_type == "fallback_due_to_llm_parse_error":
+                        local["parse_error_fallback_count"] = int(local.get("parse_error_fallback_count", 0)) + 1
+                    elif fallback_type == "fallback_due_to_budget_skip":
+                        local["budget_skip_fallback_count"] = int(local.get("budget_skip_fallback_count", 0)) + 1
+                    else:
+                        local["heuristic_fallback_count"] = int(local.get("heuristic_fallback_count", 0)) + 1
                 row = db.upsert_item_card(
                     store,
                     card_data,
@@ -295,6 +311,7 @@ def generate_item_cards(
     for item in local_items:
         local = write_local_minimal(item)
         stats["local_minimal_cards"] += 1
+        stats["deterministic_minimal_cards"] += 1
         stats["written"] += int(local["written"])
         stats["skipped"] += int(local["skipped"])
         stats["errors"] += int(local["errors"])
@@ -307,7 +324,7 @@ def generate_item_cards(
                 local = future.result()
                 for key in ["written", "llm_calls", "skipped", "errors"]:
                     stats[key] += int(local[key])
-                for key in ["failed_batch_count", "split_retry_success_count", "single_retry_success_count"]:
+                for key in ["failed_batch_count", "split_retry_success_count", "single_retry_success_count", "heuristic_fallback_count", "parse_error_fallback_count", "budget_skip_fallback_count"]:
                     stats[key] += int(local.get(key, 0))
                 results.extend(local["items"])
     else:
@@ -315,7 +332,7 @@ def generate_item_cards(
             local = process_batch(batch)
             for key in ["written", "llm_calls", "skipped", "errors"]:
                 stats[key] += int(local[key])
-            for key in ["failed_batch_count", "split_retry_success_count", "single_retry_success_count"]:
+            for key in ["failed_batch_count", "split_retry_success_count", "single_retry_success_count", "heuristic_fallback_count", "parse_error_fallback_count", "budget_skip_fallback_count"]:
                 stats[key] += int(local.get(key, 0))
             results.extend(local["items"])
     return {"ok": stats["errors"] == 0, "stats": stats, "items": results}

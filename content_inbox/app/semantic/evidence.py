@@ -17,7 +17,9 @@ from app.semantic.candidates import (
     relation_cluster_eligible,
     relation_pair_key,
 )
+from app.semantic.budget import summarize_budget_skips
 from app.semantic.relations import normalized_entity_terms, semantic_tokens
+from app.semantic.signatures import extract_event_signature
 from app.storage import InboxStore
 
 
@@ -227,6 +229,11 @@ def export_evidence(
     )
     cluster_seed_candidates, cluster_seed_rejections = build_cluster_seed_evidence(cluster_attachments, clusters_final)
     llm_calls, llm_errors, budget_skips = build_llm_evidence(target_store, semantic_run_id)
+    event_signatures = build_event_signatures(sampled_items, semantic_run_id)
+    signature_report = build_event_signature_report(event_signatures)
+    relation_conflicts = build_relation_conflicts(target_store, semantic_run_id, items_by_id)
+    candidate_lanes_summary = build_candidate_lanes_summary(candidate_generation)
+    budget_summary = summarize_budget_skips(budget_skips)
     stage_metrics = {
         "semantic_run_id": semantic_run_id,
         "stage_budgets": summary.get("stage_budgets"),
@@ -244,6 +251,8 @@ def export_evidence(
         ("relations_interesting.jsonl", interesting_rows, "jsonl"), ("relations_interesting.csv", interesting_rows, "csv"),
         ("candidate_generation.jsonl", candidate_generation, "jsonl"),
         ("candidate_suppression.jsonl", candidate_suppression, "jsonl"),
+        ("relation_conflicts.jsonl", relation_conflicts, "jsonl"),
+        ("event_signatures.jsonl", event_signatures, "jsonl"),
         ("event_hotspots.jsonl", hotspot_rows, "jsonl"),
         ("event_hotspot_items.csv", flatten_hotspot_items(hotspot_rows, items_by_id), "csv"),
         ("cluster_candidates.jsonl", cluster_candidates, "jsonl"),
@@ -265,6 +274,22 @@ def export_evidence(
         evidence_files.append(str(path))
     write_json(run_dir / "stage_metrics.json", stage_metrics)
     evidence_files.append(str(run_dir / "stage_metrics.json"))
+    write_json(run_dir / "candidate_lanes_summary.json", candidate_lanes_summary)
+    evidence_files.append(str(run_dir / "candidate_lanes_summary.json"))
+    write_json(run_dir / "budget_summary.json", budget_summary)
+    evidence_files.append(str(run_dir / "budget_summary.json"))
+    write_json(run_dir / "event_signature_quality_report.json", signature_report)
+    evidence_files.append(str(run_dir / "event_signature_quality_report.json"))
+    signature_md = render_event_signature_report(signature_report)
+    signature_md_path = run_dir / "event_signature_quality_report.md"
+    signature_md_path.write_text(signature_md, encoding="utf-8")
+    evidence_files.append(str(signature_md_path))
+    readiness_path = run_dir / "phase1_3_readiness_report.md"
+    readiness_path.write_text(render_readiness_report(summary), encoding="utf-8")
+    evidence_files.append(str(readiness_path))
+    complexity_path = run_dir / "phase1_3_complexity_control_report.md"
+    complexity_path.write_text(render_complexity_report(summary), encoding="utf-8")
+    evidence_files.append(str(complexity_path))
     cost_metrics = cost_quality_metrics(summary, relation_rows, candidate_generation, candidate_suppression, clusters_final, budget_skips)
     write_json(run_dir / "cost_quality_metrics.json", cost_metrics)
     evidence_files.append(str(run_dir / "cost_quality_metrics.json"))
@@ -349,6 +374,177 @@ def build_semantic_items(run_id: str, items: list[dict[str, Any]], item_to_hotsp
     return rows
 
 
+def build_event_signatures(items: list[dict[str, Any]], run_id: str) -> list[dict[str, Any]]:
+    rows = []
+    for item in items:
+        signature = extract_event_signature(item).model_dump()
+        rows.append({
+            "semantic_run_id": run_id,
+            "item_id": item.get("item_id"),
+            "source_id": item.get("source_id"),
+            "source_name": item.get("source_name"),
+            "title": item.get("title"),
+            **signature,
+        })
+    return rows
+
+
+def build_event_signature_report(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    accepted = [row for row in rows if row.get("is_concrete")]
+    rejected = [row for row in rows if not row.get("is_concrete")]
+    invalid_reasons = Counter(reason for row in rejected for reason in row.get("invalid_reasons", []))
+    by_key = defaultdict(list)
+    for row in accepted:
+        by_key[row.get("signature_key")].append(row)
+    scores = [float(row.get("concreteness_score") or 0.0) for row in rows]
+    return {
+        "total_items": len(rows),
+        "accepted_signature_count": len(accepted),
+        "rejected_signature_count": len(rejected),
+        "borderline_signature_count": sum(1 for row in rows if 0.55 <= float(row.get("concreteness_score") or 0.0) < 0.68),
+        "valid_signature_rate": round(len(accepted) / max(len(rows), 1), 4),
+        "invalid_reason_distribution": dict(invalid_reasons),
+        "concreteness_score_distribution": dict(Counter(round(score, 1) for score in scores)),
+        "top_signatures_by_item_count": [
+            {"signature_key": key, "item_count": len(items), "examples": [item.get("title") for item in items[:5]]}
+            for key, items in sorted(by_key.items(), key=lambda pair: len(pair[1]), reverse=True)[:30]
+        ],
+        "accepted_examples": accepted[:30],
+        "rejected_examples": rejected[:30],
+        "borderline_examples": [row for row in rows if 0.55 <= float(row.get("concreteness_score") or 0.0) < 0.68][:30],
+    }
+
+
+def render_event_signature_report(report: dict[str, Any]) -> str:
+    lines = [
+        "# Event Signature Quality Report",
+        "",
+        f"- total_items: {report.get('total_items')}",
+        f"- accepted_signature_count: {report.get('accepted_signature_count')}",
+        f"- rejected_signature_count: {report.get('rejected_signature_count')}",
+        f"- borderline_signature_count: {report.get('borderline_signature_count')}",
+        f"- valid_signature_rate: {report.get('valid_signature_rate')}",
+        "",
+        "## Invalid Reasons",
+        "",
+        json.dumps(report.get("invalid_reason_distribution", {}), ensure_ascii=False, indent=2, sort_keys=True),
+        "",
+        "## Top Signatures",
+        "",
+        json.dumps(report.get("top_signatures_by_item_count", [])[:20], ensure_ascii=False, indent=2, sort_keys=True),
+        "",
+        "## Accepted Examples",
+        "",
+        json.dumps(report.get("accepted_examples", [])[:10], ensure_ascii=False, indent=2, sort_keys=True),
+        "",
+        "## Rejected Examples",
+        "",
+        json.dumps(report.get("rejected_examples", [])[:10], ensure_ascii=False, indent=2, sort_keys=True),
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def build_relation_conflicts(store: InboxStore, run_id: str, items: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    with store.connect() as conn:
+        try:
+            rows = [dict(row) for row in conn.execute("SELECT * FROM semantic_relation_conflicts ORDER BY id").fetchall()]
+        except Exception:
+            return []
+    out = []
+    for row in rows:
+        a = items.get(row.get("item_a_id") or "", {})
+        b = items.get(row.get("item_b_id") or "", {})
+        out.append({
+            "semantic_run_id": run_id,
+            **row,
+            "item_a_title": a.get("title"),
+            "item_b_title": b.get("title"),
+        })
+    return out
+
+
+def build_candidate_lanes_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    lanes = Counter()
+    priorities = Counter()
+    lane_priority = Counter()
+    for row in rows:
+        lane = (row.get("metadata") or {}).get("lane") or "unknown"
+        priority = row.get("candidate_priority") or "unknown"
+        lanes[lane] += 1
+        priorities[priority] += 1
+        lane_priority[f"{lane}:{priority}"] += 1
+    return {
+        "lane_distribution": dict(lanes),
+        "priority_distribution": dict(priorities),
+        "lane_priority_distribution": dict(lane_priority),
+        "must_run_count": priorities.get("must_run", 0),
+        "high_count": priorities.get("high", 0),
+        "suppressed_count": priorities.get("suppress", 0),
+    }
+
+
+def render_readiness_report(summary: dict[str, Any]) -> str:
+    readiness = summary.get("readiness_assessment") or {}
+    lines = [
+        "# Phase 1.3 Readiness Report",
+        "",
+        f"- verdict: {readiness.get('verdict')}",
+        f"- ready: {readiness.get('ready')}",
+        "",
+        "## Gates",
+        "",
+    ]
+    for gate in readiness.get("gates", []):
+        mark = "PASS" if gate.get("passed") else "FAIL"
+        lines.append(f"- {mark} {gate.get('name')}: value={gate.get('value')} threshold={gate.get('threshold')} reason={gate.get('reason')}")
+    lines.extend(["", "## Blockers", "", json.dumps(readiness.get("blockers", []), ensure_ascii=False, indent=2, sort_keys=True)])
+    return "\n".join(lines) + "\n"
+
+
+def render_complexity_report(summary: dict[str, Any]) -> str:
+    return "\n".join(
+        [
+            "# Phase 1.3 Complexity Control Report",
+            "",
+            "## Modules Added",
+            "",
+            "- `semantic/config.py`: centralized thresholds, generic tokens, budget profiles.",
+            "- `semantic/signatures.py`: first-class event signature extraction and validation.",
+            "- `semantic/budget.py`: advisory budgets and skip-tier accounting.",
+            "- `semantic/card_policy.py`: card tier and fallback classification policy.",
+            "- `semantic/relation_policy.py`: relation labels, fold mapping, cluster eligibility.",
+            "- `semantic/cluster_policy.py`: cluster attach and seed policy.",
+            "- `semantic/readiness.py`: production readiness gates.",
+            "- `semantic/write_rehearsal.py`: scoped write confirmation, backup, and rehearsal reports.",
+            "",
+            "## Active Prompt Versions",
+            "",
+            "- item cards: `item_card_v1`",
+            "- item relation: `item_relation_v3`",
+            "- item-cluster relation: `item_cluster_relation_v3`",
+            "- cluster card patch: `cluster_card_patch_v1`",
+            "",
+            "## Active Relation Labels",
+            "",
+            json.dumps({
+                "duplicate": "fold, same-event duplicate evidence",
+                "near_duplicate": "fold, same-event repeat evidence",
+                "related_with_new_info": "do not fold, may seed/attach same-event cluster with confidence",
+                "same_product_different_event": "do not fold or attach, thread evidence only",
+                "same_thread": "do not fold or attach, thread evidence only",
+                "different": "no action",
+                "uncertain": "review only",
+            }, ensure_ascii=False, indent=2, sort_keys=True),
+            "",
+            "## Remaining Complexity Debt",
+            "",
+            "- `evaluate.py` and `evidence.py` still contain legacy report-rendering helpers; Phase 1.3 isolates new concepts but does not fully move all markdown rendering into `reports.py`.",
+            "- Existing SQLite schema remains backward-compatible, so some new semantic fields are persisted in evidence/metadata rather than dedicated columns.",
+            "- Candidate generation is deterministic and lexical/signature based; vector indexes remain a future recall enhancement.",
+        ]
+    ) + "\n"
+
+
 def build_item_cards(store: InboxStore, run_id: str, items: dict[str, dict[str, Any]], calls: dict[int, dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     with store.connect() as conn:
         cards = [dict(row) for row in conn.execute("SELECT * FROM item_cards WHERE is_current = 1").fetchall()]
@@ -359,7 +555,8 @@ def build_item_cards(store: InboxStore, run_id: str, items: dict[str, dict[str, 
         qh = parse_json_dict(card.get("quality_hints_json"))
         warnings = parse_json_list(card.get("warnings_json"))
         call = calls.get(int(card["llm_call_id"])) if card.get("llm_call_id") else None
-        method = "minimal_rule" if card.get("model") == "minimal_rule" else "heuristic_fallback" if "heuristic_card" in warnings or card.get("model") == "heuristic" else "llm"
+        method = "deterministic_minimal" if card.get("model") in {"minimal_rule", "deterministic_minimal"} else "heuristic_fallback" if "heuristic_card" in warnings or card.get("model") == "heuristic" else "llm"
+        fallback_type = qh.get("fallback_type") or ("fallback_deterministic_minimal" if method == "deterministic_minimal" else "fallback_heuristic" if method == "heuristic_fallback" else None)
         rows.append({
             "semantic_run_id": run_id,
             "item_id": card["item_id"],
@@ -367,11 +564,12 @@ def build_item_cards(store: InboxStore, run_id: str, items: dict[str, dict[str, 
             "source_id": item.get("source_id"),
             "title": item.get("title") or card.get("canonical_title"),
             "url": item.get("url"),
-            "card_tier": qh.get("card_tier") or ("minimal" if card.get("model") == "minimal_rule" else "unknown"),
+            "card_tier": qh.get("card_tier") or ("minimal" if method == "deterministic_minimal" else "unknown"),
             "card_method": method,
             "card_success": True,
-            "fallback": method == "heuristic_fallback",
-            "fallback_reason": "LLM skipped or failed" if method == "heuristic_fallback" else None,
+            "fallback": method in {"heuristic_fallback", "deterministic_minimal"},
+            "fallback_type": fallback_type,
+            "fallback_reason": qh.get("fallback_reason") or ("LLM skipped or failed" if method == "heuristic_fallback" else "local deterministic minimal card" if method == "deterministic_minimal" else None),
             "confidence": card.get("confidence"),
             "content_role": card.get("content_role"),
             "event_type": card.get("event_hint"),
@@ -558,11 +756,19 @@ def build_candidate_evidence(store: InboxStore, run_id: str, items: dict[str, di
             "item_b_title": b.get("title"),
             "relation_pair_key": row.get("relation_pair_key"),
             "candidate_priority": row.get("candidate_priority"),
+            "lane": meta.get("lane") or meta.get("candidate_lane"),
             "candidate_score": row.get("candidate_score"),
             "candidate_score_components": parse_json_dict(row.get("candidate_score_components_json")),
             "candidate_suppression_reason": row.get("candidate_suppression_reason"),
             "status": row.get("status"),
             "metadata": meta,
+            "positive_features": meta.get("positive_features", []),
+            "negative_features": meta.get("negative_features", []),
+            "generic_tokens_detected": meta.get("generic_overlap", []),
+            "event_signature_key": meta.get("event_signature_key"),
+            "event_signature_match": meta.get("event_signature_match"),
+            "time_window_hours": meta.get("time_window_hours"),
+            "source_diversity": (meta.get("candidate_score_components") or {}).get("source_diversity"),
             "created_at": row.get("created_at"),
         }
         generation.append(base)
@@ -579,7 +785,7 @@ def build_candidate_evidence(store: InboxStore, run_id: str, items: dict[str, di
 def interesting_relations(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     interesting = [
         row for row in rows
-        if row["relation_label"] in {"duplicate", "near_duplicate", "related_with_new_info", "uncertain"}
+        if row["relation_label"] in {"duplicate", "near_duplicate", "related_with_new_info", "same_product_different_event", "same_thread", "uncertain"}
         and not row.get("is_duplicate_direction")
     ]
     suspicious = sorted(
@@ -976,6 +1182,7 @@ def cost_quality_metrics(
 ) -> dict[str, Any]:
     actual_tokens = int((summary.get("metadata") or {}).get("actual_tokens") or 0)
     actual_calls = int((summary.get("metadata") or {}).get("actual_calls") or 0)
+    item_count = int((summary.get("metadata") or {}).get("items_sampled") or 0)
     unique_pairs = {row.get("relation_pair_key") for row in relations if row.get("relation_pair_key")}
     non_different = [row for row in relations if row.get("relation_label") != "different"]
     eligible = [row for row in relations if row.get("cluster_eligible")]
@@ -992,6 +1199,8 @@ def cost_quality_metrics(
     return {
         "actual_calls": actual_calls,
         "actual_tokens": actual_tokens,
+        "item_count": item_count,
+        "total_tokens_per_item": round(actual_tokens / item_count, 3) if item_count else 0.0,
         "tokens_by_stage": summary.get("token_cost"),
         "budget_skips": (summary.get("stage_budgets") or {}).get("stages"),
         "raw_relation_count": len(relations),

@@ -8,6 +8,17 @@ from datetime import datetime, timezone
 from typing import Any
 from urllib.parse import urlparse
 
+from app.semantic.config import CANDIDATE_THRESHOLDS, PRIORITY_ORDER
+from app.semantic.relation_policy import (
+    default_reason_code,
+    normalize_primary_relation,
+    relation_cluster_eligible as policy_relation_cluster_eligible,
+)
+from app.semantic.signatures import (
+    compatible_actor_product_action,
+    extract_event_signature,
+    signature_match as event_signature_equal,
+)
 from app.utils import normalize_url, stable_hash
 
 
@@ -237,6 +248,7 @@ BOILERPLATE_PATTERNS = [
 class CandidateAssessment:
     candidate_score: float
     candidate_priority: str
+    lane: str = "exploratory_recall"
     candidate_score_components: dict[str, float] = field(default_factory=dict)
     candidate_suppression_reason: str | None = None
     shared_entities: list[str] = field(default_factory=list)
@@ -253,6 +265,10 @@ class CandidateAssessment:
     generic_only: bool = False
     time_window_hours: float | None = None
     generic_overlap: list[str] = field(default_factory=list)
+    same_actor: bool = False
+    same_product: bool = False
+    same_action: bool = False
+    reason_code: str = ""
 
     @property
     def suppressed(self) -> bool:
@@ -262,6 +278,7 @@ class CandidateAssessment:
         return {
             "candidate_score": round(self.candidate_score, 3),
             "candidate_priority": self.candidate_priority,
+            "lane": self.lane,
             "candidate_score_components": self.candidate_score_components,
             "candidate_suppression_reason": self.candidate_suppression_reason,
             "shared_entities": self.shared_entities,
@@ -278,6 +295,10 @@ class CandidateAssessment:
             "generic_only": self.generic_only,
             "time_window_hours": round(self.time_window_hours, 3) if self.time_window_hours is not None else None,
             "generic_overlap": self.generic_overlap,
+            "same_actor": self.same_actor,
+            "same_product": self.same_product,
+            "same_action": self.same_action,
+            "reason_code": self.reason_code,
             "reason": "; ".join(self.positive_features + self.negative_features + self.disqualifiers),
         }
 
@@ -404,36 +425,21 @@ def published_day_bucket(item: dict[str, Any]) -> str | None:
 
 
 def event_signature(item: dict[str, Any], card: dict[str, Any] | None = None) -> dict[str, Any]:
-    text = item_text(item, card)
-    actors = ai_entities(text)
-    products = concrete_products(text, actors)
-    action = event_action(text)
-    bucket = published_day_bucket(item)
-    generic_tokens = sorted(token for token in semantic_tokens(text) if token in GENERIC_ENTITY_TOKENS)[:20]
-    confidence = 0.0
-    if actors and products and action:
-        confidence = 0.86
-    elif actors and products:
-        confidence = 0.62
-    elif actors and action:
-        confidence = 0.46
-    elif products and action:
-        confidence = 0.42
-    key = None
-    if confidence >= 0.8 and action and bucket:
-        actor_key = normalized_entity_terms([actors[0]]).pop() if actors else "unknown"
-        product_key = normalized_entity_terms([products[0]]).pop() if products else "unknown"
-        action_key = action or "event"
-        key = f"{actor_key}|{product_key}|{action_key}|{bucket}"
+    signature = extract_event_signature(item, card)
+    generic_tokens = sorted(token for token in semantic_tokens(item_text(item, card)) if token in GENERIC_ENTITY_TOKENS)[:20]
     return {
-        "signature_key": key,
-        "actors": actors[:6],
-        "products": products[:6],
-        "event_type": action,
-        "time_bucket": bucket,
+        "signature_key": signature.signature_key,
+        "actors": [signature.actor] if signature.actor else [],
+        "products": [signature.product_or_model] if signature.product_or_model else [],
+        "event_type": signature.action,
+        "time_bucket": signature.date_bucket,
         "generic_tokens": generic_tokens,
-        "confidence": round(confidence, 3),
-        "is_concrete": bool(key),
+        "confidence": signature.concreteness_score,
+        "concreteness_score": signature.concreteness_score,
+        "is_concrete": signature.is_concrete,
+        "invalid_reasons": signature.invalid_reasons,
+        "source_type": signature.source_type,
+        "object": signature.object,
     }
 
 
@@ -573,13 +579,18 @@ def assess_candidate(
     boilerplate = detect_boilerplate(left_text) or detect_boilerplate(right_text)
     shared_generic = sorted(entity for entity in shared if entity in GENERIC_ENTITY_TOKENS or is_proxy_noise_token(entity))
     generic_overlap = bool(shared) and not weighted
-    left_sig = event_signature(left_item, left_card)
-    right_sig = event_signature(right_item, right_card)
-    signature_match = bool(left_sig.get("signature_key") and left_sig.get("signature_key") == right_sig.get("signature_key"))
-    shared_actors = sorted(normalized_entity_terms(left_sig.get("actors", [])) & normalized_entity_terms(right_sig.get("actors", [])))
-    shared_products = sorted(normalized_entity_terms(left_sig.get("products", [])) & normalized_entity_terms(right_sig.get("products", [])))
-    same_action = bool(left_sig.get("event_type") and left_sig.get("event_type") == right_sig.get("event_type"))
+    left_sig_obj = extract_event_signature(left_item, left_card)
+    right_sig_obj = extract_event_signature(right_item, right_card)
+    left_sig = left_sig_obj.model_dump()
+    right_sig = right_sig_obj.model_dump()
+    signature_match = event_signature_equal(left_sig_obj, right_sig_obj)
+    shared_actors = sorted(normalized_entity_terms([left_sig_obj.actor]) & normalized_entity_terms([right_sig_obj.actor]))
+    shared_products = sorted(normalized_entity_terms([left_sig_obj.product_or_model]) & normalized_entity_terms([right_sig_obj.product_or_model]))
+    same_action = bool(left_sig_obj.action and left_sig_obj.action == right_sig_obj.action and left_sig_obj.action != "other")
+    actor_product_action_match = compatible_actor_product_action(left_sig_obj, right_sig_obj, max_hours=72)
     concrete_event_match = signature_match or (
+        actor_product_action_match
+        or
         bool(shared_actors and shared_products and same_action and (time_gap is None or time_gap <= 72))
         or bool(len(weighted) >= 2 and concrete_event_phrase_overlap and (time_gap is not None and time_gap <= 72))
         or bool(shared_actors and len(weighted) >= 2 and title_score >= 0.55 and (time_gap is not None and time_gap <= 72))
@@ -616,31 +627,46 @@ def assess_candidate(
         disqualifiers.append("generic_only_overlap")
     if time_gap is not None and time_gap > 168 and not hard and not signature_match:
         disqualifiers.append("wide_time_window")
+    lane = "exploratory_recall"
     if hard:
+        lane = "deterministic"
         priority = "must_run"
     elif "proxy_domain_only" in disqualifiers:
+        lane = "suppressed"
         priority = "suppress"
         suppression_reason = "suppressed_proxy_domain"
     elif generic_only:
+        lane = "suppressed"
         priority = "suppress"
         suppression_reason = "suppressed_generic_only"
     elif boilerplate and title_score < 0.45 and len(weighted) < 2:
+        lane = "suppressed"
         priority = "suppress"
         suppression_reason = "suppressed_boilerplate"
     elif generic_overlap and title_score < 0.4 and event_overlap <= 0:
+        lane = "suppressed"
         priority = "suppress"
         suppression_reason = "suppressed_generic_entity"
-    elif title_score >= 0.82 and time_score >= 0.65:
+    elif title_score >= CANDIDATE_THRESHOLDS.near_title_must_run and time_score >= 0.65:
+        lane = "near_title"
         priority = "must_run"
-    elif concrete_event_match and score >= 5.0:
+    elif signature_match and score >= CANDIDATE_THRESHOLDS.signature_must_run:
+        lane = "event_signature"
         priority = "must_run"
-    elif concrete_event_match and score >= 3.4:
+    elif concrete_event_match and score >= CANDIDATE_THRESHOLDS.signature_high:
+        lane = "event_signature" if signature_match else "same_actor_product"
         priority = "high"
-    elif (shared_products and (shared_actors or same_action) and time_score >= 0.25) or score >= 2.2:
+    elif title_score >= CANDIDATE_THRESHOLDS.near_title_high and time_score >= 0.25:
+        lane = "near_title"
+        priority = "high"
+    elif (shared_products and (shared_actors or same_action) and time_score >= 0.25) or score >= CANDIDATE_THRESHOLDS.exploratory_medium:
+        lane = "same_actor_product" if shared_products and (shared_actors or same_action) else "exploratory_recall"
         priority = "medium"
     elif score > 0:
+        lane = "same_thread" if shared_actors or shared_products else "exploratory_recall"
         priority = "low"
     else:
+        lane = "suppressed"
         priority = "suppress"
         suppression_reason = "weak_same_topic"
     same_event_evidence = []
@@ -649,7 +675,7 @@ def assess_candidate(
     if weighted:
         same_event_evidence.append(f"shared_weighted_entities:{', '.join(weighted[:5])}")
     if signature_match:
-        same_event_evidence.append(f"event_signature_match:{left_sig.get('signature_key')}")
+        same_event_evidence.append(f"event_signature_match:{left_sig_obj.signature_key}")
     elif concrete_event_match:
         same_event_evidence.append("same_actor_product_action_72h")
     if event_left & event_right:
@@ -697,11 +723,16 @@ def assess_candidate(
         disqualifiers=disqualifiers,
         positive_features=positive_features,
         negative_features=negative_features,
-        event_signature_key=left_sig.get("signature_key") if signature_match else None,
+        lane=lane,
+        event_signature_key=left_sig_obj.signature_key if signature_match else None,
         event_signature_match=signature_match,
         generic_only=generic_only,
         time_window_hours=time_gap,
         generic_overlap=shared_generic[:20],
+        same_actor=bool(shared_actors),
+        same_product=bool(shared_products),
+        same_action=same_action,
+        reason_code=default_reason_code("different", "same_event" if concrete_event_match else "different", generic_only=generic_only),
     )
 
 
@@ -717,6 +748,10 @@ def infer_event_relation_type(
     new_information = new_information or []
     if relation_label in {"duplicate", "near_duplicate"}:
         return "same_event"
+    if relation_label == "same_product_different_event":
+        return "same_product_different_event"
+    if relation_label == "same_thread":
+        return "same_thread"
     reason_text = " ".join([reason, " ".join(evidence), " ".join(new_information)]).lower()
     if assessment.boilerplate_detected or "boilerplate" in reason_text or "newsletter" in reason_text:
         return "same_account_boilerplate"
@@ -754,7 +789,7 @@ def infer_event_relation_type(
 
 
 def relation_cluster_eligible(relation_label: str, event_relation_type: str) -> bool:
-    return relation_label in {"duplicate", "near_duplicate", "related_with_new_info"} and event_relation_type == "same_event"
+    return policy_relation_cluster_eligible(relation_label, event_relation_type)
 
 
 def normalize_relation_label(
@@ -774,9 +809,16 @@ def normalize_relation_label(
     )
     disqualifiers = list(assessment.disqualifiers)
     if relation_label == "related_with_new_info" and event_type != "same_event":
-        relation_label = "different"
+        if event_type == "same_product_different_event":
+            relation_label = "same_product_different_event"
+        elif event_type in {"same_thread", "same_conference"}:
+            relation_label = "same_thread"
+        else:
+            relation_label = "different"
         if event_type not in disqualifiers:
             disqualifiers.append(event_type)
+    else:
+        relation_label = normalize_primary_relation(relation_label, event_type)
     eligible = relation_cluster_eligible(relation_label, event_type)
     return relation_label, event_type, eligible, disqualifiers
 

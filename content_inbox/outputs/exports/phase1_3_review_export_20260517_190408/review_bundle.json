@@ -1,0 +1,131 @@
+{
+  "blockers": [
+    {
+      "name": "event_signature_valid_rate",
+      "passed": false,
+      "reason": "signatures are concrete enough",
+      "threshold": ">= 0.7",
+      "value": 0.0
+    },
+    {
+      "name": "effective_multi_item_clusters",
+      "passed": false,
+      "reason": "dry-run produced useful same-event clusters",
+      "threshold": ">= 1",
+      "value": 0
+    },
+    {
+      "name": "small_scoped_real_write_rehearsal",
+      "passed": false,
+      "reason": "production readiness requires a scoped write rehearsal",
+      "threshold": true,
+      "value": false
+    }
+  ],
+  "clusters_file": "outputs/semantic_eval/api_xgo_ing_phase1_3_final_20260517_190408/clusters_final.jsonl",
+  "event_signature_report": "outputs/semantic_eval/api_xgo_ing_phase1_3_final_20260517_190408/event_signature_quality_report.md",
+  "final_run_dir": "outputs/semantic_eval/api_xgo_ing_phase1_3_final_20260517_190408",
+  "interesting_relations_file": "outputs/semantic_eval/api_xgo_ing_phase1_3_final_20260517_190408/relations_interesting.jsonl",
+  "larger_recall_run": "outputs/semantic_eval/api_xgo_ing_phase1_3_round_c_80_live_tuned",
+  "phase": "phase1_3_final",
+  "readiness": {
+    "blockers": [
+      {
+        "name": "event_signature_valid_rate",
+        "passed": false,
+        "reason": "signatures are concrete enough",
+        "threshold": ">= 0.7",
+        "value": 0.0
+      },
+      {
+        "name": "effective_multi_item_clusters",
+        "passed": false,
+        "reason": "dry-run produced useful same-event clusters",
+        "threshold": ">= 1",
+        "value": 0
+      },
+      {
+        "name": "small_scoped_real_write_rehearsal",
+        "passed": false,
+        "reason": "production readiness requires a scoped write rehearsal",
+        "threshold": true,
+        "value": false
+      }
+    ],
+    "gates": [
+      {
+        "name": "heuristic_fallback_rate",
+        "passed": true,
+        "reason": "heuristic emergency fallback must stay low",
+        "threshold": "< 0.1",
+        "value": 0.0
+      },
+      {
+        "name": "parse_failure_fallback_rate",
+        "passed": true,
+        "reason": "parse failures must not dominate cards",
+        "threshold": "< 0.03",
+        "value": 0.0
+      },
+      {
+        "name": "budget_skip_fallback_rate",
+        "passed": true,
+        "reason": "budget fallback must not starve candidate-bearing cards",
+        "threshold": "< 0.05",
+        "value": 0.0
+      },
+      {
+        "name": "skipped_must_run_candidates",
+        "passed": true,
+        "reason": "must-run candidates are protected",
+        "threshold": 0,
+        "value": 0
+      },
+      {
+        "name": "pair_relation_conflicts",
+        "passed": true,
+        "reason": "canonical pair verdicts cannot conflict",
+        "threshold": 0,
+        "value": 0
+      },
+      {
+        "name": "db_lock_errors",
+        "passed": true,
+        "reason": "no DB lock errors",
+        "threshold": 0,
+        "value": 0
+      },
+      {
+        "name": "event_signature_valid_rate",
+        "passed": false,
+        "reason": "signatures are concrete enough",
+        "threshold": ">= 0.7",
+        "value": 0.0
+      },
+      {
+        "name": "effective_multi_item_clusters",
+        "passed": false,
+        "reason": "dry-run produced useful same-event clusters",
+        "threshold": ">= 1",
+        "value": 0
+      },
+      {
+        "name": "suspect_multi_item_clusters",
+        "passed": true,
+        "reason": "no suspect multi-item clusters accepted",
+        "threshold": 0,
+        "value": 0
+      },
+      {
+        "name": "small_scoped_real_write_rehearsal",
+        "passed": false,
+        "reason": "production readiness requires a scoped write rehearsal",
+        "threshold": true,
+        "value": false
+      }
+    ],
+    "ready": false,
+    "verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE"
+  },
+  "verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE"
+}

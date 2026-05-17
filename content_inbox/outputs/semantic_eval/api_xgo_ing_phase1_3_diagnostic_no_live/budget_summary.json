@@ -1,0 +1,16 @@
+{
+  "by_priority": {
+    "low,low,low": 16,
+    "medium": 19,
+    "medium,low,low": 4,
+    "unknown": 27
+  },
+  "by_stage": {
+    "cluster_card_patch": 1,
+    "item_card": 26,
+    "item_cluster_relation": 19,
+    "item_relation": 20
+  },
+  "must_run_skip_count": 0,
+  "total": 66
+}

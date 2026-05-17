@@ -13,13 +13,17 @@ from typing import Any
 
 from app.config import BASE_DIR, settings
 from app.models import NormalizedContent, ScreeningResult
+from app.semantic.budget import BudgetPolicy, stage_token_cap
 from app.semantic.cards import generate_item_cards
 from app.semantic.candidates import assess_candidate, hotspot_key_candidates, infer_event_relation_type, relation_cluster_eligible, relation_pair_key
 from app.semantic.clusters import patch_cluster_card, process_item_clusters
 from app.semantic.evidence import build_review_bundle, export_evidence, write_json
 from app.semantic.live_smoke import live_enabled
+from app.semantic.readiness import assess_readiness
 from app.semantic.relations import process_item_relations, semantic_tokens
+from app.semantic.signatures import extract_event_signature
 from app.semantic.source_profiles import recompute_source_profiles
+from app.semantic.write_rehearsal import create_db_backup, validate_scoped_write_request, write_rehearsal_report
 from app.storage import InboxStore, row_to_item
 from app.utils import utc_now
 
@@ -48,6 +52,7 @@ def run_evaluation(
     evidence_dir: str | None = None,
     phase_label: str = "semantic_eval",
     backup_path: str | None = None,
+    confirm_scoped_semantic_write: str | None = None,
 ) -> dict[str, Any]:
     started = datetime.now(timezone.utc)
     t0 = time.monotonic()
@@ -60,6 +65,16 @@ def run_evaluation(
     source_store = InboxStore(source_db_path)
     write_real = bool(db_path and write_real_db and not dry_run)
     warnings: list[str] = []
+    ok_write, write_reason = validate_scoped_write_request(
+        write_real_db=bool(write_real_db),
+        dry_run=dry_run,
+        source_url_prefix=source_url_prefix,
+        confirmation=confirm_scoped_semantic_write,
+    )
+    if not ok_write:
+        return {"ok": False, "error": write_reason, "metadata": {"write_real_db": write_real_db, "dry_run": dry_run}}
+    if write_real and not backup_path:
+        backup_path = str(create_db_backup(source_db_path))
     if live:
         live_ok, live_reason = live_enabled()
         if not live_ok:
@@ -88,7 +103,8 @@ def run_evaluation(
         )
 
     max_items = len(sampled_items)
-    stage_budgets = stage_budget_split(token_budget, stage_budget_profile)
+    budget_policy = BudgetPolicy(total_budget=token_budget, stage_profile=stage_budget_profile, enforce_hard_cap=False)
+    stage_budgets = budget_policy.stage_budgets
     metadata: dict[str, Any] = {
         "run_id": run_id,
         "started_at": started.isoformat(),
@@ -116,6 +132,8 @@ def run_evaluation(
         "vector_index": False,
         "git_commit": git_commit_hash(),
         "warnings": warnings,
+        "backup_path": backup_path,
+        "write_confirmation": confirm_scoped_semantic_write,
     }
 
     steps: dict[str, Any] = {}
@@ -130,7 +148,7 @@ def run_evaluation(
             live=live,
             model=model,
             max_calls=max_calls,
-            token_budget=stage_cap(target_store, stage_budgets, "item_card"),
+            token_budget=stage_token_cap(target_store, budget_policy, "item_card"),
             global_call_limit=True,
             concurrency=concurrency,
         )
@@ -142,7 +160,7 @@ def run_evaluation(
             max_candidates=max_candidates,
             max_calls=max_calls,
             model=model,
-            token_budget=stage_cap(target_store, stage_budgets, "item_relation"),
+            token_budget=stage_token_cap(target_store, budget_policy, "item_relation"),
             global_call_limit=True,
             concurrency=concurrency,
         )
@@ -155,7 +173,7 @@ def run_evaluation(
             max_calls=max_calls,
             model=model,
             include_archived=include_archived,
-            token_budget=stage_cap(target_store, stage_budgets, "item_cluster_relation"),
+            token_budget=stage_token_cap(target_store, budget_policy, "item_cluster_relation"),
             global_call_limit=True,
             patch_cards=False,
         )
@@ -170,7 +188,7 @@ def run_evaluation(
                     live=live,
                     model=strong_model or model,
                     max_calls=max_calls,
-                    token_budget=stage_cap(target_store, stage_budgets, "cluster_card_patch"),
+                    token_budget=stage_token_cap(target_store, budget_policy, "cluster_card_patch"),
                     global_call_limit=True,
                 )
             )
@@ -205,6 +223,15 @@ def run_evaluation(
     summary_path = run_dir / "semantic_quality_summary.json"
     report_path.write_text(report, encoding="utf-8")
     summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+    real_write_rehearsal = None
+    if write_real and backup_path:
+        real_write_rehearsal = write_rehearsal_report(
+            run_dir=run_dir,
+            db_path=source_db_path,
+            backup_path=Path(backup_path),
+            summary=summary,
+            command="semantic evaluate --write-real-db --confirm-scoped-semantic-write api.xgo.ing",
+        )
     return {
         "ok": True,
         "run_id": run_id,
@@ -213,6 +240,7 @@ def run_evaluation(
         "metadata": metadata,
         "summary": compact_console_summary(summary),
         "evidence": evidence_result,
+        "real_write_rehearsal": real_write_rehearsal,
     }
 
 
@@ -567,11 +595,12 @@ def build_summary(
         llm_logs = conn.execute("SELECT * FROM llm_call_logs").fetchall()
 
     enriched_metadata = {**metadata, **llm_totals(llm_logs)}
-    return {
+    summary = {
         "metadata": enriched_metadata,
         "source_scope": source_scope,
         "input_sample": input_sample_summary(sampled_items),
         "item_cards": item_card_summary(item_cards, llm_logs),
+        "event_signatures": event_signature_summary(sampled_items),
         "item_relations": item_relation_summary(item_relations, llm_logs, store),
         "item_clusters": cluster_relation_summary(cluster_items, clusters, cluster_cards),
         "source_profiles": source_profile_summary(source_profiles, reviews),
@@ -580,10 +609,11 @@ def build_summary(
         "concurrency": concurrency_summary(llm_logs, enriched_metadata),
         "errors_fallbacks": error_summary(llm_logs, reviews, steps, metadata),
         "prompt_iteration_notes": prompt_iteration_notes(metadata),
-        "readiness_assessment": readiness_assessment(item_relations, cluster_items, llm_logs, metadata),
         "steps": steps,
         "recommendations": recommendations(item_relations, cluster_items, enriched_metadata),
     }
+    summary["readiness_assessment"] = assess_readiness(summary)
+    return summary
 
 
 def llm_totals(rows: list[Any]) -> dict[str, Any]:
@@ -624,6 +654,9 @@ def item_card_summary(rows: list[Any], llm_logs: list[Any]) -> dict[str, Any]:
     confidence = []
     samples = []
     heuristic_count = 0
+    deterministic_minimal_count = 0
+    parse_error_fallback_count = 0
+    budget_skip_fallback_count = 0
     for row in rows:
         try:
             warnings.update(json.loads(row["warnings_json"] or "[]"))
@@ -638,8 +671,20 @@ def item_card_summary(rows: list[Any], llm_logs: list[Any]) -> dict[str, Any]:
             pass
         tiers[tier] += 1
         tier_confidence.setdefault(tier, []).append(float(row["confidence"] or 0.0))
-        if (row["model"] or "") == "heuristic":
+        model = row["model"] or ""
+        if model == "heuristic":
             heuristic_count += 1
+        if model == "deterministic_minimal":
+            deterministic_minimal_count += 1
+        try:
+            hints = json.loads(row["quality_hints_json"] or "{}") or {}
+            fallback_type = hints.get("fallback_type")
+            if fallback_type == "fallback_due_to_llm_parse_error":
+                parse_error_fallback_count += 1
+            elif fallback_type == "fallback_due_to_budget_skip":
+                budget_skip_fallback_count += 1
+        except Exception:
+            pass
         if len(samples) < 10:
             samples.append({"item_id": row["item_id"], "title": row["canonical_title"], "role": row["content_role"], "summary": row["short_summary"]})
     return {
@@ -648,6 +693,9 @@ def item_card_summary(rows: list[Any], llm_logs: list[Any]) -> dict[str, Any]:
         "item_cards_reused": 0,
         "item_cards_failed": sum(1 for row in llm_logs if row["task_type"] == "item_card" and row["status"] == "failed"),
         "heuristic_card_fallback_count": heuristic_count,
+        "deterministic_minimal_card_count": deterministic_minimal_count,
+        "parse_error_fallback_count": parse_error_fallback_count,
+        "budget_skip_fallback_count": budget_skip_fallback_count,
         "avg_confidence": round(sum(confidence) / max(len(confidence), 1), 3),
         "content_role_distribution": dict(roles),
         "card_tier_distribution": dict(tiers),
@@ -660,6 +708,25 @@ def item_card_summary(rows: list[Any], llm_logs: list[Any]) -> dict[str, Any]:
         "entity_count_distribution": dict(Counter(entity_counts)),
         "warnings_distribution": dict(warnings),
         "samples": samples,
+    }
+
+
+def event_signature_summary(items: list[dict[str, Any]]) -> dict[str, Any]:
+    signatures = [extract_event_signature(item).model_dump() for item in items]
+    valid = [row for row in signatures if row.get("is_concrete")]
+    invalid_reasons = Counter(reason for row in signatures for reason in row.get("invalid_reasons", []))
+    by_key = Counter(row.get("signature_key") for row in valid if row.get("signature_key"))
+    scores = [float(row.get("concreteness_score") or 0.0) for row in signatures]
+    return {
+        "total_items": len(items),
+        "accepted_signature_count": len(valid),
+        "rejected_signature_count": len(items) - len(valid),
+        "valid_signature_rate": round(len(valid) / max(len(items), 1), 4),
+        "invalid_reason_distribution": dict(invalid_reasons),
+        "top_signatures": by_key.most_common(20),
+        "concreteness_score_avg": round(sum(scores) / max(len(scores), 1), 3),
+        "accepted_examples": valid[:20],
+        "rejected_examples": [row for row in signatures if not row.get("is_concrete")][:20],
     }
 
 
@@ -735,8 +802,11 @@ def item_relation_summary(rows: list[Any], llm_logs: list[Any], store: InboxStor
         "event_relation_type_distribution": dict(event_types),
         "cluster_eligible_count": cluster_eligible_count,
         "candidate_priority_distribution": candidate_stats.get("candidate_priority_distribution", {}),
+        "candidate_lane_distribution": candidate_stats.get("candidate_lane_distribution", {}),
         "candidates_suppressed_without_llm": candidate_stats.get("candidates_suppressed_without_llm", 0),
         "high_priority_skips": candidate_stats.get("high_priority_skips", 0),
+        "must_run_skips": candidate_stats.get("must_run_skips", 0),
+        "pair_conflict_count": relation_conflict_count(store),
         "llm_item_relation_calls": sum(1 for row in llm_logs if row["task_type"] == "item_relation" and row["status"] in {"ok", "failed"}),
         "duplicate": rels.get("duplicate", 0),
         "near_duplicate": rels.get("near_duplicate", 0),
@@ -789,8 +859,16 @@ def candidate_event_summary(store: InboxStore) -> dict[str, Any]:
         except Exception:
             return {}
     priority = Counter(row["candidate_priority"] or "unknown" for row in rows)
+    lanes = Counter()
+    for row in rows:
+        try:
+            metadata = json.loads(row["metadata_json"] or "{}")
+            lanes[metadata.get("lane") or metadata.get("candidate_lane") or "unknown"] += 1
+        except Exception:
+            lanes["unknown"] += 1
     return {
         "candidate_priority_distribution": dict(priority),
+        "candidate_lane_distribution": dict(lanes),
         "candidates_suppressed_without_llm": sum(1 for row in rows if row["status"] == "suppressed" or row["candidate_priority"] == "suppress"),
         "duplicate_direction_suppressed_count": sum(1 for row in rows if row["status"] == "duplicate_direction_suppressed"),
         "high_priority_skips": sum(
@@ -799,7 +877,22 @@ def candidate_event_summary(store: InboxStore) -> dict[str, Any]:
             if row["status"] == "suppressed"
             and row["candidate_priority"] in {"must_run", "high"}
         ),
+        "must_run_skips": sum(
+            1
+            for row in rows
+            if row["status"] == "suppressed"
+            and row["candidate_priority"] == "must_run"
+        ),
     }
+
+
+def relation_conflict_count(store: InboxStore) -> int:
+    with store.connect() as conn:
+        try:
+            row = conn.execute("SELECT COUNT(*) AS n FROM semantic_relation_conflicts").fetchone()
+            return int(row["n"] or 0)
+        except Exception:
+            return 0
 
 
 def cluster_relation_summary(cluster_items: list[Any], clusters: list[Any], cluster_cards: list[Any]) -> dict[str, Any]:
@@ -816,6 +909,17 @@ def cluster_relation_summary(cluster_items: list[Any], clusters: list[Any], clus
     attached_existing = max(0, len(cluster_items) - created_clusters)
     confidences = [float(row["confidence"] or 0.0) for row in cluster_items]
     multi_item_clusters = [cluster for cluster in clusters if int(cluster["item_count"] or 0) > 1]
+    cluster_member_same_event: dict[str, list[bool]] = {}
+    for row in cluster_items:
+        cluster_member_same_event.setdefault(row["cluster_id"], []).append(bool(row["same_event"]))
+    effective_multi = [
+        cluster for cluster in multi_item_clusters
+        if any(cluster_member_same_event.get(cluster["cluster_id"], []))
+    ]
+    suspect_multi = [
+        cluster for cluster in multi_item_clusters
+        if not any(cluster_member_same_event.get(cluster["cluster_id"], []))
+    ]
     samples = []
     cards_by_cluster = {row["cluster_id"]: row for row in cluster_cards}
     for cluster in clusters[:20]:
@@ -841,6 +945,10 @@ def cluster_relation_summary(cluster_items: list[Any], clusters: list[Any], clus
         "should_update_cluster_card_count": sum(1 for row in cluster_items if row["should_update_cluster_card"]),
         "should_notify_count": sum(1 for row in cluster_items if row["should_notify"]),
         "multi_item_cluster_count": len(multi_item_clusters),
+        "reported_multi_item_cluster_count": len(multi_item_clusters),
+        "effective_multi_item_cluster_count": len(effective_multi),
+        "suspect_multi_item_cluster_count": len(suspect_multi),
+        "reviewed_multi_item_cluster_count": len(effective_multi) + len(suspect_multi),
         "avg_items_per_cluster": round(
             sum(int(cluster["item_count"] or 0) for cluster in clusters) / max(len(clusters), 1),
             3,
@@ -1234,6 +1342,7 @@ def json_block(value: Any) -> str:
 
 
 def compact_console_summary(summary: dict[str, Any]) -> dict[str, Any]:
+    readiness = summary.get("readiness_assessment") or {}
     return {
         "items_sampled": summary["input_sample"]["items_sampled"],
         "item_cards": summary["item_cards"]["item_cards_generated_or_reused"],
@@ -1243,7 +1352,8 @@ def compact_console_summary(summary: dict[str, Any]) -> dict[str, Any]:
         "actual_calls": summary["metadata"]["actual_calls"],
         "actual_tokens": summary["metadata"]["actual_tokens"],
         "source_scope": summary["source_scope"]["matched_source_count"],
-        "readiness": summary["readiness_assessment"]["write_real_db_recommended_now"],
+        "readiness": readiness.get("ready", readiness.get("write_real_db_recommended_now", False)),
+        "readiness_verdict": readiness.get("verdict"),
         "warnings": summary["metadata"]["warnings"],
     }
 

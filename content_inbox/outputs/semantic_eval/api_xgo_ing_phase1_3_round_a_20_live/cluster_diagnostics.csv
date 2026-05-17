@@ -1,0 +1,21 @@
+cluster_candidate_id,final_status,final_member_count,diagnostic_reason
+cluster_candidate_1,single_item,1,created initial semantic cluster
+cluster_candidate_review_3,rejected,0,"The new item is about Anthropic enterprise adoption rates, while the cluster is about a translation learning tool."
+cluster_candidate_review_4,rejected,0,"New item is a translation of a blog post about Vercel AI Gateway, completely unrelated to the cluster's topic about translation learning tools."
+cluster_candidate_review_5,rejected,0,"The new item is a generic statement about practice, unrelated to the cluster about translation learning tools."
+cluster_candidate_review_6,rejected,0,No relation between translation learning tool cluster and general AI discussion tweet.
+cluster_candidate_review_7,rejected,0,"New item is a general quote about beliefs, unrelated to the cluster about translation learning tools."
+cluster_candidate_review_8,rejected,0,"The new item is a generic tweet about technology metaphors, unrelated to the cluster about a translation learning tool."
+cluster_candidate_review_9,rejected,0,"The cluster is about a translation learning tool post, while the new item is about Substack revolution, no connection."
+cluster_candidate_review_10,rejected,0,Cluster is a generic statement about translation learning; new item is a bare link with no concrete event relation.
+cluster_candidate_review_11,rejected,0,"New item is about NVIDIA's Stelline Developer Kit for radio astronomy, while cluster is about a translation learning tool; no shared event or topic."
+cluster_candidate_review_12,rejected,0,"The new item discusses human decision-making in real environments, unrelated to translation learning tools."
+cluster_candidate_review_13,rejected,0,"New item discusses CUDA and Jensen Huang, cluster is about translation learning tool."
+cluster_candidate_review_14,rejected,0,New item about Notion developer platform is unrelated to the cluster about translation learning tools.
+cluster_candidate_review_15,rejected,0,"New item is about Shanghai Telecom's token phone plan, cluster is about translation learning tools."
+cluster_candidate_review_16,rejected,0,"The new item discusses a general formula for intelligence, while the cluster is about a specific translation learning tool post."
+cluster_candidate_review_17,rejected,0,"The new item discusses US data center opposition allegations, while the cluster is about a translation learning tool in Chinese; no common event or topic."
+cluster_candidate_review_18,rejected,0,"The new item discusses safety of data centers compared to nuclear power, while the cluster is about a translation learning tool."
+cluster_candidate_review_19,rejected,0,"New item promotes GenAI Summit SF 2026, while cluster is about translation learning tools; no relation."
+cluster_candidate_review_20,rejected,0,"New item is about QVeris CLI financial analysis integration, cluster is about translation learning tool; no event overlap."
+cluster_candidate_review_21,rejected,0,"The new item is about Vercel AI model usage report analysis, while the cluster is about translation learning tools; they are different topics and events."

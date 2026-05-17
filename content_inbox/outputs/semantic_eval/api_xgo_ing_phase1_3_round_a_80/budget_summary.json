@@ -1,0 +1,20 @@
+{
+  "by_priority": {
+    "high": 2,
+    "low,low,low,low,low": 53,
+    "medium": 74,
+    "medium,low,low,low,low": 19,
+    "medium,medium,low,low,low": 2,
+    "medium,medium,medium,low,low": 1,
+    "medium,medium,medium,medium,low": 3,
+    "unknown": 101
+  },
+  "by_stage": {
+    "cluster_card_patch": 9,
+    "item_card": 92,
+    "item_cluster_relation": 74,
+    "item_relation": 80
+  },
+  "must_run_skip_count": 0,
+  "total": 255
+}

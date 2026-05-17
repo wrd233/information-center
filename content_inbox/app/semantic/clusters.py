@@ -9,6 +9,7 @@ from app.semantic import db
 from app.semantic.cards import generate_item_cards
 from app.semantic.llm_client import SemanticLLMClient
 from app.semantic.candidates import assess_candidate
+from app.semantic.cluster_policy import cluster_decision_attach_eligible as policy_cluster_decision_attach_eligible
 from app.semantic.relations import card_public, hours_apart, insert_review, normalized_entity_terms, semantic_tokens
 from app.semantic.schemas import (
     CLUSTER_CARD_PROMPT_VERSION,
@@ -169,6 +170,49 @@ def process_item_clusters(
             rebuild_cluster_card(store, cluster_id, live=False)
             stats["created_clusters"] += 1
             continue
+        strong_cluster_candidates = [cluster for cluster in candidates if same_event_cluster_candidate(store, item, item_card, cluster)]
+        if not strong_cluster_candidates:
+            stats["candidate_clusters"] += len(candidates)
+            insert_review(
+                store,
+                "same_topic",
+                "item",
+                item_id,
+                {
+                    "reason": "candidate clusters lacked same-event seed evidence",
+                    "attach_eligible": False,
+                    "attach_disqualifiers": ["weak_cluster_seed_evidence"],
+                    "candidate_cluster_ids": [cluster["cluster_id"] for cluster in candidates],
+                },
+            )
+            stats["review"] += 1
+            cluster_id = create_semantic_cluster(store, item, item_card, created_by="rule")
+            insert_cluster_item(
+                store,
+                cluster_id,
+                item_id,
+                primary_relation="source_material" if item_card["content_role"] == "source_material" else "new_info",
+                secondary_roles=[],
+                same_event=True,
+                same_topic=True,
+                follow_up_event=False,
+                confidence=0.6,
+                incremental_value=3,
+                report_value=3,
+                should_update_cluster_card=True,
+                should_notify=False,
+                new_facts=[],
+                new_angles=[],
+                reason="created initial semantic cluster after weak candidate rejection",
+                evidence=["weak_cluster_seed_evidence"],
+                decision_source="rule",
+                llm_call_id=None,
+                prompt_version=None,
+                model="rule",
+            )
+            rebuild_cluster_card(store, cluster_id, live=False)
+            stats["created_clusters"] += 1
+            continue
         stats["candidate_clusters"] += len(candidates)
         input_data = {
             "new_item_card": card_public(item_card),
@@ -185,7 +229,7 @@ def process_item_clusters(
             source_id=item.get("source_id") or item.get("feed_url") or item.get("source_name"),
             request_metadata={
                 "prompt_variant": "full",
-                "candidate_priority": "high" if any(same_event_cluster_candidate(store, item, item_card, cluster) for cluster in candidates) else "medium",
+                "candidate_priority": "high",
             },
         )
         stats["llm_calls"] = client.calls
@@ -269,21 +313,7 @@ def process_item_clusters(
 
 
 def cluster_decision_attach_eligible(decision: Any) -> bool:
-    relation_type = getattr(decision, "cluster_relation_type", "") or ""
-    disqualifying_types = {"same_topic_only", "same_product_different_event", "same_thread", "same_conference", "entity_overlap_only", "different", "uncertain"}
-    if relation_type in disqualifying_types:
-        return False
-    if not bool(getattr(decision, "same_event", False)) and getattr(decision, "primary_relation", "") != "source_material":
-        return False
-    if getattr(decision, "primary_relation", "") == "source_material" and not bool(getattr(decision, "same_event", False)):
-        return False
-    if getattr(decision, "confidence", 0.0) < 0.75:
-        return False
-    if getattr(decision, "attach_eligible", False) and bool(getattr(decision, "same_event", False)):
-        return True
-    return decision.primary_relation in {"source_material", "repeat", "new_info", "analysis", "experience", "context"} and (
-        bool(decision.same_event)
-    )
+    return policy_cluster_decision_attach_eligible(decision)
 
 
 def same_event_cluster_candidate(store: InboxStore, item: dict[str, Any], item_card: dict[str, Any], cluster: dict[str, Any]) -> bool:
@@ -309,6 +339,7 @@ def same_event_cluster_candidate(store: InboxStore, item: dict[str, Any], item_c
         and not assessment.suppressed
         and (
             assessment.event_signature_match
+            or (assessment.same_actor and assessment.same_product and assessment.same_action and (assessment.time_window_hours is None or assessment.time_window_hours <= 72))
             or any("same_actor_product_action_72h" in evidence for evidence in assessment.same_event_evidence)
             or any(evidence == "high_title_similarity" for evidence in assessment.same_event_evidence)
         )

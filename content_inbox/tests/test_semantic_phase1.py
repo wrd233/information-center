@@ -10,7 +10,9 @@ import pytest
 
 from app.models import NormalizedContent, ScreeningResult
 from app.semantic.cards import generate_item_cards
+from app.semantic.card_policy import fallback_classification
 from app.semantic.candidates import assess_candidate, hotspot_key_candidates, normalize_relation_label, relation_pair_key
+from app.semantic.cluster_policy import cluster_decision_attach_eligible
 from app.semantic.clusters import process_item_clusters, show_cluster, update_cluster_statuses
 from app.semantic.clusters import candidate_clusters
 from app.semantic.evaluate import run_evaluation
@@ -19,6 +21,7 @@ from app.semantic.live_smoke import run_live_smoke
 from app.semantic.relations import process_item_relations
 from app.semantic.review import decide_review, list_reviews
 from app.semantic.schemas import cluster_relation_action, item_relation_should_fold
+from app.semantic.signatures import extract_event_signature
 from app.semantic.source_profiles import get_profile, recompute_source_profiles
 from app.storage import InboxStore
 
@@ -62,9 +65,64 @@ def test_semantic_migration_idempotent(tmp_path: Path) -> None:
 def test_relation_action_mapping() -> None:
     assert item_relation_should_fold("duplicate") is True
     assert item_relation_should_fold("related_with_new_info") is False
+    assert item_relation_should_fold("same_product_different_event") is False
+    assert item_relation_should_fold("same_thread") is False
     assert cluster_relation_action("source_material") == "attach_update_card"
     assert cluster_relation_action("new_info") == "attach_update_card"
     assert cluster_relation_action("same_topic") == "do_not_attach"
+
+
+def test_phase1_3_event_signature_validation() -> None:
+    good = extract_event_signature(
+        {
+            "item_id": "a",
+            "title": "Firecrawl launches PHP SDK for Laravel",
+            "summary": "The Firecrawl PHP SDK is live for PHP and Laravel projects.",
+            "published_at": "2026-05-05T16:00:00+00:00",
+            "source_id": "socialmedia-firecrawl-firecrawl-dev",
+        }
+    )
+    assert good.is_concrete is True
+    assert good.actor.lower() == "firecrawl"
+    assert "php" in good.product_or_model.lower() or "laravel" in good.product_or_model.lower()
+    assert good.signature_key
+
+    generic = extract_event_signature(
+        {
+            "item_id": "b",
+            "title": "agent api research update",
+            "summary": "AI agent API research model paper update powered by xgo.ing",
+            "published_at": "2026-05-05T16:00:00+00:00",
+        }
+    )
+    assert generic.is_concrete is False
+    assert generic.invalid_reasons
+
+    bad_actor = extract_event_signature(
+        {
+            "item_id": "c",
+            "title": "v2.10 feature update is available",
+            "summary": "v2.10 update at 50 powered by xgo.ing",
+            "published_at": "2026-05-05T16:00:00+00:00",
+        }
+    )
+    assert bad_actor.is_concrete is False
+
+    url_fragment = extract_event_signature(
+        {
+            "item_id": "d",
+            "title": "paper: https://t.co/fkR2wVD129",
+            "summary": "May 14 security paper update powered by xgo.ing",
+            "published_at": "2026-05-14T16:00:00+00:00",
+        }
+    )
+    assert url_fragment.is_concrete is False
+
+
+def test_phase1_3_fallback_classification() -> None:
+    assert fallback_classification(source="deterministic_minimal") == "fallback_deterministic_minimal"
+    assert fallback_classification(source="heuristic", reason="JSON validation failed") == "fallback_due_to_llm_parse_error"
+    assert fallback_classification(source="heuristic", reason="live token budget reached") == "fallback_due_to_budget_skip"
 
 
 def test_item_card_generation_heuristic_and_llm_log_skip(tmp_path: Path) -> None:
@@ -367,6 +425,32 @@ def test_evaluate_source_scope_filter_and_report_sections(tmp_path: Path) -> Non
     assert "## 14. Readiness Assessment" in report
 
 
+def test_phase1_3_scoped_write_requires_confirmation(tmp_path: Path) -> None:
+    source_store = make_store(tmp_path / "source-write-refusal")
+    seed_item(source_store, "XGO scoped write item", source_id="xgo-ai", url="https://api.xgo.ing/rss/ai/2")
+    result = run_evaluation(
+        db_path=str(source_store.database_path),
+        output=str(tmp_path / "eval-write-refusal"),
+        limit=1,
+        max_calls=0,
+        max_candidates=1,
+        batch_size=1,
+        live=False,
+        dry_run=False,
+        write_real_db=True,
+        model=None,
+        strong_model=None,
+        token_budget=0,
+        include_archived=False,
+        concurrency=1,
+        source_filter=None,
+        source_url_prefix="api.xgo.ing",
+        sample_mode="source_scope_full",
+    )
+    assert result["ok"] is False
+    assert "confirm-scoped-semantic-write" in result["error"]
+
+
 def test_phase1_2d_evidence_persistence_exports_auditable_files(tmp_path: Path) -> None:
     source_store = make_store(tmp_path / "evidence-source")
     first = seed_item(source_store, "OpenAI launches Codex agent", source_id="xgo-openai", url="https://api.xgo.ing/a")
@@ -492,6 +576,7 @@ def test_phase1_2e_candidate_suppression_and_priority() -> None:
     dup_b = {"item_id": "b", "title": "Qwen FlashQLA ships", "url": "https://example.com/qwen"}
     duplicate = assess_candidate(dup_a, dup_b)
     assert duplicate.candidate_priority == "must_run"
+    assert duplicate.lane == "deterministic"
 
 
 def test_phase1_2f_event_signature_pair_beats_generic_same_product() -> None:
@@ -509,6 +594,7 @@ def test_phase1_2f_event_signature_pair_beats_generic_same_product() -> None:
     }
     strong = assess_candidate(launch_a, launch_b)
     assert strong.candidate_priority in {"must_run", "high"}
+    assert strong.lane in {"event_signature", "same_actor_product", "near_title"}
     assert strong.event_signature_match is True or "same_actor_product_action_72h" in strong.same_event_evidence
 
     product_a = {
@@ -526,6 +612,34 @@ def test_phase1_2f_event_signature_pair_beats_generic_same_product() -> None:
     weak = assess_candidate(product_a, product_b)
     assert weak.candidate_priority in {"medium", "low", "suppress"}
     assert weak.candidate_priority != "must_run"
+
+
+def test_phase1_3_relation_policy_same_product_and_thread() -> None:
+    assessment = assess_candidate(
+        {"item_id": "a", "title": "Manus Recommended Connectors launches", "summary": "Manus ships recommended connectors."},
+        {"item_id": "b", "title": "Manus Projects memory learns from tasks", "summary": "Manus projects can learn from completed tasks."},
+    )
+    label, event_type, eligible, _ = normalize_relation_label(
+        "related_with_new_info",
+        assessment,
+        reason="Same product but different feature update.",
+        evidence=["same product"],
+        new_information=["different feature"],
+    )
+    assert label == "same_product_different_event"
+    assert event_type == "same_product_different_event"
+    assert eligible is False
+
+
+def test_phase1_3_cluster_attach_policy_rejects_thread() -> None:
+    class Decision:
+        primary_relation = "new_info"
+        cluster_relation_type = "same_thread"
+        same_event = True
+        confidence = 0.95
+        attach_eligible = True
+
+    assert cluster_decision_attach_eligible(Decision()) is False
 
 
 def test_phase1_2e_evidence_exports_new_candidate_files(tmp_path: Path) -> None:

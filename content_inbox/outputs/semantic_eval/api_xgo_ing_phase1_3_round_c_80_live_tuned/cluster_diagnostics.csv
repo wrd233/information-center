@@ -1,0 +1,156 @@
+cluster_candidate_id,final_status,final_member_count,diagnostic_reason
+cluster_candidate_1,single_item,1,created initial semantic cluster
+cluster_candidate_2,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_3,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_4,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_5,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_6,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_7,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_8,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_9,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_10,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_11,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_12,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_13,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_14,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_15,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_16,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_17,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_18,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_19,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_20,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_21,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_22,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_23,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_24,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_25,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_26,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_27,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_28,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_29,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_30,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_31,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_32,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_33,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_34,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_35,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_36,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_37,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_38,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_39,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_40,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_41,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_42,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_43,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_44,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_45,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_46,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_47,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_48,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_49,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_50,single_item,1,created initial semantic cluster
+cluster_candidate_51,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_52,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_53,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_54,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_55,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_56,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_57,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_58,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_59,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_60,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_61,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_62,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_63,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_64,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_65,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_66,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_67,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_68,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_69,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_70,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_71,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_72,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_73,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_74,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_75,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_76,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_77,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_78,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_review_21,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_22,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_23,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_24,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_25,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_26,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_27,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_28,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_29,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_30,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_31,rejected,0,"New item is about NVIDIA (nvda.ws link) while clusters are about unrelated topics (Android, papers, commentary)."
+cluster_candidate_review_32,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_33,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_34,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_35,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_36,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_37,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_38,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_39,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_40,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_41,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_42,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_43,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_44,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_45,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_46,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_47,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_48,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_49,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_50,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_51,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_52,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_53,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_54,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_55,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_56,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_57,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_58,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_59,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_60,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_61,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_62,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_63,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_64,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_65,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_66,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_67,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_68,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_69,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_70,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_71,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_72,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_73,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_74,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_75,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_76,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_77,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_78,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_79,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_80,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_81,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_82,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_83,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_84,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_85,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_86,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_87,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_88,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_89,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_90,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_91,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_92,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_93,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_94,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_95,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_96,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_97,rejected,0,candidate clusters lacked same-event seed evidence

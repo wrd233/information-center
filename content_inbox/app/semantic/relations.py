@@ -17,7 +17,9 @@ from app.semantic.candidates import (
     relation_cluster_eligible,
     relation_pair_key,
 )
+from app.semantic.config import PRIORITY_ORDER
 from app.semantic.llm_client import SemanticLLMClient
+from app.semantic.relation_policy import default_reason_code
 from app.semantic.schemas import (
     ITEM_RELATION_PROMPT_VERSION,
     SCHEMA_VERSION,
@@ -104,6 +106,25 @@ def ensure_candidate_event_table(store: InboxStore) -> None:
         )
 
 
+def ensure_relation_conflict_table(store: InboxStore) -> None:
+    with store.connect() as conn:
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS semantic_relation_conflicts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                relation_pair_key TEXT NOT NULL,
+                existing_relation_id INTEGER,
+                existing_primary_relation TEXT,
+                attempted_primary_relation TEXT,
+                item_a_id TEXT,
+                item_b_id TEXT,
+                reason TEXT,
+                created_at TEXT NOT NULL
+            )
+            """
+        )
+
+
 def insert_candidate_event(
     store: InboxStore,
     *,
@@ -153,7 +174,6 @@ def find_relation_candidates(store: InboxStore, item_id: str, max_candidates: in
     )
     new_entities = normalized_entity_terms(json.loads(new_card["entities_json"] or "[]"))
     scored: list[tuple[float, int, str, dict[str, Any]]] = []
-    priority_order = {"must_run": 5, "high": 4, "medium": 3, "low": 2, "suppress": 1}
     for card in cards:
         candidate_item = db.get_item(store, card["item_id"]) or {}
         terms = semantic_tokens(f"{card['canonical_title']} {card.get('event_hint') or ''} {card.get('short_summary') or ''}")
@@ -179,7 +199,7 @@ def find_relation_candidates(store: InboxStore, item_id: str, max_candidates: in
             enriched["_candidate_item"] = candidate_item
             enriched["_candidate_assessment"] = assessment
             enriched["_relation_pair_key"] = relation_pair_key(new_item, candidate_item)
-            scored.append((score, priority_order.get(assessment.candidate_priority, 0), card["created_at"], enriched))
+            scored.append((score, PRIORITY_ORDER.get(assessment.candidate_priority, 0), card["created_at"], enriched))
     scored.sort(key=lambda pair: (pair[1], pair[0], pair[2]), reverse=True)
     if include_suppressed:
         return [card for _score, _priority, _created, card in scored[: max(max_candidates * 3, max_candidates)]]
@@ -248,6 +268,7 @@ def process_item_relations(
                 status="suppressed" if assessment.suppressed else "generated",
                 metadata={
                     "candidate_generation_reason": "; ".join(assessment.same_event_evidence or assessment.disqualifiers),
+                    "lane": assessment.lane,
                     "item_a_title": item.get("title"),
                     "item_b_title": candidate_item.get("title"),
                     **assessment.model_dump(),
@@ -255,6 +276,20 @@ def process_item_relations(
             )
         candidates = [candidate for candidate in candidates_all if not candidate["_candidate_assessment"].suppressed][:max_candidates]
         if not candidates:
+            local["no_candidate_items"] += 1
+            return local
+        if all(candidate["_candidate_assessment"].candidate_priority == "low" for candidate in candidates):
+            for candidate_card in candidates:
+                insert_candidate_event(
+                    store,
+                    stage="item_relation",
+                    item_a_id=item_id,
+                    item_b_id=candidate_card["item_id"],
+                    pair_key=candidate_card.get("_relation_pair_key"),
+                    assessment=candidate_card.get("_candidate_assessment"),
+                    status="skipped_low_priority_relation_set",
+                    metadata={"reason": "all candidates were low priority; skipped LLM relation call"},
+                )
             local["no_candidate_items"] += 1
             return local
         local["candidate_pairs"] += len(candidates)
@@ -291,7 +326,7 @@ def process_item_relations(
                     canonical_item_id=candidate_card["item_id"],
                     new_information=[],
                     reason="deterministic duplicate rule matched",
-                    evidence=roles,
+                    evidence=roles + ["reason_code=deterministic_duplicate"],
                     decision_source="rule",
                     llm_call_id=None,
                     prompt_version=None,
@@ -331,6 +366,7 @@ def process_item_relations(
                 "prompt_variant": "full" if any(c["_candidate_assessment"].candidate_priority in {"must_run", "high"} for c in candidates) else "short",
                 "candidate_priorities": [c["_candidate_assessment"].candidate_priority for c in candidates],
                 "candidate_scores": [c["_candidate_assessment"].candidate_score for c in candidates],
+                "candidate_lanes": [c["_candidate_assessment"].lane for c in candidates],
                 "candidate_event_signature_keys": [c["_candidate_assessment"].event_signature_key for c in candidates],
                 "candidate_positive_features": [c["_candidate_assessment"].positive_features for c in candidates],
                 "candidate_negative_features": [c["_candidate_assessment"].negative_features for c in candidates],
@@ -364,7 +400,10 @@ def process_item_relations(
                 canonical_item_id=relation.canonical_item_id,
                 new_information=relation.new_information,
                 reason=relation.reason,
-                evidence=relation.evidence + [f"event_relation_type={event_relation_type}", f"cluster_eligible={cluster_eligible}"] + [f"disqualifier={d}" for d in disqualifiers],
+                evidence=relation.evidence
+                + [f"event_relation_type={event_relation_type}", f"cluster_eligible={cluster_eligible}"]
+                + [f"reason_code={relation.reason_code or default_reason_code(primary_relation, event_relation_type, generic_only=assessment.generic_only)}"]
+                + [f"disqualifier={d}" for d in disqualifiers],
                 decision_source="llm",
                 llm_call_id=call_id,
                 prompt_version=ITEM_RELATION_PROMPT_VERSION,
@@ -383,6 +422,7 @@ def process_item_relations(
                     "raw_primary_relation": relation.primary_relation,
                     "event_relation_type": event_relation_type,
                     "cluster_eligible": cluster_eligible,
+                    "reason_code": relation.reason_code or default_reason_code(primary_relation, event_relation_type, generic_only=assessment.generic_only),
                     "disqualifiers": disqualifiers,
                     "same_event_evidence": relation.same_event_evidence or assessment.same_event_evidence,
                     "new_info_evidence": relation.new_info_evidence or relation.new_information,
@@ -431,7 +471,39 @@ def insert_item_relation(
     now = utc_now()
     fingerprint = db.input_fingerprint({"a": item_a_id, "b": item_b_id, "primary": primary_relation, "roles": secondary_roles})
     should_fold = item_relation_should_fold(primary_relation)
+    ensure_relation_conflict_table(store)
+    left_item = db.get_item(store, item_a_id) or {"item_id": item_a_id}
+    right_item = db.get_item(store, item_b_id) or {"item_id": item_b_id}
+    pair_key = relation_pair_key(left_item, right_item)
     with store.connect() as conn:
+        existing_rows = conn.execute("SELECT * FROM item_relations").fetchall()
+        for existing in existing_rows:
+            existing_left = db.get_item(store, existing["item_a_id"]) or {"item_id": existing["item_a_id"]}
+            existing_right = db.get_item(store, existing["item_b_id"]) or {"item_id": existing["item_b_id"]}
+            if relation_pair_key(existing_left, existing_right) != pair_key:
+                continue
+            if existing["primary_relation"] != primary_relation:
+                conn.execute(
+                    """
+                    INSERT INTO semantic_relation_conflicts (
+                        relation_pair_key, existing_relation_id, existing_primary_relation,
+                        attempted_primary_relation, item_a_id, item_b_id, reason, created_at
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        pair_key,
+                        existing["id"],
+                        existing["primary_relation"],
+                        primary_relation,
+                        item_a_id,
+                        item_b_id,
+                        "conflicting canonical pair verdict",
+                        now,
+                    ),
+                )
+                return
+            return
         conn.execute(
             """
             INSERT OR IGNORE INTO item_relations (

@@ -4,6 +4,9 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
+from app.semantic.cluster_policy import cluster_relation_action as policy_cluster_relation_action
+from app.semantic.relation_policy import should_fold as policy_should_fold
+
 
 SCHEMA_VERSION = "semantic_v1"
 ITEM_CARD_PROMPT_VERSION = "item_card_v1"
@@ -16,6 +19,8 @@ ItemRelationPrimary = Literal[
     "duplicate",
     "near_duplicate",
     "related_with_new_info",
+    "same_product_different_event",
+    "same_thread",
     "different",
     "uncertain",
 ]
@@ -30,11 +35,20 @@ ItemRelationRole = Literal[
     "summary_of",
     "syndicated_copy",
     "cross_language",
+    "same_product",
+    "same_actor",
+    "same_event_signature",
+    "same_announcement",
     "same_event_hint",
     "new_fact_hint",
     "new_analysis_hint",
     "firsthand_hint",
+    "source_material",
     "source_material_hint",
+    "availability_detail",
+    "pricing_detail",
+    "benchmark_detail",
+    "case_study",
     "same_product_different_event",
     "same_thread",
     "same_conference",
@@ -132,9 +146,14 @@ class ItemRelationDecision(BaseModel):
     new_information: list[str] = Field(default_factory=list)
     confidence: float = Field(default=0.0, ge=0.0, le=1.0)
     reason: str = ""
+    reason_code: str = ""
     evidence: list[str] = Field(default_factory=list)
     event_relation_type: str = "different"
     cluster_eligible: bool = False
+    same_event: bool = False
+    same_product: bool = False
+    same_thread: bool = False
+    should_fold: bool = False
     same_event_evidence: list[str] = Field(default_factory=list)
     new_info_evidence: list[str] = Field(default_factory=list)
     disqualifiers: list[str] = Field(default_factory=list)
@@ -163,6 +182,7 @@ class ItemClusterDecision(BaseModel):
     new_facts: list[str] = Field(default_factory=list)
     new_angles: list[str] = Field(default_factory=list)
     reason: str = ""
+    reason_code: str = ""
     evidence: list[str] = Field(default_factory=list)
     cluster_relation_type: str = "uncertain"
     attach_eligible: bool = False
@@ -197,20 +217,8 @@ class SourceReviewOutput(BaseModel):
 
 
 def item_relation_should_fold(primary_relation: str) -> bool:
-    return primary_relation in {"duplicate", "near_duplicate"}
+    return policy_should_fold(primary_relation)
 
 
 def cluster_relation_action(primary_relation: str) -> str:
-    mapping = {
-        "source_material": "attach_update_card",
-        "repeat": "attach_no_core_update",
-        "new_info": "attach_update_card",
-        "analysis": "attach_maybe_update_card",
-        "experience": "attach_maybe_update_card",
-        "context": "attach_context",
-        "follow_up": "create_follow_up_cluster",
-        "same_topic": "do_not_attach",
-        "unrelated": "do_not_attach",
-        "uncertain": "review",
-    }
-    return mapping.get(primary_relation, "review")
+    return policy_cluster_relation_action(primary_relation)

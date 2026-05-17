@@ -1,0 +1,24 @@
+{
+  "high_count": 0,
+  "lane_distribution": {
+    "exploratory_recall": 233,
+    "same_thread": 2,
+    "suppressed": 5,
+    "unknown": 82
+  },
+  "lane_priority_distribution": {
+    "exploratory_recall:low": 229,
+    "exploratory_recall:medium": 4,
+    "same_thread:low": 2,
+    "suppressed:suppress": 5,
+    "unknown:low": 76,
+    "unknown:medium": 6
+  },
+  "must_run_count": 0,
+  "priority_distribution": {
+    "low": 307,
+    "medium": 10,
+    "suppress": 5
+  },
+  "suppressed_count": 5
+}
