@@ -4,12 +4,12 @@ from typing import Any
 
 
 FOLD_RELATIONS = {"duplicate", "near_duplicate"}
-CLUSTER_SEED_RELATIONS = {"duplicate", "near_duplicate", "related_with_new_info"}
+CLUSTER_SEED_RELATIONS = {"related_with_new_info"}
 NON_ATTACH_RELATIONS = {"same_product_different_event", "same_thread", "different", "uncertain"}
 
 RELATION_ACTIONS: dict[str, dict[str, Any]] = {
-    "duplicate": {"should_fold": True, "cluster_seed_allowed": True, "thread_only": False},
-    "near_duplicate": {"should_fold": True, "cluster_seed_allowed": True, "thread_only": False},
+    "duplicate": {"should_fold": True, "cluster_seed_allowed": False, "thread_only": False},
+    "near_duplicate": {"should_fold": True, "cluster_seed_allowed": False, "thread_only": False},
     "related_with_new_info": {"should_fold": False, "cluster_seed_allowed": True, "thread_only": False},
     "same_product_different_event": {"should_fold": False, "cluster_seed_allowed": False, "thread_only": True},
     "same_thread": {"should_fold": False, "cluster_seed_allowed": False, "thread_only": True},
@@ -40,13 +40,13 @@ def should_fold(primary_relation: str) -> bool:
 
 
 def relation_cluster_eligible(primary_relation: str, event_relation_type: str, confidence: float = 1.0) -> bool:
+    if primary_relation in {"duplicate", "near_duplicate"}:
+        return False
     if primary_relation not in CLUSTER_SEED_RELATIONS:
         return False
     if event_relation_type != "same_event":
         return False
     if primary_relation == "related_with_new_info" and confidence < 0.80:
-        return False
-    if primary_relation in {"duplicate", "near_duplicate"} and confidence < 0.70:
         return False
     return True
 
@@ -75,4 +75,3 @@ def normalize_primary_relation(primary_relation: str, event_relation_type: str) 
     if event_relation_type in {"same_thread", "same_conference"}:
         return "same_thread"
     return "different" if primary_relation not in {"uncertain"} else "uncertain"
-

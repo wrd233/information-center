@@ -53,12 +53,9 @@ def relation_can_seed_cluster(primary_relation: str, event_relation_type: str, c
     if event_relation_type != "same_event":
         return False, "not_same_event"
     if primary_relation in {"duplicate", "near_duplicate"}:
-        if confidence >= CLUSTER_THRESHOLDS.near_duplicate_seed_confidence:
-            return True, "near_duplicate_seed"
-        return False, "near_duplicate_confidence_below_threshold"
+        return False, "fold_relation_not_event_cluster_seed"
     if primary_relation == "related_with_new_info":
         if confidence >= CLUSTER_THRESHOLDS.related_new_info_seed_confidence:
             return True, "related_new_info_seed"
         return False, "related_new_info_confidence_below_threshold"
     return False, "relation_type_cannot_seed"
-

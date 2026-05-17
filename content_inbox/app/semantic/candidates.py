@@ -428,6 +428,7 @@ def event_signature(item: dict[str, Any], card: dict[str, Any] | None = None) ->
     signature = extract_event_signature(item, card)
     generic_tokens = sorted(token for token in semantic_tokens(item_text(item, card)) if token in GENERIC_ENTITY_TOKENS)[:20]
     return {
+        "semantic_level": signature.semantic_level,
         "signature_key": signature.signature_key,
         "actors": [signature.actor] if signature.actor else [],
         "products": [signature.product_or_model] if signature.product_or_model else [],
@@ -625,12 +626,18 @@ def assess_candidate(
     generic_only = bool(shared_generic) and not weighted and not concrete_event_match and title_score < 0.55
     if generic_only and "generic_only_overlap" not in disqualifiers:
         disqualifiers.append("generic_only_overlap")
+    if left_sig_obj.semantic_level == "reject" or right_sig_obj.semantic_level == "reject":
+        disqualifiers.append("semantic_level_reject")
     if time_gap is not None and time_gap > 168 and not hard and not signature_match:
         disqualifiers.append("wide_time_window")
     lane = "exploratory_recall"
     if hard:
         lane = "deterministic"
         priority = "must_run"
+    elif left_sig_obj.semantic_level == "reject" or right_sig_obj.semantic_level == "reject":
+        lane = "suppressed"
+        priority = "suppress"
+        suppression_reason = "suppressed_reject_semantic_level"
     elif "proxy_domain_only" in disqualifiers:
         lane = "suppressed"
         priority = "suppress"
@@ -647,20 +654,47 @@ def assess_candidate(
         lane = "suppressed"
         priority = "suppress"
         suppression_reason = "suppressed_generic_entity"
-    elif title_score >= CANDIDATE_THRESHOLDS.near_title_must_run and time_score >= 0.65:
-        lane = "near_title"
+    elif (
+        left_sig_obj.semantic_level == "event_signature"
+        and right_sig_obj.semantic_level == "event_signature"
+        and title_score >= CANDIDATE_THRESHOLDS.near_title_must_run
+        and time_score >= 0.65
+    ):
+        lane = "precision_event"
         priority = "must_run"
-    elif signature_match and score >= CANDIDATE_THRESHOLDS.signature_must_run:
-        lane = "event_signature"
+    elif (
+        left_sig_obj.semantic_level == "event_signature"
+        and right_sig_obj.semantic_level == "event_signature"
+        and signature_match
+        and score >= CANDIDATE_THRESHOLDS.signature_must_run
+    ):
+        lane = "precision_event"
         priority = "must_run"
-    elif concrete_event_match and score >= CANDIDATE_THRESHOLDS.signature_high:
-        lane = "event_signature" if signature_match else "same_actor_product"
+    elif (
+        left_sig_obj.semantic_level == "event_signature"
+        and right_sig_obj.semantic_level == "event_signature"
+        and concrete_event_match
+        and score >= CANDIDATE_THRESHOLDS.signature_high
+    ):
+        lane = "precision_event" if signature_match else ("same_event_recall" if shared_products else "same_actor_product")
         priority = "high"
-    elif title_score >= CANDIDATE_THRESHOLDS.near_title_high and time_score >= 0.25:
-        lane = "near_title"
+    elif (
+        left_sig_obj.semantic_level == "event_signature"
+        and right_sig_obj.semantic_level == "event_signature"
+        and title_score >= CANDIDATE_THRESHOLDS.near_title_high
+        and time_score >= 0.25
+    ):
+        lane = "same_event_recall"
         priority = "high"
-    elif (shared_products and (shared_actors or same_action) and time_score >= 0.25) or score >= CANDIDATE_THRESHOLDS.exploratory_medium:
-        lane = "same_actor_product" if shared_products and (shared_actors or same_action) else "exploratory_recall"
+    elif left_sig_obj.semantic_level == "thread_signature" or right_sig_obj.semantic_level == "thread_signature":
+        lane = "same_product_different_event" if shared_products else "same_thread"
+        priority = "medium" if (shared_products or shared_actors or title_score >= 0.45) else "low"
+    elif (
+        left_sig_obj.semantic_level == "event_signature"
+        and right_sig_obj.semantic_level == "event_signature"
+        and ((shared_products and (shared_actors or same_action) and time_score >= 0.25) or score >= CANDIDATE_THRESHOLDS.exploratory_medium)
+    ):
+        lane = "same_event_recall" if shared_products and (shared_actors or same_action) else "exploratory_recall"
         priority = "medium"
     elif score > 0:
         lane = "same_thread" if shared_actors or shared_products else "exploratory_recall"

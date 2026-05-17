@@ -1,0 +1,61 @@
+{
+  "generated_at": "2026-05-17",
+  "source_runs": [
+    {
+      "run_id": "semantic_eval_20260517_104806_662651",
+      "directory": "api_xgo_ing_phase1_3_round_c_80_live_tuned",
+      "item_count": 80,
+      "accepted_signatures": 11,
+      "rejected_signatures": 69,
+      "relations_interesting": 32,
+      "relations_all": 62
+    }
+  ],
+  "counts": {
+    "semantic_items": 80,
+    "item_cards": 80,
+    "event_signatures": 80,
+    "relations_all": 62,
+    "relations_interesting": 32,
+    "candidate_generation": 1544,
+    "event_hotspots": 0,
+    "cluster_seed_rejections": 155,
+    "clusters_final": 78,
+    "signature_accepted": 11,
+    "signature_rejected": 69,
+    "effective_multi_item_clusters": 0
+  },
+  "observed_invalid_reasons": {
+    "missing_concrete_event_action": 66,
+    "missing_concrete_actor_or_product": 33,
+    "weak_action_without_entity": 31,
+    "invalid_product_fragment_without_actor": 0
+  },
+  "observed_relation_distribution": {
+    "near_duplicate": 1,
+    "same_product_different_event": 1,
+    "suspicious_different": 30
+  },
+  "observed_candidate_lane_distribution": {
+    "exploratory_recall": 28,
+    "same_thread": 3,
+    "unknown": 1
+  },
+  "observed_priority_distribution": {
+    "low": 307,
+    "medium": 10,
+    "suppressed": 5,
+    "high": 0
+  },
+  "benchmark_source_files": [
+    "semantic_items.jsonl",
+    "event_signatures.jsonl",
+    "item_cards.jsonl",
+    "relations_interesting.jsonl",
+    "relations_all.jsonl",
+    "cluster_seed_rejections.jsonl",
+    "candidate_generation.jsonl",
+    "event_signature_quality_report.md"
+  ],
+  "benchmark_ids": []
+}

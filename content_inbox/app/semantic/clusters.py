@@ -11,6 +11,7 @@ from app.semantic.llm_client import SemanticLLMClient
 from app.semantic.candidates import assess_candidate
 from app.semantic.cluster_policy import cluster_decision_attach_eligible as policy_cluster_decision_attach_eligible
 from app.semantic.relations import card_public, hours_apart, insert_review, normalized_entity_terms, semantic_tokens
+from app.semantic.signatures import extract_event_signature
 from app.semantic.schemas import (
     CLUSTER_CARD_PROMPT_VERSION,
     ITEM_CLUSTER_PROMPT_VERSION,
@@ -133,12 +134,28 @@ def process_item_clusters(
         token_budget=token_budget,
         global_call_limit=global_call_limit,
     )
-    stats = {"selected": len(rows), "attached": 0, "created_clusters": 0, "review": 0, "llm_calls": 0, "candidate_clusters": 0, "no_candidate_items": 0, "llm_items": 0}
+    stats = {"selected": len(rows), "attached": 0, "created_clusters": 0, "review": 0, "llm_calls": 0, "candidate_clusters": 0, "no_candidate_items": 0, "llm_items": 0, "skipped_non_event_signature": 0}
     for row in rows:
         item_id = row["item_id"]
         item_card = db.get_current_item_card(store, item_id)
         item = db.get_item(store, item_id)
         if not item or not item_card:
+            continue
+        signature = extract_event_signature(item, item_card)
+        if signature.semantic_level != "event_signature":
+            insert_review(
+                store,
+                "same_thread" if signature.semantic_level == "thread_signature" else "low_signal",
+                "item",
+                item_id,
+                {
+                    "reason": "non-event semantic level cannot seed event cluster",
+                    "semantic_level": signature.semantic_level,
+                    "signature": signature.model_dump(),
+                },
+            )
+            stats["skipped_non_event_signature"] += 1
+            stats["review"] += 1
             continue
         candidates = candidate_clusters(store, item_card, max_candidates, include_archived=include_archived)
         if not candidates:
@@ -317,6 +334,8 @@ def cluster_decision_attach_eligible(decision: Any) -> bool:
 
 
 def same_event_cluster_candidate(store: InboxStore, item: dict[str, Any], item_card: dict[str, Any], cluster: dict[str, Any]) -> bool:
+    if extract_event_signature(item, item_card).semantic_level != "event_signature":
+        return False
     with store.connect() as conn:
         row = conn.execute(
             """

@@ -1,0 +1,414 @@
+{
+  "version": "phase1_3b_step3_v1",
+  "generated_at": "2026-05-17",
+  "source_benchmark": "signature_benchmark_50.jsonl",
+  "source_run": "api_xgo_ing_phase1_3_round_c_80_live_tuned",
+
+  "semantic_levels": {
+    "event_signature": {
+      "definition": "A concrete, dated event-like unit that may support same-event matching or event cluster seed generation. Has concrete actor or product, concrete event action, and time context.",
+      "can_seed_event_cluster": true,
+      "can_form_thread_relation": true,
+      "examples_positive": [
+        "BENCH_1_3b_single_002: OpenShell v0.0.40 release",
+        "BENCH_1_3b_single_007: Googlebook release (Chinese)",
+        "BENCH_1_3b_single_009: Anthropic adoption data",
+        "BENCH_1_3b_single_024: Shanghai Telecom Token plan (Chinese pricing)"
+      ],
+      "examples_negative": [
+        "BENCH_1_3b_single_004: DGX Spark anecdote → thread_signature",
+        "BENCH_1_3b_pair_036: AK paper feed → thread_signature",
+        "BENCH_1_3b_single_006: pmarca 'Concerning' → reject"
+      ]
+    },
+    "thread_signature": {
+      "definition": "A related sequence or topical thread that should not directly seed an event cluster. Same source recurring format, same product different feature, same company different reports, or same author series.",
+      "can_seed_event_cluster": false,
+      "can_form_thread_relation": true,
+      "examples_positive": [
+        "BENCH_1_3b_pair_035: Codex remote control vs Windows sandbox",
+        "BENCH_1_3b_cluster_candidate_049: AK paper feed thread",
+        "BENCH_1_3b_pair_044: YC Modern vs YouArt launches"
+      ],
+      "examples_negative": [
+        "BENCH_1_3b_pair_039: Notion CLI + Workers → event_signature (coordinated launch)",
+        "BENCH_1_3b_pair_040: OpenShell v0.0.40 + v0.0.41 → event_signature (sequential releases)"
+      ]
+    },
+    "content_signature": {
+      "definition": "Structured content useful for search, filtering, or source profiling, but not event or thread clustering. Personal tool setups, generic commentary without concrete event, tutorials without new release.",
+      "can_seed_event_cluster": false,
+      "can_form_thread_relation": false,
+      "examples_positive": [
+        "BENCH_1_3b_single_030: Translation tool setup share"
+      ],
+      "examples_negative": [
+        "BENCH_1_3b_single_031: Notion CLI third-party → event_signature (restates real launch)"
+      ]
+    },
+    "reject": {
+      "definition": "Low-signal or non-semantic content. One-word replies, pure link-only posts, generic engagement bait, emoji-only, very short social replies.",
+      "can_seed_event_cluster": false,
+      "can_form_thread_relation": false,
+      "examples_positive": [
+        "BENCH_1_3b_single_017: 'Great advice'",
+        "BENCH_1_3b_single_018: 'Banger'",
+        "BENCH_1_3b_single_022: 'Open > closed'",
+        "BENCH_1_3b_single_006: 'Concerning.'"
+      ],
+      "examples_negative": [
+        "BENCH_1_3b_single_024: Shanghai Telecom → event_signature (false negative in current extractor)"
+      ]
+    }
+  },
+
+  "actions": {
+    "release": {
+      "definition": "A new product, major version, or downloadable artifact is made available.",
+      "cluster_eligible": true,
+      "thread_eligible": false,
+      "english_triggers": ["release", "launch", "ship", "now available", "introducing", "announcing", "new"],
+      "chinese_triggers": ["发布", "推出", "上线", "开源", "释出", "正式发布"],
+      "positive_examples": ["BENCH_1_3b_single_002: OpenShell v0.0.40", "BENCH_1_3b_single_007: Googlebook", "BENCH_1_3b_single_010: Notion CLI"],
+      "negative_examples": ["BENCH_1_3b_single_004: DGX Spark anecdote — not a release, just personal use"]
+    },
+    "feature_update": {
+      "definition": "An existing product or service gains new capabilities, integrations, or improvements.",
+      "cluster_eligible": true,
+      "thread_eligible": true,
+      "english_triggers": ["now supports", "can now", "new feature", "update", "now you can", "introducing"],
+      "chinese_triggers": ["支持", "接入", "新增", "更新", "功能", "现在可以"],
+      "positive_examples": ["BENCH_1_3b_single_011: Notion Custom Agents tool support", "BENCH_1_3b_single_013: Codex remote control"],
+      "negative_examples": ["BENCH_1_3b_single_030: Translation tool setup — personal use, not feature update"]
+    },
+    "availability": {
+      "definition": "A product or service becomes available in new regions, platforms, tiers, or access levels.",
+      "cluster_eligible": true,
+      "thread_eligible": false,
+      "english_triggers": ["now available on", "coming to", "waitlist", "preview", "beta", "early access", "shipping", "rolling out"],
+      "chinese_triggers": ["技术预览", "候补", "内测", "公测", "开放申请", "waitlist"],
+      "positive_examples": ["BENCH_1_3b_single_025: Stelline Dev Kit shipping", "BENCH_1_3b_single_026: GitHub Copilot Desktop preview"],
+      "negative_examples": ["BENCH_1_3b_single_006: 'Concerning' — no availability signal"]
+    },
+    "pricing": {
+      "definition": "A change to pricing, plans, or cost structure including free tiers and discounts.",
+      "cluster_eligible": true,
+      "thread_eligible": false,
+      "english_triggers": ["free", "discount", "price", "pricing", "plan", "tier", "dollar", "cost"],
+      "chinese_triggers": ["免费", "降价", "价格", "套餐", "1块钱", "元", "优惠", "折扣"],
+      "positive_examples": ["BENCH_1_3b_single_024: Shanghai Telecom Token plan", "BENCH_1_3b_single_027: LangSmith Fleet free tier"],
+      "negative_examples": ["BENCH_1_3b_single_020: Startup PUA — mentions 'money' in advice context, not pricing"]
+    },
+    "benchmark": {
+      "definition": "A systematic evaluation of model or system performance against defined metrics.",
+      "cluster_eligible": true,
+      "thread_eligible": false,
+      "english_triggers": ["benchmark", "evaluation", "score", "accuracy", "performance", "tested on"],
+      "chinese_triggers": ["基准", "评测", "跑分", "分数", "准确率"],
+      "positive_examples": ["BENCH_1_3b_single_004 (borderline): DGX Spark testing anecdote"],
+      "negative_examples": []
+    },
+    "ranking": {
+      "definition": "A comparative ordering of products, models, or services by some metric.",
+      "cluster_eligible": false,
+      "thread_eligible": true,
+      "english_triggers": ["rank", "ranking", "leaderboard", "top", "#1", "surpassed", "ahead of"],
+      "chinese_triggers": ["排名", "榜单", "超过", "领先", "超越", "第一名"],
+      "positive_examples": ["BENCH_1_3b_single_009: Anthropic surpasses OpenAI"],
+      "negative_examples": []
+    },
+    "adoption_metric": {
+      "definition": "Quantified usage, market share, revenue, or customer count data.",
+      "cluster_eligible": true,
+      "thread_eligible": true,
+      "english_triggers": ["market share", "adoption", "revenue", "users", "subscribers", "growth", "market cap", "valuation"],
+      "chinese_triggers": ["采用率", "市场份额", "用户数", "营收", "市值", "增长"],
+      "positive_examples": ["BENCH_1_3b_single_008: NVIDIA $5.5T market cap", "BENCH_1_3b_single_009: Anthropic enterprise share"],
+      "negative_examples": []
+    },
+    "case_study": {
+      "definition": "A detailed account of a customer or user achieving results with a product.",
+      "cluster_eligible": false,
+      "thread_eligible": true,
+      "english_triggers": ["case study", "customer", "how we", "how I", "built with", "using"],
+      "chinese_triggers": ["案例", "客户", "用...做了", "实践"],
+      "positive_examples": ["BENCH_1_3b_single_004: DGX Spark local testing (borderline case study)"],
+      "negative_examples": []
+    },
+    "integration": {
+      "definition": "A product or service connects with another platform, API, or tool.",
+      "cluster_eligible": true,
+      "thread_eligible": false,
+      "english_triggers": ["integrate", "integration", "connect", "plugin", "extension", "API", "SDK", "works with"],
+      "chinese_triggers": ["集成", "接入", "连接", "打通", "对接", "兼容"],
+      "positive_examples": ["BENCH_1_3b_single_014: QVeris CLI + Claude Code integration"],
+      "negative_examples": ["BENCH_1_3b_pair_037: QVeris CLI vs AI roundup — shared entity 'Claude Code' is not integration overlap"]
+    },
+    "partnership": {
+      "definition": "Two or more organizations announce a formal collaboration.",
+      "cluster_eligible": true,
+      "thread_eligible": false,
+      "english_triggers": ["partner", "partnership", "collaboration", "together with", "teaming up"],
+      "chinese_triggers": ["合作", "联手", "战略合作", "签约"],
+      "positive_examples": [],
+      "negative_examples": []
+    },
+    "funding": {
+      "definition": "A company raises investment capital.",
+      "cluster_eligible": true,
+      "thread_eligible": false,
+      "english_triggers": ["raised", "funding", "series", "seed", "investor", "valuation", "round"],
+      "chinese_triggers": ["融资", "投资", "轮", "估值", "资本"],
+      "positive_examples": [],
+      "negative_examples": ["BENCH_1_3b_single_006: 'Concerning' — extractor labeled funding but item is about opposition campaigns, not funding"]
+    },
+    "company_launch": {
+      "definition": "A new company is announced or launched, typically via accelerators or founder announcements.",
+      "cluster_eligible": true,
+      "thread_eligible": true,
+      "english_triggers": ["congrats on the launch", "launching", "founded", "new company", "stealth"],
+      "chinese_triggers": ["官宣", "新公司", "创业", "联合创始人", "正式成立", "YC"],
+      "positive_examples": ["BENCH_1_3b_single_003: Recursive launch", "BENCH_1_3b_single_005: PLAN0 launch", "BENCH_1_3b_single_029: Adialante launch"],
+      "negative_examples": ["BENCH_1_3b_pair_044: YC Modern vs YouArt — both are company_launch but different companies, don't cluster"]
+    },
+    "research_paper": {
+      "definition": "A research paper, preprint, or technical report is shared or published.",
+      "cluster_eligible": false,
+      "thread_eligible": true,
+      "english_triggers": ["paper", "arXiv", "preprint", "published", "proceedings", "results show"],
+      "chinese_triggers": ["论文", "预印本", "发表", "研究", "实验"],
+      "positive_examples": ["BENCH_1_3b_pair_036: AK paper posts (thread only)"],
+      "negative_examples": ["BENCH_1_3b_cluster_candidate_049: Should NOT form event cluster — different papers"]
+    },
+    "technical_blog": {
+      "definition": "An engineering deep-dive, implementation walkthrough, or architecture explanation tied to a specific product or system.",
+      "cluster_eligible": true,
+      "thread_eligible": true,
+      "english_triggers": ["how we built", "deep dive", "under the hood", "architecture", "implementation", "engineering"],
+      "chinese_triggers": ["技术博客", "深度", "架构", "实现", "工程"],
+      "positive_examples": ["BENCH_1_3b_single_012: Codex Windows sandbox deep-dive"],
+      "negative_examples": []
+    },
+    "security": {
+      "definition": "A security vulnerability, fix, advisory, or incident is disclosed.",
+      "cluster_eligible": true,
+      "thread_eligible": false,
+      "english_triggers": ["vulnerability", "CVE", "security fix", "patch", "advisory", "incident", "breach"],
+      "chinese_triggers": ["漏洞", "安全", "修复", "补丁"],
+      "positive_examples": ["BENCH_1_3b_single_002: OpenShell had security fixes but primary action is release, not security"],
+      "negative_examples": []
+    },
+    "event": {
+      "definition": "A dated gathering: conference, webinar, meetup, summit, or livestream.",
+      "cluster_eligible": true,
+      "thread_eligible": false,
+      "english_triggers": ["summit", "conference", "webinar", "meetup", "livestream", "workshop", "register", "ticket"],
+      "chinese_triggers": ["大会", "研讨会", "直播", "活动", "报名", "门票", "峰会"],
+      "positive_examples": ["BENCH_1_3b_single_001: AI Security Summit", "BENCH_1_3b_single_016: LangChain Interrupt", "BENCH_1_3b_single_033: Nemotron Ask the Experts"],
+      "negative_examples": ["BENCH_1_3b_pair_047: AI Security Summit vs LangChain Interrupt — both events but different events"]
+    },
+    "tutorial": {
+      "definition": "Instructional content showing how to use a product or technique.",
+      "cluster_eligible": false,
+      "thread_eligible": false,
+      "english_triggers": ["how to", "tutorial", "guide", "walkthrough", "step by step", "learn"],
+      "chinese_triggers": ["教程", "指南", "怎么", "如何"],
+      "positive_examples": [],
+      "negative_examples": ["BENCH_1_3b_single_030: Translation setup — personal share, not tutorial"]
+    },
+    "opinion_analysis": {
+      "definition": "Subjective commentary, analysis, or opinion not tied to a concrete event.",
+      "cluster_eligible": false,
+      "thread_eligible": false,
+      "english_triggers": ["I think", "in my opinion", "hot take", "reflection", "thoughts on"],
+      "chinese_triggers": ["我觉得", "我认为", "说实话", "感受"],
+      "positive_examples": [],
+      "negative_examples": ["BENCH_1_3b_single_019: Podcast opinion (correctly rejected)"]
+    }
+  },
+
+  "actor_extraction_rules": {
+    "valid_actor": [
+      "Organization name: Google, NVIDIA, Notion, OpenAI, Anthropic, LangChain, GitHub, Y Combinator",
+      "Product owner when clear: PLAN0 for PLAN0 launch, QVeris for QVeris CLI",
+      "Company being launched: Recursive for Recursive launch, Adialante for Adialante launch",
+      "Event organizer: Snyk for AI Security Summit, AI Engineer for promotion",
+      "Empty string when no clear actor exists (don't guess)"
+    ],
+    "invalid_actor": [
+      "Former employer as actor: Meta is NOT the actor for Recursive launch (BENCH_1_3b_single_003)",
+      "Integration target as actor: Claude is NOT the actor for QVeris CLI (BENCH_1_3b_single_014)",
+      "Product as organization: Codex is a product, not an org (BENCH_1_3b_single_013)",
+      "URL fragments, version numbers, or random tokens",
+      "Social media handles unless directly tied to the event"
+    ],
+    "actor_product_disambiguation": [
+      "If text says 'X launched Y': X is actor, Y is product",
+      "If text says 'Y by X' or 'X's Y': X is actor, Y is product",
+      "If text says 'X for Y' (integration): X is product, Y is integration target",
+      "If text says 'former X director launches Y': X is former employer (NOT actor), Y is launched company (actor)",
+      "When in doubt, prefer empty actor over wrong actor"
+    ],
+    "versioned_release_rules": [
+      "Product name should include the base name + version: 'OpenShell v0.0.40'",
+      "Actor is the organization that maintains the product",
+      "Version alone is never sufficient as product"
+    ]
+  },
+
+  "product_extraction_rules": {
+    "valid_product": [
+      "Named product: Googlebook, Notion CLI, OpenShell, Claude Code, LangSmith Fleet",
+      "Named company being launched: Recursive, PLAN0, Adialante",
+      "Named model: Nemotron 3 Nano Omni, DGX Spark",
+      "Named event: AI Security Summit, LangChain Interrupt",
+      "Named service plan: Token calling plan, LangSmith Fleet free tier",
+      "Empty string when no product exists (opinion, philosophy, social)"
+    ],
+    "invalid_product": [
+      "URL fragments: fkR2wVD129, nRjIqRD2fg, U4n62, yZgH0hEATU (BENCH_1_3b_single_010 et al.)",
+      "Number fragments: 'for 50', 'just 0.3', 'Our 25' (BENCH_1_3b_single_003, _009)",
+      "Date fragments: 'May 14' as product (BENCH_1_3b_single_001)",
+      "Sentence fragments longer than 8 words",
+      "Generic phrases: 'for updates from my phone', 'made just for developers'",
+      "Verb phrases: 'Give your Custom Agents', 'Build Video Analytics AI Agents'"
+    ]
+  },
+
+  "accept_reject_rules": {
+    "accept_event_signature": [
+      "Concrete actor AND concrete product AND non-other action",
+      "Versioned software release with product name and version number",
+      "Dated event with organizer, name, and location/date",
+      "Pricing/availability change with product name and specific change",
+      "Adoption/metric with actor and specific data point",
+      "Company launch with company name and launch action"
+    ],
+    "accept_thread_signature": [
+      "Same source recurring format (YC launches, AK paper feed)",
+      "Same product, different feature updates",
+      "Same company, different reports",
+      "Same author, same opinion series",
+      "Same feed, same content type"
+    ],
+    "accept_content_signature": [
+      "Has concrete entities but no event action",
+      "Personal tool setup or workflow share",
+      "Generic technical commentary with named products",
+      "Tutorial without new release tie-in"
+    ],
+    "reject": [
+      "Title < 4 words with no concrete entity",
+      "Pure link-only post with no context",
+      "One-word or emoji-only post",
+      "Generic engagement bait ('Great advice', 'Banger')",
+      "Product phrase > 60 characters (gibberish indicator)",
+      "Generic AI/agent/API terms without named actor or product",
+      "All three invalid reasons fire AND concreteness < 0.3"
+    ],
+    "safeguards_against_1_2e_overclustering": [
+      "Generic token overlap (agent, AI, API, model, research, paper) must not cause event clustering",
+      "Same source alone is insufficient for event clustering",
+      "CJK substring overlap must pass semantic validation before candidate generation",
+      "Recurring format (YC launches) must not auto-cluster"
+    ],
+    "safeguards_against_1_3_overrejection": [
+      "Chinese action language (发布, 推出, 上线, 套餐) must be detected",
+      "Versioned releases (v0.0.X pattern) should default to release action",
+      "Pricing keywords in any language should trigger pricing/availability path",
+      "Conference/summit/webinar names should trigger event action",
+      "Product name in title + from official source → consider release action"
+    ]
+  },
+
+  "relation_boundaries": {
+    "near_duplicate": {
+      "definition": "Two items report the same factual content, possibly in different languages or from different sources. One can be folded into the other.",
+      "should_fold": true,
+      "should_form_event_cluster": false,
+      "should_form_thread_relation": false,
+      "can_seed_event_cluster": false,
+      "positive_examples": ["BENCH_1_3b_pair_034: Anthropic adoption EN+ZH", "BENCH_1_3b_pair_041: NVIDIA main post + link follow-up"],
+      "negative_examples": ["BENCH_1_3b_pair_040: OpenShell v0.0.40 + v0.0.41 — NOT near_duplicate, different versions"],
+      "risk_notes": "Cross-language duplicates may have different publication timestamps. Use content overlap, not time proximity."
+    },
+    "related_with_new_info": {
+      "definition": "Same concrete event but the second item adds meaningful new fact, detail, or perspective not in the first.",
+      "should_fold": false,
+      "should_form_event_cluster": true,
+      "should_form_thread_relation": false,
+      "can_seed_event_cluster": true,
+      "positive_examples": ["BENCH_1_3b_pair_040: OpenShell v0.0.40 + v0.0.41", "BENCH_1_3b_pair_048: Notion Custom Agents + Agent Tools"],
+      "negative_examples": ["BENCH_1_3b_pair_035: Codex remote vs sandbox — different events, not new info on same event"],
+      "risk_notes": "Requires high confidence that both items describe the same underlying event. Sequential version releases are the clearest case."
+    },
+    "same_product_different_event": {
+      "definition": "Same product, company, or source but different concrete events or features.",
+      "should_fold": false,
+      "should_form_event_cluster": false,
+      "should_form_thread_relation": true,
+      "can_seed_event_cluster": false,
+      "positive_examples": ["BENCH_1_3b_pair_035: Codex remote vs sandbox", "BENCH_1_3b_pair_044: YC Modern vs YouArt"],
+      "negative_examples": ["BENCH_1_3b_pair_039: Notion CLI + Workers — same launch series, not different events"],
+      "risk_notes": "Key test: if the items were published as a coordinated launch (same timestamp, same source), prefer related_with_new_info over same_product_different_event."
+    },
+    "same_thread": {
+      "definition": "Related by topic, author, company, or product ecosystem but not the same event. Thread-like connection for navigation or source profiling.",
+      "should_fold": false,
+      "should_form_event_cluster": false,
+      "should_form_thread_relation": true,
+      "can_seed_event_cluster": false,
+      "positive_examples": ["BENCH_1_3b_pair_042: Anthropic adoption vs Mythos", "BENCH_1_3b_pair_045: Vercel report vs Ramp Index", "BENCH_1_3b_pair_046: orange.ai philosophy"],
+      "negative_examples": ["BENCH_1_3b_pair_037: QVeris vs AI roundup — not even same thread, just false positive"],
+      "risk_notes": "Do not use same_thread as a catch-all. Many candidate pairs that share a generic token are false positives (different), not threads."
+    },
+    "different": {
+      "definition": "No meaningful relationship. False positive from candidate generation.",
+      "should_fold": false,
+      "should_form_event_cluster": false,
+      "should_form_thread_relation": false,
+      "can_seed_event_cluster": false,
+      "positive_examples": ["BENCH_1_3b_pair_037: QVeris vs AI roundup", "BENCH_1_3b_pair_043: Recursive vs NVIDIA inference", "BENCH_1_3b_pair_047: AI Summit vs LangChain Interrupt"],
+      "negative_examples": [],
+      "risk_notes": "Most high-scoring suspicious_different pairs that share generic AI tokens are correctly different."
+    },
+    "low_signal": {
+      "definition": "At least one side is too thin, template-like, or rejected for reliable relation judgment.",
+      "should_fold": false,
+      "should_form_event_cluster": false,
+      "should_form_thread_relation": false,
+      "can_seed_event_cluster": false,
+      "positive_examples": ["BENCH_1_3b_pair_046: orange.ai philosophy (both items rejected)"],
+      "negative_examples": [],
+      "risk_notes": "When both items are rejected, no relation should be formed except deterministic exact-duplicate."
+    }
+  },
+
+  "cluster_seed_rules": {
+    "allowed_sources": [
+      "near_duplicate with confidence >= 0.85",
+      "related_with_new_info with confidence >= 0.8 and same concrete event",
+      "Same source + same timestamp/window (< 1 hour) + same concrete launch series",
+      "Valid event_signature match with matching actor + product + action",
+      "Versioned release sequence for same product",
+      "Cross-source same event with strong actor/product/action match"
+    ],
+    "disallowed_sources": [
+      "Generic token overlap (agent, AI, API, model, research, paper, code, cli, data)",
+      "Same source only (without concrete event overlap)",
+      "Same actor only (without product/event match)",
+      "Same product family only (without same event)",
+      "same_thread relation",
+      "same_product_different_event relation",
+      "CJK substring overlap without semantic validation",
+      "Recurring feed format without concrete event identity (YC launches, paper feeds)"
+    ],
+    "thread_allowed_sources": [
+      "Same source + same recurring format",
+      "Same product, different event",
+      "Same company, different reports",
+      "Same author, same opinion series",
+      "Same feed, same content type"
+    ]
+  }
+}

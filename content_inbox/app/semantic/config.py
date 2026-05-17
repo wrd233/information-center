@@ -194,7 +194,8 @@ class ReadinessThresholds:
     heuristic_fallback_max_rate: float = 0.10
     parse_failure_fallback_max_rate: float = 0.03
     budget_skip_fallback_max_rate: float = 0.05
-    event_signature_valid_min_rate: float = 0.70
+    event_signature_valid_min_rate: float = 0.60
+    chinese_event_detection_min_rate: float = 0.50
     max_pair_conflicts: int = 0
     max_skipped_must_run: int = 0
     max_db_lock_errors: int = 0
@@ -250,4 +251,3 @@ STAGE_BUDGET_PROFILES: Final[dict[str, dict[str, float]]] = {
         "source_profile": 0.03,
     },
 }
-

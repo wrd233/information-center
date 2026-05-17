@@ -1,0 +1,55 @@
+cluster_candidate_id,final_status,final_member_count,diagnostic_reason
+cluster_candidate_1,multi_item,2,created initial semantic cluster
+cluster_candidate_2,multi_item,2,New item provides concrete examples of agent tool capabilities for the same event.
+cluster_candidate_3,single_item,1,created initial semantic cluster
+cluster_candidate_4,single_item,1,created initial semantic cluster
+cluster_candidate_5,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_6,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_7,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_8,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_9,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_10,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_11,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_12,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_13,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_14,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_15,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_16,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_17,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_18,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_19,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_20,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_21,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_22,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_23,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_24,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_25,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_26,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_27,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_review_39,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_40,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_41,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_42,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_43,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_47,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_48,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_49,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_50,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_51,rejected,0,"New item is a subsequent release (v0.0.41) of the same product (OpenShell), not the same event as v0.0.40."
+cluster_candidate_review_55,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_57,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_60,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_62,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_65,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_66,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_70,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_71,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_72,rejected,0,New item provides additional detail about Codex's tool selection capability for the same Chrome extension launch event.
+cluster_candidate_review_73,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_74,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_75,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_77,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_78,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_79,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_80,rejected,0,New item reports a Codex pet feature without explicitly referencing the Petdex gallery launch.
+cluster_candidate_review_81,rejected,0,"Codex pet hatch contest is a different event from Petdex gallery, but both involve Codex pets."

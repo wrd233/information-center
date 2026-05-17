@@ -1,0 +1,11 @@
+cluster_candidate_id,final_status,final_member_count,diagnostic_reason
+cluster_candidate_1,single_item,1,created initial semantic cluster
+cluster_candidate_2,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_3,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_4,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_5,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_review_9,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_10,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_13,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_14,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_18,rejected,0,"New item is about a Codex Chrome extension release, which is a different feature from the cluster's topic of Codex choosing tools."

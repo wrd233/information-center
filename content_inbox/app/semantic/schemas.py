@@ -14,6 +14,7 @@ ITEM_RELATION_PROMPT_VERSION = "item_relation_v3"
 ITEM_CLUSTER_PROMPT_VERSION = "item_cluster_relation_v3"
 CLUSTER_CARD_PROMPT_VERSION = "cluster_card_patch_v1"
 SOURCE_REVIEW_PROMPT_VERSION = "source_review_v1"
+EVENT_SIGNATURE_PROMPT_VERSION = "event_signature_v1"
 
 ItemRelationPrimary = Literal[
     "duplicate",
@@ -106,6 +107,28 @@ ContentRole = Literal[
 ]
 ClusterStatus = Literal["active", "cooling", "archived", "reopened", "merged"]
 SourcePriority = Literal["new_source_under_evaluation", "high", "normal", "low", "disabled_for_llm"]
+SemanticLevel = Literal["event_signature", "thread_signature", "content_signature", "reject"]
+EventSignatureAction = Literal[
+    "release",
+    "feature_update",
+    "availability",
+    "pricing",
+    "benchmark",
+    "ranking",
+    "adoption_metric",
+    "case_study",
+    "integration",
+    "partnership",
+    "funding",
+    "company_launch",
+    "research_paper",
+    "technical_blog",
+    "security",
+    "event",
+    "tutorial",
+    "opinion_analysis",
+    "other",
+]
 
 
 class ItemCardData(BaseModel):
@@ -214,6 +237,20 @@ class SourceReviewOutput(BaseModel):
     priority_suggestion: SourcePriority
     reason: str
     evidence: list[str] = Field(default_factory=list)
+
+
+class EventSignatureExtractionOutput(BaseModel):
+    semantic_level: SemanticLevel
+    actor: str = ""
+    product_or_model: str = ""
+    action: EventSignatureAction = "other"
+    object: str = ""
+    date_bucket: str = ""
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    is_event_like: bool = False
+    is_thread_like: bool = False
+    reject_reason: str = ""
+    extraction_notes: str = ""
 
 
 def item_relation_should_fold(primary_relation: str) -> bool:

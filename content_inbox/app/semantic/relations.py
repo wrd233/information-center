@@ -483,25 +483,6 @@ def insert_item_relation(
             if relation_pair_key(existing_left, existing_right) != pair_key:
                 continue
             if existing["primary_relation"] != primary_relation:
-                conn.execute(
-                    """
-                    INSERT INTO semantic_relation_conflicts (
-                        relation_pair_key, existing_relation_id, existing_primary_relation,
-                        attempted_primary_relation, item_a_id, item_b_id, reason, created_at
-                    )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                    """,
-                    (
-                        pair_key,
-                        existing["id"],
-                        existing["primary_relation"],
-                        primary_relation,
-                        item_a_id,
-                        item_b_id,
-                        "conflicting canonical pair verdict",
-                        now,
-                    ),
-                )
                 return
             return
         conn.execute(

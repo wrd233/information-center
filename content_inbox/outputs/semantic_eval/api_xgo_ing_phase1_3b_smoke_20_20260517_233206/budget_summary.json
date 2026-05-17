@@ -1,0 +1,10 @@
+{
+  "by_priority": {
+    "unknown": 5
+  },
+  "by_stage": {
+    "cluster_card_patch": 5
+  },
+  "must_run_skip_count": 0,
+  "total": 5
+}

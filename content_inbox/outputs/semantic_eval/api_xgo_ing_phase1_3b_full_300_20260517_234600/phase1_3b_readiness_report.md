@@ -1,0 +1,120 @@
+# Phase 1.3b Readiness Report
+
+```json
+{
+  "verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE",
+  "scoped_real_write_rehearsal_run": false,
+  "reason": "300-item dry-run failed Chinese event detection gate and inspection found accepted garbage products in that run; real writes remain blocked.",
+  "gates": [
+    {
+      "name": "heuristic_fallback_rate",
+      "passed": true,
+      "reason": "heuristic emergency fallback must stay low",
+      "threshold": "< 0.1",
+      "value": 0.0
+    },
+    {
+      "name": "parse_failure_fallback_rate",
+      "passed": true,
+      "reason": "parse failures must not dominate cards",
+      "threshold": "< 0.03",
+      "value": 0.0
+    },
+    {
+      "name": "budget_skip_fallback_rate",
+      "passed": true,
+      "reason": "budget fallback must not starve candidate-bearing cards",
+      "threshold": "< 0.05",
+      "value": 0.0
+    },
+    {
+      "name": "skipped_must_run_candidates",
+      "passed": true,
+      "reason": "must-run candidates are protected",
+      "threshold": 0,
+      "value": 0
+    },
+    {
+      "name": "pair_relation_conflicts",
+      "passed": true,
+      "reason": "canonical pair verdicts cannot conflict",
+      "threshold": 0,
+      "value": 0
+    },
+    {
+      "name": "db_lock_errors",
+      "passed": true,
+      "reason": "no DB lock errors",
+      "threshold": 0,
+      "value": 0
+    },
+    {
+      "name": "event_signature_valid_rate",
+      "passed": true,
+      "reason": "signatures are concrete enough",
+      "threshold": ">= 0.6",
+      "value": 0.9821
+    },
+    {
+      "name": "chinese_event_detection_rate",
+      "passed": false,
+      "reason": "Chinese event-like items must not all be rejected",
+      "threshold": ">= 0.5",
+      "value": 0.3846
+    },
+    {
+      "name": "accepted_garbage_product_count",
+      "passed": true,
+      "reason": "URL/date/number/long-fragment products must be rejected",
+      "threshold": 0,
+      "value": 0
+    },
+    {
+      "name": "effective_multi_item_clusters",
+      "passed": true,
+      "reason": "dry-run produced useful same-event clusters",
+      "threshold": ">= 1",
+      "value": 2
+    },
+    {
+      "name": "suspect_multi_item_clusters",
+      "passed": true,
+      "reason": "no suspect multi-item clusters accepted",
+      "threshold": 0,
+      "value": 0
+    },
+    {
+      "name": "small_scoped_real_write_rehearsal",
+      "passed": false,
+      "reason": "production readiness requires a scoped write rehearsal",
+      "threshold": true,
+      "value": false
+    }
+  ],
+  "additional_manual_blockers": [
+    {
+      "name": "accepted_garbage_product_examples_in_300_run",
+      "value": [
+        "K8s as pricing product",
+        "Git semantics for every file your agent",
+        "sow0e7ym",
+        "May 4th"
+      ],
+      "threshold": "0 accepted URL/date/random/long-fragment products",
+      "passed": false
+    },
+    {
+      "name": "tokens_per_item",
+      "value": 2923.8,
+      "threshold": "ideally < 2000",
+      "passed": false
+    },
+    {
+      "name": "llm_final_failures",
+      "value": 31,
+      "threshold": "low / explain exact value",
+      "passed": false
+    }
+  ]
+}
+```

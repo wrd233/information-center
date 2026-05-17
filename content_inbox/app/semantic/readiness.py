@@ -43,7 +43,9 @@ def assess_readiness(summary: dict[str, Any], *, real_write_rehearsal_passed: bo
     db_locks = int(errors.get("db_lock_errors") or 0)
     effective_clusters = int(clusters.get("effective_multi_item_cluster_count") or clusters.get("multi_item_cluster_likely_valid_count") or 0)
     suspect_clusters = int(clusters.get("suspect_multi_item_cluster_count") or clusters.get("multi_item_cluster_suspect_count") or 0)
-    valid_signature_rate = float(signatures.get("valid_signature_rate") or 0.0)
+    valid_signature_rate = float(signatures.get("event_signature_valid_rate") or signatures.get("valid_signature_rate") or 0.0)
+    chinese_event_detection_rate = float(signatures.get("chinese_event_detection_rate") or 0.0)
+    accepted_garbage_product_count = int(signatures.get("accepted_garbage_product_count") or 0)
 
     gates = [
         GateResult("heuristic_fallback_rate", _rate(heuristic, item_count) < READINESS_THRESHOLDS.heuristic_fallback_max_rate, _rate(heuristic, item_count), f"< {READINESS_THRESHOLDS.heuristic_fallback_max_rate}", "heuristic emergency fallback must stay low"),
@@ -53,6 +55,8 @@ def assess_readiness(summary: dict[str, Any], *, real_write_rehearsal_passed: bo
         GateResult("pair_relation_conflicts", conflicts <= READINESS_THRESHOLDS.max_pair_conflicts, conflicts, READINESS_THRESHOLDS.max_pair_conflicts, "canonical pair verdicts cannot conflict"),
         GateResult("db_lock_errors", db_locks <= READINESS_THRESHOLDS.max_db_lock_errors, db_locks, READINESS_THRESHOLDS.max_db_lock_errors, "no DB lock errors"),
         GateResult("event_signature_valid_rate", valid_signature_rate >= READINESS_THRESHOLDS.event_signature_valid_min_rate, valid_signature_rate, f">= {READINESS_THRESHOLDS.event_signature_valid_min_rate}", "signatures are concrete enough"),
+        GateResult("chinese_event_detection_rate", chinese_event_detection_rate >= READINESS_THRESHOLDS.chinese_event_detection_min_rate, chinese_event_detection_rate, f">= {READINESS_THRESHOLDS.chinese_event_detection_min_rate}", "Chinese event-like items must not all be rejected"),
+        GateResult("accepted_garbage_product_count", accepted_garbage_product_count == 0, accepted_garbage_product_count, 0, "URL/date/number/long-fragment products must be rejected"),
         GateResult("effective_multi_item_clusters", effective_clusters >= READINESS_THRESHOLDS.effective_cluster_min_count, effective_clusters, f">= {READINESS_THRESHOLDS.effective_cluster_min_count}", "dry-run produced useful same-event clusters"),
         GateResult("suspect_multi_item_clusters", suspect_clusters == 0, suspect_clusters, 0, "no suspect multi-item clusters accepted"),
         GateResult("small_scoped_real_write_rehearsal", real_write_rehearsal_passed, real_write_rehearsal_passed, True, "production readiness requires a scoped write rehearsal"),
@@ -64,4 +68,3 @@ def assess_readiness(summary: dict[str, Any], *, real_write_rehearsal_passed: bo
         "gates": [gate.model_dump() for gate in gates],
         "blockers": [gate.model_dump() for gate in gates if not gate.passed],
     }
-

@@ -715,13 +715,32 @@ def event_signature_summary(items: list[dict[str, Any]]) -> dict[str, Any]:
     signatures = [extract_event_signature(item).model_dump() for item in items]
     valid = [row for row in signatures if row.get("is_concrete")]
     invalid_reasons = Counter(reason for row in signatures for reason in row.get("invalid_reasons", []))
+    semantic_levels = Counter(row.get("semantic_level") for row in signatures)
     by_key = Counter(row.get("signature_key") for row in valid if row.get("signature_key"))
     scores = [float(row.get("concreteness_score") or 0.0) for row in signatures]
+    accepted_garbage = [
+        row for row in valid
+        if any(reason.startswith("invalid_product") for reason in row.get("invalid_reasons", []))
+        or str(row.get("product_or_model") or "").lower() in {"may 14", "our 25", "for 50", "just 0.3"}
+    ]
+    chinese_items = [row for item, row in zip(items, signatures) if has_cjk((item.get("title") or "") + (item.get("summary") or "") + (item.get("content_text") or ""))]
+    chinese_event_potential = [
+        row for row in chinese_items
+        if row.get("action") not in {"other", "opinion_analysis"}
+        or row.get("actor")
+        or row.get("product_or_model")
+    ]
+    chinese_events = [row for row in chinese_event_potential if row.get("semantic_level") == "event_signature"]
     return {
         "total_items": len(items),
         "accepted_signature_count": len(valid),
         "rejected_signature_count": len(items) - len(valid),
         "valid_signature_rate": round(len(valid) / max(len(items), 1), 4),
+        "event_signature_valid_rate": round(len(valid) / max(semantic_levels.get("event_signature", 0), 1), 4),
+        "semantic_level_distribution": dict(semantic_levels),
+        "chinese_event_detection_rate": round(len(chinese_events) / max(len(chinese_event_potential), 1), 4),
+        "chinese_event_potential_count": len(chinese_event_potential),
+        "accepted_garbage_product_count": len(accepted_garbage),
         "invalid_reason_distribution": dict(invalid_reasons),
         "top_signatures": by_key.most_common(20),
         "concreteness_score_avg": round(sum(scores) / max(len(scores), 1), 3),

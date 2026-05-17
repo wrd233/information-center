@@ -1,0 +1,264 @@
+{
+  "generated_at": "2026-05-18T00:12:39.843865",
+  "verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE",
+  "what_changed": [
+    "Hybrid deterministic event signature extractor with four semantic levels and Chinese action triggers.",
+    "Candidate lanes now include precision_event, same_event_recall, same_thread, same_product_different_event, exploratory_recall, suppressed.",
+    "Thread/reject signatures cannot seed event clusters; near_duplicate folds but does not inflate cluster count.",
+    "Step 3 fixtures copied to stable test paths with regression tests.",
+    "Scoped write rehearsal remains blocked by dry-run gates."
+  ],
+  "files_modified": [
+    "app/semantic/signatures.py",
+    "app/semantic/candidates.py",
+    "app/semantic/relation_policy.py",
+    "app/semantic/cluster_policy.py",
+    "app/semantic/clusters.py",
+    "app/semantic/evaluate.py",
+    "app/semantic/readiness.py",
+    "app/semantic/config.py",
+    "app/semantic/schemas.py",
+    "app/semantic/relations.py",
+    "tests/test_semantic_signature_fixtures.py",
+    "tests/test_semantic_relation_fixtures.py",
+    "tests/test_semantic_cluster_fixtures.py",
+    "prompts/event_signature_v1.md",
+    "tests/fixtures/semantic_signature_benchmark_phase1_3b.jsonl",
+    "tests/fixtures/semantic_relation_benchmark_phase1_3b.jsonl",
+    "tests/fixtures/semantic_cluster_benchmark_phase1_3b.jsonl"
+  ],
+  "key_metrics": {
+    "20_item_smoke": {
+      "path": "outputs/semantic_eval/api_xgo_ing_phase1_3b_smoke_20_20260517_233206",
+      "items": 20,
+      "tokens_per_item": 2201.35,
+      "event_signature_valid_rate": 1.0,
+      "chinese_event_detection_rate": 0.2,
+      "effective_multi_item_clusters": 0,
+      "suspect_multi_item_clusters": 0,
+      "pair_conflicts": 0,
+      "final_failures": 0
+    },
+    "80_item_live": {
+      "path": "outputs/semantic_eval/api_xgo_ing_phase1_3b_live_80_20260517_233426",
+      "items": 80,
+      "tokens_per_item": 2720.95,
+      "event_signature_valid_rate": 1.0,
+      "chinese_event_detection_rate": 0.3214,
+      "effective_multi_item_clusters": 1,
+      "suspect_multi_item_clusters": 0,
+      "pair_conflicts": 9,
+      "final_failures": 9
+    },
+    "300_item_live_dry_run": {
+      "path": "outputs/semantic_eval/api_xgo_ing_phase1_3b_full_300_20260517_234600",
+      "items": 300,
+      "tokens_per_item": 2923.8,
+      "event_signature_valid_rate": 0.9821,
+      "valid_signature_rate_total_items": 0.3667,
+      "chinese_event_detection_rate": 0.3846,
+      "effective_multi_item_clusters": 2,
+      "suspect_multi_item_clusters": 0,
+      "pair_conflicts": 0,
+      "must_run_skip_count": 0,
+      "relations": {
+        "different": 624,
+        "near_duplicate": 12,
+        "related_with_new_info": 1,
+        "same_product_different_event": 90,
+        "same_thread": 11,
+        "uncertain": 3
+      },
+      "final_failures": 31,
+      "parse_failures": 2,
+      "rate_limit_errors": 0,
+      "db_lock_errors": 0,
+      "actual_tokens": 877140,
+      "actual_calls": 220
+    },
+    "fixture_metrics": {
+      "fixture_rows": 33,
+      "semantic_level_accuracy": 0.8788,
+      "benchmark_event_signature_false_negative_rate": 0.1739,
+      "benchmark_event_signature_false_positive_rate": 0.0,
+      "benchmark_chinese_event_detection_rate": 0.75,
+      "fixture_accepted_garbage_product_count": 0
+    }
+  },
+  "readiness": {
+    "verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE",
+    "scoped_real_write_rehearsal_run": false,
+    "reason": "300-item dry-run failed Chinese event detection gate and inspection found accepted garbage products in that run; real writes remain blocked.",
+    "gates": [
+      {
+        "name": "heuristic_fallback_rate",
+        "passed": true,
+        "reason": "heuristic emergency fallback must stay low",
+        "threshold": "< 0.1",
+        "value": 0.0
+      },
+      {
+        "name": "parse_failure_fallback_rate",
+        "passed": true,
+        "reason": "parse failures must not dominate cards",
+        "threshold": "< 0.03",
+        "value": 0.0
+      },
+      {
+        "name": "budget_skip_fallback_rate",
+        "passed": true,
+        "reason": "budget fallback must not starve candidate-bearing cards",
+        "threshold": "< 0.05",
+        "value": 0.0
+      },
+      {
+        "name": "skipped_must_run_candidates",
+        "passed": true,
+        "reason": "must-run candidates are protected",
+        "threshold": 0,
+        "value": 0
+      },
+      {
+        "name": "pair_relation_conflicts",
+        "passed": true,
+        "reason": "canonical pair verdicts cannot conflict",
+        "threshold": 0,
+        "value": 0
+      },
+      {
+        "name": "db_lock_errors",
+        "passed": true,
+        "reason": "no DB lock errors",
+        "threshold": 0,
+        "value": 0
+      },
+      {
+        "name": "event_signature_valid_rate",
+        "passed": true,
+        "reason": "signatures are concrete enough",
+        "threshold": ">= 0.6",
+        "value": 0.9821
+      },
+      {
+        "name": "chinese_event_detection_rate",
+        "passed": false,
+        "reason": "Chinese event-like items must not all be rejected",
+        "threshold": ">= 0.5",
+        "value": 0.3846
+      },
+      {
+        "name": "accepted_garbage_product_count",
+        "passed": true,
+        "reason": "URL/date/number/long-fragment products must be rejected",
+        "threshold": 0,
+        "value": 0
+      },
+      {
+        "name": "effective_multi_item_clusters",
+        "passed": true,
+        "reason": "dry-run produced useful same-event clusters",
+        "threshold": ">= 1",
+        "value": 2
+      },
+      {
+        "name": "suspect_multi_item_clusters",
+        "passed": true,
+        "reason": "no suspect multi-item clusters accepted",
+        "threshold": 0,
+        "value": 0
+      },
+      {
+        "name": "small_scoped_real_write_rehearsal",
+        "passed": false,
+        "reason": "production readiness requires a scoped write rehearsal",
+        "threshold": true,
+        "value": false
+      }
+    ],
+    "additional_manual_blockers": [
+      {
+        "name": "accepted_garbage_product_examples_in_300_run",
+        "value": [
+          "K8s as pricing product",
+          "Git semantics for every file your agent",
+          "sow0e7ym",
+          "May 4th"
+        ],
+        "threshold": "0 accepted URL/date/random/long-fragment products",
+        "passed": false
+      },
+      {
+        "name": "tokens_per_item",
+        "value": 2923.8,
+        "threshold": "ideally < 2000",
+        "passed": false
+      },
+      {
+        "name": "llm_final_failures",
+        "value": 31,
+        "threshold": "low / explain exact value",
+        "passed": false
+      }
+    ]
+  },
+  "complexity_delta": {
+    "modules_added": [
+      "tests/test_semantic_signature_fixtures.py",
+      "tests/test_semantic_relation_fixtures.py",
+      "tests/test_semantic_cluster_fixtures.py"
+    ],
+    "modules_modified": [
+      "app/semantic/signatures.py",
+      "app/semantic/candidates.py",
+      "app/semantic/relation_policy.py",
+      "app/semantic/cluster_policy.py",
+      "app/semantic/clusters.py",
+      "app/semantic/evaluate.py",
+      "app/semantic/readiness.py",
+      "app/semantic/config.py",
+      "app/semantic/schemas.py",
+      "app/semantic/relations.py"
+    ],
+    "prompt_versions_active": [
+      "item_card_v1",
+      "item_relation_v3",
+      "item_cluster_relation_v3",
+      "cluster_card_patch_v1",
+      "event_signature_v1"
+    ],
+    "active_relation_labels": [
+      "near_duplicate",
+      "related_with_new_info",
+      "same_product_different_event",
+      "same_thread",
+      "different",
+      "low_signal",
+      "uncertain"
+    ],
+    "active_thresholds": {
+      "event_signature_valid_rate": ">=0.6",
+      "chinese_event_detection_rate": ">=0.5",
+      "effective_multi_item_clusters": ">=1",
+      "suspect_multi_item_clusters": "0",
+      "must_run_skip_count": "0",
+      "pair_conflicts": "0"
+    },
+    "remaining_complexity_debt": [
+      "LLM-backed signature extraction prompt exists but the production pipeline still relies mostly on deterministic extraction plus item-card LLM context.",
+      "Product validation still allowed garbage products in the completed 300 run before the final tightening patch; rerun required.",
+      "Candidate volume remains high at 8996 generated pairs for 300 items."
+    ]
+  },
+  "real_db_writes": {
+    "ingest_source_scope": false,
+    "semantic_write_real_db": false,
+    "scoped_rehearsal": "NOT RUN",
+    "backup_paths": []
+  },
+  "remaining_blockers": [
+    "Chinese event detection in 300 dry-run is 0.3846 < 0.5.",
+    "Accepted garbage product examples remain in the completed 300-run evidence; the validator was tightened after this run and needs rerun validation.",
+    "Token cost is 2923.8 tokens/item, above the ideal <2000 target.",
+    "31 final LLM failures in the 300 run require prompt/schema or retry tuning."
+  ]
+}
