@@ -1,0 +1,369 @@
+{
+  "concurrency_comparison": {
+    "generated_at": "2026-05-17T02:47:39.696911",
+    "note": "c2 comparator reuses the corrected api_xgo_ing_full_150_c2 run copied into c2_cmp to avoid duplicate live token spend; c3 and c4 were fresh comparison runs.",
+    "reason": "concurrency=3 had the shortest duration with no rate-limit or DB-lock errors and fewer final failures than c2/c4 under the same 200k token budget; c4 did not improve throughput and had higher p95 latency/failures.",
+    "recommended_concurrency": 3,
+    "runs": [
+      {
+        "actual_calls": 44,
+        "actual_tokens": 206094,
+        "avg_latency_ms": 20789.8,
+        "cache_hit_rate": 0.1845,
+        "cache_hit_tokens": 38016,
+        "calls_per_sec": 0.0741,
+        "cluster_relations": {
+          "new_info": 14,
+          "source_material": 4
+        },
+        "concurrency": 2,
+        "db_lock_errors": 0,
+        "duration_seconds": 594.173,
+        "final_failures": 3,
+        "heuristic_card_fallback_count": 15,
+        "item_card_failed": 3,
+        "p50_latency_ms": 21257,
+        "p95_latency_ms": 30208,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "relations": {
+          "different": 55,
+          "near_duplicate": 2,
+          "related_with_new_info": 15
+        },
+        "repair_retry_count": 3,
+        "source_path": "outputs/semantic_eval/api_xgo_ing_full_150_c2_cmp/semantic_quality_summary.json",
+        "successful_cluster_card_patches": 0,
+        "successful_item_cards": 27,
+        "successful_item_cluster_relations": 0,
+        "successful_item_relations": 14,
+        "tokens_per_sec": 346.86
+      },
+      {
+        "actual_calls": 43,
+        "actual_tokens": 209040,
+        "avg_latency_ms": 21531.6,
+        "cache_hit_rate": 0.1763,
+        "cache_hit_tokens": 36864,
+        "calls_per_sec": 0.1216,
+        "cluster_relations": {
+          "new_info": 17,
+          "source_material": 3
+        },
+        "concurrency": 3,
+        "db_lock_errors": 0,
+        "duration_seconds": 353.698,
+        "final_failures": 1,
+        "heuristic_card_fallback_count": 5,
+        "item_card_failed": 1,
+        "p50_latency_ms": 22439,
+        "p95_latency_ms": 29555,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "relations": {
+          "different": 53,
+          "near_duplicate": 4,
+          "related_with_new_info": 12
+        },
+        "repair_retry_count": 1,
+        "source_path": "outputs/semantic_eval/api_xgo_ing_full_150_c3_cmp/semantic_quality_summary.json",
+        "successful_cluster_card_patches": 0,
+        "successful_item_cards": 29,
+        "successful_item_cluster_relations": 0,
+        "successful_item_relations": 13,
+        "tokens_per_sec": 591.01
+      },
+      {
+        "actual_calls": 49,
+        "actual_tokens": 212231,
+        "avg_latency_ms": 20962.6,
+        "cache_hit_rate": 0.2352,
+        "cache_hit_tokens": 49920,
+        "calls_per_sec": 0.1231,
+        "cluster_relations": {
+          "new_info": 17,
+          "source_material": 5
+        },
+        "concurrency": 4,
+        "db_lock_errors": 0,
+        "duration_seconds": 398.016,
+        "final_failures": 3,
+        "heuristic_card_fallback_count": 15,
+        "item_card_failed": 3,
+        "p50_latency_ms": 20752,
+        "p95_latency_ms": 33846,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "relations": {
+          "different": 73,
+          "near_duplicate": 4,
+          "related_with_new_info": 18
+        },
+        "repair_retry_count": 3,
+        "source_path": "outputs/semantic_eval/api_xgo_ing_full_150_c4_cmp/semantic_quality_summary.json",
+        "successful_cluster_card_patches": 0,
+        "successful_item_cards": 27,
+        "successful_item_cluster_relations": 0,
+        "successful_item_relations": 19,
+        "tokens_per_sec": 533.22
+      }
+    ]
+  },
+  "console_ui_modified": false,
+  "final_full_evaluation_summary": {
+    "actual_calls": 35,
+    "actual_tokens": 216872,
+    "errors_fallbacks": {
+      "db_lock_errors": 0,
+      "final_failures": 0,
+      "llm_parse_failures": 0,
+      "repair_retry_count": 0,
+      "review_queue_entries_due_to_failure": 553,
+      "skipped_due_to_max_calls": false,
+      "skipped_due_to_missing_card": 0,
+      "skipped_due_to_no_candidate": 0,
+      "skipped_due_to_token_budget": false
+    },
+    "item_cards": {
+      "avg_confidence": 0.629,
+      "content_role_distribution": {
+        "aggregator": 3,
+        "analysis": 21,
+        "commentary": 32,
+        "firsthand": 16,
+        "low_signal": 33,
+        "report": 117,
+        "source_material": 78
+      },
+      "entity_count_distribution": {
+        "0": 12,
+        "1": 25,
+        "10": 3,
+        "11": 1,
+        "14": 1,
+        "15": 1,
+        "2": 46,
+        "3": 55,
+        "4": 48,
+        "5": 36,
+        "6": 32,
+        "7": 28,
+        "8": 8,
+        "9": 4
+      },
+      "heuristic_card_fallback_count": 125,
+      "item_cards_failed": 0,
+      "item_cards_generated": 300,
+      "item_cards_generated_or_reused": 300,
+      "item_cards_reused": 0,
+      "samples": [
+        {
+          "item_id": "item_005146f422b44ef0b9111375fc37c1bc",
+          "role": "source_material",
+          "summary": "Mistral AI announced public preview of Workflows, an orchestration layer for enterprise AI, used by organizations including ASML, ABANCA, CMA-CGM, France Travail, La Banque Postale, Moeve.",
+          "title": "Mistral AI releases public preview of Workflows, the orchestration layer for enterprise AI"
+        },
+        {
+          "item_id": "item_008568ca63864852a278b6196a5592fd",
+          "role": "report",
+          "summary": "Andrew Dai launched ElorianAI, a multimodal reasoning lab, after 12 years at Brain/DeepMind.",
+          "title": "My former Brain colleague @AndrewDai just launched @ElorianAI"
+        },
+        {
+          "item_id": "item_00a898ed350745bfba572359d4f4d24c",
+          "role": "low_signal",
+          "summary": "Alex Albert recommends Jack Raines' book 'Young Money' for teens/20s.",
+          "title": "Jack's young money blog had a big impact on me when I was in college"
+        },
+        {
+          "item_id": "item_028ebef302864044b56032ed693483ae",
+          "role": "analysis",
+          "summary": "Want to move faster with AI without losing human oversight? ⏸️ Join our live session on April 8th for a quick introduction to Dify’s Human Input node, including how it works, how to use it, and real workflow demos. You’ll see how to seamlessly add a review step into your workflow so outputs can be paused, checked, and approved before they go live. When AI s…",
+          "title": "Want to move faster with AI without losing human oversight? ⏸️ Join our live session on April 8th f..."
+        },
+        {
+          "item_id": "item_03126b51b80e4bebbcbd350dae2387bc",
+          "role": "aggregator",
+          "summary": "Latent.Space posts 'ImageGen is on the Path to AGI'.",
+          "title": "[AINews] ImageGen is on the Path to AGI"
+        },
+        {
+          "item_id": "item_04c96d0dfc174175b19634543bd29dc9",
+          "role": "report",
+          "summary": "I've been working on this essay for a while, and it is mainly about AI and about the future. But given the horror we're seeing in Minnesota, its emphasis on the importance of preserving democratic values and rights at home is particularly relevant. 💬 298 🔄 413 ❤️ 6661 👀 1114750 📊 903 ⚡ Powered by xgo.ing",
+          "title": "I've been working on this essay for a while, and it is mainly about AI and about the future. But giv..."
+        },
+        {
+          "item_id": "item_04e656f80035418f80d5efa6868b17ff",
+          "role": "analysis",
+          "summary": "happy horse is insanely happy Chetaslua @chetaslua 🚨 Happy Horse First Output This model beats seedance 2 on artificial analysis for more information check quoted tweet Your browser does not support the video tag. 🔗 View on Twitter 🔗 View Quoted Tweet 💬 7 🔄 2 ❤️ 69 👀 24907 📊 12 ⚡ Powered by xgo.ing",
+          "title": "happy horse is insanely happy"
+        },
+        {
+          "item_id": "item_050f2b0c19cd4d3e807948aed3dae097",
+          "role": "low_signal",
+          "summary": "Promotional tweet with link to skywork.ai.",
+          "title": "Make your own: skywork.ai"
+        },
+        {
+          "item_id": "item_05280d3f568e4d85993f4e21c7f2a05e",
+          "role": "report",
+          "summary": "Our lying Ontario premier has just stolen $50 from every single person in Ontario. The estimated cost of repairing our beloved Science Center was 200 million dollars. The firm that made the estimate was told to multiply it by 1.85 to make it bigger. We were then told it would be better to build a new science center. Now we learn the new center will be small…",
+          "title": "Our lying Ontario premier has just stolen $50 from every single person in Ontario. The estimated cos..."
+        },
+        {
+          "item_id": "item_05df64b7139c4d63a534344df9adbbf6",
+          "role": "source_material",
+          "summary": "DeepSeek announces API availability for deepseek-v4-pro and deepseek-v4-flash, with 1M context and dual modes, and retirement of deepseek-chat and deepseek-reasoner by July 24, 2026.",
+          "title": "API is Available Today! DeepSeek v4 Pro and v4 Flash Models"
+        }
+      ],
+      "warnings_distribution": {
+        "anecdotal_evidence": 1,
+        "anecdote": 1,
+        "announcement_teaser": 1,
+        "claim_unverified": 1,
+        "claims about 'better than any other model' may be unverified": 1,
+        "claims research-backed without citation": 1,
+        "contains opinion": 1,
+        "contains speculation": 1,
+        "contains_quoted_content": 1,
+        "firsthand experience": 1,
+        "heuristic_card": 125,
+        "link_only": 1,
+        "low_detail": 1,
+        "low_information": 1,
+        "low_signal": 2,
+        "marketing": 1,
+        "marketing_giveaway": 1,
+        "marketing_promotion": 1,
+        "no_details": 1,
+        "opinion": 2,
+        "opinion/analysis": 1,
+        "opinion_heavy": 1,
+        "opinion_only": 5,
+        "opinion_piece": 1,
+        "opinion_tweet": 1,
+        "personal opinion": 1,
+        "personal reaction": 1,
+        "product_announcement": 1,
+        "promotional": 7,
+        "promotional content": 1,
+        "promotional_content": 4,
+        "promotional_language": 1,
+        "promotional_tweet": 1,
+        "quote_tweet": 1,
+        "request/query": 1,
+        "short announcement": 1,
+        "short_content": 1,
+        "source is employee not official account": 1,
+        "subjective claim": 1,
+        "summary_only": 19,
+        "thin_content": 1,
+        "too_short": 19,
+        "tutorial": 1,
+        "unclear_context": 1,
+        "unverified_claim": 1,
+        "vague_content": 3
+      }
+    },
+    "item_clusters": {
+      "new_info": 18,
+      "source_material": 7
+    },
+    "item_relations": {
+      "near_duplicate": 11
+    },
+    "items_sampled": 300,
+    "multi_item_cluster_count": 0,
+    "pending_reviews_created": 612,
+    "source_profiles_recomputed": 82
+  },
+  "generated_at": "2026-05-17T02:48:21.817365",
+  "probe_before_after": {
+    "after_items": 782,
+    "after_latest_item_time": "2026-05-16T10:18:27+00:00",
+    "after_sources_with_items": 147,
+    "before_items": 728,
+    "before_latest_item_time": "2026-05-05T03:57:57+00:00",
+    "before_sources_with_items": 146,
+    "html_entity_source_name_issues_after": 5,
+    "net_new_linked_items": 54,
+    "scope_missing_feed_url_items_after": 0,
+    "scope_missing_source_id_items_after": 0,
+    "zero_item_sources_after": 4,
+    "zero_item_sources_before": 5
+  },
+  "prompt_chain_iteration_log": [
+    {
+      "finding": "item_card LLM batches failed and all 50 cards fell back to heuristic; output JSON was often truncated/unterminated.",
+      "iteration": "initial smoke"
+    },
+    {
+      "changes": [
+        "item_card prompt tightened for AI model/company/product preservation, fact/opinion split, summary-only warnings",
+        "item_relation and item_cluster prompts clarified same-event vs same-topic/follow-up and AI entity overlap",
+        "cluster_card prompt clarified compact titles/core facts/known angles",
+        "candidate recall now scores normalized entity overlap, semantic tokens, cross-source bonus, and 24/72h time windows",
+        "increased output caps: item_card 4000, item_relation 2200, item_cluster_relation 2600"
+      ],
+      "iteration": "prompt/cap fix"
+    },
+    {
+      "iteration": "corrected smoke",
+      "result": "item_card failures dropped to 1 batch; heuristic fallback dropped to 5/50; related_with_new_info and near_duplicate appeared."
+    },
+    {
+      "finding": "default 200k token budget is consumed largely by item_card generation, limiting downstream item_relation/cluster coverage at 150/300 items.",
+      "iteration": "larger runs"
+    }
+  ],
+  "readiness_assessment": {
+    "next_recommended_fixes": [
+      "Fix api.xgo.ing feed fetch latency/timeouts with source-level concurrency and robust per-source timeout reporting in the production ingest path.",
+      "Reduce item_card token cost: smaller batch size or shorter inputs for social posts, stricter output fields, and reliable retry/repair logging.",
+      "Make token budget stage-aware so item_relation and item_cluster_relation receive reserved budget after item_cards.",
+      "Add vector or stronger entity index for relation/cluster candidates, then rerun source_scope_full.",
+      "Aggregate source_profile review entries per source instead of many item-level pending reviews."
+    ],
+    "reasons": [
+      "Final scoped ingest was not clean: 146/151 sources failed or timed out in the bounded pass, although net linked items improved from 728 to 782.",
+      "At 300 items, heuristic_card fallback was 125/300 (>20%) because token budget was consumed during item cards.",
+      "Final 300 run had no LLM item_relation calls and no multi-item clusters; relation/cluster quality is not sufficiently exercised at that scale.",
+      "Source profile pending reviews were very high (612), indicating review aggregation/tuning is needed before production writes.",
+      "Candidate recall improved and works on small/medium samples, but still lacks vector index and produces mostly single-item clusters."
+    ],
+    "write_real_db_semantic_pass_recommended": false
+  },
+  "real_db_writes": {
+    "ingest_source_scope": true,
+    "semantic_write_real_db": false
+  },
+  "report_paths": {
+    "comparison_json": "outputs/semantic_eval/api_xgo_ing_concurrency_comparison_20260517_024739.json",
+    "final300_json": "outputs/semantic_eval/api_xgo_ing_full_300_final/semantic_quality_summary.json",
+    "full150_json": "outputs/semantic_eval/api_xgo_ing_full_150_c2/semantic_quality_summary.json",
+    "ingest_json": "outputs/semantic_eval/api_xgo_ing_ingest_20260517_013814.json",
+    "probe_after_json": "outputs/semantic_eval/api_xgo_ing_probe_after_20260517_015754.json",
+    "probe_before_json": "outputs/semantic_eval/api_xgo_ing_probe_before_20260517_011815.json",
+    "required_smoke_json_initial": "outputs/semantic_eval/api_xgo_ing_smoke_c2/semantic_quality_summary.json",
+    "smoke_iter2_json": "outputs/semantic_eval/api_xgo_ing_smoke_c2_iter2/semantic_quality_summary.json"
+  },
+  "source_refresh_summary": {
+    "backup_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/backups/content_inbox.sqlite3.before_api_xgo_semantic_phase1_2b_20260517_013814.sqlite3",
+    "db_item_delta_final_bounded_pass": 1,
+    "duplicates_final_bounded_pass": 54,
+    "failures_by_reason": {
+      "ingest_failed": 1,
+      "source_ingest_timeout": 145
+    },
+    "items_after_final_bounded_pass": 2551,
+    "items_before_final_bounded_pass": 2550,
+    "latest_item_time_after": "2026-05-16T10:18:27+00:00",
+    "latest_item_time_before": "2026-05-16T10:18:27+00:00",
+    "note": "Earlier interrupted scoped attempts inserted additional api.xgo.ing items before the final bounded report; probe before/after is the authoritative net refresh view.",
+    "sources_failed_final_bounded_pass": 146,
+    "sources_selected": 151,
+    "sources_succeeded_final_bounded_pass": 5
+  }
+}

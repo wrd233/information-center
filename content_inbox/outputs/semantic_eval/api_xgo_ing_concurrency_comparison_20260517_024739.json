@@ -1,0 +1,110 @@
+{
+  "generated_at": "2026-05-17T02:47:39.696911",
+  "note": "c2 comparator reuses the corrected api_xgo_ing_full_150_c2 run copied into c2_cmp to avoid duplicate live token spend; c3 and c4 were fresh comparison runs.",
+  "reason": "concurrency=3 had the shortest duration with no rate-limit or DB-lock errors and fewer final failures than c2/c4 under the same 200k token budget; c4 did not improve throughput and had higher p95 latency/failures.",
+  "recommended_concurrency": 3,
+  "runs": [
+    {
+      "actual_calls": 44,
+      "actual_tokens": 206094,
+      "avg_latency_ms": 20789.8,
+      "cache_hit_rate": 0.1845,
+      "cache_hit_tokens": 38016,
+      "calls_per_sec": 0.0741,
+      "cluster_relations": {
+        "new_info": 14,
+        "source_material": 4
+      },
+      "concurrency": 2,
+      "db_lock_errors": 0,
+      "duration_seconds": 594.173,
+      "final_failures": 3,
+      "heuristic_card_fallback_count": 15,
+      "item_card_failed": 3,
+      "p50_latency_ms": 21257,
+      "p95_latency_ms": 30208,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "relations": {
+        "different": 55,
+        "near_duplicate": 2,
+        "related_with_new_info": 15
+      },
+      "repair_retry_count": 3,
+      "source_path": "outputs/semantic_eval/api_xgo_ing_full_150_c2_cmp/semantic_quality_summary.json",
+      "successful_cluster_card_patches": 0,
+      "successful_item_cards": 27,
+      "successful_item_cluster_relations": 0,
+      "successful_item_relations": 14,
+      "tokens_per_sec": 346.86
+    },
+    {
+      "actual_calls": 43,
+      "actual_tokens": 209040,
+      "avg_latency_ms": 21531.6,
+      "cache_hit_rate": 0.1763,
+      "cache_hit_tokens": 36864,
+      "calls_per_sec": 0.1216,
+      "cluster_relations": {
+        "new_info": 17,
+        "source_material": 3
+      },
+      "concurrency": 3,
+      "db_lock_errors": 0,
+      "duration_seconds": 353.698,
+      "final_failures": 1,
+      "heuristic_card_fallback_count": 5,
+      "item_card_failed": 1,
+      "p50_latency_ms": 22439,
+      "p95_latency_ms": 29555,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "relations": {
+        "different": 53,
+        "near_duplicate": 4,
+        "related_with_new_info": 12
+      },
+      "repair_retry_count": 1,
+      "source_path": "outputs/semantic_eval/api_xgo_ing_full_150_c3_cmp/semantic_quality_summary.json",
+      "successful_cluster_card_patches": 0,
+      "successful_item_cards": 29,
+      "successful_item_cluster_relations": 0,
+      "successful_item_relations": 13,
+      "tokens_per_sec": 591.01
+    },
+    {
+      "actual_calls": 49,
+      "actual_tokens": 212231,
+      "avg_latency_ms": 20962.6,
+      "cache_hit_rate": 0.2352,
+      "cache_hit_tokens": 49920,
+      "calls_per_sec": 0.1231,
+      "cluster_relations": {
+        "new_info": 17,
+        "source_material": 5
+      },
+      "concurrency": 4,
+      "db_lock_errors": 0,
+      "duration_seconds": 398.016,
+      "final_failures": 3,
+      "heuristic_card_fallback_count": 15,
+      "item_card_failed": 3,
+      "p50_latency_ms": 20752,
+      "p95_latency_ms": 33846,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "relations": {
+        "different": 73,
+        "near_duplicate": 4,
+        "related_with_new_info": 18
+      },
+      "repair_retry_count": 3,
+      "source_path": "outputs/semantic_eval/api_xgo_ing_full_150_c4_cmp/semantic_quality_summary.json",
+      "successful_cluster_card_patches": 0,
+      "successful_item_cards": 27,
+      "successful_item_cluster_relations": 0,
+      "successful_item_relations": 19,
+      "tokens_per_sec": 533.22
+    }
+  ]
+}

@@ -53,6 +53,15 @@ Summary:
 - Evaluate defaults are wider for real-data assessment: `--max-calls 100`, `--token-budget 200000`, `--concurrency 4`.
 - Concurrent DeepSeek calls are enabled for item-card batches and item-item relation judging.
 
+## Phase 1.2 Evaluation Enhancements
+
+- `evaluate` supports `--source-url-prefix` and `--source-filter`.
+- `evaluate` supports sample modes: `recent`, `duplicate_candidates`, `cluster_candidates`, `source_scope_full`, and `mixed`.
+- Reports now separate `operation_count`, `llm_call_count`, `skipped`, `success`, and `failed`.
+- Reports include Source Scope, Concurrency Summary, Prompt Iteration Notes, and Readiness Assessment sections.
+- Source scope filtering checks `feed_url`, item `url`, `source_id`, `source_name`, and source category where available.
+- `--output-dir` is accepted as an alias for `--output`.
+
 ## Deferred / Deviations
 
 - Vector indexes for `item_cards` and `cluster_cards` are still deferred.

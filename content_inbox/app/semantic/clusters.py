@@ -8,7 +8,7 @@ from typing import Any
 from app.semantic import db
 from app.semantic.cards import generate_item_cards
 from app.semantic.llm_client import SemanticLLMClient
-from app.semantic.relations import card_public, insert_review
+from app.semantic.relations import card_public, hours_apart, insert_review, normalized_entity_terms, semantic_tokens
 from app.semantic.schemas import (
     CLUSTER_CARD_PROMPT_VERSION,
     ITEM_CLUSTER_PROMPT_VERSION,
@@ -65,23 +65,35 @@ def candidate_clusters(
     include_archived: bool = False,
 ) -> list[dict[str, Any]]:
     clusters = list_clusters(store, status=None, limit=200)
-    item_terms = set((item_card["canonical_title"] + " " + (item_card["event_hint"] or "")).lower().split())
-    item_entities = set(json.loads(item_card["entities_json"] or "[]"))
-    scored: list[tuple[int, dict[str, Any]]] = []
+    item_terms = semantic_tokens(
+        f"{item_card['canonical_title']} {item_card.get('event_hint') or ''} {item_card.get('short_summary') or ''}"
+    )
+    item_entities = normalized_entity_terms(json.loads(item_card["entities_json"] or "[]"))
+    item = db.get_item(store, item_card["item_id"]) or {}
+    scored: list[tuple[float, str, dict[str, Any]]] = []
     for cluster in clusters:
         if cluster["status"] == "merged":
             continue
         if cluster["status"] == "archived" and not include_archived:
             continue
         archived_penalty = -3 if cluster["status"] == "archived" else 0
-        title_terms = set((cluster["cluster_title"] + " " + cluster["cluster_summary"]).lower().split())
-        score = len(item_terms & title_terms) + len(item_entities & set(cluster["entities"])) * 2 + archived_penalty
+        title_terms = semantic_tokens(f"{cluster['cluster_title']} {cluster['cluster_summary']}")
+        score = float(len(item_terms & title_terms)) + len(item_entities & normalized_entity_terms(cluster["entities"])) * 4 + archived_penalty
+        gap = hours_apart(
+            item.get("published_at") or item.get("created_at"),
+            cluster.get("last_seen_at") or cluster.get("first_seen_at"),
+        )
+        if gap is not None:
+            if gap <= 24:
+                score += 2
+            elif gap <= 72:
+                score += 1
         if score > 0:
             card = current_cluster_card(store, cluster["cluster_id"])
             cluster["cluster_card"] = card
-            scored.append((score, cluster))
-    scored.sort(key=lambda pair: pair[0], reverse=True)
-    return [cluster for _score, cluster in scored[:max_candidates]]
+            scored.append((score, cluster.get("last_seen_at") or "", cluster))
+    scored.sort(key=lambda pair: (pair[0], pair[1]), reverse=True)
+    return [cluster for _score, _seen, cluster in scored[:max_candidates]]
 
 
 def process_item_clusters(
@@ -165,7 +177,7 @@ def process_item_clusters(
             schema_version=SCHEMA_VERSION,
             input_data=input_data,
             output_model=ItemClusterOutput,
-            max_tokens=1800,
+            max_tokens=2600,
             item_id=item_id,
             source_id=item.get("source_id") or item.get("feed_url") or item.get("source_name"),
         )

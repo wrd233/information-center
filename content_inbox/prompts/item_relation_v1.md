@@ -43,6 +43,9 @@ Decision rules:
 - duplicate or near_duplicate may be folded for display but never deleted.
 - related_with_new_info must be kept and sent to cluster judging.
 - Do not treat new analysis, firsthand experience, or source material as a duplicate just because it shares the same event.
+- For AI news, treat shared model/product/company/paper/benchmark names as strong evidence to inspect, not automatic duplication.
+- Use related_with_new_info when the candidate is about the same AI event/topic and the new item adds a launch detail, benchmark result, paper/source link, policy change, pricing/access fact, hands-on observation, or distinct analysis angle.
+- Use different when shared entities are broad only, such as both mentioning OpenAI but covering unrelated products or events.
 - If confidence is low or evidence is insufficient, output uncertain.
 - Do not invent facts or new_information.
 

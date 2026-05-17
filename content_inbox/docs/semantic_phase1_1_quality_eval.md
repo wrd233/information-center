@@ -56,6 +56,21 @@ PYTHONPATH=. python3 -m content_inbox.semantic evaluate \
   --output content_inbox/outputs/semantic_eval
 ```
 
+Phase 1.2 adds source scope and sample modes:
+
+```bash
+PYTHONPATH=. python3 -m content_inbox.semantic evaluate \
+  --db-path content_inbox/data/content_inbox.sqlite3 \
+  --source-url-prefix api.xgo.ing \
+  --sample-mode mixed \
+  --limit 100 \
+  --max-calls 200 \
+  --concurrency 4 \
+  --live \
+  --dry-run \
+  --output /tmp/content_inbox_semantic_eval
+```
+
 Small live smoke:
 
 ```bash

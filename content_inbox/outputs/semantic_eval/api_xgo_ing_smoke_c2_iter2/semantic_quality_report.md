@@ -1,0 +1,3324 @@
+# Semantic Quality Report
+
+## 1. Run Metadata
+
+```json
+{
+  "actual_calls": 67,
+  "actual_tokens": 200757,
+  "batch_size": 5,
+  "cache_hit_tokens": 52992,
+  "cache_miss_tokens": 0,
+  "concurrency": 2,
+  "db_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3",
+  "dry_run": true,
+  "duration_seconds": 511.531,
+  "evaluation_db_path": "/var/folders/f_/12__g2851hv407x2tv3xbx580000gn/T/content_inbox_semantic_eval_8o8dnjox.sqlite3",
+  "finished_at": "2026-05-16T18:17:24.314012+00:00",
+  "git_commit": "038fec7dcde63c6e80bf9ff73031abfaafb9c25b",
+  "include_archived": false,
+  "items_sampled": 50,
+  "live": true,
+  "max_calls": 120,
+  "max_candidates": 4,
+  "max_items": 50,
+  "model": "deepseek-v4-flash",
+  "recall_strategy": "lexical/entity/time/source hybrid",
+  "run_id": "semantic_eval_20260516_180852_742632",
+  "sample_mode": "mixed",
+  "source_filter": null,
+  "source_url_prefix": "api.xgo.ing",
+  "started_at": "2026-05-16T18:08:52.742632+00:00",
+  "strong_model": null,
+  "token_budget": 200000,
+  "vector_index": false,
+  "warnings": [],
+  "write_real_db": false
+}
+```
+
+## 2. Source Scope
+
+```json
+{
+  "matched_source_count": 147,
+  "source_filter": null,
+  "source_url_prefix": "api.xgo.ing",
+  "sources": [
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/05f1492e43514dc3862a076d3697c390",
+      "item_count": 25,
+      "latest_item_time": "2026-05-15T19:17:19+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-nvidia-ai-nvidiaai",
+      "source_name": "NVIDIA AI(@NVIDIAAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/0277b0bbefd54df7bc6b7880122da8f7",
+      "item_count": 25,
+      "latest_item_time": "2026-05-16T10:18:27+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-orange-ai-oran-ge",
+      "source_name": "orange.ai(@oran_ge)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/74e542992cf7441390c708f5601071d4",
+      "item_count": 7,
+      "latest_item_time": "2026-05-04T13:27:27+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-imxiaohu",
+      "source_name": "小互(@imxiaohu)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/082097117b4543e9a741cd2580f936d3",
+      "item_count": 7,
+      "latest_item_time": "2026-04-24T07:24:53+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-junyang-lin-justinlin610",
+      "source_name": "Junyang Lin(@JustinLin610)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/179bcc4b8e5d4274b6e9e935f9fd4434",
+      "item_count": 6,
+      "latest_item_time": "2026-05-05T06:23:31+00:00",
+      "sampled_item_count": 6,
+      "source_id": "socialmedia-aadit-sheth-aaditsh",
+      "source_name": "Aadit Sheth(@aaditsh)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/0e3ebaf288014c45b0d24b71fe37312b",
+      "item_count": 6,
+      "latest_item_time": "2026-04-27T11:31:05+00:00",
+      "sampled_item_count": 6,
+      "source_id": "socialmedia-ai-breakfast-aibreakfast",
+      "source_name": "AI Breakfast(@AiBreakfast)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/22af005b21ec45b1a4503acca777b7f0",
+      "item_count": 6,
+      "latest_item_time": "2026-03-10T20:50:07+00:00",
+      "sampled_item_count": 6,
+      "source_id": "socialmedia-ai-sdk-aisdk",
+      "source_name": "AI SDK(@aisdk)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/08b5488b20bc437c8bfc317a52e5c26d",
+      "item_count": 6,
+      "latest_item_time": "2026-04-30T16:21:35+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-andrew-ng-andrewyng",
+      "source_name": "Andrew Ng(@AndrewYNg)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/0be252fedbe84ad7bea21be44b18da89",
+      "item_count": 6,
+      "latest_item_time": "2026-04-30T19:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-dify-dify-ai",
+      "source_name": "Dify(@dify_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/1897eed387064dfab443764d6da50bc6",
+      "item_count": 6,
+      "latest_item_time": "2026-05-01T11:13:35+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-elevenlabs-elevenlabsio",
+      "source_name": "ElevenLabs(@elevenlabsio)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/221a88341acb475db221a12fed8208d0",
+      "item_count": 6,
+      "latest_item_time": "2026-04-30T17:30:36+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-notebooklm-notebooklm",
+      "source_name": "NotebookLM(@NotebookLM)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/0c0856a69f9f49cf961018c32a0b0049",
+      "item_count": 6,
+      "latest_item_time": "2026-05-07T17:19:33+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-openai-openai",
+      "source_name": "OpenAI(@OpenAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/17687b1051204b2dbaed4ea4c9178f28",
+      "item_count": 6,
+      "latest_item_time": "2026-05-02T04:37:44+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-poe-poe-platform",
+      "source_name": "Poe(@poe_platform)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/12eba9c3db4940c5ab2a72bd00f9ff2c",
+      "item_count": 6,
+      "latest_item_time": "2026-04-30T14:02:05+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-replicate-replicate",
+      "source_name": "Replicate(@replicate)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/3953aa71e87a422eb9d7bf6ff1c7c43e",
+      "item_count": 6,
+      "latest_item_time": "2026-05-04T23:05:58+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-xai-xai",
+      "source_name": "xAI(@xai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f3fedf817599470dbf8d8d11f0872475",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T21:00:03+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-a16z-a16z",
+      "source_name": "a16z(@a16z)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/3042b6f912b24f64982cc23f7bd59681",
+      "item_count": 5,
+      "latest_item_time": "2026-04-28T15:15:29+00:00",
+      "sampled_item_count": 5,
+      "source_id": "socialmedia-adam-d-angelo-adamdangelo",
+      "source_name": "Adam D'Angelo(@adamdangelo)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/7d19a619a1cc4a9896129211269d2c85",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T22:34:11+00:00",
+      "sampled_item_count": 5,
+      "source_id": "socialmedia-ai-engineer-aidotengineer",
+      "source_name": "AI Engineer(@aiDotEngineer)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/aa74321087f9405a872fd9a76b743bf8",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T12:21:00+00:00",
+      "sampled_item_count": 5,
+      "source_id": "socialmedia-ai-will-financeyf5",
+      "source_name": "AI Will(@FinanceYF5)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/341f7b9f8d9b477e8bb200caa7f32c6e",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T21:27:41+00:00",
+      "sampled_item_count": 5,
+      "source_id": "socialmedia-ak-akhaliq",
+      "source_name": "AK(@_akhaliq)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/3434c0d56ee0446f991fb6af42bfac4b",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T19:44:40+00:00",
+      "sampled_item_count": 5,
+      "source_id": "socialmedia-akshay-kothari-akothari",
+      "source_name": "Akshay Kothari(@akothari)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/524525de0d69407b80f0a7d891fdc8df",
+      "item_count": 5,
+      "latest_item_time": "2026-04-20T17:19:14+00:00",
+      "sampled_item_count": 3,
+      "source_id": "socialmedia-alex-albert-alexalbert",
+      "source_name": "Alex Albert(@alexalbert__)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a02496979a0e4d86baf2b72c24db52a4",
+      "item_count": 5,
+      "latest_item_time": "2026-03-24T23:59:57+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-aman-sanger-amanrsanger",
+      "source_name": "Aman Sanger(@amanrsanger)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/5fb1814c610c4af2911caa98c5c5ef82",
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T03:57:57+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-amjad-masad-amasad",
+      "source_name": "Amjad Masad(@amasad)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/edf707b5c0b248579085f66d7a3c5524",
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T17:43:06+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-andrej-karpathy-karpathy",
+      "source_name": "Andrej Karpathy(@karpathy)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a3eb6beb2d894da3a9b7ab6d2e46790e",
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T23:26:59+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-andrew-chen-andrewchen",
+      "source_name": "andrew chen(@andrewchen)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/fc28a211471b496682feff329ec616e5",
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T19:03:27+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-anthropic-anthropicai",
+      "source_name": "Anthropic(@AnthropicAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/5f13b32b124a41cfb659f903a84032b1",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T10:49:37+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-anton-osika-eu-acc-antonosika",
+      "source_name": "Anton Osika – eu/acc(@antonosika)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/59e6b63ae9684d11be0ae13d9e7420f2",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T18:20:23+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-aravind-srinivas-aravsrinivas",
+      "source_name": "Aravind Srinivas(@AravSrinivas)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/d8121d969fb34c7daad2dd2aac4ba270",
+      "item_count": 5,
+      "latest_item_time": "2026-03-16T23:24:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-arthur-mensch-arthurmensch",
+      "source_name": "Arthur Mensch(@arthurmensch)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/e153fdd077df458b8298d975c060dcc3",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T23:25:51+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-augment-code-augmentcode",
+      "source_name": "Augment Code(@augmentcode)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/6bbf31cac345443585c3280320ba9009",
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T15:45:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-berkeley-ai-research-berkeley-ai",
+      "source_name": "Berkeley AI Research(@berkeley_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f54b2b40185943ce8f48a880110b7bc2",
+      "item_count": 5,
+      "latest_item_time": "2026-04-22T02:10:13+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-binyuan-hui-huybery",
+      "source_name": "Binyuan Hui(@huybery)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/760ab7cd9708452c9ce1f9144b92a430",
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T23:30:36+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-bolt-new-boltdotnew",
+      "source_name": "bolt.new(@boltdotnew)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/b8d7530f0b294405825013bbc1cc198f",
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T01:47:09+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-browser-use-browser-use",
+      "source_name": "Browser Use(@browser_use)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/66a6b39ddcfa42e39621e0ab293c1bdd",
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T21:29:34+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-cat-catwu",
+      "source_name": "cat(@_catwu)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/3877c31cdb554cffb750b3b683c98c4d",
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T21:37:28+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-character-ai-character-ai",
+      "source_name": "Character.AI(@character_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f7992687b8d74b14bf2341eb3a0a5ec4",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T20:20:08+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-chatgpt-chatgptapp",
+      "source_name": "ChatGPT(@ChatGPTapp)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4cc14cbd15c74e189d537c415369e1a7",
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T17:48:11+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-cognition-cognition-labs",
+      "source_name": "Cognition(@cognition_labs)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/462aa134ed914f98b3491680ad9b36ed",
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T13:11:45+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-cohere-cohere",
+      "source_name": "cohere(@cohere)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/5287b4e0e13a4ab7ab7b1d56f9d88960",
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T19:46:40+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-cursor-cursor-ai",
+      "source_name": "Cursor(@cursor_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/49666ce6fe3e4cb786c6574684542ec5",
+      "item_count": 5,
+      "latest_item_time": "2026-04-07T18:14:19+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-dario-amodei-darioamodei",
+      "source_name": "Dario Amodei(@DarioAmodei)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/42e6b4901b97498eab2ab64c07d56177",
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T00:09:55+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-deeplearning-ai-deeplearningai",
+      "source_name": "DeepLearning.AI(@DeepLearningAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/68b610deb24b47ae9a236811563cda86",
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T02:20:52+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-deepseek-deepseek-ai",
+      "source_name": "DeepSeek(@deepseek_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4a884d5e2f3740c5a26c9c093de6388a",
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T11:34:21+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-demis-hassabis-demishassabis",
+      "source_name": "Demis Hassabis(@demishassabis)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/6384ee3c656c48fea5e8b3cdacece4d0",
+      "item_count": 5,
+      "latest_item_time": "2026-03-26T17:03:19+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-dia-diabrowser",
+      "source_name": "Dia(@diabrowser)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/97f1484ae48c430fbbf3438099743674",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T02:33:59+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-dotey",
+      "source_name": "宝玉(@dotey)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/931d6e88e067496cac6bf23f69d60f33",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T21:05:55+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-elvis-omarsar0",
+      "source_name": "elvis(@omarsar0)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/ddfdcdd4e390495c942f0b5da62af0fb",
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T02:41:21+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-eric-jing-ericjing-ai",
+      "source_name": "Eric Jing(@ericjing_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/65f321be670b4ffba7f40d0afd38c94d",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T11:01:36+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-eric-zakariasson-ericzakariasson",
+      "source_name": "eric zakariasson(@ericzakariasson)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a4bfe44bfc0d4c949da21ebd3f5f42a5",
+      "item_count": 5,
+      "latest_item_time": "2026-04-07T16:48:36+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-fei-fei-li-drfeifei",
+      "source_name": "Fei-Fei Li(@drfeifei)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/326763c2f6154826babcfd71c5ab0f70",
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T16:35:17+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-fellou-fellouai",
+      "source_name": "Fellou(@FellouAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f8a106a09a7d404fb8de7eb0c5ddd2a2",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T16:33:18+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-figma-figma",
+      "source_name": "Figma(@figma)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/c04abb206bbf4f91b22795024d6c0614",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T23:14:12+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-firecrawl-firecrawl-dev",
+      "source_name": "Firecrawl(@firecrawl_dev)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/9f35c76341554bd78c2b9e63dc4fa5d8",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T18:45:40+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-fireworks-ai-fireworksai-hq",
+      "source_name": "Fireworks AI(@FireworksAI_HQ)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4900b3dcd592424687582ff9e0f148ea",
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T10:59:12+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-fish-audio-fishaudio",
+      "source_name": "Fish Audio(@FishAudio)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/be74da51698d4cefb12b39830d6cd201",
+      "item_count": 5,
+      "latest_item_time": "2026-03-16T20:10:48+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-flowiseai-flowiseai",
+      "source_name": "FlowiseAI(@FlowiseAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/35a38c5646d946fb894d8c30c1d9629e",
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T03:08:36+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-gary-marcus-garymarcus",
+      "source_name": "Gary Marcus(@GaryMarcus)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/71ffd342cb5d478185ef7d55bdfca011",
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T02:48:37+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-genspark-genspark-ai",
+      "source_name": "Genspark(@genspark_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/cb6169815e2e447e8e6148a4af3f9686",
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T17:33:11+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-geoffrey-hinton-geoffreyhinton",
+      "source_name": "Geoffrey Hinton(@geoffreyhinton)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/69d925d4a8d44221b03eecbe07bd0f74",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T23:11:31+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-google-ai-developers-googleaidevs",
+      "source_name": "Google AI Developers(@googleaidevs)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4de0bd2d5cef4333a0260dc8157054a7",
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T16:10:11+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-google-ai-googleai",
+      "source_name": "Google AI(@GoogleAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a99538443a484fcc846bdcc8f50745ec",
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T16:01:19+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-google-deepmind-googledeepmind",
+      "source_name": "Google DeepMind(@GoogleDeepMind)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/6fb337feeec44ca38b79491b971d868d",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T18:39:22+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-google-gemini-app-geminiapp",
+      "source_name": "Google Gemini App(@GeminiApp)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/af19d054e26a49129f23abfa82d9e268",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T13:48:37+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-greg-brockman-gdb",
+      "source_name": "Greg Brockman(@gdb)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/771b32075fe54a83bdb6966de9647b4f",
+      "item_count": 5,
+      "latest_item_time": "2026-02-18T22:04:39+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-groq-inc-groqinc",
+      "source_name": "Groq Inc(@GroqInc)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/e8750659b8154dbfa0489f451e044af1",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T19:41:40+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-guillermo-rauch-rauchg",
+      "source_name": "Guillermo Rauch(@rauchg)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/831fac36aa0a49a9af79f35dc1c9b5d9",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T04:52:12+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-guizang-ai-op7418",
+      "source_name": "歸藏(guizang.ai)(@op7418)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/e65b5e59fcb544918c1ba17f5758f0f8",
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T17:39:57+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-hailuo-ai-minimax-hailuo-ai",
+      "source_name": "Hailuo AI (MiniMax)(@Hailuo_AI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f299207df53745bca04a03db8d11c5aa",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T18:02:27+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-harrison-chase-hwchase17",
+      "source_name": "Harrison Chase(@hwchase17)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a9aff6b016c143ed8728dd86eb70d7db",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T23:05:37+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-heygen-heygen-official",
+      "source_name": "HeyGen(@HeyGen_Official)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/6e8e7b42cb434818810f87bcf77d86fb",
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T13:55:43+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-hunyuan-txhunyuan",
+      "source_name": "Hunyuan(@TXhunyuan)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/57831559d22440debbfb2f2528e4ba84",
+      "item_count": 5,
+      "latest_item_time": "2026-04-09T18:58:45+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-ian-goodfellow-goodfellow-ian",
+      "source_name": "Ian Goodfellow(@goodfellow_ian)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a719880fe66e4156a111187f50dae91b",
+      "item_count": 5,
+      "latest_item_time": "2026-04-22T16:46:12+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-ideogram-ideogram-ai",
+      "source_name": "Ideogram(@ideogram_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/dceb5cd131b34c72a8376cba8ea5d864",
+      "item_count": 5,
+      "latest_item_time": "2026-04-14T19:43:38+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-jan-leike-janleike",
+      "source_name": "Jan Leike(@janleike)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/b1013166769c49f8aa3fbdc222867054",
+      "item_count": 5,
+      "latest_item_time": "2026-04-28T20:16:21+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-jeff-dean-jeffdean",
+      "source_name": "Jeff Dean(@JeffDean)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/b3d904c0d7c446558ef3a1e7f2eb362b",
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T02:49:49+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-jerry-liu-jerryjliu0",
+      "source_name": "Jerry Liu(@jerryjliu0)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/c6cfe7c0d6b74849997073233fdea840",
+      "item_count": 5,
+      "latest_item_time": "2026-04-01T15:15:09+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-jim-fan-drjimfan",
+      "source_name": "Jim Fan(@DrJimFan)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f510f6e7eecf456ca7e2895a46752888",
+      "item_count": 5,
+      "latest_item_time": "2026-03-13T12:29:21+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-jina-ai-jinaai",
+      "source_name": "Jina AI(@JinaAI_)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/44d9fa384087448a94d3c8595f8d535e",
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T17:08:33+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-julien-chaumond-julien-c",
+      "source_name": "Julien Chaumond(@julien_c)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/58894bf2934a426ca833c682da2bc810",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T20:00:13+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-justin-welsh-thejustinwelsh",
+      "source_name": "Justin Welsh(@thejustinwelsh)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/c61046471f174d86bc0eb76cb44a21c3",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T18:15:52+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-justine-moore-venturetwins",
+      "source_name": "Justine Moore(@venturetwins)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/564237c3de274d58a04f064920817888",
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T03:00:03+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-kling-ai-kling-ai",
+      "source_name": "Kling AI(@Kling_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/862fee50a745423c87e2633b274caf1d",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T21:47:10+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-langchain-langchainai",
+      "source_name": "LangChain(@LangChainAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a7be8b61a1264ea7984abfaea3eff686",
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T04:59:53+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-latent-space-latentspacepod",
+      "source_name": "Latent.Space(@latentspacepod)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/dc2426bc8348495189b45451d1707a1c",
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T23:47:09+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lee-robinson-leerob",
+      "source_name": "Lee Robinson(@leerob)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/77d5ce4736854b0ebae603e4b54d3095",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T22:21:49+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lenny-rachitsky-lennysan",
+      "source_name": "Lenny Rachitsky(@lennysan)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/adf65931519340f795e2336910b4cd15",
+      "item_count": 5,
+      "latest_item_time": "2026-04-09T17:56:46+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lex-fridman-lexfridman",
+      "source_name": "Lex Fridman(@lexfridman)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/ca2fa444b6ea4b8b974fe148056e497a",
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T03:22:45+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lijigang-com",
+      "source_name": "李继刚(@lijigang_com)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a8f7e2238039461cbc8bf55f5f194498",
+      "item_count": 5,
+      "latest_item_time": "2026-03-10T17:08:44+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lilian-weng-lilianweng",
+      "source_name": "Lilian Weng(@lilianweng)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f01b088d5a39473e854b07143df77ec5",
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T21:55:13+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lmarena-ai-lmarena-ai",
+      "source_name": "lmarena.ai(@lmarena_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4f63d960de644aeebd0aa97e4994dafe",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T22:53:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-logan-kilpatrick-officiallogank",
+      "source_name": "Logan Kilpatrick(@OfficialLoganK)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/639cd13d44284e10ac89fbd1c5399767",
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T09:33:21+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lovable-lovable-dev",
+      "source_name": "Lovable(@lovable_dev)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/db648e4d4eae4822aa0d34f0faef7ad2",
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T06:49:02+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lovartai-lovart-ai",
+      "source_name": "LovartAI(@lovart_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/320181c4651a41a08015946b55f704ab",
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T15:16:07+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-manusai-manusai-hq",
+      "source_name": "ManusAI(@ManusAI_HQ)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/94bb691baeff461686326af619beb116",
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T23:08:57+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-mem0-mem0ai",
+      "source_name": "mem0(@mem0ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/48aae530e0bf413aa7d44380f418e2e3",
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T02:20:59+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-meng-shao-shao-meng",
+      "source_name": "meng shao(@shao__meng)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/61f4b78554fb4b8fa5653ec5d924d15a",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T16:57:40+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-microsoft-research-msftresearch",
+      "source_name": "Microsoft Research(@MSFTResearch)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/72dd496bfd9d44c5a5761a974630376d",
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T22:04:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-midjourney-midjourney",
+      "source_name": "Midjourney(@midjourney)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/424e67b19eed4500b7a440976bbd2ade",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T15:00:01+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-milvus-milvusio",
+      "source_name": "Milvus(@milvusio)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/5d749cc613ec4069bb2a47334739e1b6",
+      "item_count": 5,
+      "latest_item_time": "2026-04-23T07:39:32+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-monica-im-hey-im-monica",
+      "source_name": "Monica_IM(@hey_im_monica)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/394acfaff8c44e09936f5bc0b8504f2c",
+      "item_count": 5,
+      "latest_item_time": "2026-04-28T17:12:10+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-mustafa-suleyman-mustafasuleyman",
+      "source_name": "Mustafa Suleyman(@mustafasuleyman)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/b43bc203409e4c5a9c3ae86fe1ac00c9",
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T03:38:58+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-naval-naval",
+      "source_name": "Naval(@naval)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/6ebdf0d91eef4c149acd0ef110635866",
+      "item_count": 5,
+      "latest_item_time": "2026-04-24T19:15:41+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-nick-st-pierre-nickfloats",
+      "source_name": "Nick St. Pierre(@nickfloats)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f97a26863aec4425b021720d4f8e4ede",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T22:12:45+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-notion-notionhq",
+      "source_name": "Notion(@NotionHQ)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/6326c63a2dfa445bbde88bea0c3112c2",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T23:36:39+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-ollama-ollama",
+      "source_name": "ollama(@ollama)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/971dc1fc90da449bac23e5fad8a33d55",
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T00:08:19+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-openai-developers-openaidevs",
+      "source_name": "OpenAI Developers(@OpenAIDevs)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/e503a90c035c4b1d8f8dd34907d15bf4",
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T03:12:11+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-openrouter-openrouterai",
+      "source_name": "OpenRouter(@OpenRouterAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/c65c68f3713747bba863f92d6b5e996f",
+      "item_count": 5,
+      "latest_item_time": "2026-05-03T07:37:18+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-patrick-loeber-patloeber",
+      "source_name": "Patrick Loeber(@patloeber)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/b9912ac9a29042cf8c834419dc44cb1f",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T21:26:51+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-paul-couvert-itspaulai",
+      "source_name": "Paul Couvert(@itsPaulAi)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/900549ddadf04e839d3f7a17ebaba3fc",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T22:07:09+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-paul-graham-paulg",
+      "source_name": "Paul Graham(@paulg)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/fdd601ea751949e7bec9e4cdad7c8e6c",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T18:06:02+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-perplexity-perplexity-ai",
+      "source_name": "Perplexity(@perplexity_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/ce352bbf72e44033985bc756db2ee0e2",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T16:15:29+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-philipp-schmid-philschmid",
+      "source_name": "Philipp Schmid(@_philschmid)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/3306d8b253ec4e03aca3c2e9967e7119",
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T01:52:21+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-pika-pika-labs",
+      "source_name": "Pika(@pika_labs)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a55f6e33dd224235aabaabaaf9d58a06",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T15:00:02+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-qdrant-qdrant-engine",
+      "source_name": "Qdrant(@qdrant_engine)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/80032d016d654eb4afe741ff34b7643d",
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T15:14:01+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-qwen-alibaba-qwen",
+      "source_name": "Qwen(@Alibaba_Qwen)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4838204097ed422eac24ad48e68dc3ff",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T15:45:26+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-ray-dalio-raydalio",
+      "source_name": "Ray Dalio(@RayDalio)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/acc648327c614d9b985b9fc3d737165b",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T11:33:35+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-recraft-recraftai",
+      "source_name": "Recraft(@recraftai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/613f859e4bc440c5a28f40732840f5cf",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T21:14:46+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-replit-replit",
+      "source_name": "Replit ⠕(@Replit)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a636de3cbda0495daabd15b9fd298614",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T15:18:21+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-rowan-cheung-rowancheung",
+      "source_name": "Rowan Cheung(@rowancheung)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/e6bb4f612dd24db5bc1a6811e6dd5820",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T17:30:29+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-runway-runwayml",
+      "source_name": "Runway(@runwayml)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/baad3713defe4182844d2756b4c2c9ed",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T16:41:48+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-sahil-lavingia-shl",
+      "source_name": "Sahil Lavingia(@shl)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/e30d4cd223f44bed9d404807105c8927",
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T00:51:52+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-sam-altman-sama",
+      "source_name": "Sam Altman(@sama)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/baa68dbd9a9e461a96fd9b2e3f35dcbf",
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T12:11:51+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-satya-nadella-satyanadella",
+      "source_name": "Satya Nadella(@satyanadella)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/5fca8ccd87344d388bc863304ed6fd86",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T17:57:54+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-scott-wu-scottwu46",
+      "source_name": "Scott Wu(@ScottWu46)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/30ad80be93c84e44acc37d5ddf31db57",
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T01:39:37+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-simon-willison-simonw",
+      "source_name": "Simon Willison(@simonw)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/6d7d398dd80b48d79669c92745d32cf6",
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T11:31:33+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-skywork-skywork-ai",
+      "source_name": "Skywork(@Skywork_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/d5fc365556e641cba2278f501e8c6f92",
+      "item_count": 5,
+      "latest_item_time": "2026-04-23T07:26:58+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-stanford-ai-lab-stanfordailab",
+      "source_name": "Stanford AI Lab(@StanfordAILab)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/fafa6df3c67644b1a367a177240e0173",
+      "item_count": 5,
+      "latest_item_time": "2026-04-21T22:41:39+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-sualeh-asif-sualehasif996",
+      "source_name": "Sualeh Asif(@sualehasif996)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/c961547e08df4396b3ab69367a07a1cd",
+      "item_count": 5,
+      "latest_item_time": "2026-03-20T14:13:18+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-suhail-suhail",
+      "source_name": "Suhail(@Suhail)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/8324d65a63dc42c584a8c08cc8323c9f",
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T20:49:27+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-sundar-pichai-sundarpichai",
+      "source_name": "Sundar Pichai(@sundarpichai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/2de92402f4a24c90bb27e7580b93a878",
+      "item_count": 5,
+      "latest_item_time": "2026-04-24T21:21:51+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-taranjeet-taranjeetio",
+      "source_name": "Taranjeet(@taranjeetio)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/83b1ea38940b4a1d81ea57d1ffb12ad7",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T20:03:19+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-the-rundown-ai-therundownai",
+      "source_name": "The Rundown AI(@TheRundownAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4918efb13c47459b8dcaa79cfdf72d09",
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T19:01:30+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-thomas-wolf-thom-wolf",
+      "source_name": "Thomas Wolf(@Thom_Wolf)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/dbf37973e6fc4eae91d4be9669a78fc7",
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T00:36:35+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-v0-v0",
+      "source_name": "v0(@v0)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/7794c4268a504019a94af1778857a703",
+      "item_count": 5,
+      "latest_item_time": "2026-02-24T01:40:04+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-varun-mohan-mohansolo",
+      "source_name": "Varun Mohan(@_mohansolo)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/9de19c78f7454ad08c956c1a00d237fe",
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T01:39:10+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-vista8",
+      "source_name": "向阳乔木(@vista8)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/2f1035ec6b28475987af06b600e1d04c",
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T16:02:39+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-weaviate-vector-database-weaviate-io",
+      "source_name": "Weaviate • vector database(@weaviate_io)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4a8273800ed34a069eecdb6c5c1b9ccf",
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T17:14:35+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-windsurf-windsurf-ai",
+      "source_name": "Windsurf(@windsurf_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/b1ab109f6afd42ab8ea32e17a19a3a3e",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T22:44:52+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-y-combinator-ycombinator",
+      "source_name": "Y Combinator(@ycombinator)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f5f4f928dede472ea55053672ad27ab6",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T16:44:38+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-yann-lecun-ylecun",
+      "source_name": "Yann LeCun(@ylecun)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/ef7c70f9568d45f4915169fef4ce90b4",
+      "item_count": 4,
+      "latest_item_time": "2026-04-24T12:03:30+00:00",
+      "sampled_item_count": 4,
+      "source_id": "socialmedia-ai-at-meta-aiatmeta",
+      "source_name": "AI at Meta(@AIatMeta)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/fc16750ce50741f1b1f05ea1fb29436f",
+      "item_count": 4,
+      "latest_item_time": "2026-04-24T07:06:35+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-hugging-face-huggingface",
+      "source_name": "Hugging Face(@huggingface)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/78d7b99318b04b309b04000f7e24da29",
+      "item_count": 4,
+      "latest_item_time": "2026-04-16T15:36:13+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-mike-krieger-mikeyk",
+      "source_name": "Mike Krieger(@mikeyk)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/8d2d03aea8af49818096da4ea00409d1",
+      "item_count": 4,
+      "latest_item_time": "2026-04-30T23:06:24+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-mistral-ai-mistralai",
+      "source_name": "Mistral AI(@MistralAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4d2d4165a7524217a08d3f57f27fa190",
+      "item_count": 4,
+      "latest_item_time": "2026-05-04T04:34:32+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-richard-socher-richardsocher",
+      "source_name": "Richard Socher(@RichardSocher)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/244eb9fa77ce4fa3b7fa5ceba80027a4",
+      "item_count": 2,
+      "latest_item_time": "2025-05-23T14:50:37+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-barsee-128054-heybarsee",
+      "source_name": "Barsee 🐶(@heyBarsee)"
+    }
+  ]
+}
+```
+
+## 3. Input Sample Summary
+
+```json
+{
+  "items_sampled": 50,
+  "items_too_short": 0,
+  "items_with_raw_content": 50,
+  "items_with_summary_only": 0,
+  "languages": {
+    "en_or_unknown": 45,
+    "zh": 5
+  },
+  "source_count": 10,
+  "time_range": {
+    "max_created_at": "2026-05-16T18:08:52.856382+00:00",
+    "min_created_at": "2026-05-16T18:08:52.823617+00:00"
+  },
+  "top_sources": [
+    [
+      "socialmedia-aadit-sheth-aaditsh",
+      6
+    ],
+    [
+      "socialmedia-ai-sdk-aisdk",
+      6
+    ],
+    [
+      "socialmedia-ai-breakfast-aibreakfast",
+      6
+    ],
+    [
+      "socialmedia-akshay-kothari-akothari",
+      5
+    ],
+    [
+      "socialmedia-adam-d-angelo-adamdangelo",
+      5
+    ],
+    [
+      "socialmedia-ak-akhaliq",
+      5
+    ],
+    [
+      "socialmedia-ai-will-financeyf5",
+      5
+    ],
+    [
+      "socialmedia-ai-engineer-aidotengineer",
+      5
+    ],
+    [
+      "socialmedia-ai-at-meta-aiatmeta",
+      4
+    ],
+    [
+      "socialmedia-alex-albert-alexalbert",
+      3
+    ]
+  ]
+}
+```
+
+## 4. Item Card Quality
+
+```json
+{
+  "avg_confidence": 0.554,
+  "content_role_distribution": {
+    "aggregator": 6,
+    "analysis": 12,
+    "commentary": 8,
+    "firsthand": 1,
+    "low_signal": 11,
+    "report": 4,
+    "source_material": 8
+  },
+  "entity_count_distribution": {
+    "0": 5,
+    "1": 12,
+    "2": 10,
+    "3": 11,
+    "4": 4,
+    "5": 3,
+    "6": 3,
+    "7": 1,
+    "9": 1
+  },
+  "heuristic_card_fallback_count": 5,
+  "item_cards_failed": 1,
+  "item_cards_generated": 50,
+  "item_cards_generated_or_reused": 50,
+  "item_cards_reused": 0,
+  "samples": [
+    {
+      "item_id": "item_0582d07e9e3b4f9981f23199755f6d27",
+      "role": "source_material",
+      "summary": "Anthropic Labs introduces Claude Design for creating prototypes, slides, and one-pagers via conversation, powered by Opus 4.7.",
+      "title": "Everyone with a vision can produce very high-quality designs now (with a lil help from Claude)"
+    },
+    {
+      "item_id": "item_0ce9921cf8814d1e9c04641984661fc9",
+      "role": "analysis",
+      "summary": "Hey @grok give me a breakdown of the setup I'd need at home to run this locally, including cost, and compare it to frontier model pricing DeepSeek @deepseek_ai 🚀 DeepSeek-V4 Preview is officially live & open-sourced! Welcome to the era of cost-effective 1M context length. 🔹 DeepSeek-V4-Pro: 1.6T total / 49B active params. Performance rivaling the world's to…",
+      "title": "Hey @grok give me a breakdown of the setup I'd need at home to run this locally, including cost, and..."
+    },
+    {
+      "item_id": "item_1e352d60c5814da59abd2e50bd0b3e85",
+      "role": "low_signal",
+      "summary": "I want to be able to tell my Waymo to take 280 instead of 101",
+      "title": "I want to be able to tell my Waymo to take 280 instead of 101"
+    },
+    {
+      "item_id": "item_1e5a0dce6ad24001afe532b1203775b5",
+      "role": "commentary",
+      "summary": "Opinion: Winners in industry change are those who redesign the industry as a product; a16z is the answer for VC; AI entrepreneurs need system-level restructuring thinking.",
+      "title": "7/🧭 真正的 takeaway 行业变天时，赢家不是更努力的人，是把行业当产品重新设计的人。 a16z 是 VC 行业的答案。AI 时代的创业者，需要同样的系统级重构思维。"
+    },
+    {
+      "item_id": "item_1f24c471a38541bdb2c2b871f46a33ae",
+      "role": "commentary",
+      "summary": "Adam D'Angelo hopes power outages don't slow Waymo's progress.",
+      "title": "I hope the power outage stuff doesn't slow Waymo's progress."
+    },
+    {
+      "item_id": "item_247c9dcdb24e45b6b527b385d2e23d6a",
+      "role": "low_signal",
+      "summary": "See the performance difference side by side: https://t.co/2VeE4iSdOr",
+      "title": "See the performance difference side by side: https://t.co/2VeE4iSdOr"
+    },
+    {
+      "item_id": "item_2548dea8326a44d8a940277308da1258",
+      "role": "firsthand",
+      "summary": "Phoenix Yin称使用Claude在Blender中不到1小时创作了1000个赛博朋克×动漫风格的夜景。",
+      "title": "10. 不到 1 小时创作了 1000 个赛博朋克×动漫风格的夜景"
+    },
+    {
+      "item_id": "item_29ecbbbd00644ad298cbccd4aff77b39",
+      "role": "analysis",
+      "summary": "This applies again today, e.g. people are saying the same exact thing now but code can still get *another* 100x bigger while every other vertical grows slower than code. Scott Wu @ScottWu46 1-2 yrs ago the story was always \"AI-for-code works pretty well so far but soon AI-for-every-other-vertical will catch up\" Instead, code just got another 100x bigger...",
+      "title": "This applies again today, e.g. people are saying the same exact thing now but code can still get *an..."
+    },
+    {
+      "item_id": "item_3844637ae3504d31abede31aa5d393ac",
+      "role": "source_material",
+      "summary": "Meta announces Muse Spark, available in Meta AI app and on meta.ai.",
+      "title": "Try Muse Spark today via the Meta AI app or meta.ai"
+    },
+    {
+      "item_id": "item_44e46219759249d7823b8d72ec398a79",
+      "role": "analysis",
+      "summary": "Tweet by AI Engineer quoting Patrick on context flywheel: better context -> better agent output -> better observations -> better regenerated context.",
+      "title": "Patrick also makes the bigger point: context is not just input, it is a flywheel..."
+    }
+  ],
+  "warnings_distribution": {
+    "anecdotal": 1,
+    "heuristic_card": 5,
+    "link_only": 1,
+    "low_signal": 4,
+    "minimal_content": 1,
+    "no_verifiable_facts": 2,
+    "opinion": 2,
+    "opinion_heavy": 1,
+    "opinion_only": 2,
+    "social_media": 3,
+    "social_media_claim": 2,
+    "social_media_link": 4,
+    "social_media_opinion": 1,
+    "social_media_promotion": 1,
+    "social_media_promotional": 1,
+    "social_media_summary": 2,
+    "summary_of_thread": 1,
+    "summary_only": 7,
+    "too_short": 7,
+    "unverifiable": 1
+  }
+}
+```
+
+## 5. Item-Item Relation Quality
+
+```json
+{
+  "avg_confidence": 0.834,
+  "candidate_pairs_considered": 200,
+  "different": 171,
+  "duplicate": 0,
+  "examples": [
+    {
+      "candidate_item_title": "This is really good comms. For context, ChatGPT had a bug where it kept talking about goblins. The...",
+      "confidence": 0.9,
+      "new_item_title": "A lot of bugs that folks may have hit yesterday when first trying Opus 4.7 are now fixed. Thanks for...",
+      "primary_relation": "different",
+      "published_at": "2026-04-17T15:14:47+00:00",
+      "reason": "Different event: OpenAI goblin bug communication vs Opus 4.7 bug fixes.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-alex-albert-alexalbert"
+    },
+    {
+      "candidate_item_title": "Use Claude Sonnet 4.6 with AI Gateway.",
+      "confidence": 0.9,
+      "new_item_title": "A lot of bugs that folks may have hit yesterday when first trying Opus 4.7 are now fixed. Thanks for...",
+      "primary_relation": "different",
+      "published_at": "2026-04-17T15:14:47+00:00",
+      "reason": "Different event: Claude Sonnet 4.6 release vs Opus 4.7 bug fixes.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-alex-albert-alexalbert"
+    },
+    {
+      "candidate_item_title": "Someone threw a molotov cocktail at Sam's house three weeks ago. His home was shot at days later. D...",
+      "confidence": 0.9,
+      "new_item_title": "A lot of bugs that folks may have hit yesterday when first trying Opus 4.7 are now fixed. Thanks for...",
+      "primary_relation": "different",
+      "published_at": "2026-04-17T15:14:47+00:00",
+      "reason": "Different event: Attack on Sam Altman vs Opus 4.7 bug fixes.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-alex-albert-alexalbert"
+    },
+    {
+      "candidate_item_title": "Everyone with a vision can produce very high-quality designs now (with a lil help from Claude)",
+      "confidence": 0.85,
+      "new_item_title": "A lot of bugs that folks may have hit yesterday when first trying Opus 4.7 are now fixed. Thanks for...",
+      "primary_relation": "related_with_new_info",
+      "published_at": "2026-04-17T15:14:47+00:00",
+      "reason": "Both involve Opus 4.7; new item adds specific bug fixes and improvements.",
+      "secondary_roles": [
+        "new_fact_hint"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-alex-albert-alexalbert"
+    },
+    {
+      "candidate_item_title": "A lot of bugs that folks may have hit yesterday when first trying Opus 4.7 are now fixed. Thanks for...",
+      "confidence": 0.7,
+      "new_item_title": "Everyone with a vision can produce very high-quality designs now (with a lil help from Claude)",
+      "primary_relation": "related_with_new_info",
+      "published_at": "2026-04-17T15:40:58+00:00",
+      "reason": "Both involve Opus 4.7, but new item introduces Claude Design product, adding new information about a product launch.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-alex-albert-alexalbert"
+    },
+    {
+      "candidate_item_title": "PSA: please get as AI pilled as you can. You know that distant uncle that you never quite understoo...",
+      "confidence": 0.9,
+      "new_item_title": "Everyone with a vision can produce very high-quality designs now (with a lil help from Claude)",
+      "primary_relation": "different",
+      "published_at": "2026-04-17T15:40:58+00:00",
+      "reason": "The new item is about Claude Design, while the candidate is a generic PSA about AI with no specific entities in common.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-alex-albert-alexalbert"
+    },
+    {
+      "candidate_item_title": "This applies again today, e.g. people are saying the same exact thing now but code can still get *an...",
+      "confidence": 0.9,
+      "new_item_title": "Everyone with a vision can produce very high-quality designs now (with a lil help from Claude)",
+      "primary_relation": "different",
+      "published_at": "2026-04-17T15:40:58+00:00",
+      "reason": "The new item is about Claude Design, while the candidate discusses code scaling and mentions Scott Wu; no shared entities or events.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-alex-albert-alexalbert"
+    },
+    {
+      "candidate_item_title": "I use all of the major LLMs on a weekly basis across both my businesses. The thing people are missi...",
+      "confidence": 0.9,
+      "new_item_title": "Everyone with a vision can produce very high-quality designs now (with a lil help from Claude)",
+      "primary_relation": "different",
+      "published_at": "2026-04-17T15:40:58+00:00",
+      "reason": "The new item is about Claude Design, while the candidate discusses LLM market dynamics with different entities; no direct relation.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-alex-albert-alexalbert"
+    },
+    {
+      "candidate_item_title": "This is really good comms. For context, ChatGPT had a bug where it kept talking about goblins. The...",
+      "confidence": 1.0,
+      "new_item_title": "Jack's young money blog had a big impact on me when I was in college and navigating what I wanted to...",
+      "primary_relation": "different",
+      "published_at": "2026-04-20T17:19:14+00:00",
+      "reason": "The new item is about a book recommendation by Alex Albert for Jack Raines' 'Young Money', while the candidate discusses OpenAI's goblin bug communication. No overlapping entities or topics.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-alex-albert-alexalbert"
+    },
+    {
+      "candidate_item_title": "I was basically Claude-only for the last 6 months. but GPT-5.5 pulled me back. The research output...",
+      "confidence": 1.0,
+      "new_item_title": "Jack's young money blog had a big impact on me when I was in college and navigating what I wanted to...",
+      "primary_relation": "different",
+      "published_at": "2026-04-20T17:19:14+00:00",
+      "reason": "The new item is about a book recommendation, while the candidate is about GPT-5.5 and Claude-only usage. No shared entities or themes.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-alex-albert-alexalbert"
+    }
+  ],
+  "fold_candidates": 1,
+  "llm_item_relation_calls": 50,
+  "low_confidence_examples": [
+    {
+      "candidate_item_title": "Co-Evolving Policy Distillation paper: https://t.co/ikR9ENlw3i",
+      "confidence": 0.1,
+      "new_item_title": "Ideas worth spreading",
+      "primary_relation": "different",
+      "published_at": "2026-05-02T05:22:45+00:00",
+      "reason": "No shared entities or event hints; topics are unrelated.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-akshay-kothari-akothari"
+    },
+    {
+      "candidate_item_title": "The Last Human-Written Paper Agent-Native Research Artifacts paper: https://t.co/cju1daCYH5",
+      "confidence": 0.1,
+      "new_item_title": "Ideas worth spreading",
+      "primary_relation": "different",
+      "published_at": "2026-05-02T05:22:45+00:00",
+      "reason": "No shared entities or event hints; topics are unrelated.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-akshay-kothari-akothari"
+    },
+    {
+      "candidate_item_title": "Heterogeneous Scientific Foundation Model Collaboration paper: https://t.co/DXuVi6TDw3",
+      "confidence": 0.1,
+      "new_item_title": "Ideas worth spreading",
+      "primary_relation": "different",
+      "published_at": "2026-05-02T05:22:45+00:00",
+      "reason": "No shared entities or event hints; topics are unrelated.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-akshay-kothari-akothari"
+    },
+    {
+      "candidate_item_title": "@steveruizok full video ICYMI https://t.co/PNVa6zo952",
+      "confidence": 0.1,
+      "new_item_title": "Ideas worth spreading",
+      "primary_relation": "different",
+      "published_at": "2026-05-02T05:22:45+00:00",
+      "reason": "No shared entities or event hints; topics are unrelated.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-akshay-kothari-akothari"
+    },
+    {
+      "candidate_item_title": "UniVidX A Unified Multimodal Framework for Versatile Video Generation via Diffusion Priors paper: ...",
+      "confidence": 0.0,
+      "new_item_title": "Web2BigTable A Bi-Level Multi-Agent LLM System for Internet-Scale Information Search and Extraction...",
+      "primary_relation": "different",
+      "published_at": "2026-05-04T21:27:41+00:00",
+      "reason": "The new item is about a different paper (Web2BigTable) with no overlap in entities or event.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-ak-akhaliq"
+    },
+    {
+      "candidate_item_title": "Co-Evolving Policy Distillation paper: https://t.co/ikR9ENlw3i",
+      "confidence": 0.0,
+      "new_item_title": "Web2BigTable A Bi-Level Multi-Agent LLM System for Internet-Scale Information Search and Extraction...",
+      "primary_relation": "different",
+      "published_at": "2026-05-04T21:27:41+00:00",
+      "reason": "The new item is about a different paper (Web2BigTable) with no overlap in entities or event.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-ak-akhaliq"
+    },
+    {
+      "candidate_item_title": "The Last Human-Written Paper Agent-Native Research Artifacts paper: https://t.co/cju1daCYH5",
+      "confidence": 0.0,
+      "new_item_title": "Web2BigTable A Bi-Level Multi-Agent LLM System for Internet-Scale Information Search and Extraction...",
+      "primary_relation": "different",
+      "published_at": "2026-05-04T21:27:41+00:00",
+      "reason": "The new item is about a different paper (Web2BigTable) with no overlap in entities or event.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-ak-akhaliq"
+    },
+    {
+      "candidate_item_title": "@steveruizok full video ICYMI https://t.co/PNVa6zo952",
+      "confidence": 0.0,
+      "new_item_title": "Web2BigTable A Bi-Level Multi-Agent LLM System for Internet-Scale Information Search and Extraction...",
+      "primary_relation": "different",
+      "published_at": "2026-05-04T21:27:41+00:00",
+      "reason": "The new item is a paper tweet, candidate is a video tweet; no shared entities or events.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-ak-akhaliq"
+    },
+    {
+      "candidate_item_title": "See the performance difference side by side: https://t.co/2VeE4iSdOr",
+      "confidence": 0.1,
+      "new_item_title": "Learn more: https://t.co/KNZUk15LG8",
+      "primary_relation": "uncertain",
+      "published_at": "2026-02-23T20:27:50+00:00",
+      "reason": "Both items are low-signal tweets with links and no entities or event hints; insufficient evidence to determine relation.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-ai-sdk-aisdk"
+    },
+    {
+      "candidate_item_title": "This applies again today, e.g. people are saying the same exact thing now but code can still get *an...",
+      "confidence": 0.1,
+      "new_item_title": "Learn more: https://t.co/KNZUk15LG8",
+      "primary_relation": "uncertain",
+      "published_at": "2026-02-23T20:27:50+00:00",
+      "reason": "The new item lacks entities and event hint; the candidate is about Scott Wu and code scaling; no clear connection.",
+      "secondary_roles": [],
+      "should_fold": false,
+      "source": "socialmedia-ai-sdk-aisdk"
+    }
+  ],
+  "near_duplicate": 1,
+  "related_with_new_info": 21,
+  "related_with_new_info_count": 21,
+  "relations_by_primary_relation": {
+    "different": 171,
+    "near_duplicate": 1,
+    "related_with_new_info": 21,
+    "uncertain": 7
+  },
+  "uncertain_count": 7
+}
+```
+
+## 6. Item-Cluster Relation Quality
+
+```json
+{
+  "actions": {
+    "attach_to_cluster": 14
+  },
+  "attached_existing_clusters": 0,
+  "avg_confidence": 0.6,
+  "avg_items_per_cluster": 1.0,
+  "candidate_clusters_considered": 14,
+  "cluster_samples": [
+    {
+      "cluster_status": "active",
+      "cluster_title": "Opus 4.7 bug fixes and improvements",
+      "core_facts": [
+        "Bugs in Opus 4.7 fixed; Adaptive Thinking triggers more often; improved output quality on non-coding tasks."
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_973c0133ff874b53af581e2b395a7963"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "Book announcement and recommendation",
+      "core_facts": [
+        "Alex Albert recommends Jack Raines' book 'Young Money' for young people."
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_afd7161a11334048b5fa5eb44db20385"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "Notion sales squad photo",
+      "core_facts": [
+        "NotionHQ SF sales squad in agent attire, end-of-quarter energy."
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_5e121944dea94ff28e74a949b2609f80"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "Sharing an article",
+      "core_facts": [
+        "Akshay Kothari shares an article by Hugo Amsellem."
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_9987c922e34245ffa1f8e7e41469d4b0"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "Ajit’s comment here reminded me of one of my favorite lines from Warren: \"Most of our results come from about a dozen truly good decisions. That’s roughly one every five years.\"",
+      "core_facts": [
+        "Ajit's comment reminded author of Warren Buffett's line about a dozen good decisions every five years; author applies it to investing and life."
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_ec6ea9281dc04598bb3b2f087d3a4937"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "I think robot pets are going to be a huge market.",
+      "core_facts": [
+        "Adam D'Angelo predicts robot pets will become a huge market."
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_91027992cce54b14b6f7d085bc5e4ca0"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "Meta's Muse Spark capable of inferring product logic from image",
+      "core_facts": [
+        "Post discussing Meta's Muse Spark capability to infer product logic from a calendar screenshot."
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_6b1fbdfe142a426ea15aa7b0220b3e46"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "i can't believe we used to write all this code by hand",
+      "core_facts": [
+        "i can't believe we used to write all this code by hand"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_a737594ce0194421af7af75e41656d7d"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "I want to be able to tell my Waymo to take 280 instead of 101",
+      "core_facts": [
+        "I want to be able to tell my Waymo to take 280 instead of 101"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_1e352d60c5814da59abd2e50bd0b3e85"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "OpenAI WebSockets in Responses API announced",
+      "core_facts": [
+        "Use OpenAI WebSockets with the AI SDK to save up to 40% time to first byte. OpenAI Developers @OpenAIDevs Introducing WebSockets in the Responses API. Built for low-latency, long-running agents with heavy tool calls."
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_8aabb5b1707e4bbe827a7e08b133f1b5"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "See the performance difference side by side: https://t.co/2VeE4iSdOr",
+      "core_facts": [
+        "See the performance difference side by side: https://t.co/2VeE4iSdOr"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_247c9dcdb24e45b6b527b385d2e23d6a"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "Claude integrates with 3D and creative tools",
+      "core_facts": [
+        "社交媒体帖子声称Claude可以直接与Blender、Autodesk Fusion、Adobe、Ableton、Affinity、Splice、SketchUp和Resolume对话，任何人只需输入提示词即可创作3D场景和模型。"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_7a9aad8253e44fee893e2d2e3f83f496"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "以上就是全部，原作者 @minchoi",
+      "core_facts": [
+        "该条推文是线程结尾，感谢原作者并呼吁关注和转发。"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_91550196f36b4c9a9e8e5d3cc1b3f034"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "I swear DeepSeek open-sourcing everything is some Sun-Tzu shit. America is trying to build trillio...",
+      "core_facts": [
+        "I swear DeepSeek open-sourcing everything is some Sun-Tzu shit. America is trying to build trillion-dollar AI monopolies, and China is trying to make that impossible. If the secret recipe to AGI is (eventually) public, the business model changes. Valuations compress. Defensibility disappears. The premium on being closed starts to look like a liability inste…"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_e0092a8860894d5c9104939030a27f99"
+      ]
+    }
+  ],
+  "created_clusters": 14,
+  "follow_up_event": {
+    "false": 14
+  },
+  "manual_review_suggestions": {
+    "high_uncertain": [],
+    "possible_miscluster": [],
+    "possible_missplit": [],
+    "top_review_items_or_clusters": []
+  },
+  "multi_item_cluster_count": 0,
+  "relations": {
+    "new_info": 13,
+    "source_material": 1
+  },
+  "same_event": {
+    "true": 14
+  },
+  "same_topic": {
+    "true": 14
+  },
+  "should_notify_count": 0,
+  "should_update_cluster_card_count": 14,
+  "top_clusters": [
+    {
+      "cluster_id": "cluster_d5f07a8ec3eb474ca2461dd7071974e3",
+      "cluster_title": "Opus 4.7 bug fixes and improvements",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_dd30473089d04bbda329fb61af81b57a",
+      "cluster_title": "Book announcement and recommendation",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_fc660212403241ca8c7bb742ad4411ae",
+      "cluster_title": "Notion sales squad photo",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_531dc8111cd440c8b51648f65d53e51c",
+      "cluster_title": "Sharing an article",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_a425f962bf724384ac7993e81f25f761",
+      "cluster_title": "Ajit’s comment here reminded me of one of my favorite lines from Warren: \"Most of our results come from about a dozen truly good decisions. That’s roughly one every five years.\"",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_8d03b546546b410bb73917141cd78e81",
+      "cluster_title": "I think robot pets are going to be a huge market.",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_173443fb26614f039d544b27c87e3f59",
+      "cluster_title": "Meta's Muse Spark capable of inferring product logic from image",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_ea5d37a86f1044619744a35f254e7db3",
+      "cluster_title": "i can't believe we used to write all this code by hand",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_2f33515a7f5c4215a127075e2fb674c7",
+      "cluster_title": "I want to be able to tell my Waymo to take 280 instead of 101",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_3ec9a891e4f8425fb5ab6758452cedf9",
+      "cluster_title": "OpenAI WebSockets in Responses API announced",
+      "item_count": 1
+    }
+  ],
+  "uncertain_clusters": 0
+}
+```
+
+## 7. Cluster Quality Samples
+
+```json
+[
+  {
+    "cluster_status": "active",
+    "cluster_title": "Opus 4.7 bug fixes and improvements",
+    "core_facts": [
+      "Bugs in Opus 4.7 fixed; Adaptive Thinking triggers more often; improved output quality on non-coding tasks."
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_973c0133ff874b53af581e2b395a7963"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "Book announcement and recommendation",
+    "core_facts": [
+      "Alex Albert recommends Jack Raines' book 'Young Money' for young people."
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_afd7161a11334048b5fa5eb44db20385"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "Notion sales squad photo",
+    "core_facts": [
+      "NotionHQ SF sales squad in agent attire, end-of-quarter energy."
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_5e121944dea94ff28e74a949b2609f80"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "Sharing an article",
+    "core_facts": [
+      "Akshay Kothari shares an article by Hugo Amsellem."
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_9987c922e34245ffa1f8e7e41469d4b0"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "Ajit’s comment here reminded me of one of my favorite lines from Warren: \"Most of our results come from about a dozen truly good decisions. That’s roughly one every five years.\"",
+    "core_facts": [
+      "Ajit's comment reminded author of Warren Buffett's line about a dozen good decisions every five years; author applies it to investing and life."
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_ec6ea9281dc04598bb3b2f087d3a4937"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "I think robot pets are going to be a huge market.",
+    "core_facts": [
+      "Adam D'Angelo predicts robot pets will become a huge market."
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_91027992cce54b14b6f7d085bc5e4ca0"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "Meta's Muse Spark capable of inferring product logic from image",
+    "core_facts": [
+      "Post discussing Meta's Muse Spark capability to infer product logic from a calendar screenshot."
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_6b1fbdfe142a426ea15aa7b0220b3e46"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "i can't believe we used to write all this code by hand",
+    "core_facts": [
+      "i can't believe we used to write all this code by hand"
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_a737594ce0194421af7af75e41656d7d"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "I want to be able to tell my Waymo to take 280 instead of 101",
+    "core_facts": [
+      "I want to be able to tell my Waymo to take 280 instead of 101"
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_1e352d60c5814da59abd2e50bd0b3e85"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "OpenAI WebSockets in Responses API announced",
+    "core_facts": [
+      "Use OpenAI WebSockets with the AI SDK to save up to 40% time to first byte. OpenAI Developers @OpenAIDevs Introducing WebSockets in the Responses API. Built for low-latency, long-running agents with heavy tool calls."
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_8aabb5b1707e4bbe827a7e08b133f1b5"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "See the performance difference side by side: https://t.co/2VeE4iSdOr",
+    "core_facts": [
+      "See the performance difference side by side: https://t.co/2VeE4iSdOr"
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_247c9dcdb24e45b6b527b385d2e23d6a"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "Claude integrates with 3D and creative tools",
+    "core_facts": [
+      "社交媒体帖子声称Claude可以直接与Blender、Autodesk Fusion、Adobe、Ableton、Affinity、Splice、SketchUp和Resolume对话，任何人只需输入提示词即可创作3D场景和模型。"
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_7a9aad8253e44fee893e2d2e3f83f496"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "以上就是全部，原作者 @minchoi",
+    "core_facts": [
+      "该条推文是线程结尾，感谢原作者并呼吁关注和转发。"
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_91550196f36b4c9a9e8e5d3cc1b3f034"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "I swear DeepSeek open-sourcing everything is some Sun-Tzu shit. America is trying to build trillio...",
+    "core_facts": [
+      "I swear DeepSeek open-sourcing everything is some Sun-Tzu shit. America is trying to build trillion-dollar AI monopolies, and China is trying to make that impossible. If the secret recipe to AGI is (eventually) public, the business model changes. Valuations compress. Defensibility disappears. The premium on being closed starts to look like a liability inste…"
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_e0092a8860894d5c9104939030a27f99"
+    ]
+  }
+]
+```
+
+## 8. Source Profile Results
+
+```json
+{
+  "disabled_for_llm_candidates": [],
+  "high_candidates": [],
+  "llm_total_tokens_by_source": {
+    "socialmedia-aadit-sheth-aaditsh": 24991,
+    "socialmedia-adam-d-angelo-adamdangelo": 13699,
+    "socialmedia-ai-at-meta-aiatmeta": 10663,
+    "socialmedia-ai-breakfast-aibreakfast": 16568,
+    "socialmedia-ai-engineer-aidotengineer": 14462,
+    "socialmedia-ai-sdk-aisdk": 17310,
+    "socialmedia-ai-will-financeyf5": 14518,
+    "socialmedia-ak-akhaliq": 10376,
+    "socialmedia-akshay-kothari-akothari": 15982,
+    "socialmedia-alex-albert-alexalbert": 10672
+  },
+  "low_candidates": [],
+  "pending_reviews_created": 52,
+  "sources_recomputed": 10,
+  "sources_with_insufficient_data": [],
+  "top_sources_by_duplicate_rate": [
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 1,
+      "llm_total_tokens": 24991,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 0.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-aadit-sheth-aaditsh",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 6,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 13699,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-adam-d-angelo-adamdangelo",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 6,
+      "llm_total_tokens": 10663,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-at-meta-aiatmeta",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 4,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 3,
+      "llm_total_tokens": 16568,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-breakfast-aibreakfast",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 6,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 4,
+      "llm_total_tokens": 14462,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.2,
+      "new_event_rate": 0.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-engineer-aidotengineer",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 1,
+      "llm_total_tokens": 17310,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-sdk-aisdk",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 6,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 4,
+      "llm_total_tokens": 14518,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-will-financeyf5",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 10376,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 0.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ak-akhaliq",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 15982,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-akshay-kothari-akothari",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 2,
+      "llm_total_tokens": 10672,
+      "llm_yield_score": 3.375,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-alex-albert-alexalbert",
+      "source_item_rate": 0.5,
+      "source_material_rate": 0.5,
+      "total_items": 3,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    }
+  ],
+  "top_sources_by_incremental_value_avg": [
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 13699,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-adam-d-angelo-adamdangelo",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 6,
+      "llm_total_tokens": 10663,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-at-meta-aiatmeta",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 4,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 3,
+      "llm_total_tokens": 16568,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-breakfast-aibreakfast",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 6,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 1,
+      "llm_total_tokens": 17310,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-sdk-aisdk",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 6,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 4,
+      "llm_total_tokens": 14518,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-will-financeyf5",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 15982,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-akshay-kothari-akothari",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 2,
+      "llm_total_tokens": 10672,
+      "llm_yield_score": 3.375,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-alex-albert-alexalbert",
+      "source_item_rate": 0.5,
+      "source_material_rate": 0.5,
+      "total_items": 3,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 1,
+      "llm_total_tokens": 24991,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 0.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-aadit-sheth-aaditsh",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 6,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 4,
+      "llm_total_tokens": 14462,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.2,
+      "new_event_rate": 0.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-engineer-aidotengineer",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 10376,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 0.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ak-akhaliq",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    }
+  ],
+  "top_sources_by_llm_yield": [
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 2,
+      "llm_total_tokens": 10672,
+      "llm_yield_score": 3.375,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-alex-albert-alexalbert",
+      "source_item_rate": 0.5,
+      "source_material_rate": 0.5,
+      "total_items": 3,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 13699,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-adam-d-angelo-adamdangelo",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 6,
+      "llm_total_tokens": 10663,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-at-meta-aiatmeta",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 4,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 3,
+      "llm_total_tokens": 16568,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-breakfast-aibreakfast",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 6,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 1,
+      "llm_total_tokens": 17310,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-sdk-aisdk",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 6,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 4,
+      "llm_total_tokens": 14518,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-will-financeyf5",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 15982,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-akshay-kothari-akothari",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 1,
+      "llm_total_tokens": 24991,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 0.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-aadit-sheth-aaditsh",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 6,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 4,
+      "llm_total_tokens": 14462,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.2,
+      "new_event_rate": 0.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-engineer-aidotengineer",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 10376,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 0.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ak-akhaliq",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    }
+  ],
+  "top_sources_by_report_value_avg": [
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 13699,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-adam-d-angelo-adamdangelo",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 6,
+      "llm_total_tokens": 10663,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-at-meta-aiatmeta",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 4,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 3,
+      "llm_total_tokens": 16568,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-breakfast-aibreakfast",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 6,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 1,
+      "llm_total_tokens": 17310,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-sdk-aisdk",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 6,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 4,
+      "llm_total_tokens": 14518,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-will-financeyf5",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 15982,
+      "llm_yield_score": 2.75,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-akshay-kothari-akothari",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 3.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 2,
+      "llm_total_tokens": 10672,
+      "llm_yield_score": 3.375,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-alex-albert-alexalbert",
+      "source_item_rate": 0.5,
+      "source_material_rate": 0.5,
+      "total_items": 3,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 1,
+      "llm_total_tokens": 24991,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 0.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-aadit-sheth-aaditsh",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 6,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 4,
+      "llm_total_tokens": 14462,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.2,
+      "new_event_rate": 0.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ai-engineer-aidotengineer",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    },
+    {
+      "created_at": "2026-05-16T18:17:24.305154+00:00",
+      "duplicate_rate": 0.0,
+      "incremental_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 10376,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 0.0,
+      "priority_suggestion": "normal",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_status": "pending",
+      "source_id": "socialmedia-ak-akhaliq",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 5,
+      "updated_at": "2026-05-16T18:17:24.305154+00:00"
+    }
+  ]
+}
+```
+
+## 9. Token / Latency / Cache Summary
+
+```json
+[
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 24018.5,
+    "cache_hit_tokens": 11008,
+    "cache_miss_tokens": 0,
+    "calls": 10,
+    "failed": 1,
+    "input_tokens": 24734,
+    "llm_call_count": 10,
+    "operation_count": 10,
+    "output_tokens": 26782,
+    "p50_latency_ms": 23492,
+    "p95_latency_ms": 30804,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 1,
+    "skipped": 0,
+    "success": 9,
+    "task_type": "item_card",
+    "total_tokens": 51516
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 9406.9,
+    "cache_hit_tokens": 36096,
+    "cache_miss_tokens": 0,
+    "calls": 50,
+    "failed": 0,
+    "input_tokens": 78094,
+    "llm_call_count": 50,
+    "operation_count": 50,
+    "output_tokens": 53143,
+    "p50_latency_ms": 8450,
+    "p95_latency_ms": 15993,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 0,
+    "success": 50,
+    "task_type": "item_relation",
+    "total_tokens": 131237
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 7060.3,
+    "cache_hit_tokens": 5888,
+    "cache_miss_tokens": 0,
+    "calls": 7,
+    "failed": 0,
+    "input_tokens": 13353,
+    "llm_call_count": 7,
+    "operation_count": 35,
+    "output_tokens": 4651,
+    "p50_latency_ms": 5951,
+    "p95_latency_ms": 12350,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 28,
+    "success": 7,
+    "task_type": "item_cluster_relation",
+    "total_tokens": 18004
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 17,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 17,
+    "success": 0,
+    "task_type": "cluster_card_patch",
+    "total_tokens": 0
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 0,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 0,
+    "success": 0,
+    "task_type": "cluster_card_rebuild",
+    "total_tokens": 0
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 0,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 0,
+    "success": 0,
+    "task_type": "source_review",
+    "total_tokens": 0
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 0,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 0,
+    "success": 0,
+    "task_type": "json_repair",
+    "total_tokens": 0
+  }
+]
+```
+
+## 10. Concurrency Summary
+
+```json
+{
+  "actual_calls": 67,
+  "actual_tokens": 200757,
+  "avg_latency_ms": 11342.5,
+  "by_task": {
+    "cluster_card_patch": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 2,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "cluster_card_patch",
+      "total_tokens": 0
+    },
+    "cluster_card_rebuild": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 2,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "cluster_card_rebuild",
+      "total_tokens": 0
+    },
+    "item_card": {
+      "avg_latency_ms": 24018.5,
+      "cache_hit_tokens": 11008,
+      "calls": 10,
+      "concurrency": 2,
+      "db_lock_errors": 0,
+      "failed": 1,
+      "p50_latency_ms": 23492,
+      "p95_latency_ms": 30804,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 1,
+      "success": 9,
+      "task_type": "item_card",
+      "total_tokens": 51516
+    },
+    "item_cluster_relation": {
+      "avg_latency_ms": 7060.3,
+      "cache_hit_tokens": 5888,
+      "calls": 7,
+      "concurrency": 2,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 5951,
+      "p95_latency_ms": 12350,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 7,
+      "task_type": "item_cluster_relation",
+      "total_tokens": 18004
+    },
+    "item_relation": {
+      "avg_latency_ms": 9406.9,
+      "cache_hit_tokens": 36096,
+      "calls": 50,
+      "concurrency": 2,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 8450,
+      "p95_latency_ms": 15993,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 50,
+      "task_type": "item_relation",
+      "total_tokens": 131237
+    },
+    "json_repair": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 2,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "json_repair",
+      "total_tokens": 0
+    },
+    "source_review": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 2,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "source_review",
+      "total_tokens": 0
+    }
+  },
+  "cache_hit_rate": 0.264,
+  "cache_hit_tokens": 52992,
+  "calls_per_sec": 0.131,
+  "db_lock_errors": 0,
+  "duration_seconds": 511.531,
+  "final_failures": 1,
+  "max_concurrency": 2,
+  "p50_latency_ms": 8911,
+  "p95_latency_ms": 24310,
+  "parse_failures": 0,
+  "rate_limit_errors": 0,
+  "repair_retry_count": 1,
+  "tokens_per_sec": 392.46
+}
+```
+
+## 11. Errors / Fallbacks / Retries
+
+```json
+{
+  "db_lock_errors": 0,
+  "final_failures": 1,
+  "llm_parse_failures": 0,
+  "repair_retry_count": 1,
+  "review_queue_entries_due_to_failure": 28,
+  "skipped_due_to_max_calls": false,
+  "skipped_due_to_missing_card": 0,
+  "skipped_due_to_no_candidate": 0,
+  "skipped_due_to_token_budget": false
+}
+```
+
+## 12. Prompt Iteration Notes
+
+```json
+[
+  {
+    "changes": [
+      "source scope filtering",
+      "sample modes",
+      "operation_count versus llm_call_count report split",
+      "concurrency summary"
+    ],
+    "concurrency": 2,
+    "iteration": "phase1_2_current",
+    "max_calls": 120,
+    "max_items": 50,
+    "notes": "No enum expansion; prompt JSON contracts remain stable.",
+    "sample_mode": "mixed"
+  }
+]
+```
+
+## 13. Manual Review Suggestions
+
+```json
+{
+  "high_uncertain": [],
+  "possible_miscluster": [],
+  "possible_missplit": [],
+  "top_review_items_or_clusters": []
+}
+```
+
+## 14. Readiness Assessment
+
+```json
+{
+  "cluster_signal_count": 14,
+  "reasons": [
+    "Use dry-run reports for manual review before write-real-db.",
+    "Candidate recall is still lexical/entity/time/source hybrid, not vector-indexed.",
+    "1 LLM failures observed in this run."
+  ],
+  "write_real_db_recommended_now": false
+}
+```
+
+## 15. Recommendations
+
+- Review uncertain relations and tune prompts with real examples.
+- Add vector indexes for item_cards and cluster_cards before larger runs.
+- Keep primary relation enum unchanged for now; it covered Phase 1.1 control flow.
+- Collect more source_signals before trusting source_profile priority suggestions.
+- Run a larger dry-run before any write-real-db semantic pass.
+- Increase token_budget or lower max_items for more complete evaluation.

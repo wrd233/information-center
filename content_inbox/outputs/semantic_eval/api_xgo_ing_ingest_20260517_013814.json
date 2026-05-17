@@ -1,0 +1,2210 @@
+{
+  "active_sources": [
+    "socialmedia-orange-ai-oran-ge",
+    "socialmedia-nvidia-ai-nvidiaai",
+    "socialmedia-junyang-lin-justinlin610",
+    "socialmedia-andrew-ng-andrewyng",
+    "socialmedia-dify-dify-ai",
+    "socialmedia-openai-openai",
+    "socialmedia-ai-breakfast-aibreakfast",
+    "socialmedia-replicate-replicate",
+    "socialmedia-poe-poe-platform",
+    "socialmedia-aadit-sheth-aaditsh",
+    "socialmedia-elevenlabs-elevenlabsio",
+    "socialmedia-notebooklm-notebooklm",
+    "socialmedia-ai-sdk-aisdk",
+    "socialmedia-barsee-128054-heybarsee",
+    "socialmedia-taranjeet-taranjeetio",
+    "socialmedia-weaviate-vector-database-weaviate-io",
+    "socialmedia-adam-d-angelo-adamdangelo",
+    "socialmedia-simon-willison-simonw",
+    "socialmedia-manusai-manusai-hq",
+    "socialmedia-fellou-fellouai",
+    "socialmedia-pika-pika-labs",
+    "socialmedia-ak-akhaliq",
+    "socialmedia-akshay-kothari-akothari",
+    "socialmedia-gary-marcus-garymarcus",
+    "socialmedia-character-ai-character-ai",
+    "socialmedia-mustafa-suleyman-mustafasuleyman",
+    "socialmedia-xai-xai",
+    "socialmedia-kevin-weil-127482-127480-kevinweil",
+    "socialmedia-milvus-milvusio",
+    "socialmedia-deeplearning-ai-deeplearningai",
+    "socialmedia-julien-chaumond-julien-c",
+    "socialmedia-cohere-cohere",
+    "socialmedia-ray-dalio-raydalio",
+    "socialmedia-meng-shao-shao-meng",
+    "socialmedia-fish-audio-fishaudio",
+    "socialmedia-thomas-wolf-thom-wolf",
+    "socialmedia-dario-amodei-darioamodei",
+    "socialmedia-windsurf-windsurf-ai",
+    "socialmedia-demis-hassabis-demishassabis",
+    "socialmedia-cognition-cognition-labs",
+    "socialmedia-richard-socher-richardsocher",
+    "socialmedia-google-ai-googleai",
+    "socialmedia-logan-kilpatrick-officiallogank",
+    "socialmedia-alex-albert-alexalbert",
+    "socialmedia-cursor-cursor-ai",
+    "socialmedia-kling-ai-kling-ai",
+    "socialmedia-ian-goodfellow-goodfellow-ian",
+    "socialmedia-justin-welsh-thejustinwelsh",
+    "socialmedia-aravind-srinivas-aravsrinivas",
+    "socialmedia-monica-im-hey-im-monica",
+    "socialmedia-clem-129303-clementdelangue",
+    "socialmedia-anton-osika-eu-acc-antonosika",
+    "socialmedia-amjad-masad-amasad",
+    "socialmedia-scott-wu-scottwu46",
+    "socialmedia-replit-replit",
+    "socialmedia-microsoft-research-msftresearch",
+    "socialmedia-ollama-ollama",
+    "socialmedia-marc-andreessen-127482-127480-pmarca",
+    "socialmedia-dia-diabrowser",
+    "socialmedia-lovable-lovable-dev",
+    "socialmedia-eric-zakariasson-ericzakariasson",
+    "socialmedia-cat-catwu",
+    "socialmedia-llamaindex-129433-llama-index",
+    "socialmedia-deepseek-deepseek-ai",
+    "socialmedia-google-ai-developers-googleaidevs",
+    "socialmedia-berkeley-ai-research-berkeley-ai",
+    "socialmedia-skywork-skywork-ai",
+    "socialmedia-hunyuan-txhunyuan",
+    "socialmedia-nick-st-pierre-nickfloats",
+    "socialmedia-google-gemini-app-geminiapp",
+    "socialmedia-genspark-genspark-ai",
+    "socialmedia-midjourney-midjourney",
+    "socialmedia-imxiaohu",
+    "socialmedia-bolt-new-boltdotnew",
+    "socialmedia-groq-inc-groqinc",
+    "socialmedia-varun-mohan-mohansolo",
+    "socialmedia-lenny-rachitsky-lennysan",
+    "socialmedia-mike-krieger-mikeyk",
+    "socialmedia-ai-engineer-aidotengineer",
+    "socialmedia-qwen-alibaba-qwen",
+    "socialmedia-guizang-ai-op7418",
+    "socialmedia-sundar-pichai-sundarpichai",
+    "socialmedia-the-rundown-ai-therundownai",
+    "socialmedia-langchain-langchainai",
+    "socialmedia-mistral-ai-mistralai",
+    "socialmedia-paul-graham-paulg",
+    "socialmedia-elvis-omarsar0",
+    "socialmedia-mem0-mem0ai",
+    "socialmedia-openai-developers-openaidevs",
+    "socialmedia-dotey",
+    "socialmedia-vista8",
+    "socialmedia-fireworks-ai-fireworksai-hq",
+    "socialmedia-aman-sanger-amanrsanger",
+    "socialmedia-andrew-chen-andrewchen",
+    "socialmedia-fei-fei-li-drfeifei",
+    "socialmedia-qdrant-qdrant-engine",
+    "socialmedia-rowan-cheung-rowancheung",
+    "socialmedia-ideogram-ideogram-ai",
+    "socialmedia-latent-space-latentspacepod",
+    "socialmedia-lilian-weng-lilianweng",
+    "socialmedia-google-deepmind-googledeepmind",
+    "socialmedia-heygen-heygen-official",
+    "socialmedia-ai-will-financeyf5",
+    "socialmedia-recraft-recraftai",
+    "socialmedia-lex-fridman-lexfridman",
+    "socialmedia-greg-brockman-gdb",
+    "socialmedia-jeff-dean-jeffdean",
+    "socialmedia-y-combinator-ycombinator",
+    "socialmedia-jerry-liu-jerryjliu0",
+    "socialmedia-naval-naval",
+    "socialmedia-browser-use-browser-use",
+    "socialmedia-paul-couvert-itspaulai",
+    "socialmedia-satya-nadella-satyanadella",
+    "socialmedia-sahil-lavingia-shl",
+    "socialmedia-flowiseai-flowiseai",
+    "socialmedia-firecrawl-firecrawl-dev",
+    "socialmedia-justine-moore-venturetwins",
+    "socialmedia-patrick-loeber-patloeber",
+    "socialmedia-jim-fan-drjimfan",
+    "socialmedia-suhail-suhail",
+    "socialmedia-lijigang-com",
+    "socialmedia-geoffrey-hinton-geoffreyhinton",
+    "socialmedia-philipp-schmid-philschmid",
+    "socialmedia-stanford-ai-lab-stanfordailab",
+    "socialmedia-arthur-mensch-arthurmensch",
+    "socialmedia-lovartai-lovart-ai",
+    "socialmedia-v0-v0",
+    "socialmedia-lee-robinson-leerob",
+    "socialmedia-jan-leike-janleike",
+    "socialmedia-eric-jing-ericjing-ai",
+    "socialmedia-augment-code-augmentcode",
+    "socialmedia-sam-altman-sama",
+    "socialmedia-openrouter-openrouterai",
+    "socialmedia-hailuo-ai-minimax-hailuo-ai",
+    "socialmedia-runway-runwayml",
+    "socialmedia-guillermo-rauch-rauchg",
+    "socialmedia-andrej-karpathy-karpathy",
+    "socialmedia-ai-at-meta-aiatmeta",
+    "socialmedia-lmarena-ai-lmarena-ai",
+    "socialmedia-harrison-chase-hwchase17",
+    "socialmedia-a16z-a16z",
+    "socialmedia-jina-ai-jinaai",
+    "socialmedia-binyuan-hui-huybery",
+    "socialmedia-yann-lecun-ylecun",
+    "socialmedia-chatgpt-chatgptapp",
+    "socialmedia-figma-figma",
+    "socialmedia-notion-notionhq",
+    "socialmedia-sualeh-asif-sualehasif996",
+    "socialmedia-hugging-face-huggingface",
+    "socialmedia-anthropic-anthropicai",
+    "socialmedia-perplexity-perplexity-ai"
+  ],
+  "backup_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/backups/content_inbox.sqlite3.before_api_xgo_semantic_phase1_2b_20260517_013814.sqlite3",
+  "db_item_delta": 1,
+  "dry_run": false,
+  "duplicates": 54,
+  "failure_count": 146,
+  "failures_by_reason": {
+    "ingest_failed": 1,
+    "source_ingest_timeout": 145
+  },
+  "items_after": 2551,
+  "items_before": 2550,
+  "latest_item_time_after": "2026-05-16T10:18:27+00:00",
+  "latest_item_time_before": "2026-05-16T10:18:27+00:00",
+  "new_items": 0,
+  "ok": false,
+  "results": [
+    {
+      "ok": true,
+      "result": {
+        "items": [],
+        "ok": true,
+        "run": {
+          "duration_ms": 2044,
+          "duration_seconds": 2.044,
+          "error": null,
+          "error_code": null,
+          "error_message": null,
+          "finished_at": "2026-05-16T17:38:16.988028+00:00",
+          "incremental": {
+            "anchor_found": null,
+            "anchor_index": null,
+            "decision": null,
+            "incremental_decision": null,
+            "incremental_mode": "fixed_limit",
+            "mode": "fixed_limit",
+            "source_has_history": null,
+            "warnings": []
+          },
+          "retryable": false,
+          "run_id": "rss_20260516_173814_943927_socialmedia-orange-ai-oran-ge",
+          "source_id": "socialmedia-orange-ai-oran-ge",
+          "started_at": "2026-05-16T17:38:14.943927+00:00",
+          "stats": {
+            "duplicate_items": 20,
+            "failed_items": 0,
+            "feed_items_seen": 20,
+            "fetched_entries": 20,
+            "new_items": 0,
+            "processed_entries": 20,
+            "processed_items": 20,
+            "selected_items_for_processing": 20
+          },
+          "status": "success"
+        },
+        "source": {
+          "consecutive_failure_count": 0,
+          "consecutive_failures": 0,
+          "failure_count": 0,
+          "last_error_code": null,
+          "last_error_message": null,
+          "last_failure_at": null,
+          "last_fetch_at": "2026-05-16T17:38:16.988028+00:00",
+          "last_ingest_at": "2026-05-16T17:38:16.988028+00:00",
+          "last_success_at": "2026-05-16T17:38:16.988028+00:00",
+          "source_id": "socialmedia-orange-ai-oran-ge",
+          "status": "active"
+        }
+      },
+      "source_id": "socialmedia-orange-ai-oran-ge",
+      "status_code": 200
+    },
+    {
+      "ok": true,
+      "result": {
+        "items": [],
+        "ok": true,
+        "run": {
+          "duration_ms": 2164,
+          "duration_seconds": 2.164,
+          "error": null,
+          "error_code": null,
+          "error_message": null,
+          "finished_at": "2026-05-16T17:38:19.387717+00:00",
+          "incremental": {
+            "anchor_found": null,
+            "anchor_index": null,
+            "decision": null,
+            "incremental_decision": null,
+            "incremental_mode": "fixed_limit",
+            "mode": "fixed_limit",
+            "source_has_history": null,
+            "warnings": []
+          },
+          "retryable": false,
+          "run_id": "rss_20260516_173817_223828_socialmedia-nvidia-ai-nvidiaai",
+          "source_id": "socialmedia-nvidia-ai-nvidiaai",
+          "started_at": "2026-05-16T17:38:17.223828+00:00",
+          "stats": {
+            "duplicate_items": 20,
+            "failed_items": 0,
+            "feed_items_seen": 20,
+            "fetched_entries": 20,
+            "new_items": 0,
+            "processed_entries": 20,
+            "processed_items": 20,
+            "selected_items_for_processing": 20
+          },
+          "status": "success"
+        },
+        "source": {
+          "consecutive_failure_count": 0,
+          "consecutive_failures": 0,
+          "failure_count": 0,
+          "last_error_code": null,
+          "last_error_message": null,
+          "last_failure_at": null,
+          "last_fetch_at": "2026-05-16T17:38:19.387717+00:00",
+          "last_ingest_at": "2026-05-16T17:38:19.387717+00:00",
+          "last_success_at": "2026-05-16T17:38:19.387717+00:00",
+          "source_id": "socialmedia-nvidia-ai-nvidiaai",
+          "status": "active"
+        }
+      },
+      "source_id": "socialmedia-nvidia-ai-nvidiaai",
+      "status_code": 200
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-junyang-lin-justinlin610",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-andrew-ng-andrewyng",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-dify-dify-ai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-openai-openai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-ai-breakfast-aibreakfast",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-replicate-replicate",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-poe-poe-platform",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-aadit-sheth-aaditsh",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-elevenlabs-elevenlabsio",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-notebooklm-notebooklm",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-ai-sdk-aisdk",
+      "status_code": 408
+    },
+    {
+      "ok": true,
+      "result": {
+        "items": [],
+        "ok": true,
+        "run": {
+          "duration_ms": 1410,
+          "duration_seconds": 1.41,
+          "error": null,
+          "error_code": null,
+          "error_message": null,
+          "finished_at": "2026-05-16T17:39:49.214422+00:00",
+          "incremental": {
+            "anchor_found": null,
+            "anchor_index": null,
+            "decision": null,
+            "incremental_decision": null,
+            "incremental_mode": "fixed_limit",
+            "mode": "fixed_limit",
+            "source_has_history": null,
+            "warnings": []
+          },
+          "retryable": false,
+          "run_id": "rss_20260516_173947_804250_socialmedia-barsee-128054-heybarsee",
+          "source_id": "socialmedia-barsee-128054-heybarsee",
+          "started_at": "2026-05-16T17:39:47.804250+00:00",
+          "stats": {
+            "duplicate_items": 6,
+            "failed_items": 0,
+            "feed_items_seen": 6,
+            "fetched_entries": 6,
+            "new_items": 0,
+            "processed_entries": 6,
+            "processed_items": 6,
+            "selected_items_for_processing": 6
+          },
+          "status": "success"
+        },
+        "source": {
+          "consecutive_failure_count": 0,
+          "consecutive_failures": 0,
+          "failure_count": 0,
+          "last_error_code": null,
+          "last_error_message": null,
+          "last_failure_at": null,
+          "last_fetch_at": "2026-05-16T17:39:49.214422+00:00",
+          "last_ingest_at": "2026-05-16T17:39:49.214422+00:00",
+          "last_success_at": "2026-05-16T17:39:49.214422+00:00",
+          "source_id": "socialmedia-barsee-128054-heybarsee",
+          "status": "active"
+        }
+      },
+      "source_id": "socialmedia-barsee-128054-heybarsee",
+      "status_code": 200
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-taranjeet-taranjeetio",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-weaviate-vector-database-weaviate-io",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-adam-d-angelo-adamdangelo",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-simon-willison-simonw",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-manusai-manusai-hq",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-fellou-fellouai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-pika-pika-labs",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-ak-akhaliq",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-akshay-kothari-akothari",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-gary-marcus-garymarcus",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-character-ai-character-ai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-mustafa-suleyman-mustafasuleyman",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-xai-xai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-kevin-weil-127482-127480-kevinweil",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-milvus-milvusio",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-deeplearning-ai-deeplearningai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-julien-chaumond-julien-c",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-cohere-cohere",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-ray-dalio-raydalio",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-meng-shao-shao-meng",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-fish-audio-fishaudio",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-thomas-wolf-thom-wolf",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-dario-amodei-darioamodei",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-windsurf-windsurf-ai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-demis-hassabis-demishassabis",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-cognition-cognition-labs",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-richard-socher-richardsocher",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-google-ai-googleai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-logan-kilpatrick-officiallogank",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-alex-albert-alexalbert",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-cursor-cursor-ai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-kling-ai-kling-ai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-ian-goodfellow-goodfellow-ian",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-justin-welsh-thejustinwelsh",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-aravind-srinivas-aravsrinivas",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-monica-im-hey-im-monica",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-clem-129303-clementdelangue",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-anton-osika-eu-acc-antonosika",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-amjad-masad-amasad",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-scott-wu-scottwu46",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-replit-replit",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-microsoft-research-msftresearch",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-ollama-ollama",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-marc-andreessen-127482-127480-pmarca",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-dia-diabrowser",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-lovable-lovable-dev",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-eric-zakariasson-ericzakariasson",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-cat-catwu",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-llamaindex-129433-llama-index",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-deepseek-deepseek-ai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-google-ai-developers-googleaidevs",
+      "status_code": 408
+    },
+    {
+      "ok": true,
+      "result": {
+        "items": [],
+        "ok": true,
+        "run": {
+          "duration_ms": 1293,
+          "duration_seconds": 1.293,
+          "error": null,
+          "error_code": null,
+          "error_message": null,
+          "finished_at": "2026-05-16T17:46:39.540416+00:00",
+          "incremental": {
+            "anchor_found": null,
+            "anchor_index": null,
+            "decision": null,
+            "incremental_decision": null,
+            "incremental_mode": "fixed_limit",
+            "mode": "fixed_limit",
+            "source_has_history": null,
+            "warnings": []
+          },
+          "retryable": false,
+          "run_id": "rss_20260516_174638_246895_socialmedia-berkeley-ai-research-berkeley-ai",
+          "source_id": "socialmedia-berkeley-ai-research-berkeley-ai",
+          "started_at": "2026-05-16T17:46:38.246895+00:00",
+          "stats": {
+            "duplicate_items": 5,
+            "failed_items": 0,
+            "feed_items_seen": 5,
+            "fetched_entries": 5,
+            "new_items": 0,
+            "processed_entries": 5,
+            "processed_items": 5,
+            "selected_items_for_processing": 5
+          },
+          "status": "success"
+        },
+        "source": {
+          "consecutive_failure_count": 0,
+          "consecutive_failures": 0,
+          "failure_count": 0,
+          "last_error_code": null,
+          "last_error_message": null,
+          "last_failure_at": null,
+          "last_fetch_at": "2026-05-16T17:46:39.540416+00:00",
+          "last_ingest_at": "2026-05-16T17:46:39.540416+00:00",
+          "last_success_at": "2026-05-16T17:46:39.540416+00:00",
+          "source_id": "socialmedia-berkeley-ai-research-berkeley-ai",
+          "status": "active"
+        }
+      },
+      "source_id": "socialmedia-berkeley-ai-research-berkeley-ai",
+      "status_code": 200
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-skywork-skywork-ai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-hunyuan-txhunyuan",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-nick-st-pierre-nickfloats",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-google-gemini-app-geminiapp",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-genspark-genspark-ai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-midjourney-midjourney",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-imxiaohu",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-bolt-new-boltdotnew",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-groq-inc-groqinc",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-varun-mohan-mohansolo",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-lenny-rachitsky-lennysan",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-mike-krieger-mikeyk",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-ai-engineer-aidotengineer",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-qwen-alibaba-qwen",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-guizang-ai-op7418",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-sundar-pichai-sundarpichai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-the-rundown-ai-therundownai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-langchain-langchainai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-mistral-ai-mistralai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-paul-graham-paulg",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-elvis-omarsar0",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-mem0-mem0ai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-openai-developers-openaidevs",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error": {
+          "error_code": "rss_parse_error",
+          "feed_url": "https://api.xgo.ing/rss/user/97f1484ae48c430fbbf3438099743674",
+          "message": "failed to parse feed: <unknown>:2:0: not well-formed (invalid token)",
+          "retryable": false,
+          "source_id": "socialmedia-dotey"
+        },
+        "ok": false,
+        "run": {
+          "duration_ms": 1200,
+          "duration_seconds": 1.2,
+          "error": {
+            "error_code": "rss_parse_error",
+            "message": "failed to parse feed: <unknown>:2:0: not well-formed (invalid token)",
+            "retryable": false
+          },
+          "error_code": "rss_parse_error",
+          "error_message": "failed to parse feed: <unknown>:2:0: not well-formed (invalid token)",
+          "finished_at": "2026-05-16T17:49:45.310670+00:00",
+          "incremental": {
+            "anchor_found": null,
+            "anchor_index": null,
+            "decision": null,
+            "incremental_decision": null,
+            "incremental_mode": "fixed_limit",
+            "mode": "fixed_limit",
+            "source_has_history": null,
+            "warnings": []
+          },
+          "retryable": false,
+          "run_id": "rss_20260516_174944_110457_socialmedia-dotey",
+          "source_id": "socialmedia-dotey",
+          "started_at": "2026-05-16T17:49:44.110457+00:00",
+          "stats": {
+            "duplicate_items": 0,
+            "failed_items": 0,
+            "feed_items_seen": 0,
+            "fetched_entries": 0,
+            "new_items": 0,
+            "processed_entries": 0,
+            "processed_items": 0,
+            "selected_items_for_processing": 0
+          },
+          "status": "failed"
+        },
+        "source": {
+          "consecutive_failure_count": 1,
+          "consecutive_failures": 1,
+          "failure_count": 1,
+          "last_error_code": "rss_parse_error",
+          "last_error_message": "failed to parse feed: <unknown>:2:0: not well-formed (invalid token)",
+          "last_failure_at": "2026-05-16T17:49:45.310670+00:00",
+          "last_fetch_at": "2026-05-16T17:49:45.310670+00:00",
+          "last_ingest_at": "2026-05-16T17:49:45.310670+00:00",
+          "last_success_at": null,
+          "source_id": "socialmedia-dotey",
+          "status": "active"
+        }
+      },
+      "source_id": "socialmedia-dotey",
+      "status_code": 400
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-vista8",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-fireworks-ai-fireworksai-hq",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-aman-sanger-amanrsanger",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-andrew-chen-andrewchen",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-fei-fei-li-drfeifei",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-qdrant-qdrant-engine",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-rowan-cheung-rowancheung",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-ideogram-ideogram-ai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-latent-space-latentspacepod",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-lilian-weng-lilianweng",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-google-deepmind-googledeepmind",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-heygen-heygen-official",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-ai-will-financeyf5",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-recraft-recraftai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-lex-fridman-lexfridman",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-greg-brockman-gdb",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-jeff-dean-jeffdean",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-y-combinator-ycombinator",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-jerry-liu-jerryjliu0",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-naval-naval",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-browser-use-browser-use",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-paul-couvert-itspaulai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-satya-nadella-satyanadella",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-sahil-lavingia-shl",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-flowiseai-flowiseai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-firecrawl-firecrawl-dev",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-justine-moore-venturetwins",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-patrick-loeber-patloeber",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-jim-fan-drjimfan",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-suhail-suhail",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-lijigang-com",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-geoffrey-hinton-geoffreyhinton",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-philipp-schmid-philschmid",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-stanford-ai-lab-stanfordailab",
+      "status_code": 408
+    },
+    {
+      "ok": true,
+      "result": {
+        "items": [],
+        "ok": true,
+        "run": {
+          "duration_ms": 1375,
+          "duration_seconds": 1.375,
+          "error": null,
+          "error_code": null,
+          "error_message": null,
+          "finished_at": "2026-05-16T17:54:19.372154+00:00",
+          "incremental": {
+            "anchor_found": null,
+            "anchor_index": null,
+            "decision": null,
+            "incremental_decision": null,
+            "incremental_mode": "fixed_limit",
+            "mode": "fixed_limit",
+            "source_has_history": null,
+            "warnings": []
+          },
+          "retryable": false,
+          "run_id": "rss_20260516_175417_996717_socialmedia-arthur-mensch-arthurmensch",
+          "source_id": "socialmedia-arthur-mensch-arthurmensch",
+          "started_at": "2026-05-16T17:54:17.996717+00:00",
+          "stats": {
+            "duplicate_items": 3,
+            "failed_items": 0,
+            "feed_items_seen": 3,
+            "fetched_entries": 3,
+            "new_items": 0,
+            "processed_entries": 3,
+            "processed_items": 3,
+            "selected_items_for_processing": 3
+          },
+          "status": "success"
+        },
+        "source": {
+          "consecutive_failure_count": 0,
+          "consecutive_failures": 0,
+          "failure_count": 0,
+          "last_error_code": null,
+          "last_error_message": null,
+          "last_failure_at": null,
+          "last_fetch_at": "2026-05-16T17:54:19.372154+00:00",
+          "last_ingest_at": "2026-05-16T17:54:19.372154+00:00",
+          "last_success_at": "2026-05-16T17:54:19.372154+00:00",
+          "source_id": "socialmedia-arthur-mensch-arthurmensch",
+          "status": "active"
+        }
+      },
+      "source_id": "socialmedia-arthur-mensch-arthurmensch",
+      "status_code": 200
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-lovartai-lovart-ai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-v0-v0",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-lee-robinson-leerob",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-jan-leike-janleike",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-eric-jing-ericjing-ai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-augment-code-augmentcode",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-sam-altman-sama",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-openrouter-openrouterai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-hailuo-ai-minimax-hailuo-ai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-runway-runwayml",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-guillermo-rauch-rauchg",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-andrej-karpathy-karpathy",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-ai-at-meta-aiatmeta",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-lmarena-ai-lmarena-ai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-harrison-chase-hwchase17",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-a16z-a16z",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-jina-ai-jinaai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-binyuan-hui-huybery",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-yann-lecun-ylecun",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-chatgpt-chatgptapp",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-figma-figma",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-notion-notionhq",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-sualeh-asif-sualehasif996",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-hugging-face-huggingface",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-anthropic-anthropicai",
+      "status_code": 408
+    },
+    {
+      "ok": false,
+      "result": {
+        "error_code": "source_ingest_timeout",
+        "message": "source ingest exceeded 8s",
+        "ok": false
+      },
+      "source_id": "socialmedia-perplexity-perplexity-ai",
+      "status_code": 408
+    }
+  ],
+  "sample_new_items": [
+    {
+      "created_at": "2026-05-16T17:38:21.779717+00:00",
+      "feed_url": "https://api.xgo.ing/rss/user/244eb9fa77ce4fa3b7fa5ceba80027a4",
+      "item_id": "item_4ce784fd24da45b5b56e0fc41f62975f",
+      "published_at": "2025-05-23T14:50:37+00:00",
+      "source_id": "socialmedia-barsee-128054-heybarsee",
+      "source_name": "Barsee 🐶(@heyBarsee)",
+      "title": "12. Perplexity has started rolling out its agentic web browser - Comet, to early testers."
+    },
+    {
+      "created_at": "2026-05-16T17:38:07.026776+00:00",
+      "feed_url": "https://api.xgo.ing/rss/user/244eb9fa77ce4fa3b7fa5ceba80027a4",
+      "item_id": "item_39192d763afb4445842a44b1f5f49146",
+      "published_at": "2025-05-23T14:50:22+00:00",
+      "source_id": "socialmedia-barsee-128054-heybarsee",
+      "source_name": "Barsee 🐶(@heyBarsee)",
+      "title": "We just had one of the biggest weeks in AI. -Google launched Veo 3 -OpenAI and Jony introduce IO -..."
+    },
+    {
+      "created_at": "2026-05-16T17:37:49.809903+00:00",
+      "feed_url": "https://api.xgo.ing/rss/user/22af005b21ec45b1a4503acca777b7f0",
+      "item_id": "item_02d1a905c6014c6b841739997ca6d467",
+      "published_at": "2026-01-22T14:35:50+00:00",
+      "source_id": "socialmedia-ai-sdk-aisdk",
+      "source_name": "AI SDK(@aisdk)",
+      "title": "Blog post: https://t.co/qRC8nPAZfL"
+    },
+    {
+      "created_at": "2026-05-16T17:37:24.966675+00:00",
+      "feed_url": "https://api.xgo.ing/rss/user/221a88341acb475db221a12fed8208d0",
+      "item_id": "item_11886891c4914575944d2724ad16cfbc",
+      "published_at": "2026-04-06T19:18:07+00:00",
+      "source_id": "socialmedia-notebooklm-notebooklm",
+      "source_name": "NotebookLM(@NotebookLM)",
+      "title": "Hi! For those of you who have been using Cinematic Video Overviews over the past few weeks— what do ..."
+    },
+    {
+      "created_at": "2026-05-16T17:36:52.313614+00:00",
+      "feed_url": "https://api.xgo.ing/rss/user/1897eed387064dfab443764d6da50bc6",
+      "item_id": "item_c135317bfb1a4360b587adcc73b05059",
+      "published_at": "2026-04-29T14:17:04+00:00",
+      "source_id": "socialmedia-elevenlabs-elevenlabsio",
+      "source_name": "ElevenLabs(@elevenlabsio)",
+      "title": "@Stefano @thepoisonivory @DangerTwinsBand @KesingtonKross @justinlove @imskyelouise With over 4,000 ..."
+    },
+    {
+      "created_at": "2026-05-16T17:36:30.001785+00:00",
+      "feed_url": "https://api.xgo.ing/rss/user/179bcc4b8e5d4274b6e9e935f9fd4434",
+      "item_id": "item_0a1a57c3d12d4a10bff4eff59e8f1e21",
+      "published_at": "2026-05-05T06:23:31+00:00",
+      "source_id": "socialmedia-aadit-sheth-aaditsh",
+      "source_name": "Aadit Sheth(@aaditsh)",
+      "title": "This is so simple but so smart. A pack of bananas where each one is at a different ripeness level so..."
+    },
+    {
+      "created_at": "2026-05-16T17:36:09.465040+00:00",
+      "feed_url": "https://api.xgo.ing/rss/user/17687b1051204b2dbaed4ea4c9178f28",
+      "item_id": "item_b2f1fcd03f4446da9d32dff12365964e",
+      "published_at": "2026-04-01T20:13:46+00:00",
+      "source_id": "socialmedia-poe-poe-platform",
+      "source_name": "Poe(@poe_platform)",
+      "title": "Try it out on all platforms and in the Poe API today: https://t.co/GvNlCgiKWP"
+    },
+    {
+      "created_at": "2026-05-16T17:35:45.476350+00:00",
+      "feed_url": "https://api.xgo.ing/rss/user/12eba9c3db4940c5ab2a72bd00f9ff2c",
+      "item_id": "item_12b9e3cb209743199fa7567a5fde1024",
+      "published_at": "2026-04-22T17:19:46+00:00",
+      "source_id": "socialmedia-replicate-replicate",
+      "source_name": "Replicate(@replicate)",
+      "title": "V6 from @PixVerse_ is now live on Replicate. Precise Camera Movement Control — pans, tilts, zooms, ..."
+    },
+    {
+      "created_at": "2026-05-16T17:35:20.221774+00:00",
+      "feed_url": "https://api.xgo.ing/rss/user/0e3ebaf288014c45b0d24b71fe37312b",
+      "item_id": "item_2ed1db4fd03b413da6fa32951c31c26f",
+      "published_at": "2026-04-12T03:34:33+00:00",
+      "source_id": "socialmedia-ai-breakfast-aibreakfast",
+      "source_name": "AI Breakfast(@AiBreakfast)",
+      "title": "-Electronics store says it will price match -Guy pulls out his phone and sends OpenClaw a message t..."
+    },
+    {
+      "created_at": "2026-05-16T17:34:55.513363+00:00",
+      "feed_url": "https://api.xgo.ing/rss/user/0c0856a69f9f49cf961018c32a0b0049",
+      "item_id": "item_f1918708464c4b6e90b15658bcee13dc",
+      "published_at": "2026-05-07T17:19:33+00:00",
+      "source_id": "socialmedia-openai-openai",
+      "source_name": "OpenAI(@OpenAI)",
+      "title": "We know you’re eager for voice updates in ChatGPT. Stay tuned, we’re cooking."
+    }
+  ],
+  "sources_matched": [
+    "socialmedia-orange-ai-oran-ge",
+    "socialmedia-nvidia-ai-nvidiaai",
+    "socialmedia-junyang-lin-justinlin610",
+    "socialmedia-andrew-ng-andrewyng",
+    "socialmedia-dify-dify-ai",
+    "socialmedia-openai-openai",
+    "socialmedia-ai-breakfast-aibreakfast",
+    "socialmedia-replicate-replicate",
+    "socialmedia-poe-poe-platform",
+    "socialmedia-aadit-sheth-aaditsh",
+    "socialmedia-elevenlabs-elevenlabsio",
+    "socialmedia-notebooklm-notebooklm",
+    "socialmedia-ai-sdk-aisdk",
+    "socialmedia-barsee-128054-heybarsee",
+    "socialmedia-taranjeet-taranjeetio",
+    "socialmedia-weaviate-vector-database-weaviate-io",
+    "socialmedia-adam-d-angelo-adamdangelo",
+    "socialmedia-simon-willison-simonw",
+    "socialmedia-manusai-manusai-hq",
+    "socialmedia-fellou-fellouai",
+    "socialmedia-pika-pika-labs",
+    "socialmedia-ak-akhaliq",
+    "socialmedia-akshay-kothari-akothari",
+    "socialmedia-gary-marcus-garymarcus",
+    "socialmedia-character-ai-character-ai",
+    "socialmedia-mustafa-suleyman-mustafasuleyman",
+    "socialmedia-xai-xai",
+    "socialmedia-kevin-weil-127482-127480-kevinweil",
+    "socialmedia-milvus-milvusio",
+    "socialmedia-deeplearning-ai-deeplearningai",
+    "socialmedia-julien-chaumond-julien-c",
+    "socialmedia-cohere-cohere",
+    "socialmedia-ray-dalio-raydalio",
+    "socialmedia-meng-shao-shao-meng",
+    "socialmedia-fish-audio-fishaudio",
+    "socialmedia-thomas-wolf-thom-wolf",
+    "socialmedia-dario-amodei-darioamodei",
+    "socialmedia-windsurf-windsurf-ai",
+    "socialmedia-demis-hassabis-demishassabis",
+    "socialmedia-cognition-cognition-labs",
+    "socialmedia-richard-socher-richardsocher",
+    "socialmedia-google-ai-googleai",
+    "socialmedia-logan-kilpatrick-officiallogank",
+    "socialmedia-alex-albert-alexalbert",
+    "socialmedia-cursor-cursor-ai",
+    "socialmedia-kling-ai-kling-ai",
+    "socialmedia-ian-goodfellow-goodfellow-ian",
+    "socialmedia-justin-welsh-thejustinwelsh",
+    "socialmedia-aravind-srinivas-aravsrinivas",
+    "socialmedia-monica-im-hey-im-monica",
+    "socialmedia-clem-129303-clementdelangue",
+    "socialmedia-anton-osika-eu-acc-antonosika",
+    "socialmedia-amjad-masad-amasad",
+    "socialmedia-scott-wu-scottwu46",
+    "socialmedia-replit-replit",
+    "socialmedia-microsoft-research-msftresearch",
+    "socialmedia-ollama-ollama",
+    "socialmedia-marc-andreessen-127482-127480-pmarca",
+    "socialmedia-dia-diabrowser",
+    "socialmedia-lovable-lovable-dev",
+    "socialmedia-eric-zakariasson-ericzakariasson",
+    "socialmedia-cat-catwu",
+    "socialmedia-llamaindex-129433-llama-index",
+    "socialmedia-deepseek-deepseek-ai",
+    "socialmedia-google-ai-developers-googleaidevs",
+    "socialmedia-berkeley-ai-research-berkeley-ai",
+    "socialmedia-skywork-skywork-ai",
+    "socialmedia-hunyuan-txhunyuan",
+    "socialmedia-nick-st-pierre-nickfloats",
+    "socialmedia-google-gemini-app-geminiapp",
+    "socialmedia-genspark-genspark-ai",
+    "socialmedia-midjourney-midjourney",
+    "socialmedia-imxiaohu",
+    "socialmedia-bolt-new-boltdotnew",
+    "socialmedia-groq-inc-groqinc",
+    "socialmedia-varun-mohan-mohansolo",
+    "socialmedia-lenny-rachitsky-lennysan",
+    "socialmedia-mike-krieger-mikeyk",
+    "socialmedia-ai-engineer-aidotengineer",
+    "socialmedia-qwen-alibaba-qwen",
+    "socialmedia-guizang-ai-op7418",
+    "socialmedia-sundar-pichai-sundarpichai",
+    "socialmedia-the-rundown-ai-therundownai",
+    "socialmedia-langchain-langchainai",
+    "socialmedia-mistral-ai-mistralai",
+    "socialmedia-paul-graham-paulg",
+    "socialmedia-elvis-omarsar0",
+    "socialmedia-mem0-mem0ai",
+    "socialmedia-openai-developers-openaidevs",
+    "socialmedia-dotey",
+    "socialmedia-vista8",
+    "socialmedia-fireworks-ai-fireworksai-hq",
+    "socialmedia-aman-sanger-amanrsanger",
+    "socialmedia-andrew-chen-andrewchen",
+    "socialmedia-fei-fei-li-drfeifei",
+    "socialmedia-qdrant-qdrant-engine",
+    "socialmedia-rowan-cheung-rowancheung",
+    "socialmedia-ideogram-ideogram-ai",
+    "socialmedia-latent-space-latentspacepod",
+    "socialmedia-lilian-weng-lilianweng",
+    "socialmedia-google-deepmind-googledeepmind",
+    "socialmedia-heygen-heygen-official",
+    "socialmedia-ai-will-financeyf5",
+    "socialmedia-recraft-recraftai",
+    "socialmedia-lex-fridman-lexfridman",
+    "socialmedia-greg-brockman-gdb",
+    "socialmedia-jeff-dean-jeffdean",
+    "socialmedia-y-combinator-ycombinator",
+    "socialmedia-jerry-liu-jerryjliu0",
+    "socialmedia-naval-naval",
+    "socialmedia-browser-use-browser-use",
+    "socialmedia-paul-couvert-itspaulai",
+    "socialmedia-satya-nadella-satyanadella",
+    "socialmedia-sahil-lavingia-shl",
+    "socialmedia-flowiseai-flowiseai",
+    "socialmedia-firecrawl-firecrawl-dev",
+    "socialmedia-justine-moore-venturetwins",
+    "socialmedia-patrick-loeber-patloeber",
+    "socialmedia-jim-fan-drjimfan",
+    "socialmedia-suhail-suhail",
+    "socialmedia-lijigang-com",
+    "socialmedia-geoffrey-hinton-geoffreyhinton",
+    "socialmedia-philipp-schmid-philschmid",
+    "socialmedia-stanford-ai-lab-stanfordailab",
+    "socialmedia-arthur-mensch-arthurmensch",
+    "socialmedia-lovartai-lovart-ai",
+    "socialmedia-v0-v0",
+    "socialmedia-lee-robinson-leerob",
+    "socialmedia-jan-leike-janleike",
+    "socialmedia-eric-jing-ericjing-ai",
+    "socialmedia-augment-code-augmentcode",
+    "socialmedia-sam-altman-sama",
+    "socialmedia-openrouter-openrouterai",
+    "socialmedia-hailuo-ai-minimax-hailuo-ai",
+    "socialmedia-runway-runwayml",
+    "socialmedia-guillermo-rauch-rauchg",
+    "socialmedia-andrej-karpathy-karpathy",
+    "socialmedia-ai-at-meta-aiatmeta",
+    "socialmedia-lmarena-ai-lmarena-ai",
+    "socialmedia-harrison-chase-hwchase17",
+    "socialmedia-a16z-a16z",
+    "socialmedia-jina-ai-jinaai",
+    "socialmedia-binyuan-hui-huybery",
+    "socialmedia-yann-lecun-ylecun",
+    "socialmedia-chatgpt-chatgptapp",
+    "socialmedia-figma-figma",
+    "socialmedia-notion-notionhq",
+    "socialmedia-sualeh-asif-sualehasif996",
+    "socialmedia-hugging-face-huggingface",
+    "socialmedia-anthropic-anthropicai",
+    "socialmedia-perplexity-perplexity-ai"
+  ],
+  "success_count": 5,
+  "total_active": 151,
+  "total_matched": 151
+}

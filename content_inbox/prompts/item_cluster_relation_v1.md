@@ -53,6 +53,10 @@ Rules:
 - primary_relation is single-choice. secondary_roles may be multi-choice annotations but must not replace primary_relation.
 - related analysis, experience, or context can attach to the same event without being repeat.
 - follow_up means a new event caused by the prior event; create/link a follow-up cluster.
+- In AI coverage, model/product/company/paper/benchmark overlap is important, but attach only when the item is the same event or clearly adds to the same event record.
+- Use new_info for additional factual details on the same release, paper, benchmark, outage, policy, pricing, or access change.
+- Use analysis or experience for commentary, benchmark interpretation, hands-on usage, or developer reports about an existing event.
+- Use same_topic when it shares an entity but is not the same event, and follow_up when it is a later caused event.
 - Archived clusters normally should not absorb new items unless this is an extremely strong same event or a follow_up.
 - If confidence is low or information is insufficient, output uncertain.
 

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timezone
 from typing import Any
 
 from app.semantic import db
@@ -42,24 +44,77 @@ def hard_relation(new_item: dict[str, Any], candidate_item: dict[str, Any]) -> t
     return None
 
 
+def normalized_entity_terms(values: list[str]) -> set[str]:
+    terms: set[str] = set()
+    for value in values:
+        text = str(value or "").strip()
+        if not text:
+            continue
+        lowered = text.lower()
+        terms.add(lowered)
+        compact = re.sub(r"[^a-z0-9\u4e00-\u9fff]+", "", lowered)
+        if compact:
+            terms.add(compact)
+    return terms
+
+
+def semantic_tokens(text: str) -> set[str]:
+    raw = re.findall(r"[A-Za-z][A-Za-z0-9_.+-]{2,}|[\u4e00-\u9fff]{2,8}", text.lower())
+    stop = {"the", "and", "with", "from", "that", "this", "for", "about", "after", "before", "using"}
+    return {token for token in raw if token not in stop}
+
+
+def parse_time(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+    except Exception:
+        return None
+
+
+def hours_apart(left: str | None, right: str | None) -> float | None:
+    a = parse_time(left)
+    b = parse_time(right)
+    if not a or not b:
+        return None
+    return abs((a - b).total_seconds()) / 3600
+
+
 def find_relation_candidates(store: InboxStore, item_id: str, max_candidates: int) -> list[dict[str, Any]]:
     new_card = db.get_current_item_card(store, item_id)
     if not new_card:
         return []
-    cards = db.list_current_item_cards(store, exclude_item_id=item_id, limit=200)
-    new_terms = set((new_card["canonical_title"] + " " + (new_card["event_hint"] or "")).lower().split())
-    scored: list[tuple[int, dict[str, Any]]] = []
+    new_item = db.get_item(store, item_id) or {}
+    cards = db.list_current_item_cards(store, exclude_item_id=item_id, limit=500)
+    new_terms = semantic_tokens(
+        f"{new_card['canonical_title']} {new_card.get('event_hint') or ''} {new_card.get('short_summary') or ''}"
+    )
+    new_entities = normalized_entity_terms(json.loads(new_card["entities_json"] or "[]"))
+    scored: list[tuple[float, str, dict[str, Any]]] = []
     for card in cards:
-        terms = set((card["canonical_title"] + " " + (card["event_hint"] or "")).lower().split())
-        score = len(new_terms & terms)
+        candidate_item = db.get_item(store, card["item_id"]) or {}
+        terms = semantic_tokens(f"{card['canonical_title']} {card.get('event_hint') or ''} {card.get('short_summary') or ''}")
+        score = float(len(new_terms & terms))
         try:
-            score += len(set(json.loads(new_card["entities_json"] or "[]")) & set(json.loads(card["entities_json"] or "[]"))) * 2
+            score += len(new_entities & normalized_entity_terms(json.loads(card["entities_json"] or "[]"))) * 4
         except Exception:
             pass
+        if (new_item.get("source_id") or "") != (candidate_item.get("source_id") or ""):
+            score += 0.75
+        gap = hours_apart(new_item.get("published_at") or new_item.get("created_at"), candidate_item.get("published_at") or candidate_item.get("created_at"))
+        if gap is not None:
+            if gap <= 24:
+                score += 2
+            elif gap <= 72:
+                score += 1
+        if normalize_url(new_item.get("url") or "") and normalize_url(new_item.get("url") or "") == normalize_url(candidate_item.get("url") or ""):
+            score += 10
         if score > 0:
-            scored.append((score, card))
-    scored.sort(key=lambda pair: pair[0], reverse=True)
-    return [card for _score, card in scored[:max_candidates]]
+            scored.append((score, card["created_at"], card))
+    scored.sort(key=lambda pair: (pair[0], pair[1]), reverse=True)
+    return [card for _score, _created, card in scored[:max_candidates]]
 
 
 def process_item_relations(
@@ -147,7 +202,7 @@ def process_item_relations(
             schema_version=SCHEMA_VERSION,
             input_data=input_data,
             output_model=ItemRelationOutput,
-            max_tokens=1400,
+            max_tokens=2200,
             item_id=item_id,
             source_id=item.get("source_id") or item.get("feed_url") or item.get("source_name"),
         )

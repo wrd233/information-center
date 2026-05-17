@@ -51,8 +51,11 @@ Rules:
 - key_facts must contain verifiable facts only; key_opinions must contain author judgement, prediction, or sentiment.
 - event_hint is the event suggested by the item, not final cluster membership.
 - Use content_role source_material for official announcements, papers, releases, changelogs, original data, or primary material.
-- Use analysis for interpretation, experience for firsthand/hands-on reports, aggregator for link collections, low_signal for marketing or empty summaries.
-- If unsure, use unknown or warnings. Do not invent facts.
+- Use analysis for interpretation, firsthand for hands-on reports, aggregator for link collections, low_signal for marketing or empty summaries.
+- Preserve exact AI model names, company names, product names, paper names, benchmark names, version numbers, and dataset names when present.
+- If the RSS item only has a title or thin summary, keep short_summary close to the supplied text, avoid abstraction, set confidence lower, and add warnings such as "summary_only" or "too_short".
+- Do not turn claims, opinions, speculation, or benchmark interpretations into key_facts. Put them in key_opinions unless independently factual from the item text.
+- If unsure, use unknown or warnings. Do not invent facts, dates, entities, model capabilities, or release status.
 
 Example input:
 {"task":"item_card_batch","items":[{"item_id":"item_1","title":"OpenAI releases GPT-5.5","summary":"OpenAI announced GPT-5.5 for developers.","url":"https://example.com"}]}

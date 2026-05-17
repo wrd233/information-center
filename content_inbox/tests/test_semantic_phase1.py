@@ -247,6 +247,9 @@ def test_evaluate_dry_run_writes_report_not_source_db(tmp_path: Path) -> None:
         token_budget=0,
         include_archived=False,
         concurrency=2,
+        source_filter=None,
+        source_url_prefix=None,
+        sample_mode="recent",
     )
     assert result["ok"] is True
     assert Path(result["report_path"]).exists()
@@ -274,6 +277,9 @@ def test_evaluate_missing_live_env_skips_live_calls(tmp_path: Path, monkeypatch:
         token_budget=0,
         include_archived=False,
         concurrency=2,
+        source_filter=None,
+        source_url_prefix=None,
+        sample_mode="recent",
     )
     assert any("live skipped" in warning for warning in result["metadata"]["warnings"])
 
@@ -296,6 +302,9 @@ def test_evaluate_max_calls_and_token_budget_marked(tmp_path: Path) -> None:
         token_budget=1,
         include_archived=False,
         concurrency=2,
+        source_filter=None,
+        source_url_prefix=None,
+        sample_mode="recent",
     )
     summary = json.loads(Path(result["summary_path"]).read_text(encoding="utf-8"))
     assert summary["metadata"]["actual_calls"] == 0
@@ -312,6 +321,48 @@ def test_archived_cluster_excluded_unless_requested(tmp_path: Path) -> None:
         card = conn.execute("SELECT * FROM item_cards LIMIT 1").fetchone()
     assert candidate_clusters(store, dict(card), 5) == []
     assert candidate_clusters(store, dict(card), 5, include_archived=True)
+
+
+def test_evaluate_source_scope_filter_and_report_sections(tmp_path: Path) -> None:
+    source_store = make_store(tmp_path / "source-scope")
+    seed_item(
+        source_store,
+        "XGO scoped AI item",
+        source_id="xgo-ai",
+        url="https://api.xgo.ing/rss/ai/1",
+    )
+    seed_item(
+        source_store,
+        "Other item",
+        source_id="other",
+        url="https://example.com/other",
+    )
+    result = run_evaluation(
+        db_path=str(source_store.database_path),
+        output=str(tmp_path / "eval-scope"),
+        limit=10,
+        max_calls=0,
+        max_candidates=3,
+        batch_size=2,
+        live=False,
+        dry_run=True,
+        write_real_db=False,
+        model=None,
+        strong_model=None,
+        token_budget=0,
+        include_archived=False,
+        concurrency=2,
+        source_filter=None,
+        source_url_prefix="api.xgo.ing",
+        sample_mode="source_scope_full",
+    )
+    summary = json.loads(Path(result["summary_path"]).read_text(encoding="utf-8"))
+    report = Path(result["report_path"]).read_text(encoding="utf-8")
+    assert summary["input_sample"]["items_sampled"] == 1
+    assert summary["source_scope"]["matched_source_count"] == 1
+    assert "## 2. Source Scope" in report
+    assert "## 10. Concurrency Summary" in report
+    assert "## 14. Readiness Assessment" in report
 
 
 @pytest.mark.live_deepseek

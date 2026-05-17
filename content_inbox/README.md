@@ -395,6 +395,23 @@ CONTENT_INBOX_LLM_ENABLE_LIVE=1 PYTHONPATH=. python3 -m content_inbox.semantic e
 
 `evaluate` 默认额度比 smoke test 更宽：`--max-calls 100`、`--token-budget 200000`、`--concurrency 4`。`--concurrency` 会并发 item-card batch 和 item-item relation 的 DeepSeek 调用；cluster 写入路径保持较保守，避免并发误聚类。
 
+聚焦 `api.xgo.ing` AI RSS 源评估：
+
+```bash
+CONTENT_INBOX_LLM_ENABLE_LIVE=1 PYTHONPATH=. python3 -m content_inbox.semantic evaluate \
+  --db-path data/content_inbox.sqlite3 \
+  --source-url-prefix api.xgo.ing \
+  --sample-mode mixed \
+  --limit 100 \
+  --max-calls 200 \
+  --concurrency 4 \
+  --live \
+  --dry-run \
+  --output /tmp/content_inbox_semantic_eval
+```
+
+`--sample-mode` 支持 `recent`、`duplicate_candidates`、`cluster_candidates`、`source_scope_full` 和 `mixed`。
+
 Semantic LLM calls write audit rows to `llm_call_logs`, including model, prompt/schema version, input fingerprint, latency, status, token usage, cache token fields when returned by the provider, raw output, parsed JSON, and error details. API keys are never logged.
 
 This phase did not change console UI. Future console work can consume the backend-only `/api/semantic/*` endpoints for item semantic detail, relations, clusters, source profiles, review queue, and LLM call log summaries.

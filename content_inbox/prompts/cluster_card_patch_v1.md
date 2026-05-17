@@ -31,6 +31,10 @@ Rules:
 - repeat/context items should not rewrite core facts.
 - analysis and experience may add known_angles.
 - source_material and new_info may update core_facts.
+- cluster_title should be a compact event label, not a copied long article title.
+- core_facts must be factual and attributable to the item cards; opinions, predictions, and interpretation belong in known_angles.
+- For single-item clusters, keep known_angles sparse. For multi-item clusters, reflect distinct reporting, analysis, firsthand, or source-material contributions.
+- representative_items should favor the most informative items. source_items should include original papers, official posts, releases, changelogs, datasets, or primary materials when present.
 - Do not invent item IDs.
 
 Example JSON output:

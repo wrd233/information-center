@@ -27,6 +27,45 @@ def write_json(data: dict[str, Any]) -> None:
     print(json.dumps(data, ensure_ascii=False, sort_keys=True))
 
 
+def _print_probe_report(data: dict[str, Any]) -> None:
+    """Print a human-readable probe report."""
+    summary = data.get("summary", {})
+    diags = data.get("diagnostics", [])
+    sources = data.get("rss_sources_matched", [])
+
+    print("=" * 60)
+    print(f"Source Scope Probe: {data.get('source_url_prefix', '?')}")
+    print("=" * 60)
+
+    print(f"\nSummary:")
+    print(f"  Total rss_sources: {summary.get('total_rss_sources', '?')}")
+    print(f"  Sources matched:   {summary.get('total_sources_matched', '?')}")
+    print(f"  Items via JOIN:    {summary.get('total_items_via_rss_join', '?')}")
+    print(f"  Items via direct:  {summary.get('total_items_via_direct_search', '?')}")
+    print(f"  NULL source_id:    {summary.get('total_items_with_null_source_id', '?')}")
+    print(f"  NULL feed_url:     {summary.get('total_items_with_null_feed_url', '?')}")
+
+    if diags:
+        print(f"\nDiagnostics:")
+        for d in diags:
+            tag = d["severity"].upper()
+            print(f"  [{tag}] [Case {d['case']}] {d['message']}")
+
+    if sources:
+        print(f"\nMatched Sources ({len(sources)}):")
+        for s in sources:
+            print(f"  {s['source_id']}")
+            print(f"    name: {s['source_name']}")
+            print(f"    feed_url: {s['feed_url']}")
+            print(f"    status: {s['status']}  items: {s['item_count_total']}  "
+                  f"(by source_id: {s['item_count_by_source_id']}, "
+                  f"by name: {s['item_count_by_name_category']})")
+            if s.get("last_error_message"):
+                print(f"    last_error: {s['last_error_message']}")
+
+    print()
+
+
 def store_from_args(args: argparse.Namespace) -> InboxStore:
     return InboxStore(Path(args.db_path) if args.db_path else settings.database_path)
 
@@ -128,7 +167,31 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--token-budget", type=int, default=200000)
     evaluate.add_argument("--concurrency", type=int, default=4)
     evaluate.add_argument("--include-archived", action="store_true")
-    evaluate.add_argument("--output")
+    evaluate.add_argument("--output", "--output-dir", dest="output")
+    evaluate.add_argument("--source-filter")
+    evaluate.add_argument("--source-url-prefix")
+    evaluate.add_argument(
+        "--sample-mode",
+        choices=["recent", "duplicate_candidates", "cluster_candidates", "source_scope_full", "mixed"],
+        default="recent",
+    )
+    ingest = sub.add_parser("ingest-source-scope")
+    ingest.add_argument("--dry-run", action="store_true", default=True)
+    ingest.add_argument("--apply", action="store_true", help="Actually run ingestion (requires --apply)")
+    ingest.add_argument("--limit-sources", type=int, default=0)
+    ingest.add_argument("--output")
+    ingest.add_argument("source_url_prefix", help="URL prefix of sources to ingest")
+
+    probe = sub.add_parser("probe-source-scope")
+    probe.add_argument("--json", "--json-output", dest="json_output", action="store_true")
+    probe.add_argument("--output")
+    probe.add_argument("source_url_prefix", help="URL prefix to probe (e.g., api.xgo.ing)")
+
+    fix = sub.add_parser("fix-source-linkage")
+    fix.add_argument("--dry-run", action="store_true", default=True)
+    fix.add_argument("--apply", action="store_true", help="Apply fixes to real DB (requires --apply)")
+    fix.add_argument("source_url_prefix")
+
     return parser
 
 
@@ -163,6 +226,9 @@ def main(argv: list[str] | None = None) -> int:
                 token_budget=args.token_budget,
                 include_archived=args.include_archived,
                 concurrency=args.concurrency,
+                source_filter=args.source_filter,
+                source_url_prefix=args.source_url_prefix,
+                sample_mode=args.sample_mode,
             )
             write_json(data)
             return 0 if data.get("ok", True) else 1
@@ -231,6 +297,45 @@ def main(argv: list[str] | None = None) -> int:
                 data = decide_review(store, args.review_id, "approved")
             else:
                 data = decide_review(store, args.review_id, "rejected")
+        elif args.command == "probe-source-scope":
+            from app.semantic.probe import probe_markdown_report, probe_source_scope
+
+            data = probe_source_scope(store, args.source_url_prefix)
+            if getattr(args, "output", None):
+                out = Path(args.output)
+                if out.suffix == ".md":
+                    out.write_text(probe_markdown_report(data), encoding="utf-8")
+                    out.with_suffix(".json").write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+                else:
+                    out.write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+            if getattr(args, "json_output", False):
+                write_json(data)
+            else:
+                _print_probe_report(data)
+        elif args.command == "fix-source-linkage":
+            from app.semantic.probe import fix_source_linkage
+
+            dry_run = not getattr(args, "apply", False)
+            data = fix_source_linkage(store, args.source_url_prefix, apply=not dry_run, dry_run=dry_run)
+            write_json(data)
+        elif args.command == "ingest-source-scope":
+            from app.semantic.probe import ingest_markdown_report, ingest_matching_sources
+
+            dry_run = not getattr(args, "apply", False)
+            data = ingest_matching_sources(
+                store,
+                args.source_url_prefix,
+                dry_run=dry_run,
+                limit=args.limit_sources or None,
+            )
+            if getattr(args, "output", None):
+                out = Path(args.output)
+                if out.suffix == ".md":
+                    out.write_text(ingest_markdown_report(data), encoding="utf-8")
+                    out.with_suffix(".json").write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+                else:
+                    out.write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+            write_json(data)
         else:
             raise ValueError(f"unknown command: {args.command}")
         write_json(data)

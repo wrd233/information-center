@@ -109,7 +109,7 @@ def generate_item_cards(
             schema_version=SCHEMA_VERSION,
             input_data=input_data,
             output_model=ItemCardBatchOutput,
-            max_tokens=1800,
+            max_tokens=4000,
         )
         local["llm_calls"] = client.calls
         cards_by_id: dict[str, ItemCardData] = {}
