@@ -131,7 +131,7 @@ def process_item_clusters(
         token_budget=token_budget,
         global_call_limit=global_call_limit,
     )
-    stats = {"selected": len(rows), "attached": 0, "created_clusters": 0, "review": 0, "llm_calls": 0}
+    stats = {"selected": len(rows), "attached": 0, "created_clusters": 0, "review": 0, "llm_calls": 0, "candidate_clusters": 0, "no_candidate_items": 0, "llm_items": 0}
     for row in rows:
         item_id = row["item_id"]
         item_card = db.get_current_item_card(store, item_id)
@@ -140,6 +140,7 @@ def process_item_clusters(
             continue
         candidates = candidate_clusters(store, item_card, max_candidates, include_archived=include_archived)
         if not candidates:
+            stats["no_candidate_items"] += 1
             cluster_id = create_semantic_cluster(store, item, item_card, created_by="rule")
             insert_cluster_item(
                 store,
@@ -167,6 +168,7 @@ def process_item_clusters(
             rebuild_cluster_card(store, cluster_id, live=False)
             stats["created_clusters"] += 1
             continue
+        stats["candidate_clusters"] += len(candidates)
         input_data = {
             "new_item_card": card_public(item_card),
             "candidate_clusters": [cluster_prompt_payload(store, cluster) for cluster in candidates],
@@ -182,6 +184,7 @@ def process_item_clusters(
             source_id=item.get("source_id") or item.get("feed_url") or item.get("source_name"),
         )
         stats["llm_calls"] = client.calls
+        stats["llm_items"] += 1
         if not output:
             insert_review(store, "uncertain_cluster_relation", "item", item_id, {"reason": "LLM skipped or failed"})
             stats["review"] += 1

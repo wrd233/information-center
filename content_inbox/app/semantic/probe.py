@@ -5,6 +5,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 from collections import Counter
 from datetime import datetime
 from html import unescape
@@ -416,7 +417,9 @@ def ingest_matching_sources(
     *,
     dry_run: bool = True,
     limit: int | None = None,
-    per_source_timeout_seconds: int = 8,
+    concurrency: int = 8,
+    per_source_timeout_seconds: int = 30,
+    retry: int = 1,
 ) -> dict[str, Any]:
     search = f"%{source_url_prefix}%"
     clean = source_url_prefix.removeprefix("https://").removeprefix("http://")
@@ -451,6 +454,9 @@ def ingest_matching_sources(
             "active_sources": active_sources,
             "total_matched": len(sources_matched),
             "total_active": len(active_sources),
+            "concurrency": concurrency,
+            "per_source_timeout_seconds": per_source_timeout_seconds,
+            "retry": retry,
         }
 
     # Non-dry-run: actually ingest
@@ -460,25 +466,28 @@ def ingest_matching_sources(
     new_items = 0
     duplicate_items = 0
     failures_by_reason: Counter[str] = Counter()
-    backup_path = str(_backup_db(Path(store.database_path), reason="before_api_xgo_semantic_phase1_2b"))
+    backup_path = str(_backup_db(Path(store.database_path), reason="before_api_xgo_semantic_phase1_2c"))
 
-    for src_id in active_sources:
-        try:
-            status, result = ingest_one_source_subprocess(store, src_id, timeout_seconds=per_source_timeout_seconds)
-            ok = status < 400 and bool(result.get("ok"))
-            if ok:
-                run_stats = (result.get("run") or {}).get("stats", {})
-                new_items += int(run_stats.get("new_items", 0) or 0)
-                duplicate_items += int(run_stats.get("duplicate_items", 0) or 0)
-                success_count += 1
-            else:
-                failure_count += 1
-                failures_by_reason[result.get("error_code") or "ingest_failed"] += 1
-            results.append({"source_id": src_id, "ok": ok, "status_code": status, "result": result})
-        except Exception as exc:
-            results.append({"source_id": src_id, "ok": False, "error": str(exc)})
+    source_names = {row[0]: row[1] for row in src_rows}
+    source_urls = {row[0]: row[2] for row in src_rows}
+
+    for result in run_ingest_process_pool(
+        store,
+        active_sources,
+        source_names=source_names,
+        source_urls=source_urls,
+        concurrency=concurrency,
+        per_source_timeout_seconds=per_source_timeout_seconds,
+        retry=retry,
+    ):
+        if result["ok"]:
+            new_items += int(result.get("inserted_count", 0) or 0)
+            duplicate_items += int(result.get("duplicate_count", 0) or 0)
+            success_count += 1
+        else:
             failure_count += 1
-            failures_by_reason[type(exc).__name__] += 1
+            failures_by_reason[result.get("failure_reason") or "unknown_error"] += 1
+        results.append(result)
 
     with store.connect() as conn:
         after_total_items = conn.execute("SELECT COUNT(*) FROM inbox_items").fetchone()[0]
@@ -494,6 +503,12 @@ def ingest_matching_sources(
         "total_active": len(active_sources),
         "success_count": success_count,
         "failure_count": failure_count,
+        "timeout_count": failures_by_reason.get("timeout", 0),
+        "empty_feed_count": sum(1 for result in results if result.get("ok") and result.get("fetched_count") == 0),
+        "duplicate_only_count": sum(1 for result in results if result.get("ok") and result.get("inserted_count") == 0 and result.get("duplicate_count", 0) > 0),
+        "concurrency": concurrency,
+        "per_source_timeout_seconds": per_source_timeout_seconds,
+        "retry": retry,
         "items_before": before_total_items,
         "items_after": after_total_items,
         "new_items": new_items,
@@ -507,8 +522,24 @@ def ingest_matching_sources(
     }
 
 
-def ingest_one_source_subprocess(store: InboxStore, source_id: str, *, timeout_seconds: int) -> tuple[int, dict[str, Any]]:
-    code = """
+def classify_ingest_failure(status: int, result: dict[str, Any]) -> str:
+    code = str(result.get("error_code") or result.get("code") or "").lower()
+    message = str(result.get("message") or result.get("error_message") or result.get("error") or "").lower()
+    text = f"{code} {message}"
+    if status == 408 or "timeout" in text or "timed out" in text:
+        return "timeout"
+    if "http" in text or status in {401, 403, 404, 429, 500, 502, 503, 504}:
+        return "http_error"
+    if "parse" in text or "xml" in text or "feed" in text and "invalid" in text:
+        return "parse_error"
+    if "empty" in text:
+        return "empty_feed"
+    if status < 400:
+        return "duplicate_only"
+    return "unknown_error"
+
+
+SOURCE_INGEST_SUBPROCESS_CODE = """
 import json
 import sys
 from pathlib import Path
@@ -520,12 +551,157 @@ store = InboxStore(Path(sys.argv[1]))
 status, result = ingest_registered_source(store, sys.argv[2], RSSSourceIngestRequest(force=True))
 print(json.dumps({"status": status, "result": result}, ensure_ascii=False))
 """
+
+
+def run_ingest_process_pool(
+    store: InboxStore,
+    source_ids: list[str],
+    *,
+    source_names: dict[str, str],
+    source_urls: dict[str, str],
+    concurrency: int,
+    per_source_timeout_seconds: int,
+    retry: int,
+) -> list[dict[str, Any]]:
+    pending = [
+        {
+            "source_id": source_id,
+            "attempt": 1,
+            "started_at": datetime.now(),
+        }
+        for source_id in source_ids
+    ]
+    running: dict[subprocess.Popen[str], dict[str, Any]] = {}
+    results: list[dict[str, Any]] = []
+    max_attempts = max(1, retry + 1)
+
+    while pending or running:
+        while pending and len(running) < max(1, concurrency):
+            job = pending.pop(0)
+            proc = start_source_ingest_process(store, job["source_id"])
+            job["attempt_started_at"] = datetime.now()
+            job["attempt_started_monotonic"] = time.monotonic()
+            running[proc] = job
+
+        progressed = False
+        for proc, job in list(running.items()):
+            elapsed = time.monotonic() - job["attempt_started_monotonic"]
+            if proc.poll() is None and per_source_timeout_seconds > 0 and elapsed > per_source_timeout_seconds:
+                status, payload = finish_timed_out_source_process(proc, per_source_timeout_seconds)
+            elif proc.poll() is None:
+                continue
+            else:
+                status, payload = finish_source_process(proc)
+
+            progressed = True
+            del running[proc]
+            ok = status < 400 and bool(payload.get("ok"))
+            reason = classify_ingest_failure(status, payload)
+            if not ok and job["attempt"] < max_attempts and reason in {"timeout", "http_error", "unknown_error"}:
+                pending.append({
+                    "source_id": job["source_id"],
+                    "attempt": job["attempt"] + 1,
+                    "started_at": job["started_at"],
+                })
+                continue
+            results.append(format_source_ingest_result(
+                job["source_id"],
+                source_names=source_names,
+                source_urls=source_urls,
+                status=status,
+                payload=payload,
+                attempts=job["attempt"],
+                started_at=job["started_at"],
+            ))
+
+        if not progressed:
+            time.sleep(0.1)
+    return results
+
+
+def start_source_ingest_process(store: InboxStore, source_id: str) -> subprocess.Popen[str]:
+    env = dict(os.environ)
+    cwd = str(Path(__file__).resolve().parents[2])
+    env["PYTHONPATH"] = cwd
+    return subprocess.Popen(
+        [sys.executable, "-c", SOURCE_INGEST_SUBPROCESS_CODE, str(store.database_path), source_id],
+        cwd=cwd,
+        env=env,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+
+
+def finish_source_process(proc: subprocess.Popen[str]) -> tuple[int, dict[str, Any]]:
+    stdout, stderr = proc.communicate(timeout=5)
+    if proc.returncode != 0:
+        return 500, {
+            "ok": False,
+            "error_code": "source_ingest_subprocess_failed",
+            "message": (stderr or stdout or "").strip()[:1000],
+        }
+    try:
+        payload = json.loads((stdout or "").strip().splitlines()[-1])
+        return int(payload["status"]), dict(payload["result"])
+    except Exception as exc:
+        return 500, {
+            "ok": False,
+            "error_code": "source_ingest_subprocess_parse_failed",
+            "message": f"{exc}: {(stdout or '')[:1000]}",
+        }
+
+
+def finish_timed_out_source_process(proc: subprocess.Popen[str], timeout_seconds: int) -> tuple[int, dict[str, Any]]:
+    try:
+        proc.kill()
+        proc.communicate(timeout=5)
+    except Exception:
+        pass
+    return 408, {
+        "ok": False,
+        "error_code": "source_ingest_timeout",
+        "message": f"source ingest exceeded {timeout_seconds}s",
+    }
+
+
+def format_source_ingest_result(
+    source_id: str,
+    *,
+    source_names: dict[str, str],
+    source_urls: dict[str, str],
+    status: int,
+    payload: dict[str, Any],
+    attempts: int,
+    started_at: datetime,
+) -> dict[str, Any]:
+    run_stats = (payload.get("run") or {}).get("stats", {}) if isinstance(payload, dict) else {}
+    ok = status < 400 and bool(payload.get("ok"))
+    return {
+        "source_id": source_id,
+        "source_name": source_names.get(source_id),
+        "feed_url": source_urls.get(source_id),
+        "ok": ok,
+        "status_code": status,
+        "attempts": attempts,
+        "failure_reason": None if ok else classify_ingest_failure(status, payload),
+        "fetched_count": int(run_stats.get("fetched_entries", 0) or run_stats.get("feed_items_seen", 0) or 0),
+        "inserted_count": int(run_stats.get("new_items", 0) or 0),
+        "duplicate_count": int(run_stats.get("duplicate_items", 0) or 0),
+        "failed_item_count": int(run_stats.get("failed_items", 0) or 0),
+        "duration_seconds": round((datetime.now() - started_at).total_seconds(), 3),
+        "error_message": payload.get("message") or payload.get("error_message") or ((payload.get("error") or {}).get("message") if isinstance(payload.get("error"), dict) else None),
+        "result": payload,
+    }
+
+
+def ingest_one_source_subprocess(store: InboxStore, source_id: str, *, timeout_seconds: int) -> tuple[int, dict[str, Any]]:
     env = dict(os.environ)
     cwd = str(Path(__file__).resolve().parents[2])
     env["PYTHONPATH"] = cwd
     try:
         completed = subprocess.run(
-            [sys.executable, "-c", code, str(store.database_path), source_id],
+            [sys.executable, "-c", SOURCE_INGEST_SUBPROCESS_CODE, str(store.database_path), source_id],
             cwd=cwd,
             env=env,
             text=True,
@@ -582,6 +758,12 @@ def ingest_markdown_report(data: dict[str, Any]) -> str:
         f"- sources selected: {data.get('total_active', 0)}",
         f"- sources succeeded: {data.get('success_count', 0)}",
         f"- sources failed: {data.get('failure_count', 0)}",
+        f"- timed out sources: {data.get('timeout_count', 0)}",
+        f"- empty feeds: {data.get('empty_feed_count', 0)}",
+        f"- duplicate-only feeds: {data.get('duplicate_only_count', 0)}",
+        f"- concurrency: {data.get('concurrency')}",
+        f"- per-source timeout: {data.get('per_source_timeout_seconds')}s",
+        f"- retry: {data.get('retry')}",
         f"- items before: {data.get('items_before', 0)}",
         f"- items after: {data.get('items_after', 0)}",
         f"- DB item delta: {data.get('db_item_delta', 0)}",
@@ -605,6 +787,11 @@ def ingest_markdown_report(data: dict[str, Any]) -> str:
     for result in data.get("results", []):
         if not result.get("ok"):
             payload = result.get("result") or {}
-            lines.append(f"- {result.get('source_id')}: {payload.get('error_code') or result.get('error')} {payload.get('message') or ''}")
+            lines.append(f"- {result.get('source_id')}: {result.get('failure_reason') or payload.get('error_code') or result.get('error')} {result.get('error_message') or payload.get('message') or ''}")
+    lines.extend(["", "## Per-Source Results", "", "| source_id | ok | reason | fetched | inserted | duplicate | duration_s | attempts |", "|---|---:|---|---:|---:|---:|---:|---:|"])
+    for result in sorted(data.get("results", []), key=lambda item: (not item.get("ok"), item.get("source_id") or "")):
+        lines.append(
+            f"| {result.get('source_id')} | {str(result.get('ok')).lower()} | {result.get('failure_reason') or ''} | {result.get('fetched_count', 0)} | {result.get('inserted_count', 0)} | {result.get('duplicate_count', 0)} | {result.get('duration_seconds', 0)} | {result.get('attempts', 1)} |"
+        )
     lines.append("")
     return "\n".join(lines)

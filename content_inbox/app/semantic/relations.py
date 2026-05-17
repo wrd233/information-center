@@ -142,7 +142,7 @@ def process_item_relations(
             """,
             (limit,),
         ).fetchall()
-    stats = {"selected": len(rows), "written": 0, "folded": 0, "review": 0, "llm_calls": 0}
+    stats = {"selected": len(rows), "written": 0, "folded": 0, "review": 0, "llm_calls": 0, "candidate_pairs": 0, "no_candidate_items": 0, "llm_items": 0}
 
     def process_one(row: Any) -> dict[str, int]:
         client = SemanticLLMClient(
@@ -153,7 +153,7 @@ def process_item_relations(
             token_budget=token_budget,
             global_call_limit=global_call_limit,
         )
-        local = {"written": 0, "folded": 0, "review": 0, "llm_calls": 0}
+        local = {"written": 0, "folded": 0, "review": 0, "llm_calls": 0, "candidate_pairs": 0, "no_candidate_items": 0, "llm_items": 0}
         item_id = row["item_id"]
         item = db.get_item(store, item_id)
         new_card = db.get_current_item_card(store, item_id)
@@ -161,7 +161,9 @@ def process_item_relations(
             return local
         candidates = find_relation_candidates(store, item_id, max_candidates)
         if not candidates:
+            local["no_candidate_items"] += 1
             return local
+        local["candidate_pairs"] += len(candidates)
         hard_written = False
         for candidate_card in candidates:
             candidate_item = db.get_item(store, candidate_card["item_id"])
@@ -207,6 +209,7 @@ def process_item_relations(
             source_id=item.get("source_id") or item.get("feed_url") or item.get("source_name"),
         )
         local["llm_calls"] = client.calls
+        local["llm_items"] += 1
         if not output:
             insert_review(store, "uncertain_relation", "item", item_id, {"reason": "LLM skipped or failed"})
             local["review"] += 1
@@ -241,12 +244,12 @@ def process_item_relations(
             futures = [executor.submit(process_one, row) for row in rows]
             for future in as_completed(futures):
                 local = future.result()
-                for key in ["written", "folded", "review", "llm_calls"]:
+                for key in ["written", "folded", "review", "llm_calls", "candidate_pairs", "no_candidate_items", "llm_items"]:
                     stats[key] += int(local[key])
     else:
         for row in rows:
             local = process_one(row)
-            for key in ["written", "folded", "review", "llm_calls"]:
+            for key in ["written", "folded", "review", "llm_calls", "candidate_pairs", "no_candidate_items", "llm_items"]:
                 stats[key] += int(local[key])
     return {"ok": True, "stats": stats}
 

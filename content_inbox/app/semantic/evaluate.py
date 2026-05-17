@@ -16,7 +16,7 @@ from app.models import NormalizedContent, ScreeningResult
 from app.semantic.cards import generate_item_cards
 from app.semantic.clusters import patch_cluster_card, process_item_clusters
 from app.semantic.live_smoke import live_enabled
-from app.semantic.relations import process_item_relations
+from app.semantic.relations import normalized_entity_terms, process_item_relations, semantic_tokens
 from app.semantic.source_profiles import recompute_source_profiles
 from app.storage import InboxStore, row_to_item
 from app.utils import utc_now
@@ -41,6 +41,7 @@ def run_evaluation(
     source_filter: str | None = None,
     source_url_prefix: str | None = None,
     sample_mode: str = "recent",
+    stage_budget_profile: str = "balanced",
 ) -> dict[str, Any]:
     started = datetime.now(timezone.utc)
     t0 = time.monotonic()
@@ -81,6 +82,7 @@ def run_evaluation(
         )
 
     max_items = len(sampled_items)
+    stage_budgets = stage_budget_split(token_budget, stage_budget_profile)
     metadata: dict[str, Any] = {
         "run_id": run_id,
         "started_at": started.isoformat(),
@@ -97,6 +99,8 @@ def run_evaluation(
         "max_candidates": max_candidates,
         "batch_size": batch_size,
         "token_budget": token_budget,
+        "stage_budget_profile": stage_budget_profile,
+        "stage_budgets": stage_budgets,
         "include_archived": include_archived,
         "concurrency": concurrency,
         "source_filter": source_filter,
@@ -120,7 +124,7 @@ def run_evaluation(
             live=live,
             model=model,
             max_calls=max_calls,
-            token_budget=token_budget or None,
+            token_budget=stage_cap(target_store, stage_budgets, "item_card"),
             global_call_limit=True,
             concurrency=concurrency,
         )
@@ -132,7 +136,7 @@ def run_evaluation(
             max_candidates=max_candidates,
             max_calls=max_calls,
             model=model,
-            token_budget=token_budget or None,
+            token_budget=stage_cap(target_store, stage_budgets, "item_relation"),
             global_call_limit=True,
             concurrency=concurrency,
         )
@@ -145,7 +149,7 @@ def run_evaluation(
             max_calls=max_calls,
             model=model,
             include_archived=include_archived,
-            token_budget=token_budget or None,
+            token_budget=stage_cap(target_store, stage_budgets, "item_cluster_relation"),
             global_call_limit=True,
             patch_cards=False,
         )
@@ -160,7 +164,7 @@ def run_evaluation(
                     live=live,
                     model=strong_model or model,
                     max_calls=max_calls,
-                    token_budget=token_budget or None,
+                    token_budget=stage_cap(target_store, stage_budgets, "cluster_card_patch"),
                     global_call_limit=True,
                 )
             )
@@ -187,6 +191,56 @@ def run_evaluation(
     }
 
 
+def stage_budget_split(total_budget: int, profile: str) -> dict[str, int]:
+    if total_budget <= 0:
+        return {}
+    profiles = {
+        "balanced": {
+            "item_card": 0.40,
+            "item_relation": 0.25,
+            "item_cluster_relation": 0.25,
+            "cluster_card_patch": 0.07,
+            "source_profile": 0.03,
+        },
+        "relation_heavy": {
+            "item_card": 0.32,
+            "item_relation": 0.34,
+            "item_cluster_relation": 0.24,
+            "cluster_card_patch": 0.07,
+            "source_profile": 0.03,
+        },
+        "cluster_heavy": {
+            "item_card": 0.32,
+            "item_relation": 0.22,
+            "item_cluster_relation": 0.36,
+            "cluster_card_patch": 0.07,
+            "source_profile": 0.03,
+        },
+        "card_heavy": {
+            "item_card": 0.55,
+            "item_relation": 0.18,
+            "item_cluster_relation": 0.17,
+            "cluster_card_patch": 0.07,
+            "source_profile": 0.03,
+        },
+    }
+    ratios = profiles.get(profile, profiles["balanced"])
+    return {stage: int(total_budget * ratio) for stage, ratio in ratios.items()}
+
+
+def tokens_used(store: InboxStore) -> int:
+    with store.connect() as conn:
+        row = conn.execute("SELECT COALESCE(SUM(total_tokens), 0) AS n FROM llm_call_logs WHERE status = 'ok'").fetchone()
+    return int(row["n"] or 0)
+
+
+def stage_cap(store: InboxStore, budgets: dict[str, int], stage: str) -> int | None:
+    budget = budgets.get(stage)
+    if not budget:
+        return None
+    return tokens_used(store) + budget
+
+
 def make_temp_eval_store() -> tuple[InboxStore, Path]:
     tmp = tempfile.NamedTemporaryFile(prefix="content_inbox_semantic_eval_", suffix=".sqlite3", delete=False)
     tmp.close()
@@ -205,11 +259,67 @@ def sample_existing_items(
     with store.connect() as conn:
         where, params = source_scope_where(source_filter, source_url_prefix, conn=conn)
         order_sql = sample_order_sql(sample_mode)
-        rows = conn.execute(
-            f"SELECT * FROM inbox_items {where} {order_sql} LIMIT ?",
-            (*params, limit),
-        ).fetchall()
+        if sample_mode == "event_hotspots":
+            rows = sample_event_hotspots(conn, where, params, limit)
+        else:
+            rows = conn.execute(
+                f"SELECT * FROM inbox_items {where} {order_sql} LIMIT ?",
+                (*params, limit),
+            ).fetchall()
     return [row_to_item(row) for row in rows]
+
+
+def sample_event_hotspots(conn: sqlite3.Connection, where: str, params: list[str], limit: int) -> list[Any]:
+    rows = conn.execute(
+        f"""
+        SELECT *
+        FROM inbox_items
+        {where}
+        ORDER BY COALESCE(published_at, created_at) DESC
+        LIMIT ?
+        """,
+        (*params, max(limit * 8, 400)),
+    ).fetchall()
+    items = list(rows)
+    token_sources: dict[str, set[str]] = {}
+    token_items: dict[str, list[Any]] = {}
+    for row in items:
+        text = f"{row['title'] or ''} {row['summary'] or ''} {row['content_text'] or ''}"
+        entities = normalized_entity_terms(list(semantic_tokens(text)))
+        for token in entities:
+            if len(token) < 3:
+                continue
+            token_sources.setdefault(token, set()).add(row["source_id"] or row["source_name"] or "")
+            token_items.setdefault(token, []).append(row)
+    hotspot_tokens = sorted(
+        token_items,
+        key=lambda token: (len(token_sources.get(token, set())), len(token_items[token]), len(token)),
+        reverse=True,
+    )
+    selected: list[Any] = []
+    seen: set[str] = set()
+    for token in hotspot_tokens:
+        if len(token_sources.get(token, set())) < 2 and len(token_items[token]) < 3:
+            continue
+        group = sorted(
+            token_items[token],
+            key=lambda row: (row["source_id"] or "", row["published_at"] or row["created_at"] or ""),
+            reverse=True,
+        )
+        for row in group[:6]:
+            if row["item_id"] in seen:
+                continue
+            selected.append(row)
+            seen.add(row["item_id"])
+            if len(selected) >= limit:
+                return selected
+    for row in items:
+        if row["item_id"] not in seen:
+            selected.append(row)
+            seen.add(row["item_id"])
+            if len(selected) >= limit:
+                break
+    return selected
 
 
 def _resolve_source_url_prefix(
@@ -286,6 +396,8 @@ def sample_order_sql(sample_mode: str) -> str:
         return "ORDER BY COALESCE(published_at, created_at) ASC, source_name, title"
     if sample_mode == "mixed":
         return "ORDER BY source_name, COALESCE(published_at, created_at) DESC, title"
+    if sample_mode == "event_hotspots":
+        return "ORDER BY COALESCE(published_at, created_at) DESC, source_name, title"
     return "ORDER BY created_at DESC"
 
 
@@ -429,6 +541,7 @@ def build_summary(
         "item_clusters": cluster_relation_summary(cluster_items, clusters, cluster_cards),
         "source_profiles": source_profile_summary(source_profiles, reviews),
         "token_cost": token_summary(llm_logs),
+        "stage_budgets": stage_budget_summary(llm_logs, metadata),
         "concurrency": concurrency_summary(llm_logs, enriched_metadata),
         "errors_fallbacks": error_summary(llm_logs, reviews, steps, metadata),
         "prompt_iteration_notes": prompt_iteration_notes(metadata),
@@ -470,6 +583,8 @@ def has_cjk(text: str) -> bool:
 def item_card_summary(rows: list[Any], llm_logs: list[Any]) -> dict[str, Any]:
     roles = Counter(row["content_role"] for row in rows)
     warnings = Counter()
+    tiers = Counter()
+    tier_confidence: dict[str, list[float]] = {}
     entity_counts = []
     confidence = []
     samples = []
@@ -481,6 +596,13 @@ def item_card_summary(rows: list[Any], llm_logs: list[Any]) -> dict[str, Any]:
         except Exception:
             pass
         confidence.append(float(row["confidence"] or 0.0))
+        tier = "unknown"
+        try:
+            tier = (json.loads(row["quality_hints_json"] or "{}") or {}).get("card_tier") or tier
+        except Exception:
+            pass
+        tiers[tier] += 1
+        tier_confidence.setdefault(tier, []).append(float(row["confidence"] or 0.0))
         if (row["model"] or "") == "heuristic":
             heuristic_count += 1
         if len(samples) < 10:
@@ -493,10 +615,47 @@ def item_card_summary(rows: list[Any], llm_logs: list[Any]) -> dict[str, Any]:
         "heuristic_card_fallback_count": heuristic_count,
         "avg_confidence": round(sum(confidence) / max(len(confidence), 1), 3),
         "content_role_distribution": dict(roles),
+        "card_tier_distribution": dict(tiers),
+        "avg_confidence_by_tier": {
+            tier: round(sum(values) / max(len(values), 1), 3)
+            for tier, values in sorted(tier_confidence.items())
+        },
+        "llm_failures_by_tier": llm_failures_by_tier(llm_logs),
+        "avg_tokens_by_tier": avg_tokens_by_tier(llm_logs),
         "entity_count_distribution": dict(Counter(entity_counts)),
         "warnings_distribution": dict(warnings),
         "samples": samples,
     }
+
+
+def llm_failures_by_tier(llm_logs: list[Any]) -> dict[str, int]:
+    out = Counter()
+    for row in llm_logs:
+        if row["task_type"] != "item_card" or row["status"] != "failed":
+            continue
+        tier = "unknown"
+        try:
+            request = json.loads(row["request_json"] or "{}")
+            tier = request.get("card_tier") or tier
+        except Exception:
+            pass
+        out[tier] += 1
+    return dict(out)
+
+
+def avg_tokens_by_tier(llm_logs: list[Any]) -> dict[str, float]:
+    tokens: dict[str, list[int]] = {}
+    for row in llm_logs:
+        if row["task_type"] != "item_card" or row["status"] not in {"ok", "failed"}:
+            continue
+        tier = "mixed_llm"
+        try:
+            request = json.loads(row["request_json"] or "{}")
+            tier = request.get("card_tier") or tier
+        except Exception:
+            pass
+        tokens.setdefault(tier, []).append(int(row["total_tokens"] or 0))
+    return {tier: round(sum(values) / max(len(values), 1), 1) for tier, values in tokens.items()}
 
 
 def item_relation_summary(rows: list[Any], llm_logs: list[Any], store: InboxStore) -> dict[str, Any]:
@@ -619,12 +778,23 @@ def manual_review_suggestions(cluster_items: list[Any], clusters: list[Any]) -> 
 def source_profile_summary(rows: list[Any], reviews: list[Any]) -> dict[str, Any]:
     profiles = [dict(row) for row in rows]
     pending = [dict(row) for row in reviews if row["status"] == "pending"]
+    source_priority_pending = [
+        row for row in pending
+        if row.get("review_type") == "source_priority_suggestion"
+        and row.get("target_type") == "source"
+    ]
+    insufficient = [
+        p for p in profiles
+        if (p.get("total_items") or 0) < 10 or (p.get("llm_processed_items") or 0) < 5
+    ]
     return {
         "sources_recomputed": len(rows),
         "high_candidates": [p for p in profiles if p.get("priority_suggestion") == "high"][:20],
         "low_candidates": [p for p in profiles if p.get("priority_suggestion") == "low"][:20],
         "disabled_for_llm_candidates": [p for p in profiles if p.get("priority_suggestion") == "disabled_for_llm"][:20],
-        "pending_reviews_created": len(pending),
+        "pending_reviews_created": len(source_priority_pending),
+        "pending_reviews_created_all_types": len(pending),
+        "reviews_suppressed_due_to_insufficient_data": len(insufficient),
         "top_sources_by_llm_yield": sorted(profiles, key=lambda p: p.get("llm_yield_score") or 0, reverse=True)[:10],
         "top_sources_by_duplicate_rate": sorted(profiles, key=lambda p: p.get("duplicate_rate") or 0, reverse=True)[:10],
         "top_sources_by_incremental_value_avg": sorted(profiles, key=lambda p: p.get("incremental_value_avg") or 0, reverse=True)[:10],
@@ -632,7 +802,7 @@ def source_profile_summary(rows: list[Any], reviews: list[Any]) -> dict[str, Any
         "llm_total_tokens_by_source": {
             p["source_id"]: p.get("llm_total_tokens", 0) for p in sorted(profiles, key=lambda p: p.get("llm_total_tokens") or 0, reverse=True)[:30]
         },
-        "sources_with_insufficient_data": [p for p in profiles if (p.get("total_items") or 0) < 3][:20],
+        "sources_with_insufficient_data": insufficient[:20],
     }
 
 
@@ -664,6 +834,45 @@ def token_summary(rows: list[Any]) -> list[dict[str, Any]]:
             "retry_count": sum(1 for row in subset if row["status"] == "failed"),
             "avg_candidates_per_call": None,
         })
+    return out
+
+
+def stage_budget_summary(rows: list[Any], metadata: dict[str, Any]) -> dict[str, Any]:
+    budgets = metadata.get("stage_budgets") or {}
+    by_task = {item["task_type"]: item for item in token_summary(rows)}
+    out: dict[str, Any] = {
+        "total_token_budget": metadata.get("token_budget", 0),
+        "stage_budget_profile": metadata.get("stage_budget_profile"),
+        "stages": {},
+        "downstream_starved": False,
+    }
+    mapping = {
+        "item_card": "item_card",
+        "item_relation": "item_relation",
+        "item_cluster_relation": "item_cluster_relation",
+        "cluster_card_patch": "cluster_card_patch",
+        "source_profile": "source_review",
+    }
+    for stage, task in mapping.items():
+        consumed = int((by_task.get(task) or {}).get("total_tokens", 0) or 0)
+        budget = int(budgets.get(stage, 0) or 0)
+        skipped = int((by_task.get(task) or {}).get("skipped", 0) or 0)
+        out["stages"][stage] = {
+            "budget": budget,
+            "consumed_tokens": consumed,
+            "remaining_budget": max(0, budget - consumed) if budget else None,
+            "calls": int((by_task.get(task) or {}).get("llm_call_count", 0) or 0),
+            "skipped": skipped,
+            "skipped_due_to_budget": skipped if budget and consumed >= budget else 0,
+        }
+    out["downstream_starved"] = (
+        bool(budgets)
+        and out["stages"]["item_card"]["consumed_tokens"] >= out["stages"]["item_card"]["budget"]
+        and (
+            out["stages"]["item_relation"]["calls"] == 0
+            or out["stages"]["item_cluster_relation"]["calls"] == 0
+        )
+    )
     return out
 
 
@@ -836,15 +1045,19 @@ def build_markdown_report(summary: dict[str, Any]) -> str:
         "",
         json_block(summary["concurrency"]),
         "",
-        "## 11. Errors / Fallbacks / Retries",
+        "## 11. Stage Budget Summary",
+        "",
+        json_block(summary["stage_budgets"]),
+        "",
+        "## 12. Errors / Fallbacks / Retries",
         "",
         json_block(summary["errors_fallbacks"]),
         "",
-        "## 12. Prompt Iteration Notes",
+        "## 13. Prompt Iteration Notes",
         "",
         json_block(summary["prompt_iteration_notes"]),
         "",
-        "## 13. Manual Review Suggestions",
+        "## 14. Manual Review Suggestions",
         "",
         json_block(summary["item_clusters"]["manual_review_suggestions"]),
         "",
@@ -852,7 +1065,11 @@ def build_markdown_report(summary: dict[str, Any]) -> str:
         "",
         json_block(summary["readiness_assessment"]),
         "",
-        "## 15. Recommendations",
+        "## 15. Readiness Assessment",
+        "",
+        json_block(summary["readiness_assessment"]),
+        "",
+        "## 16. Recommendations",
         "",
     ]
     lines.extend([f"- {rec}" for rec in summary["recommendations"]])

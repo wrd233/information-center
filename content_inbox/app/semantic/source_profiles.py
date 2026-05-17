@@ -28,6 +28,7 @@ def recompute_source_profiles(store: InboxStore) -> dict[str, Any]:
             "high_candidates": 0,
             "low_candidates": 0,
             "disabled_for_llm_candidates": 0,
+            "reviews_suppressed_insufficient_data": 0,
             "warnings": [],
         }
         for row in source_rows:
@@ -85,7 +86,8 @@ def recompute_source_profiles(store: InboxStore) -> dict[str, Any]:
             report_avg = float(signals["report_avg"] or 0.0)
             high_value = int(signals["high_value"] or 0)
             yield_score = round((inc_avg + report_avg + source_material_rate * 5.0 + new_event_rate * 5.0) / 4.0, 3)
-            suggestion = suggest_priority(duplicate_rate, near_duplicate_rate, yield_score, high_value, total_items)
+            llm_processed = counts.get("related_with_new_info", 0) + high_value
+            suggestion = suggest_priority(duplicate_rate, near_duplicate_rate, yield_score, high_value, total_items, llm_processed)
             old = conn.execute("SELECT * FROM source_profiles WHERE source_id = ?", (source_id,)).fetchone()
             current_priority = old["llm_priority"] if old else "new_source_under_evaluation"
             if old:
@@ -106,7 +108,7 @@ def recompute_source_profiles(store: InboxStore) -> dict[str, Any]:
                 (
                     source_id,
                     total_items,
-                    counts.get("related_with_new_info", 0) + high_value,
+                    llm_processed,
                     duplicate_rate,
                     near_duplicate_rate,
                     new_event_rate,
@@ -148,16 +150,16 @@ def recompute_source_profiles(store: InboxStore) -> dict[str, Any]:
     return {"ok": True, "stats": stats}
 
 
-def suggest_priority(duplicate_rate: float, near_duplicate_rate: float, yield_score: float, high_value: int, total_items: int) -> str:
-    if total_items >= 10 and duplicate_rate + near_duplicate_rate > 0.85 and yield_score < 1.0:
+def suggest_priority(duplicate_rate: float, near_duplicate_rate: float, yield_score: float, high_value: int, total_items: int, llm_processed: int = 0) -> str:
+    if total_items < 10 or llm_processed < 5:
+        return "new_source_under_evaluation"
+    if duplicate_rate + near_duplicate_rate > 0.85 and yield_score < 1.0:
         return "disabled_for_llm"
-    if duplicate_rate + near_duplicate_rate > 0.65 and yield_score < 1.8:
+    if total_items >= 15 and duplicate_rate + near_duplicate_rate > 0.65 and yield_score < 1.8:
         return "low"
-    if yield_score >= 3.5 and high_value >= 2:
+    if yield_score >= 3.5 and high_value >= 5:
         return "high"
-    if total_items >= 3:
-        return "normal"
-    return "new_source_under_evaluation"
+    return "normal"
 
 
 def create_priority_reviews(store: InboxStore) -> int:
@@ -170,6 +172,8 @@ def create_priority_reviews(store: InboxStore) -> int:
             WHERE priority_suggestion IS NOT NULL
               AND priority_suggestion != llm_priority
               AND review_status = 'pending'
+              AND total_items >= 10
+              AND llm_processed_items >= 5
             """
         ).fetchall()
     for row in rows:

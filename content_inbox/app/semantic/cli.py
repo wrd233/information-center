@@ -165,6 +165,11 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--model")
     evaluate.add_argument("--strong-model")
     evaluate.add_argument("--token-budget", type=int, default=200000)
+    evaluate.add_argument(
+        "--stage-budget-profile",
+        choices=["balanced", "relation_heavy", "cluster_heavy", "card_heavy"],
+        default="balanced",
+    )
     evaluate.add_argument("--concurrency", type=int, default=4)
     evaluate.add_argument("--include-archived", action="store_true")
     evaluate.add_argument("--output", "--output-dir", dest="output")
@@ -172,19 +177,22 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--source-url-prefix")
     evaluate.add_argument(
         "--sample-mode",
-        choices=["recent", "duplicate_candidates", "cluster_candidates", "source_scope_full", "mixed"],
+        choices=["recent", "duplicate_candidates", "cluster_candidates", "source_scope_full", "mixed", "event_hotspots"],
         default="recent",
     )
     ingest = sub.add_parser("ingest-source-scope")
     ingest.add_argument("--dry-run", action="store_true", default=True)
     ingest.add_argument("--apply", action="store_true", help="Actually run ingestion (requires --apply)")
     ingest.add_argument("--limit-sources", type=int, default=0)
-    ingest.add_argument("--output")
+    ingest.add_argument("--concurrency", type=int, default=8)
+    ingest.add_argument("--per-source-timeout", type=int, default=30)
+    ingest.add_argument("--retry", type=int, default=1)
+    ingest.add_argument("--output", "--output-dir", dest="output")
     ingest.add_argument("source_url_prefix", help="URL prefix of sources to ingest")
 
     probe = sub.add_parser("probe-source-scope")
     probe.add_argument("--json", "--json-output", dest="json_output", action="store_true")
-    probe.add_argument("--output")
+    probe.add_argument("--output", "--output-dir", dest="output")
     probe.add_argument("source_url_prefix", help="URL prefix to probe (e.g., api.xgo.ing)")
 
     fix = sub.add_parser("fix-source-linkage")
@@ -229,6 +237,7 @@ def main(argv: list[str] | None = None) -> int:
                 source_filter=args.source_filter,
                 source_url_prefix=args.source_url_prefix,
                 sample_mode=args.sample_mode,
+                stage_budget_profile=args.stage_budget_profile,
             )
             write_json(data)
             return 0 if data.get("ok", True) else 1
@@ -303,7 +312,11 @@ def main(argv: list[str] | None = None) -> int:
             data = probe_source_scope(store, args.source_url_prefix)
             if getattr(args, "output", None):
                 out = Path(args.output)
-                if out.suffix == ".md":
+                if not out.suffix:
+                    out.mkdir(parents=True, exist_ok=True)
+                    (out / "probe_report.md").write_text(probe_markdown_report(data), encoding="utf-8")
+                    (out / "probe_summary.json").write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+                elif out.suffix == ".md":
                     out.write_text(probe_markdown_report(data), encoding="utf-8")
                     out.with_suffix(".json").write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
                 else:
@@ -327,10 +340,17 @@ def main(argv: list[str] | None = None) -> int:
                 args.source_url_prefix,
                 dry_run=dry_run,
                 limit=args.limit_sources or None,
+                concurrency=args.concurrency,
+                per_source_timeout_seconds=args.per_source_timeout,
+                retry=args.retry,
             )
             if getattr(args, "output", None):
                 out = Path(args.output)
-                if out.suffix == ".md":
+                if not out.suffix:
+                    out.mkdir(parents=True, exist_ok=True)
+                    (out / "ingest_report.md").write_text(ingest_markdown_report(data), encoding="utf-8")
+                    (out / "ingest_summary.json").write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+                elif out.suffix == ".md":
                     out.write_text(ingest_markdown_report(data), encoding="utf-8")
                     out.with_suffix(".json").write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
                 else:
