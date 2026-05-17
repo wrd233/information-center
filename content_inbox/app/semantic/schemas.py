@@ -7,8 +7,8 @@ from pydantic import BaseModel, Field, field_validator
 
 SCHEMA_VERSION = "semantic_v1"
 ITEM_CARD_PROMPT_VERSION = "item_card_v1"
-ITEM_RELATION_PROMPT_VERSION = "item_relation_v2"
-ITEM_CLUSTER_PROMPT_VERSION = "item_cluster_relation_v2"
+ITEM_RELATION_PROMPT_VERSION = "item_relation_v3"
+ITEM_CLUSTER_PROMPT_VERSION = "item_cluster_relation_v3"
 CLUSTER_CARD_PROMPT_VERSION = "cluster_card_patch_v1"
 SOURCE_REVIEW_PROMPT_VERSION = "source_review_v1"
 
@@ -35,6 +35,12 @@ ItemRelationRole = Literal[
     "new_analysis_hint",
     "firsthand_hint",
     "source_material_hint",
+    "same_product_different_event",
+    "same_thread",
+    "same_conference",
+    "same_template",
+    "generic_topic_overlap",
+    "weak_context",
 ]
 ItemClusterPrimary = Literal[
     "source_material",
@@ -67,6 +73,12 @@ ItemClusterRole = Literal[
     "business_impact",
     "source_discovery",
     "citation_hub",
+    "same_product_different_event",
+    "same_thread",
+    "same_conference",
+    "same_template",
+    "generic_topic_overlap",
+    "weak_context",
 ]
 ContentRole = Literal[
     "source_material",

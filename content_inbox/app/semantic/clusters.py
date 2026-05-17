@@ -195,6 +195,15 @@ def process_item_clusters(
             stats["review"] += 1
             continue
         decision = output.best_relation
+        selected_cluster = next((cluster for cluster in candidates if cluster["cluster_id"] == decision.cluster_id), candidates[0] if candidates else None)
+        if selected_cluster and decision.primary_relation != "follow_up" and not same_event_cluster_candidate(store, item, item_card, selected_cluster):
+            payload = decision.model_dump()
+            payload["attach_eligible"] = False
+            payload.setdefault("attach_disqualifiers", [])
+            payload["attach_disqualifiers"] = list(payload["attach_disqualifiers"] or []) + ["weak_cluster_seed_evidence"]
+            insert_review(store, "same_topic", "item", item_id, payload)
+            stats["review"] += 1
+            continue
         if not cluster_decision_attach_eligible(decision):
             review_type = "same_topic" if decision.primary_relation in {"same_topic", "unrelated"} else "uncertain_cluster_relation"
             payload = decision.model_dump()
@@ -260,10 +269,20 @@ def process_item_clusters(
 
 
 def cluster_decision_attach_eligible(decision: Any) -> bool:
-    if getattr(decision, "attach_eligible", False):
+    relation_type = getattr(decision, "cluster_relation_type", "") or ""
+    disqualifying_types = {"same_topic_only", "same_product_different_event", "same_thread", "same_conference", "entity_overlap_only", "different", "uncertain"}
+    if relation_type in disqualifying_types:
+        return False
+    if not bool(getattr(decision, "same_event", False)) and getattr(decision, "primary_relation", "") != "source_material":
+        return False
+    if getattr(decision, "primary_relation", "") == "source_material" and not bool(getattr(decision, "same_event", False)):
+        return False
+    if getattr(decision, "confidence", 0.0) < 0.75:
+        return False
+    if getattr(decision, "attach_eligible", False) and bool(getattr(decision, "same_event", False)):
         return True
     return decision.primary_relation in {"source_material", "repeat", "new_info", "analysis", "experience", "context"} and (
-        bool(decision.same_event) or decision.primary_relation == "source_material"
+        bool(decision.same_event)
     )
 
 
@@ -285,7 +304,15 @@ def same_event_cluster_candidate(store: InboxStore, item: dict[str, Any], item_c
         return False
     representative = dict(row)
     assessment = assess_candidate(item, representative, item_card, representative)
-    return assessment.candidate_priority in {"must_run", "high"} and not assessment.suppressed
+    return (
+        assessment.candidate_priority in {"must_run", "high"}
+        and not assessment.suppressed
+        and (
+            assessment.event_signature_match
+            or any("same_actor_product_action_72h" in evidence for evidence in assessment.same_event_evidence)
+            or any(evidence == "high_title_similarity" for evidence in assessment.same_event_evidence)
+        )
+    )
 
 
 def cluster_prompt_payload(store: InboxStore, cluster: dict[str, Any]) -> dict[str, Any]:

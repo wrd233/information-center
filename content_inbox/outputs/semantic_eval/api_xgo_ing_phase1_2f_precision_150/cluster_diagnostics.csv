@@ -1,0 +1,151 @@
+cluster_candidate_id,final_status,final_member_count,diagnostic_reason
+cluster_candidate_1,single_item,1,created initial semantic cluster
+cluster_candidate_2,single_item,1,created initial semantic cluster
+cluster_candidate_3,single_item,1,created initial semantic cluster
+cluster_candidate_4,single_item,1,created initial semantic cluster
+cluster_candidate_5,single_item,1,created initial semantic cluster
+cluster_candidate_6,single_item,1,created initial semantic cluster
+cluster_candidate_7,single_item,1,created initial semantic cluster
+cluster_candidate_8,single_item,1,created initial semantic cluster
+cluster_candidate_9,single_item,1,created initial semantic cluster
+cluster_candidate_10,single_item,1,created initial semantic cluster
+cluster_candidate_11,single_item,1,created initial semantic cluster
+cluster_candidate_review_134,rejected,0,The items are unrelated motivational quotes from the same platform but different topics.
+cluster_candidate_review_135,rejected,0,"The new item is a recruitment tweet about model optimization, while the cluster is about life advice; they share no event or topic beyond being on the same platform."
+cluster_candidate_review_136,rejected,0,Both are life advice posts on xgo.ing but not the same event.
+cluster_candidate_review_137,rejected,0,No substantive overlap; cluster is a generic motivational quote while item is an OpenAI thank-you post.
+cluster_candidate_review_138,rejected,0,The new item about Replit's Parallel Agents is unrelated to the cluster about life advice.
+cluster_candidate_review_139,rejected,0,"The cluster is about a motivational quote, while the new item is about an upcoming podcast guest; no topical or event overlap."
+cluster_candidate_review_140,rejected,0,No connection between motivational quote and GPT-Realtime-2 standup demo.
+cluster_candidate_review_141,rejected,0,"No shared entities, topic, or event between the cluster's life advice and the item's voice-to-action workflow."
+cluster_candidate_review_142,rejected,0,"Different quote, no shared event or entities besides generic powered by xgo.ing tag."
+cluster_candidate_review_143,rejected,0,"The new item discusses Anthropic agent use cases, while the cluster contains a motivational quote with no common entities or topics."
+cluster_candidate_review_144,rejected,0,"The new item is about an AI history video, while the cluster is about life advice; they share only a generic platform tag."
+cluster_candidate_review_145,rejected,0,"The cluster is about a generic motivational quote, while the new item is about a product launch for ColaOS, completely different topic and entities."
+cluster_candidate_review_146,rejected,0,"The new item is about a bread award, while the cluster is about a motivational quote; no topic or entity overlap."
+cluster_candidate_review_147,rejected,0,"New item is a direct reply/quote of the cluster's representative item, sharing the same conversation thread but not adding new facts about the original event."
+cluster_candidate_review_148,rejected,0,No meaningful content overlap between the new item and the cluster; they are about different topics.
+cluster_candidate_review_149,rejected,0,No semantic overlap between a generic motivational quote and a specific AI product broadcast.
+cluster_candidate_review_150,rejected,0,"The new item is about an AI security summit, completely unrelated to the motivational quote cluster."
+cluster_candidate_review_151,rejected,0,"No overlap in topic, entities, or event context between a motivational quote and a podcast about large models."
+cluster_candidate_review_152,rejected,0,"The cluster contains a motivational quote, while the new item is a link to a tech article about Android, no shared event or topic."
+cluster_candidate_review_153,rejected,0,"The new item is about an AI model architecture, while the cluster is a motivational quote; no overlap."
+cluster_candidate_review_154,rejected,0,No overlap in topic or event between the motivational quote cluster and the paper link.
+cluster_candidate_review_155,rejected,0,"The new item is about a benchmark for video understanding, while the cluster is about life advice. They share no topic or event."
+cluster_candidate_review_156,rejected,0,LLM skipped or failed
+cluster_candidate_review_157,rejected,0,LLM skipped or failed
+cluster_candidate_review_158,rejected,0,LLM skipped or failed
+cluster_candidate_review_159,rejected,0,LLM skipped or failed
+cluster_candidate_review_160,rejected,0,LLM skipped or failed
+cluster_candidate_review_161,rejected,0,LLM skipped or failed
+cluster_candidate_review_162,rejected,0,LLM skipped or failed
+cluster_candidate_review_163,rejected,0,LLM skipped or failed
+cluster_candidate_review_164,rejected,0,LLM skipped or failed
+cluster_candidate_review_165,rejected,0,LLM skipped or failed
+cluster_candidate_review_166,rejected,0,LLM skipped or failed
+cluster_candidate_review_167,rejected,0,LLM skipped or failed
+cluster_candidate_review_168,rejected,0,LLM skipped or failed
+cluster_candidate_review_169,rejected,0,LLM skipped or failed
+cluster_candidate_review_170,rejected,0,LLM skipped or failed
+cluster_candidate_review_171,rejected,0,LLM skipped or failed
+cluster_candidate_review_172,rejected,0,LLM skipped or failed
+cluster_candidate_review_173,rejected,0,LLM skipped or failed
+cluster_candidate_review_174,rejected,0,LLM skipped or failed
+cluster_candidate_review_175,rejected,0,LLM skipped or failed
+cluster_candidate_review_176,rejected,0,LLM skipped or failed
+cluster_candidate_review_177,rejected,0,LLM skipped or failed
+cluster_candidate_review_178,rejected,0,LLM skipped or failed
+cluster_candidate_review_179,rejected,0,LLM skipped or failed
+cluster_candidate_review_180,rejected,0,LLM skipped or failed
+cluster_candidate_review_181,rejected,0,LLM skipped or failed
+cluster_candidate_review_182,rejected,0,LLM skipped or failed
+cluster_candidate_review_183,rejected,0,LLM skipped or failed
+cluster_candidate_review_184,rejected,0,LLM skipped or failed
+cluster_candidate_review_185,rejected,0,LLM skipped or failed
+cluster_candidate_review_186,rejected,0,LLM skipped or failed
+cluster_candidate_review_187,rejected,0,LLM skipped or failed
+cluster_candidate_review_188,rejected,0,LLM skipped or failed
+cluster_candidate_review_189,rejected,0,LLM skipped or failed
+cluster_candidate_review_190,rejected,0,LLM skipped or failed
+cluster_candidate_review_191,rejected,0,LLM skipped or failed
+cluster_candidate_review_192,rejected,0,LLM skipped or failed
+cluster_candidate_review_193,rejected,0,LLM skipped or failed
+cluster_candidate_review_194,rejected,0,LLM skipped or failed
+cluster_candidate_review_195,rejected,0,LLM skipped or failed
+cluster_candidate_review_196,rejected,0,LLM skipped or failed
+cluster_candidate_review_197,rejected,0,LLM skipped or failed
+cluster_candidate_review_198,rejected,0,LLM skipped or failed
+cluster_candidate_review_199,rejected,0,LLM skipped or failed
+cluster_candidate_review_200,rejected,0,LLM skipped or failed
+cluster_candidate_review_201,rejected,0,LLM skipped or failed
+cluster_candidate_review_202,rejected,0,LLM skipped or failed
+cluster_candidate_review_203,rejected,0,LLM skipped or failed
+cluster_candidate_review_204,rejected,0,LLM skipped or failed
+cluster_candidate_review_205,rejected,0,LLM skipped or failed
+cluster_candidate_review_206,rejected,0,LLM skipped or failed
+cluster_candidate_review_207,rejected,0,LLM skipped or failed
+cluster_candidate_review_208,rejected,0,LLM skipped or failed
+cluster_candidate_review_209,rejected,0,LLM skipped or failed
+cluster_candidate_review_210,rejected,0,LLM skipped or failed
+cluster_candidate_review_211,rejected,0,LLM skipped or failed
+cluster_candidate_review_212,rejected,0,LLM skipped or failed
+cluster_candidate_review_213,rejected,0,LLM skipped or failed
+cluster_candidate_review_214,rejected,0,LLM skipped or failed
+cluster_candidate_review_215,rejected,0,LLM skipped or failed
+cluster_candidate_review_216,rejected,0,LLM skipped or failed
+cluster_candidate_review_217,rejected,0,LLM skipped or failed
+cluster_candidate_review_218,rejected,0,LLM skipped or failed
+cluster_candidate_review_219,rejected,0,LLM skipped or failed
+cluster_candidate_review_220,rejected,0,LLM skipped or failed
+cluster_candidate_review_221,rejected,0,LLM skipped or failed
+cluster_candidate_review_222,rejected,0,LLM skipped or failed
+cluster_candidate_review_223,rejected,0,LLM skipped or failed
+cluster_candidate_review_224,rejected,0,LLM skipped or failed
+cluster_candidate_review_225,rejected,0,LLM skipped or failed
+cluster_candidate_review_226,rejected,0,LLM skipped or failed
+cluster_candidate_review_227,rejected,0,LLM skipped or failed
+cluster_candidate_review_228,rejected,0,LLM skipped or failed
+cluster_candidate_review_229,rejected,0,LLM skipped or failed
+cluster_candidate_review_230,rejected,0,LLM skipped or failed
+cluster_candidate_review_231,rejected,0,LLM skipped or failed
+cluster_candidate_review_232,rejected,0,LLM skipped or failed
+cluster_candidate_review_233,rejected,0,LLM skipped or failed
+cluster_candidate_review_234,rejected,0,LLM skipped or failed
+cluster_candidate_review_235,rejected,0,LLM skipped or failed
+cluster_candidate_review_236,rejected,0,LLM skipped or failed
+cluster_candidate_review_237,rejected,0,LLM skipped or failed
+cluster_candidate_review_238,rejected,0,LLM skipped or failed
+cluster_candidate_review_239,rejected,0,LLM skipped or failed
+cluster_candidate_review_240,rejected,0,LLM skipped or failed
+cluster_candidate_review_241,rejected,0,LLM skipped or failed
+cluster_candidate_review_242,rejected,0,LLM skipped or failed
+cluster_candidate_review_243,rejected,0,LLM skipped or failed
+cluster_candidate_review_244,rejected,0,LLM skipped or failed
+cluster_candidate_review_245,rejected,0,LLM skipped or failed
+cluster_candidate_review_246,rejected,0,LLM skipped or failed
+cluster_candidate_review_247,rejected,0,LLM skipped or failed
+cluster_candidate_review_248,rejected,0,LLM skipped or failed
+cluster_candidate_review_249,rejected,0,LLM skipped or failed
+cluster_candidate_review_250,rejected,0,LLM skipped or failed
+cluster_candidate_review_251,rejected,0,LLM skipped or failed
+cluster_candidate_review_252,rejected,0,LLM skipped or failed
+cluster_candidate_review_253,rejected,0,LLM skipped or failed
+cluster_candidate_review_254,rejected,0,LLM skipped or failed
+cluster_candidate_review_255,rejected,0,LLM skipped or failed
+cluster_candidate_review_256,rejected,0,LLM skipped or failed
+cluster_candidate_review_257,rejected,0,LLM skipped or failed
+cluster_candidate_review_258,rejected,0,LLM skipped or failed
+cluster_candidate_review_259,rejected,0,LLM skipped or failed
+cluster_candidate_review_260,rejected,0,LLM skipped or failed
+cluster_candidate_review_261,rejected,0,LLM skipped or failed
+cluster_candidate_review_262,rejected,0,LLM skipped or failed
+cluster_candidate_review_263,rejected,0,LLM skipped or failed
+cluster_candidate_review_264,rejected,0,LLM skipped or failed
+cluster_candidate_review_265,rejected,0,LLM skipped or failed
+cluster_candidate_review_266,rejected,0,LLM skipped or failed
+cluster_candidate_review_267,rejected,0,LLM skipped or failed
+cluster_candidate_review_268,rejected,0,LLM skipped or failed
+cluster_candidate_review_269,rejected,0,LLM skipped or failed
+cluster_candidate_review_270,rejected,0,LLM skipped or failed
+cluster_candidate_review_271,rejected,0,LLM skipped or failed
+cluster_candidate_review_272,rejected,0,LLM skipped or failed

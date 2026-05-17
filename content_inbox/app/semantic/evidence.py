@@ -107,8 +107,11 @@ def hotspot_groups(sampled_items: list[dict[str, Any]], semantic_run_id: str) ->
     token_meta: dict[str, dict[str, Any]] = {}
     for item in sampled_items:
         keys = hotspot_key_candidates(item)
-        item_keys = [keys["selected_hotspot_key"]] + keys.get("dominant_entities", [])[:5] + keys.get("dominant_event_phrases", [])[:3]
-        for token in normalized_entity_terms(item_keys):
+        signature = keys.get("event_signature") or {}
+        item_keys: list[str] = []
+        if signature.get("signature_key"):
+            item_keys.append(signature["signature_key"])
+        for token in item_keys:
             if len(token) < 3:
                 continue
             token_items[token].append(item)
@@ -146,6 +149,10 @@ def hotspot_groups(sampled_items: list[dict[str, Any]], semantic_run_id: str) ->
             "dominant_entities": token_meta.get(token, {}).get("dominant_entities") or [token],
             "dominant_event_phrases": token_meta.get(token, {}).get("dominant_event_phrases", []),
             "dominant_keywords": [token],
+            "event_signature": token_meta.get(token, {}).get("event_signature", {}),
+            "signature_key": token_meta.get(token, {}).get("signature_key"),
+            "generic_tokens": token_meta.get(token, {}).get("generic_tokens", []),
+            "signature_confidence": token_meta.get(token, {}).get("signature_confidence", 0.0),
             "source_count": len({item.get("source_id") or item.get("source_name") for item in members}),
             "source_diversity_score": round(len({item.get("source_id") or item.get("source_name") for item in members}) / max(len(members), 1), 3),
             "time_window_days": time_window_days(times),
@@ -218,6 +225,7 @@ def export_evidence(
     cluster_candidates, cluster_attachments, clusters_final, cluster_diagnostics = build_cluster_evidence(
         target_store, semantic_run_id, items_by_id, calls_by_id, item_to_hotspot
     )
+    cluster_seed_candidates, cluster_seed_rejections = build_cluster_seed_evidence(cluster_attachments, clusters_final)
     llm_calls, llm_errors, budget_skips = build_llm_evidence(target_store, semantic_run_id)
     stage_metrics = {
         "semantic_run_id": semantic_run_id,
@@ -239,6 +247,8 @@ def export_evidence(
         ("event_hotspots.jsonl", hotspot_rows, "jsonl"),
         ("event_hotspot_items.csv", flatten_hotspot_items(hotspot_rows, items_by_id), "csv"),
         ("cluster_candidates.jsonl", cluster_candidates, "jsonl"),
+        ("cluster_seed_candidates.jsonl", cluster_seed_candidates, "jsonl"),
+        ("cluster_seed_rejections.jsonl", cluster_seed_rejections, "jsonl"),
         ("cluster_attachments.jsonl", cluster_attachments, "jsonl"),
         ("clusters_final.jsonl", clusters_final, "jsonl"),
         ("cluster_diagnostics.csv", cluster_diagnostics, "csv"),
@@ -255,7 +265,7 @@ def export_evidence(
         evidence_files.append(str(path))
     write_json(run_dir / "stage_metrics.json", stage_metrics)
     evidence_files.append(str(run_dir / "stage_metrics.json"))
-    cost_metrics = cost_quality_metrics(summary, relation_rows, candidate_generation, candidate_suppression, clusters_final)
+    cost_metrics = cost_quality_metrics(summary, relation_rows, candidate_generation, candidate_suppression, clusters_final, budget_skips)
     write_json(run_dir / "cost_quality_metrics.json", cost_metrics)
     evidence_files.append(str(run_dir / "cost_quality_metrics.json"))
     comparison = phase_comparison(run_dir, cost_metrics)
@@ -745,6 +755,19 @@ def build_cluster_evidence(
         member_items = [items.get(ci["item_id"], {}) for ci in members]
         times = [item.get("published_at") or item.get("created_at") for item in member_items if item]
         rel_counter = Counter(ci["primary_relation"] for ci in members)
+        signature_keys = [hotspot_key_candidates(item).get("signature_key") for item in member_items if item]
+        concrete_signatures = [key for key in signature_keys if key]
+        time_days = time_window_days(times)
+        suspect_reasons = []
+        if len(members) > 1 and not concrete_signatures:
+            suspect_reasons.append("no_concrete_event_signature")
+        if len(members) > 1 and time_days and time_days > 7:
+            suspect_reasons.append("wide_cluster_time_window")
+        if len(members) > 1 and len({item.get("source_id") for item in member_items if item}) == 1 and rel_counter.get("new_info", 0) > 0:
+            suspect_reasons.append("same_source_new_info_cluster")
+        likely_valid = len(members) > 1 and bool(concrete_signatures) and (time_days is None or time_days <= 3) and any(
+            label in rel_counter for label in {"repeat", "new_info", "source_material", "analysis", "experience", "context"}
+        )
         final.append({
             "semantic_run_id": run_id,
             "cluster_id": cluster["cluster_id"],
@@ -757,7 +780,11 @@ def build_cluster_evidence(
             "source_count": len({item.get("source_id") for item in member_items if item}),
             "time_window_start": min(times) if times else None,
             "time_window_end": max(times) if times else None,
+            "time_window_days": time_days,
             "relation_summary": dict(rel_counter),
+            "event_signature_keys": concrete_signatures[:10],
+            "cluster_quality_label": "likely_valid" if likely_valid else "suspect" if suspect_reasons else "needs_review" if len(members) > 1 else "single_item",
+            "cluster_suspect_reasons": suspect_reasons,
         })
     for candidate in candidates:
         diagnostics.append({
@@ -767,6 +794,39 @@ def build_cluster_evidence(
             "diagnostic_reason": candidate["diagnostic_reason"],
         })
     return candidates, attachments, final, diagnostics
+
+
+def build_cluster_seed_evidence(
+    attachments: list[dict[str, Any]],
+    clusters: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    cluster_quality = {cluster["cluster_id"]: cluster for cluster in clusters}
+    candidates = []
+    rejections = []
+    for row in attachments:
+        cluster_id = row.get("cluster_id")
+        cluster = cluster_quality.get(cluster_id or "", {})
+        is_seed_like = bool(cluster_id) and int(cluster.get("member_count") or 0) > 1
+        decision = "seed" if row.get("decision") in {"attached", "attached_rule"} and row.get("attach_eligible") and is_seed_like else "reject"
+        evidence_row = {
+            "semantic_run_id": row.get("semantic_run_id"),
+            "seed_items": [row.get("item_id")],
+            "cluster_id": cluster_id,
+            "event_signature_key": ",".join(cluster.get("event_signature_keys") or []),
+            "seed_confidence": row.get("confidence") or 0,
+            "shared_concrete_evidence": [row.get("source_relation_label"), row.get("cluster_relation_type"), row.get("source_event_relation_type")],
+            "generic_overlap": [],
+            "time_window_hours": round(float(cluster.get("time_window_days") or 0) * 24, 3),
+            "decision": decision,
+            "reason": row.get("reason") or ("multi-item cluster evidence accepted" if decision == "seed" else "not enough same-event evidence to seed"),
+            "cluster_quality_label": cluster.get("cluster_quality_label"),
+            "attach_disqualifiers": row.get("attach_disqualifiers") or [],
+        }
+        if decision == "seed":
+            candidates.append(evidence_row)
+        else:
+            rejections.append(evidence_row)
+    return candidates, rejections
 
 
 def cluster_member_count(cluster_items: list[dict[str, Any]], cluster_id: str) -> int:
@@ -825,15 +885,37 @@ def build_llm_evidence(store: InboxStore, run_id: str) -> tuple[list[dict[str, A
             errors.append({**call, "error_message": snippet(row.get("error"), 1000), "raw_response_snippet": snippet(row.get("raw_output"))})
         if row.get("status") == "skipped":
             reason = row.get("error") or request.get("reason") or "skipped"
+            skip_type = (
+                "skipped_due_to_stage_cap" if "stage budget" in reason.lower()
+                else "skipped_due_to_global_cap" if "global" in reason.lower() or "max calls" in reason.lower()
+                else "skipped_due_to_llm_failure" if "failed" in reason.lower()
+                else "skipped_due_to_token_budget" if "budget" in reason.lower()
+                else "skipped_other"
+            )
+            priorities = [str(priority) for priority in (request.get("candidate_priorities") or [request.get("candidate_priority")]) if priority]
+            top_priority = request.get("candidate_priority") or ",".join(priorities)
+            if any(priority == "must_run" for priority in priorities or []):
+                quality_tier = "skipped_must_run_candidates"
+            elif any(priority == "high" for priority in priorities or []):
+                quality_tier = "skipped_high_score_candidates"
+            elif any(priority == "medium" for priority in priorities or []):
+                quality_tier = "skipped_medium_score_candidates"
+            else:
+                quality_tier = "skipped_low_score_candidates"
             skips.append({
                 "semantic_run_id": run_id,
                 "stage": row["task_type"],
-                "skip_type": "token_budget" if "budget" in reason else "call_budget" if "max calls" in reason else "candidate_limit" if "candidate" in reason else "other",
+                "skip_type": skip_type,
+                "quality_skip_tier": quality_tier,
                 "skip_reason": reason,
                 "would_have_been_stage": row["task_type"],
-                "candidate_priority": request.get("candidate_priority") or ",".join(request.get("candidate_priorities") or []),
+                "candidate_priority": top_priority,
                 "candidate_score": max(request.get("candidate_scores") or [0]) if isinstance(request.get("candidate_scores"), list) else request.get("candidate_score"),
-                "is_high_priority_skip": any(priority in {"must_run", "high"} for priority in (request.get("candidate_priorities") or [request.get("candidate_priority")])),
+                "event_signature_key": request.get("event_signature_key") or ",".join(str(key) for key in request.get("candidate_event_signature_keys") or [] if key),
+                "positive_features": request.get("positive_features") or request.get("candidate_positive_features") or [],
+                "negative_features": request.get("negative_features") or request.get("candidate_negative_features") or [],
+                "would_have_been_task": row["task_type"],
+                "is_high_priority_skip": any(priority in {"must_run", "high"} for priority in (priorities or [])),
                 "item_id": row.get("item_id"),
                 "relation_id": None,
                 "cluster_candidate_id": row.get("cluster_id"),
@@ -890,6 +972,7 @@ def cost_quality_metrics(
     candidate_generation: list[dict[str, Any]],
     candidate_suppression: list[dict[str, Any]],
     clusters: list[dict[str, Any]],
+    budget_skips: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     actual_tokens = int((summary.get("metadata") or {}).get("actual_tokens") or 0)
     actual_calls = int((summary.get("metadata") or {}).get("actual_calls") or 0)
@@ -897,8 +980,15 @@ def cost_quality_metrics(
     non_different = [row for row in relations if row.get("relation_label") != "different"]
     eligible = [row for row in relations if row.get("cluster_eligible")]
     multi_clusters = [row for row in clusters if int(row.get("member_count") or 0) > 1]
+    likely_valid_multi = [row for row in multi_clusters if row.get("cluster_quality_label") == "likely_valid"]
+    suspect_multi = [row for row in multi_clusters if row.get("cluster_quality_label") == "suspect"]
+    needs_review_multi = [row for row in multi_clusters if row.get("cluster_quality_label") == "needs_review"]
     priority_counts = Counter(row.get("candidate_priority") or "unknown" for row in candidate_generation)
     suppression_counts = Counter(row.get("skip_reason") or row.get("candidate_suppression_reason") or "suppressed" for row in candidate_suppression)
+    budget_skips = budget_skips or []
+    budget_by_stage = Counter(row.get("stage") or "unknown" for row in budget_skips)
+    budget_by_priority = Counter(row.get("candidate_priority") or "unknown" for row in budget_skips)
+    budget_by_quality = Counter(row.get("quality_skip_tier") or "unknown" for row in budget_skips)
     return {
         "actual_calls": actual_calls,
         "actual_tokens": actual_tokens,
@@ -910,12 +1000,24 @@ def cost_quality_metrics(
         "non_different_count": len(non_different),
         "cluster_eligible_count": len(eligible),
         "multi_item_cluster_count": len(multi_clusters),
+        "multi_item_cluster_suspect_count": len(suspect_multi),
+        "multi_item_cluster_likely_valid_count": len(likely_valid_multi),
+        "multi_item_cluster_needs_review_count": len(needs_review_multi),
+        "effective_multi_item_cluster_count": len(likely_valid_multi),
         "candidate_priority_distribution": dict(priority_counts),
         "candidate_suppression_count": len(candidate_suppression),
         "candidate_suppression_distribution": dict(suppression_counts),
+        "budget_skip_by_stage": dict(budget_by_stage),
+        "budget_skip_by_priority": dict(budget_by_priority),
+        "budget_skip_by_quality_tier": dict(budget_by_quality),
+        "high_priority_skip_count": sum(1 for row in budget_skips if row.get("candidate_priority") in {"high", "must_run"} or row.get("is_high_priority_skip")),
+        "must_run_skip_count": sum(1 for row in budget_skips if "must_run" in str(row.get("candidate_priority"))),
+        "high_priority_skip_examples": [row for row in budget_skips if row.get("is_high_priority_skip")][:5],
+        "must_run_skip_examples": [row for row in budget_skips if "must_run" in str(row.get("candidate_priority"))][:5],
         "non_different_per_100k_tokens": round(len(non_different) * 100000 / max(actual_tokens, 1), 3),
         "cluster_eligible_per_100k_tokens": round(len(eligible) * 100000 / max(actual_tokens, 1), 3),
         "multi_item_cluster_per_100k_tokens": round(len(multi_clusters) * 100000 / max(actual_tokens, 1), 3),
+        "likely_valid_multi_item_clusters_per_100k_tokens": round(len(likely_valid_multi) * 100000 / max(actual_tokens, 1), 3),
     }
 
 
@@ -983,6 +1085,12 @@ def build_bundle_json(run_dir: Path, manifest: dict[str, Any], summary: dict[str
     relation_groups = defaultdict(list)
     for row in relations:
         relation_groups[row["relation_label"]].append(row)
+    all_relations_sample = read_jsonl(run_dir / "relations_all.jsonl", limit=500)
+    same_product_or_thread = [
+        row for row in all_relations_sample
+        if row.get("event_relation_type") in {"same_product_different_event", "same_thread", "same_conference"}
+        or any(role in {"same_product_different_event", "same_thread", "same_conference"} for role in row.get("secondary_roles", []))
+    ]
     return {
         "export_metadata": {
             "phase": manifest.get("phase"),
@@ -1012,6 +1120,7 @@ def build_bundle_json(run_dir: Path, manifest: dict[str, Any], summary: dict[str
                 "summary": summary.get("item_relations"),
                 "near_duplicate": relation_groups.get("near_duplicate", []),
                 "related_with_new_info": relation_groups.get("related_with_new_info", []),
+                "same_product_different_event_samples": same_product_or_thread[:50],
                 "uncertain": relation_groups.get("uncertain", []),
                 "suppressed_examples": suppressed[:100],
                 "suspicious_different_sample": relation_groups.get("suspicious_different", []),
@@ -1019,10 +1128,13 @@ def build_bundle_json(run_dir: Path, manifest: dict[str, Any], summary: dict[str
             "clusters": {
                 "summary": summary.get("item_clusters"),
                 "candidates": read_jsonl(run_dir / "cluster_candidates.jsonl", limit=500),
+                "seed_candidates": read_jsonl(run_dir / "cluster_seed_candidates.jsonl", limit=500),
+                "seed_rejections": read_jsonl(run_dir / "cluster_seed_rejections.jsonl", limit=500),
                 "attachments": read_jsonl(run_dir / "cluster_attachments.jsonl", limit=500),
                 "final_clusters": read_jsonl(run_dir / "clusters_final.jsonl", limit=500),
             },
             "event_hotspots": read_jsonl(run_dir / "event_hotspots.jsonl", limit=200),
+            "event_signatures": read_jsonl(run_dir / "event_hotspots.jsonl", limit=200),
             "budget_skips": read_jsonl(run_dir / "budget_skips.jsonl", limit=500),
             "llm_errors": read_jsonl(run_dir / "llm_errors.jsonl", limit=200),
             "candidate_generation": read_jsonl(run_dir / "candidate_generation.jsonl", limit=500),
@@ -1099,7 +1211,7 @@ def build_bundle_markdown(bundle: dict[str, Any], zip_path: Path) -> str:
     for row in fallbacks[:50]:
         lines.append(f"- {row.get('item_id')} | {row.get('source_id')} | {row.get('title')} | {row.get('fallback_reason')}")
     lines.extend(["", "## 6. Relation evidence", ""])
-    for label in ["near_duplicate", "related_with_new_info", "uncertain", "suspicious_different_sample"]:
+    for label in ["near_duplicate", "related_with_new_info", "same_product_different_event_samples", "uncertain", "suspicious_different_sample"]:
         rows = semantic["relations"].get(label, [])
         lines.extend([f"### {label}", "", f"count: {len(rows)}"])
         for row in rows:
@@ -1113,6 +1225,14 @@ def build_bundle_markdown(bundle: dict[str, Any], zip_path: Path) -> str:
         "## 7. Cluster diagnostics",
         "",
         json.dumps(semantic.get("clusters", {}).get("summary"), ensure_ascii=False, indent=2, sort_keys=True)[:10000],
+        "",
+        "### Cluster seed candidates",
+        "",
+        json.dumps(semantic.get("clusters", {}).get("seed_candidates", [])[:50], ensure_ascii=False, indent=2, sort_keys=True)[:10000],
+        "",
+        "### Cluster seed rejections",
+        "",
+        json.dumps(semantic.get("clusters", {}).get("seed_rejections", [])[:50], ensure_ascii=False, indent=2, sort_keys=True)[:10000],
         "",
         "## 8. Event hotspots",
         "",

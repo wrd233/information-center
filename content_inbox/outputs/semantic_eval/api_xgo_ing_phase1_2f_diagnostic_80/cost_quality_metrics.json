@@ -1,0 +1,465 @@
+{
+  "actual_calls": 60,
+  "actual_tokens": 182939,
+  "budget_skip_by_priority": {
+    "low,low,low,low,low": 22,
+    "medium": 50,
+    "medium,low,low,low,low": 16,
+    "medium,medium,low,low,low": 5,
+    "medium,medium,medium,low,low": 8,
+    "medium,medium,medium,medium,low": 6,
+    "medium,medium,medium,medium,medium": 3,
+    "must_run,low,low,low,low": 1,
+    "must_run,medium,medium,low,low": 1,
+    "unknown": 9
+  },
+  "budget_skip_by_quality_tier": {
+    "skipped_low_score_candidates": 31,
+    "skipped_medium_score_candidates": 88,
+    "skipped_must_run_candidates": 2
+  },
+  "budget_skip_by_stage": {
+    "cluster_card_patch": 9,
+    "item_cluster_relation": 50,
+    "item_relation": 62
+  },
+  "budget_skips": {
+    "cluster_card_patch": {
+      "budget": 14000,
+      "calls": 3,
+      "consumed_tokens": 5399,
+      "remaining_budget": 8601,
+      "skipped": 9,
+      "skipped_due_to_budget": 0
+    },
+    "item_card": {
+      "budget": 80000,
+      "calls": 19,
+      "consumed_tokens": 67901,
+      "remaining_budget": 12099,
+      "skipped": 0,
+      "skipped_due_to_budget": 0
+    },
+    "item_cluster_relation": {
+      "budget": 50000,
+      "calls": 21,
+      "consumed_tokens": 51274,
+      "remaining_budget": 0,
+      "skipped": 50,
+      "skipped_due_to_budget": 50
+    },
+    "item_relation": {
+      "budget": 50000,
+      "calls": 17,
+      "consumed_tokens": 58365,
+      "remaining_budget": 0,
+      "skipped": 62,
+      "skipped_due_to_budget": 62
+    },
+    "source_profile": {
+      "budget": 6000,
+      "calls": 0,
+      "consumed_tokens": 0,
+      "remaining_budget": 6000,
+      "skipped": 0,
+      "skipped_due_to_budget": 0
+    }
+  },
+  "candidate_priority_distribution": {
+    "low": 1219,
+    "medium": 149,
+    "must_run": 3,
+    "suppress": 15
+  },
+  "candidate_suppression_count": 15,
+  "candidate_suppression_distribution": {
+    "suppressed_boilerplate": 3,
+    "suppressed_generic_only": 4,
+    "suppressed_proxy_domain": 8
+  },
+  "cluster_eligible_count": 0,
+  "cluster_eligible_per_100k_tokens": 0.0,
+  "duplicate_direction_suppressed_count": 8,
+  "effective_multi_item_cluster_count": 0,
+  "high_priority_skip_count": 2,
+  "high_priority_skip_examples": [
+    {
+      "candidate_priority": "must_run,medium,medium,low,low",
+      "candidate_score": 10.029,
+      "cluster_candidate_id": null,
+      "created_at": "2026-05-17T08:50:02.184520+00:00",
+      "event_signature_key": "",
+      "is_high_priority_skip": true,
+      "item_id": "item_4678517f783441488b65f965de82ee4d",
+      "negative_features": [
+        [
+          "generic_overlap:api"
+        ],
+        [
+          "wide_time_window_hours:249.8"
+        ],
+        [
+          "wide_time_window_hours:208.9"
+        ],
+        [],
+        []
+      ],
+      "positive_features": [
+        [
+          "high_title_similarity",
+          "shared_weighted_entities:devx, gemini, gemini api, geminiapi, webhooks",
+          "same_actor_product_action_72h",
+          "shared_event_phrases:api",
+          "close_time_window",
+          "shared_products:shipped webhooks in the gemini api, shippedwebhooksinthegeminiapi",
+          "shared_actors:gemini"
+        ],
+        [
+          "shared_weighted_entities:gemini, google",
+          "shared_event_phrases:agent",
+          "shared_actors:gemini, google"
+        ],
+        [
+          "shared_weighted_entities:big, just"
+        ],
+        [
+          "close_time_window"
+        ],
+        [
+          "close_time_window"
+        ]
+      ],
+      "quality_skip_tier": "skipped_must_run_candidates",
+      "reason": "live token budget reached",
+      "relation_id": null,
+      "remaining_budget": {},
+      "semantic_run_id": "semantic_eval_20260517_084546_391125",
+      "skip_reason": "live token budget reached",
+      "skip_type": "skipped_due_to_token_budget",
+      "stage": "item_relation",
+      "would_have_been_stage": "item_relation",
+      "would_have_been_task": "item_relation"
+    },
+    {
+      "candidate_priority": "must_run,low,low,low,low",
+      "candidate_score": 10.029,
+      "cluster_candidate_id": null,
+      "created_at": "2026-05-17T08:50:02.190030+00:00",
+      "event_signature_key": "",
+      "is_high_priority_skip": true,
+      "item_id": "item_a7f8cf301c0447e6a185da65424de3f5",
+      "negative_features": [
+        [
+          "generic_overlap:api"
+        ],
+        [],
+        [],
+        [],
+        []
+      ],
+      "positive_features": [
+        [
+          "high_title_similarity",
+          "shared_weighted_entities:devx, gemini, gemini api, geminiapi, webhooks",
+          "same_actor_product_action_72h",
+          "shared_event_phrases:api",
+          "close_time_window",
+          "shared_products:shipped webhooks in the gemini api, shippedwebhooksinthegeminiapi",
+          "shared_actors:gemini"
+        ],
+        [
+          "close_time_window"
+        ],
+        [
+          "close_time_window"
+        ],
+        [
+          "close_time_window"
+        ],
+        [
+          "close_time_window"
+        ]
+      ],
+      "quality_skip_tier": "skipped_must_run_candidates",
+      "reason": "live token budget reached",
+      "relation_id": null,
+      "remaining_budget": {},
+      "semantic_run_id": "semantic_eval_20260517_084546_391125",
+      "skip_reason": "live token budget reached",
+      "skip_type": "skipped_due_to_token_budget",
+      "stage": "item_relation",
+      "would_have_been_stage": "item_relation",
+      "would_have_been_task": "item_relation"
+    }
+  ],
+  "likely_valid_multi_item_clusters_per_100k_tokens": 0.0,
+  "multi_item_cluster_count": 1,
+  "multi_item_cluster_likely_valid_count": 0,
+  "multi_item_cluster_needs_review_count": 0,
+  "multi_item_cluster_per_100k_tokens": 0.547,
+  "multi_item_cluster_suspect_count": 1,
+  "must_run_skip_count": 2,
+  "must_run_skip_examples": [
+    {
+      "candidate_priority": "must_run,medium,medium,low,low",
+      "candidate_score": 10.029,
+      "cluster_candidate_id": null,
+      "created_at": "2026-05-17T08:50:02.184520+00:00",
+      "event_signature_key": "",
+      "is_high_priority_skip": true,
+      "item_id": "item_4678517f783441488b65f965de82ee4d",
+      "negative_features": [
+        [
+          "generic_overlap:api"
+        ],
+        [
+          "wide_time_window_hours:249.8"
+        ],
+        [
+          "wide_time_window_hours:208.9"
+        ],
+        [],
+        []
+      ],
+      "positive_features": [
+        [
+          "high_title_similarity",
+          "shared_weighted_entities:devx, gemini, gemini api, geminiapi, webhooks",
+          "same_actor_product_action_72h",
+          "shared_event_phrases:api",
+          "close_time_window",
+          "shared_products:shipped webhooks in the gemini api, shippedwebhooksinthegeminiapi",
+          "shared_actors:gemini"
+        ],
+        [
+          "shared_weighted_entities:gemini, google",
+          "shared_event_phrases:agent",
+          "shared_actors:gemini, google"
+        ],
+        [
+          "shared_weighted_entities:big, just"
+        ],
+        [
+          "close_time_window"
+        ],
+        [
+          "close_time_window"
+        ]
+      ],
+      "quality_skip_tier": "skipped_must_run_candidates",
+      "reason": "live token budget reached",
+      "relation_id": null,
+      "remaining_budget": {},
+      "semantic_run_id": "semantic_eval_20260517_084546_391125",
+      "skip_reason": "live token budget reached",
+      "skip_type": "skipped_due_to_token_budget",
+      "stage": "item_relation",
+      "would_have_been_stage": "item_relation",
+      "would_have_been_task": "item_relation"
+    },
+    {
+      "candidate_priority": "must_run,low,low,low,low",
+      "candidate_score": 10.029,
+      "cluster_candidate_id": null,
+      "created_at": "2026-05-17T08:50:02.190030+00:00",
+      "event_signature_key": "",
+      "is_high_priority_skip": true,
+      "item_id": "item_a7f8cf301c0447e6a185da65424de3f5",
+      "negative_features": [
+        [
+          "generic_overlap:api"
+        ],
+        [],
+        [],
+        [],
+        []
+      ],
+      "positive_features": [
+        [
+          "high_title_similarity",
+          "shared_weighted_entities:devx, gemini, gemini api, geminiapi, webhooks",
+          "same_actor_product_action_72h",
+          "shared_event_phrases:api",
+          "close_time_window",
+          "shared_products:shipped webhooks in the gemini api, shippedwebhooksinthegeminiapi",
+          "shared_actors:gemini"
+        ],
+        [
+          "close_time_window"
+        ],
+        [
+          "close_time_window"
+        ],
+        [
+          "close_time_window"
+        ],
+        [
+          "close_time_window"
+        ]
+      ],
+      "quality_skip_tier": "skipped_must_run_candidates",
+      "reason": "live token budget reached",
+      "relation_id": null,
+      "remaining_budget": {},
+      "semantic_run_id": "semantic_eval_20260517_084546_391125",
+      "skip_reason": "live token budget reached",
+      "skip_type": "skipped_due_to_token_budget",
+      "stage": "item_relation",
+      "would_have_been_stage": "item_relation",
+      "would_have_been_task": "item_relation"
+    }
+  ],
+  "non_different_count": 0,
+  "non_different_per_100k_tokens": 0.0,
+  "raw_relation_count": 75,
+  "tokens_by_stage": [
+    {
+      "avg_candidates_per_call": null,
+      "avg_latency_ms": 19341.0,
+      "cache_hit_tokens": 19456,
+      "cache_miss_tokens": 0,
+      "calls": 19,
+      "failed": 3,
+      "input_tokens": 36585,
+      "llm_call_count": 19,
+      "operation_count": 19,
+      "output_tokens": 31316,
+      "p50_latency_ms": 17130,
+      "p95_latency_ms": 33929,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 3,
+      "skipped": 0,
+      "success": 16,
+      "task_type": "item_card",
+      "total_tokens": 67901
+    },
+    {
+      "avg_candidates_per_call": null,
+      "avg_latency_ms": 13740.6,
+      "cache_hit_tokens": 22144,
+      "cache_miss_tokens": 0,
+      "calls": 17,
+      "failed": 2,
+      "input_tokens": 36442,
+      "llm_call_count": 17,
+      "operation_count": 79,
+      "output_tokens": 21923,
+      "p50_latency_ms": 13138,
+      "p95_latency_ms": 20094,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 2,
+      "skipped": 62,
+      "success": 15,
+      "task_type": "item_relation",
+      "total_tokens": 58365
+    },
+    {
+      "avg_candidates_per_call": null,
+      "avg_latency_ms": 5637.2,
+      "cache_hit_tokens": 33920,
+      "cache_miss_tokens": 0,
+      "calls": 21,
+      "failed": 0,
+      "input_tokens": 41332,
+      "llm_call_count": 21,
+      "operation_count": 71,
+      "output_tokens": 9942,
+      "p50_latency_ms": 5411,
+      "p95_latency_ms": 7400,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "skipped": 50,
+      "success": 21,
+      "task_type": "item_cluster_relation",
+      "total_tokens": 51274
+    },
+    {
+      "avg_candidates_per_call": null,
+      "avg_latency_ms": 6754.0,
+      "cache_hit_tokens": 1536,
+      "cache_miss_tokens": 0,
+      "calls": 3,
+      "failed": 0,
+      "input_tokens": 3661,
+      "llm_call_count": 3,
+      "operation_count": 12,
+      "output_tokens": 1738,
+      "p50_latency_ms": 5722,
+      "p95_latency_ms": 9316,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "skipped": 9,
+      "success": 3,
+      "task_type": "cluster_card_patch",
+      "total_tokens": 5399
+    },
+    {
+      "avg_candidates_per_call": null,
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "cache_miss_tokens": 0,
+      "calls": 0,
+      "failed": 0,
+      "input_tokens": 0,
+      "llm_call_count": 0,
+      "operation_count": 0,
+      "output_tokens": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "skipped": 0,
+      "success": 0,
+      "task_type": "cluster_card_rebuild",
+      "total_tokens": 0
+    },
+    {
+      "avg_candidates_per_call": null,
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "cache_miss_tokens": 0,
+      "calls": 0,
+      "failed": 0,
+      "input_tokens": 0,
+      "llm_call_count": 0,
+      "operation_count": 0,
+      "output_tokens": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "skipped": 0,
+      "success": 0,
+      "task_type": "source_review",
+      "total_tokens": 0
+    },
+    {
+      "avg_candidates_per_call": null,
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "cache_miss_tokens": 0,
+      "calls": 0,
+      "failed": 0,
+      "input_tokens": 0,
+      "llm_call_count": 0,
+      "operation_count": 0,
+      "output_tokens": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "skipped": 0,
+      "success": 0,
+      "task_type": "json_repair",
+      "total_tokens": 0
+    }
+  ],
+  "unique_relation_pair_count": 67
+}

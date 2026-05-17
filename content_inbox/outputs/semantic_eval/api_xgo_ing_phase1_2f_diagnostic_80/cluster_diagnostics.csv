@@ -1,0 +1,81 @@
+cluster_candidate_id,final_status,final_member_count,diagnostic_reason
+cluster_candidate_1,multi_item,2,created initial semantic cluster
+cluster_candidate_2,multi_item,2,The new item is the official paper for the EgoMemReason benchmark.
+cluster_candidate_3,single_item,1,created initial semantic cluster
+cluster_candidate_4,single_item,1,created initial semantic cluster
+cluster_candidate_5,single_item,1,created initial semantic cluster
+cluster_candidate_6,single_item,1,created initial semantic cluster
+cluster_candidate_7,single_item,1,created initial semantic cluster
+cluster_candidate_8,single_item,1,created initial semantic cluster
+cluster_candidate_9,single_item,1,created initial semantic cluster
+cluster_candidate_10,single_item,1,created initial semantic cluster
+cluster_candidate_review_65,rejected,0,"The new item discusses Nvidia market cap and CEO comments, not the EgoMemReason benchmark."
+cluster_candidate_review_66,rejected,0,"The new item is about building video analytics AI agents, while the cluster is about a specific benchmark for egocentric video understanding. They share a broad topic but are different events."
+cluster_candidate_review_67,rejected,0,"The new item discusses token burning and user engagement, while the cluster is about a video understanding benchmark. No overlapping entities or topics."
+cluster_candidate_review_68,rejected,0,No clear connection to the EgoMemReason benchmark; the new item is a generic 'Read more' link with no evident topic overlap.
+cluster_candidate_review_69,rejected,0,"The new item is about a personal translation tool using DeepSeek V4 Flash, while the cluster is about the EgoMemReason benchmark for egocentric video understanding; no topic or entity overlap."
+cluster_candidate_review_70,rejected,0,"The new item discusses a startup entrepreneurship story, while the cluster is about an egocentric video benchmark; no topical or entity overlap."
+cluster_candidate_review_71,rejected,0,No evidence connects the new item to the EgoMemReason benchmark cluster.
+cluster_candidate_review_72,rejected,0,"The new item describes a game with AI agents, while the cluster is about a benchmark for egocentric video understanding; no entities or topics overlap."
+cluster_candidate_review_73,rejected,0,New item is a prompt injection attempt unrelated to the EgoMemReason benchmark.
+cluster_candidate_review_74,rejected,0,"The new item is about calling a 'Skill' in Chinese, unrelated to EgoMemReason benchmark."
+cluster_candidate_review_75,rejected,0,"The new item is about building an NVIDIA AI Spark rig and a monitoring dashboard, which has no connection to the EgoMemReason benchmark for egocentric video understanding."
+cluster_candidate_review_76,rejected,0,"The new item is about a swag bag, completely unrelated to the EgoMemReason benchmark cluster."
+cluster_candidate_review_77,rejected,0,"The new item is about LangSmith Fleet free model from FireworksAI, completely unrelated to the EgoMemReason benchmark cluster."
+cluster_candidate_review_78,rejected,0,"The new item is a reply to a different person about being part of an initiative, with no mention of the EgoMemReason benchmark or related event."
+cluster_candidate_review_79,rejected,0,"No entity or topic overlap; Syncless is an enterprise collaboration product, EgoMemReason is a video understanding benchmark."
+cluster_candidate_review_80,rejected,0,"The new item is about collaboration philosophy in Chinese, while the cluster is about an egocentric video understanding benchmark; no overlap in entities, topic, or event."
+cluster_candidate_review_81,rejected,0,"The new item is about short drama regulation in Chinese, while the cluster is about a video understanding benchmark. No overlap in topic or entities."
+cluster_candidate_review_82,rejected,0,"The new item is about Feishu CLI hitting 10k GitHub stars, which is completely unrelated to the EgoMemReason benchmark cluster."
+cluster_candidate_review_83,rejected,0,New item about @ollama is unrelated to the EgoMemReason benchmark cluster.
+cluster_candidate_review_84,rejected,0,"The new item discusses a translation learning tool using models, which is unrelated to the EgoMemReason benchmark for egocentric video understanding."
+cluster_candidate_review_85,rejected,0,LLM skipped or failed
+cluster_candidate_review_86,rejected,0,LLM skipped or failed
+cluster_candidate_review_87,rejected,0,LLM skipped or failed
+cluster_candidate_review_88,rejected,0,LLM skipped or failed
+cluster_candidate_review_89,rejected,0,LLM skipped or failed
+cluster_candidate_review_90,rejected,0,LLM skipped or failed
+cluster_candidate_review_91,rejected,0,LLM skipped or failed
+cluster_candidate_review_92,rejected,0,LLM skipped or failed
+cluster_candidate_review_93,rejected,0,LLM skipped or failed
+cluster_candidate_review_94,rejected,0,LLM skipped or failed
+cluster_candidate_review_95,rejected,0,LLM skipped or failed
+cluster_candidate_review_96,rejected,0,LLM skipped or failed
+cluster_candidate_review_97,rejected,0,LLM skipped or failed
+cluster_candidate_review_98,rejected,0,LLM skipped or failed
+cluster_candidate_review_99,rejected,0,LLM skipped or failed
+cluster_candidate_review_100,rejected,0,LLM skipped or failed
+cluster_candidate_review_101,rejected,0,LLM skipped or failed
+cluster_candidate_review_102,rejected,0,LLM skipped or failed
+cluster_candidate_review_103,rejected,0,LLM skipped or failed
+cluster_candidate_review_104,rejected,0,LLM skipped or failed
+cluster_candidate_review_105,rejected,0,LLM skipped or failed
+cluster_candidate_review_106,rejected,0,LLM skipped or failed
+cluster_candidate_review_107,rejected,0,LLM skipped or failed
+cluster_candidate_review_108,rejected,0,LLM skipped or failed
+cluster_candidate_review_109,rejected,0,LLM skipped or failed
+cluster_candidate_review_110,rejected,0,LLM skipped or failed
+cluster_candidate_review_111,rejected,0,LLM skipped or failed
+cluster_candidate_review_112,rejected,0,LLM skipped or failed
+cluster_candidate_review_113,rejected,0,LLM skipped or failed
+cluster_candidate_review_114,rejected,0,LLM skipped or failed
+cluster_candidate_review_115,rejected,0,LLM skipped or failed
+cluster_candidate_review_116,rejected,0,LLM skipped or failed
+cluster_candidate_review_117,rejected,0,LLM skipped or failed
+cluster_candidate_review_118,rejected,0,LLM skipped or failed
+cluster_candidate_review_119,rejected,0,LLM skipped or failed
+cluster_candidate_review_120,rejected,0,LLM skipped or failed
+cluster_candidate_review_121,rejected,0,LLM skipped or failed
+cluster_candidate_review_122,rejected,0,LLM skipped or failed
+cluster_candidate_review_123,rejected,0,LLM skipped or failed
+cluster_candidate_review_124,rejected,0,LLM skipped or failed
+cluster_candidate_review_125,rejected,0,LLM skipped or failed
+cluster_candidate_review_126,rejected,0,LLM skipped or failed
+cluster_candidate_review_127,rejected,0,LLM skipped or failed
+cluster_candidate_review_128,rejected,0,LLM skipped or failed
+cluster_candidate_review_129,rejected,0,LLM skipped or failed
+cluster_candidate_review_130,rejected,0,LLM skipped or failed
+cluster_candidate_review_131,rejected,0,LLM skipped or failed
+cluster_candidate_review_132,rejected,0,LLM skipped or failed
+cluster_candidate_review_133,rejected,0,LLM skipped or failed
+cluster_candidate_review_134,rejected,0,LLM skipped or failed

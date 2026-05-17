@@ -18,7 +18,7 @@ from app.semantic.candidates import assess_candidate, hotspot_key_candidates, in
 from app.semantic.clusters import patch_cluster_card, process_item_clusters
 from app.semantic.evidence import build_review_bundle, export_evidence, write_json
 from app.semantic.live_smoke import live_enabled
-from app.semantic.relations import normalized_entity_terms, process_item_relations, semantic_tokens
+from app.semantic.relations import process_item_relations, semantic_tokens
 from app.semantic.source_profiles import recompute_source_profiles
 from app.storage import InboxStore, row_to_item
 from app.utils import utc_now
@@ -317,8 +317,11 @@ def sample_event_hotspots(conn: sqlite3.Connection, where: str, params: list[str
     token_items: dict[str, list[Any]] = {}
     for row in items:
         keys = hotspot_key_candidates(dict(row))
-        entities = normalized_entity_terms([keys["selected_hotspot_key"], *keys.get("dominant_entities", [])[:5], *keys.get("dominant_event_phrases", [])[:3]])
-        for token in entities:
+        signature = keys.get("event_signature") or {}
+        seed_values: list[str] = []
+        if signature.get("signature_key"):
+            seed_values.append(signature["signature_key"])
+        for token in seed_values:
             if len(token) < 3:
                 continue
             token_sources.setdefault(token, set()).add(row["source_id"] or row["source_name"] or "")
@@ -974,10 +977,20 @@ def percentile(values: list[int], pct: float) -> int:
 
 def error_summary(rows: list[Any], reviews: list[Any], steps: dict[str, Any], metadata: dict[str, Any]) -> dict[str, Any]:
     tokens = metadata.get("actual_tokens", 0)
+    card_stats = ((steps.get("item_cards") or {}).get("stats") or {}) if isinstance(steps.get("item_cards"), dict) else {}
+    item_card_count = int(card_stats.get("written") or 0)
+    heuristic_fallback_count = sum(1 for row in rows if row["task_type"] == "item_card" and row["model"] == "heuristic")
     return {
         "llm_parse_failures": sum(1 for row in rows if row["status"] == "failed" and "JSON" in (row["error"] or "")),
         "repair_retry_count": sum(1 for row in rows if row["status"] == "failed"),
         "final_failures": sum(1 for row in rows if row["status"] == "failed"),
+        "item_card_count": item_card_count,
+        "llm_card_count": sum(1 for row in rows if row["task_type"] == "item_card" and row["status"] == "ok"),
+        "heuristic_fallback_count": heuristic_fallback_count,
+        "fallback_rate": round(heuristic_fallback_count / max(item_card_count, 1), 4),
+        "failed_batch_count": int(card_stats.get("failed_batch_count") or 0),
+        "split_retry_success_count": int(card_stats.get("split_retry_success_count") or 0),
+        "single_retry_success_count": int(card_stats.get("single_retry_success_count") or 0),
         "review_queue_entries_due_to_failure": sum(1 for row in reviews if "failed" in (row["reason"] or "").lower()),
         "skipped_due_to_max_calls": any("max calls" in (row["error"] or "") for row in rows),
         "skipped_due_to_token_budget": bool(metadata.get("token_budget") and tokens >= metadata.get("token_budget")),
@@ -1050,18 +1063,21 @@ def recommendations(item_relations: list[Any], cluster_items: list[Any], metadat
 def prompt_iteration_notes(metadata: dict[str, Any]) -> list[dict[str, Any]]:
     return [
         {
-            "iteration": "phase1_2_current",
+            "iteration": "phase1_2f",
             "changes": [
-                "source scope filtering",
-                "sample modes",
-                "operation_count versus llm_call_count report split",
-                "concurrency summary",
+                "event-signature hotspot keys",
+                "generic AI/template token suppression",
+                "scarcer must_run/high candidate priorities",
+                "same_product_different_event and same_thread secondary roles",
+                "cluster seed precision diagnostics",
+                "budget skip quality tiers",
+                "item-card split retry metrics",
             ],
             "sample_mode": metadata.get("sample_mode"),
             "max_items": metadata.get("max_items"),
             "max_calls": metadata.get("max_calls"),
             "concurrency": metadata.get("concurrency"),
-            "notes": "No enum expansion; prompt JSON contracts remain stable.",
+            "notes": "Primary relation enums remain stable; prompt versions bumped to v3 with stricter same-event rules.",
         }
     ]
 
@@ -1114,54 +1130,101 @@ def build_markdown_report(summary: dict[str, Any]) -> str:
         "",
         json_block(summary["item_relations"]),
         "",
-        "## 6. Item-Cluster Relation Quality",
+        "## 6. Event Signature Hotspots",
+        "",
+        json_block({
+            "sample_mode": m.get("sample_mode"),
+            "evidence_files": ["event_hotspots.jsonl", "event_hotspot_items.csv"],
+            "generic_token_policy": "generic AI/template tokens are supporting evidence only and cannot independently create high-priority hotspots",
+        }),
+        "",
+        "## 7. Candidate Priority Distribution",
+        "",
+        json_block({
+            "candidate_priority_distribution": summary["item_relations"].get("candidate_priority_distribution", {}),
+            "candidates_suppressed_without_llm": summary["item_relations"].get("candidates_suppressed_without_llm", 0),
+            "warning": "must_run/high should remain scarce; inspect candidate_generation.jsonl if inflated",
+        }),
+        "",
+        "## 8. Relation Precision Review",
+        "",
+        json_block({
+            "near_duplicate": summary["item_relations"].get("near_duplicate", 0),
+            "related_with_new_info": summary["item_relations"].get("related_with_new_info", 0),
+            "event_relation_type_distribution": summary["item_relations"].get("event_relation_type_distribution", {}),
+            "examples": summary["item_relations"].get("examples", []),
+        }),
+        "",
+        "## 9. Item-Cluster Relation Quality",
         "",
         json_block(summary["item_clusters"]),
         "",
-        "## 7. Cluster Quality Samples",
+        "## 10. Cluster Seed Review",
+        "",
+        json_block({
+            "multi_item_cluster_count": summary["item_clusters"].get("multi_item_cluster_count", 0),
+            "evidence_files": ["cluster_seed_candidates.jsonl", "cluster_seed_rejections.jsonl", "clusters_final.jsonl"],
+            "cluster_samples": summary["item_clusters"].get("cluster_samples", []),
+        }),
+        "",
+        "## 11. Budget Skip Quality",
+        "",
+        json_block(summary["stage_budgets"]),
+        "",
+        "## 12. Cost / Yield",
+        "",
+        json_block(summary["token_cost"]),
+        "",
+        "## 13. Cluster Quality Samples",
         "",
         json_block(summary["item_clusters"].get("cluster_samples", [])),
         "",
-        "## 8. Source Profile Results",
+        "## 14. Source Profile Results",
         "",
         json_block(summary["source_profiles"]),
         "",
-        "## 9. Token / Latency / Cache Summary",
+        "## 15. Token / Latency / Cache Summary",
         "",
         json_block(summary["token_cost"]),
+        "",
+        "## 16. Concurrency Summary",
+        "",
+        json_block(summary["concurrency"]),
+        "",
+        "## 17. Stage Budget Summary",
+        "",
+        json_block(summary["stage_budgets"]),
+        "",
+        "## 18. Errors / Fallbacks / Retries",
+        "",
+        json_block(summary["errors_fallbacks"]),
+        "",
+        "## 19. Prompt Iteration Notes",
+        "",
+        json_block(summary["prompt_iteration_notes"]),
+        "",
+        "## 20. Manual Review Suggestions",
+        "",
+        json_block(summary["item_clusters"]["manual_review_suggestions"]),
+        "",
+        "## 21. Readiness Assessment",
+        "",
+        json_block(summary["readiness_assessment"]),
+        "",
+        "## 22. Recommendations",
+        "",
+    ]
+    lines.extend([f"- {rec}" for rec in summary["recommendations"]])
+    lines.extend([
         "",
         "## 10. Concurrency Summary",
         "",
         json_block(summary["concurrency"]),
         "",
-        "## 11. Stage Budget Summary",
-        "",
-        json_block(summary["stage_budgets"]),
-        "",
-        "## 12. Errors / Fallbacks / Retries",
-        "",
-        json_block(summary["errors_fallbacks"]),
-        "",
-        "## 13. Prompt Iteration Notes",
-        "",
-        json_block(summary["prompt_iteration_notes"]),
-        "",
-        "## 14. Manual Review Suggestions",
-        "",
-        json_block(summary["item_clusters"]["manual_review_suggestions"]),
-        "",
         "## 14. Readiness Assessment",
         "",
         json_block(summary["readiness_assessment"]),
-        "",
-        "## 15. Readiness Assessment",
-        "",
-        json_block(summary["readiness_assessment"]),
-        "",
-        "## 16. Recommendations",
-        "",
-    ]
-    lines.extend([f"- {rec}" for rec in summary["recommendations"]])
+    ])
     lines.append("")
     return "\n".join(lines)
 

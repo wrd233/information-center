@@ -331,6 +331,10 @@ def process_item_relations(
                 "prompt_variant": "full" if any(c["_candidate_assessment"].candidate_priority in {"must_run", "high"} for c in candidates) else "short",
                 "candidate_priorities": [c["_candidate_assessment"].candidate_priority for c in candidates],
                 "candidate_scores": [c["_candidate_assessment"].candidate_score for c in candidates],
+                "candidate_event_signature_keys": [c["_candidate_assessment"].event_signature_key for c in candidates],
+                "candidate_positive_features": [c["_candidate_assessment"].positive_features for c in candidates],
+                "candidate_negative_features": [c["_candidate_assessment"].negative_features for c in candidates],
+                "candidate_time_window_hours": [c["_candidate_assessment"].time_window_hours for c in candidates],
             },
         )
         local["llm_calls"] = client.calls

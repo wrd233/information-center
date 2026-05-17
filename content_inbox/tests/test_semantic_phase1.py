@@ -466,16 +466,66 @@ def test_phase1_2e_hotspot_filters_xgo_proxy_key() -> None:
     assert keys["proxy_domain_filtered"] is True
 
 
+def test_phase1_2f_hotspot_uses_event_signature_not_generic_agent() -> None:
+    item = {
+        "item_id": "x",
+        "title": "Replit launches Parallel Agents for app builders",
+        "summary": "Meet Replit Parallel Agents. Build faster by running agents in parallel. Powered by xgo.ing",
+        "published_at": "2026-05-11T17:34:28+00:00",
+        "url": "https://api.xgo.ing/rss/replit",
+    }
+    keys = hotspot_key_candidates(item)
+    assert keys["key_source"] == "event_signature"
+    assert "replit" in keys["selected_hotspot_key"]
+    assert "parallelagents" in keys["selected_hotspot_key"] or "parallel agents" in keys["selected_hotspot_key"]
+    assert keys["selected_hotspot_key"] != "agent"
+
+
 def test_phase1_2e_candidate_suppression_and_priority() -> None:
     generic_a = {"item_id": "a", "title": "AI agent tips", "summary": "General agent ideas"}
     generic_b = {"item_id": "b", "title": "Agent workflow notes", "summary": "Generic AI agent ideas"}
     generic = assess_candidate(generic_a, generic_b)
-    assert generic.candidate_priority in {"low", "suppress"}
+    assert generic.candidate_priority == "suppress"
+    assert generic.generic_only is True
 
     dup_a = {"item_id": "a", "title": "Qwen FlashQLA ships", "url": "https://example.com/qwen"}
     dup_b = {"item_id": "b", "title": "Qwen FlashQLA ships", "url": "https://example.com/qwen"}
     duplicate = assess_candidate(dup_a, dup_b)
     assert duplicate.candidate_priority == "must_run"
+
+
+def test_phase1_2f_event_signature_pair_beats_generic_same_product() -> None:
+    launch_a = {
+        "item_id": "a",
+        "title": "Replit launches Parallel Agents",
+        "summary": "Parallel Agents are now available in Replit.",
+        "published_at": "2026-05-11T17:34:28+00:00",
+    }
+    launch_b = {
+        "item_id": "b",
+        "title": "Try Replit Parallel Agents today",
+        "summary": "Replit Parallel Agents launch lets users run up to 10 agents.",
+        "published_at": "2026-05-11T18:34:28+00:00",
+    }
+    strong = assess_candidate(launch_a, launch_b)
+    assert strong.candidate_priority in {"must_run", "high"}
+    assert strong.event_signature_match is True or "same_actor_product_action_72h" in strong.same_event_evidence
+
+    product_a = {
+        "item_id": "c",
+        "title": "Perplexity Computer is available in Microsoft Marketplace",
+        "summary": "Get Perplexity Computer from the marketplace.",
+        "published_at": "2026-05-04T18:06:02+00:00",
+    }
+    product_b = {
+        "item_id": "d",
+        "title": "Perplexity adds premium health sources",
+        "summary": "Available to Max subscribers in Perplexity and Computer.",
+        "published_at": "2026-05-05T17:07:22+00:00",
+    }
+    weak = assess_candidate(product_a, product_b)
+    assert weak.candidate_priority in {"medium", "low", "suppress"}
+    assert weak.candidate_priority != "must_run"
 
 
 def test_phase1_2e_evidence_exports_new_candidate_files(tmp_path: Path) -> None:

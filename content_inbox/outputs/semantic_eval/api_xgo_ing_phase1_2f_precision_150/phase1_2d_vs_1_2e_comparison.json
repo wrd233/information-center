@@ -1,0 +1,1205 @@
+{
+  "baseline_available": true,
+  "baseline_path": "outputs/semantic_eval/api_xgo_ing_phase1_2d_full_300_c5_20260517_140244/stage_metrics.json",
+  "baseline_phase": "phase1_2d",
+  "baseline_stage_metrics": {
+    "concurrency": {
+      "actual_calls": 221,
+      "actual_tokens": 737878,
+      "avg_latency_ms": 12325.7,
+      "by_task": {
+        "cluster_card_patch": {
+          "avg_latency_ms": 9100.3,
+          "cache_hit_tokens": 1536,
+          "calls": 3,
+          "concurrency": 5,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 7186,
+          "p95_latency_ms": 13094,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 3,
+          "task_type": "cluster_card_patch",
+          "total_tokens": 6612
+        },
+        "cluster_card_rebuild": {
+          "avg_latency_ms": 0.0,
+          "cache_hit_tokens": 0,
+          "calls": 0,
+          "concurrency": 5,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 0,
+          "p95_latency_ms": 0,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 0,
+          "task_type": "cluster_card_rebuild",
+          "total_tokens": 0
+        },
+        "item_card": {
+          "avg_latency_ms": 27806.4,
+          "cache_hit_tokens": 62848,
+          "calls": 41,
+          "concurrency": 5,
+          "db_lock_errors": 0,
+          "failed": 5,
+          "p50_latency_ms": 28205,
+          "p95_latency_ms": 33210,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 5,
+          "success": 36,
+          "task_type": "item_card",
+          "total_tokens": 252174
+        },
+        "item_cluster_relation": {
+          "avg_latency_ms": 6234.8,
+          "cache_hit_tokens": 129664,
+          "calls": 79,
+          "concurrency": 5,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 5590,
+          "p95_latency_ms": 10657,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 79,
+          "task_type": "item_cluster_relation",
+          "total_tokens": 192179
+        },
+        "item_relation": {
+          "avg_latency_ms": 10857.7,
+          "cache_hit_tokens": 72192,
+          "calls": 98,
+          "concurrency": 5,
+          "db_lock_errors": 0,
+          "failed": 3,
+          "p50_latency_ms": 9192,
+          "p95_latency_ms": 18103,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 3,
+          "success": 95,
+          "task_type": "item_relation",
+          "total_tokens": 286913
+        },
+        "json_repair": {
+          "avg_latency_ms": 0.0,
+          "cache_hit_tokens": 0,
+          "calls": 0,
+          "concurrency": 5,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 0,
+          "p95_latency_ms": 0,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 0,
+          "task_type": "json_repair",
+          "total_tokens": 0
+        },
+        "source_review": {
+          "avg_latency_ms": 0.0,
+          "cache_hit_tokens": 0,
+          "calls": 0,
+          "concurrency": 5,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 0,
+          "p95_latency_ms": 0,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 0,
+          "task_type": "source_review",
+          "total_tokens": 0
+        }
+      },
+      "cache_hit_rate": 0.3608,
+      "cache_hit_tokens": 266240,
+      "calls_per_sec": 0.1892,
+      "db_lock_errors": 0,
+      "duration_seconds": 1168.356,
+      "final_failures": 8,
+      "max_concurrency": 5,
+      "p50_latency_ms": 8350,
+      "p95_latency_ms": 30641,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "repair_retry_count": 8,
+      "tokens_per_sec": 631.55
+    },
+    "errors_fallbacks": {
+      "db_lock_errors": 0,
+      "final_failures": 8,
+      "llm_parse_failures": 0,
+      "repair_retry_count": 8,
+      "review_queue_entries_due_to_failure": 400,
+      "skipped_due_to_max_calls": false,
+      "skipped_due_to_missing_card": 0,
+      "skipped_due_to_no_candidate": 0,
+      "skipped_due_to_token_budget": false
+    },
+    "semantic_run_id": "semantic_eval_20260517_060244_285276",
+    "stage_budgets": {
+      "downstream_starved": false,
+      "stage_budget_profile": "relation_heavy",
+      "stages": {
+        "cluster_card_patch": {
+          "budget": 56000,
+          "calls": 3,
+          "consumed_tokens": 6612,
+          "remaining_budget": 49388,
+          "skipped": 18,
+          "skipped_due_to_budget": 0
+        },
+        "item_card": {
+          "budget": 256000,
+          "calls": 41,
+          "consumed_tokens": 252174,
+          "remaining_budget": 3826,
+          "skipped": 0,
+          "skipped_due_to_budget": 0
+        },
+        "item_cluster_relation": {
+          "budget": 192000,
+          "calls": 79,
+          "consumed_tokens": 192179,
+          "remaining_budget": 0,
+          "skipped": 199,
+          "skipped_due_to_budget": 199
+        },
+        "item_relation": {
+          "budget": 272000,
+          "calls": 98,
+          "consumed_tokens": 286913,
+          "remaining_budget": 0,
+          "skipped": 198,
+          "skipped_due_to_budget": 198
+        },
+        "source_profile": {
+          "budget": 24000,
+          "calls": 0,
+          "consumed_tokens": 0,
+          "remaining_budget": 24000,
+          "skipped": 0,
+          "skipped_due_to_budget": 0
+        }
+      },
+      "total_token_budget": 800000
+    },
+    "token_cost": [
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 27806.4,
+        "cache_hit_tokens": 62848,
+        "cache_miss_tokens": 0,
+        "calls": 41,
+        "failed": 5,
+        "input_tokens": 131229,
+        "llm_call_count": 41,
+        "operation_count": 41,
+        "output_tokens": 120945,
+        "p50_latency_ms": 28205,
+        "p95_latency_ms": 33210,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 5,
+        "skipped": 0,
+        "success": 36,
+        "task_type": "item_card",
+        "total_tokens": 252174
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 10857.7,
+        "cache_hit_tokens": 72192,
+        "cache_miss_tokens": 0,
+        "calls": 98,
+        "failed": 3,
+        "input_tokens": 180696,
+        "llm_call_count": 98,
+        "operation_count": 296,
+        "output_tokens": 106217,
+        "p50_latency_ms": 9192,
+        "p95_latency_ms": 18103,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 3,
+        "skipped": 198,
+        "success": 95,
+        "task_type": "item_relation",
+        "total_tokens": 286913
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 6234.8,
+        "cache_hit_tokens": 129664,
+        "cache_miss_tokens": 0,
+        "calls": 79,
+        "failed": 0,
+        "input_tokens": 148847,
+        "llm_call_count": 79,
+        "operation_count": 278,
+        "output_tokens": 43332,
+        "p50_latency_ms": 5590,
+        "p95_latency_ms": 10657,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 199,
+        "success": 79,
+        "task_type": "item_cluster_relation",
+        "total_tokens": 192179
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 9100.3,
+        "cache_hit_tokens": 1536,
+        "cache_miss_tokens": 0,
+        "calls": 3,
+        "failed": 0,
+        "input_tokens": 3987,
+        "llm_call_count": 3,
+        "operation_count": 21,
+        "output_tokens": 2625,
+        "p50_latency_ms": 7186,
+        "p95_latency_ms": 13094,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 18,
+        "success": 3,
+        "task_type": "cluster_card_patch",
+        "total_tokens": 6612
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 0.0,
+        "cache_hit_tokens": 0,
+        "cache_miss_tokens": 0,
+        "calls": 0,
+        "failed": 0,
+        "input_tokens": 0,
+        "llm_call_count": 0,
+        "operation_count": 0,
+        "output_tokens": 0,
+        "p50_latency_ms": 0,
+        "p95_latency_ms": 0,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 0,
+        "success": 0,
+        "task_type": "cluster_card_rebuild",
+        "total_tokens": 0
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 0.0,
+        "cache_hit_tokens": 0,
+        "cache_miss_tokens": 0,
+        "calls": 0,
+        "failed": 0,
+        "input_tokens": 0,
+        "llm_call_count": 0,
+        "operation_count": 0,
+        "output_tokens": 0,
+        "p50_latency_ms": 0,
+        "p95_latency_ms": 0,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 0,
+        "success": 0,
+        "task_type": "source_review",
+        "total_tokens": 0
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 0.0,
+        "cache_hit_tokens": 0,
+        "cache_miss_tokens": 0,
+        "calls": 0,
+        "failed": 0,
+        "input_tokens": 0,
+        "llm_call_count": 0,
+        "operation_count": 0,
+        "output_tokens": 0,
+        "p50_latency_ms": 0,
+        "p95_latency_ms": 0,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 0,
+        "success": 0,
+        "task_type": "json_repair",
+        "total_tokens": 0
+      }
+    ]
+  },
+  "current": {
+    "actual_calls": 64,
+    "actual_tokens": 228659,
+    "budget_skip_by_priority": {
+      "high": 1,
+      "low": 1,
+      "low,low,low,low,low": 41,
+      "medium": 116,
+      "medium,low,low,low,low": 20,
+      "medium,medium,low,low,low": 8,
+      "medium,medium,medium,low,low": 13,
+      "medium,medium,medium,medium,low": 9,
+      "medium,medium,medium,medium,medium": 20,
+      "must_run,low,low,low,low": 3,
+      "must_run,medium,low,low,low": 2,
+      "must_run,medium,medium,low,low": 5,
+      "must_run,medium,medium,medium,low": 1,
+      "must_run,medium,medium,medium,medium": 3,
+      "must_run,must_run,low,low,low": 4,
+      "unknown": 20
+    },
+    "budget_skip_by_quality_tier": {
+      "skipped_high_score_candidates": 1,
+      "skipped_low_score_candidates": 62,
+      "skipped_medium_score_candidates": 186,
+      "skipped_must_run_candidates": 18
+    },
+    "budget_skip_by_stage": {
+      "cluster_card_patch": 11,
+      "item_card": 9,
+      "item_cluster_relation": 117,
+      "item_relation": 130
+    },
+    "budget_skips": {
+      "cluster_card_patch": {
+        "budget": 14000,
+        "calls": 3,
+        "consumed_tokens": 7178,
+        "remaining_budget": 6822,
+        "skipped": 11,
+        "skipped_due_to_budget": 0
+      },
+      "item_card": {
+        "budget": 80000,
+        "calls": 20,
+        "consumed_tokens": 106665,
+        "remaining_budget": 0,
+        "skipped": 9,
+        "skipped_due_to_budget": 9
+      },
+      "item_cluster_relation": {
+        "budget": 50000,
+        "calls": 22,
+        "consumed_tokens": 50010,
+        "remaining_budget": 0,
+        "skipped": 117,
+        "skipped_due_to_budget": 117
+      },
+      "item_relation": {
+        "budget": 50000,
+        "calls": 19,
+        "consumed_tokens": 64806,
+        "remaining_budget": 0,
+        "skipped": 130,
+        "skipped_due_to_budget": 130
+      },
+      "source_profile": {
+        "budget": 6000,
+        "calls": 0,
+        "consumed_tokens": 0,
+        "remaining_budget": 6000,
+        "skipped": 0,
+        "skipped_due_to_budget": 0
+      }
+    },
+    "candidate_priority_distribution": {
+      "low": 1995,
+      "medium": 478,
+      "must_run": 33,
+      "suppress": 43
+    },
+    "candidate_suppression_count": 43,
+    "candidate_suppression_distribution": {
+      "suppressed_boilerplate": 1,
+      "suppressed_generic_only": 25,
+      "suppressed_proxy_domain": 17
+    },
+    "cluster_eligible_count": 0,
+    "cluster_eligible_per_100k_tokens": 0.0,
+    "duplicate_direction_suppressed_count": 2,
+    "effective_multi_item_cluster_count": 0,
+    "high_priority_skip_count": 19,
+    "high_priority_skip_examples": [
+      {
+        "candidate_priority": "must_run,medium,low,low,low",
+        "candidate_score": 7.543,
+        "cluster_candidate_id": null,
+        "created_at": "2026-05-17T08:56:49.471620+00:00",
+        "event_signature_key": "",
+        "is_high_priority_skip": true,
+        "item_id": "item_2e666bd8d4fd4488b2714a89fe13530f",
+        "negative_features": [
+          [
+            "generic_overlap:powered"
+          ],
+          [
+            "generic_overlap:powered"
+          ],
+          [
+            "generic_overlap:powered",
+            "wide_time_window_hours:311.5"
+          ],
+          [],
+          [
+            "wide_time_window_hours:363.5"
+          ]
+        ],
+        "positive_features": [
+          [
+            "high_title_similarity",
+            "shared_weighted_entities:cir0it4g3t, make, skywork, skywork.ai, skyworkai",
+            "same_actor_product_action_72h",
+            "close_time_window",
+            "shared_products:cir0it4g3t",
+            "shared_actors:skywork"
+          ],
+          [
+            "shared_weighted_entities:cir0it4g3t, skywork, skywork.ai, skyworkai",
+            "close_time_window",
+            "shared_products:cir0it4g3t",
+            "shared_actors:skywork"
+          ],
+          [
+            "shared_weighted_entities:something"
+          ],
+          [],
+          []
+        ],
+        "quality_skip_tier": "skipped_must_run_candidates",
+        "reason": "live token budget reached",
+        "relation_id": null,
+        "remaining_budget": {},
+        "semantic_run_id": "semantic_eval_20260517_085257_673166",
+        "skip_reason": "live token budget reached",
+        "skip_type": "skipped_due_to_token_budget",
+        "stage": "item_relation",
+        "would_have_been_stage": "item_relation",
+        "would_have_been_task": "item_relation"
+      },
+      {
+        "candidate_priority": "must_run,medium,low,low,low",
+        "candidate_score": 7.543,
+        "cluster_candidate_id": null,
+        "created_at": "2026-05-17T08:56:49.627458+00:00",
+        "event_signature_key": "",
+        "is_high_priority_skip": true,
+        "item_id": "item_9f8e3c665165483ba2ce7d44d15c756e",
+        "negative_features": [
+          [
+            "generic_overlap:powered"
+          ],
+          [
+            "generic_overlap:powered"
+          ],
+          [
+            "generic_overlap:powered",
+            "wide_time_window_hours:296.6"
+          ],
+          [
+            "generic_overlap:powered",
+            "wide_time_window_hours:286.3"
+          ],
+          [
+            "wide_time_window_hours:177.9"
+          ]
+        ],
+        "positive_features": [
+          [
+            "high_title_similarity",
+            "shared_weighted_entities:cir0it4g3t, make, skywork, skywork.ai, skyworkai",
+            "same_actor_product_action_72h",
+            "close_time_window",
+            "shared_products:cir0it4g3t",
+            "shared_actors:skywork"
+          ],
+          [
+            "shared_weighted_entities:cir0it4g3t, skywork, skywork.ai, skyworkai",
+            "close_time_window",
+            "shared_products:cir0it4g3t",
+            "shared_actors:skywork"
+          ],
+          [
+            "shared_weighted_entities:own"
+          ],
+          [
+            "shared_weighted_entities:own"
+          ],
+          []
+        ],
+        "quality_skip_tier": "skipped_must_run_candidates",
+        "reason": "live token budget reached",
+        "relation_id": null,
+        "remaining_budget": {},
+        "semantic_run_id": "semantic_eval_20260517_085257_673166",
+        "skip_reason": "live token budget reached",
+        "skip_type": "skipped_due_to_token_budget",
+        "stage": "item_relation",
+        "would_have_been_stage": "item_relation",
+        "would_have_been_task": "item_relation"
+      },
+      {
+        "candidate_priority": "must_run,low,low,low,low",
+        "candidate_score": 9.7,
+        "cluster_candidate_id": null,
+        "created_at": "2026-05-17T08:56:50.222729+00:00",
+        "event_signature_key": "",
+        "is_high_priority_skip": true,
+        "item_id": "item_106c2cedfe5a47ae86c6491166525b9d",
+        "negative_features": [
+          [],
+          [
+            "wide_time_window_hours:351.1"
+          ],
+          [
+            "wide_time_window_hours:263.9"
+          ],
+          [
+            "wide_time_window_hours:311.5"
+          ],
+          [
+            "wide_time_window_hours:323.9"
+          ]
+        ],
+        "positive_features": [
+          [
+            "high_title_similarity",
+            "shared_weighted_entities:gpt-5.5, gpt55, openai",
+            "same_actor_product_action_72h",
+            "close_time_window",
+            "shared_products:at 50, at50, may 14, may14",
+            "shared_actors:gpt-5.5, gpt55, openai"
+          ],
+          [
+            "shared_weighted_entities:openai",
+            "shared_actors:openai"
+          ],
+          [
+            "shared_weighted_entities:openai",
+            "shared_actors:openai"
+          ],
+          [
+            "shared_weighted_entities:may"
+          ],
+          [
+            "shared_weighted_entities:openai",
+            "shared_actors:openai"
+          ]
+        ],
+        "quality_skip_tier": "skipped_must_run_candidates",
+        "reason": "live token budget reached",
+        "relation_id": null,
+        "remaining_budget": {},
+        "semantic_run_id": "semantic_eval_20260517_085257_673166",
+        "skip_reason": "live token budget reached",
+        "skip_type": "skipped_due_to_token_budget",
+        "stage": "item_relation",
+        "would_have_been_stage": "item_relation",
+        "would_have_been_task": "item_relation"
+      },
+      {
+        "candidate_priority": "must_run,must_run,low,low,low",
+        "candidate_score": 6.938,
+        "cluster_candidate_id": null,
+        "created_at": "2026-05-17T08:56:53.338360+00:00",
+        "event_signature_key": "",
+        "is_high_priority_skip": true,
+        "item_id": "item_29290780dd8a406f8ea49c0183f4d040",
+        "negative_features": [
+          [
+            "generic_overlap:github"
+          ],
+          [
+            "generic_overlap:github"
+          ],
+          [],
+          [],
+          []
+        ],
+        "positive_features": [
+          [
+            "shared_weighted_entities:gateway, github.com, githubcom, kubernetes, nvidia",
+            "same_actor_product_action_72h",
+            "shared_event_phrases:release, released",
+            "shared_concrete_event_phrases:released",
+            "close_time_window",
+            "shared_actors:github, nvidia, v0.0, v00"
+          ],
+          [
+            "shared_weighted_entities:cli, control, fixes, github.com, githubcom",
+            "same_actor_product_action_72h",
+            "shared_event_phrases:release, released",
+            "shared_concrete_event_phrases:released",
+            "close_time_window",
+            "shared_actors:github, nvidia, v0.0, v00"
+          ],
+          [
+            "shared_weighted_entities:nvidia",
+            "close_time_window",
+            "shared_actors:nvidia"
+          ],
+          [
+            "shared_weighted_entities:nvidia",
+            "close_time_window",
+            "shared_actors:nvidia"
+          ],
+          [
+            "shared_weighted_entities:cli",
+            "close_time_window"
+          ]
+        ],
+        "quality_skip_tier": "skipped_must_run_candidates",
+        "reason": "live token budget reached",
+        "relation_id": null,
+        "remaining_budget": {},
+        "semantic_run_id": "semantic_eval_20260517_085257_673166",
+        "skip_reason": "live token budget reached",
+        "skip_type": "skipped_due_to_token_budget",
+        "stage": "item_relation",
+        "would_have_been_stage": "item_relation",
+        "would_have_been_task": "item_relation"
+      },
+      {
+        "candidate_priority": "must_run,low,low,low,low",
+        "candidate_score": 8.746,
+        "cluster_candidate_id": null,
+        "created_at": "2026-05-17T08:56:55.156204+00:00",
+        "event_signature_key": "",
+        "is_high_priority_skip": true,
+        "item_id": "item_1caa97823cd445c2958d62d36604c3b4",
+        "negative_features": [
+          [
+            "generic_overlap:but"
+          ],
+          [
+            "generic_overlap:but",
+            "wide_time_window_hours:464.1"
+          ],
+          [
+            "wide_time_window_hours:1157.5"
+          ],
+          [
+            "wide_time_window_hours:174.8"
+          ],
+          []
+        ],
+        "positive_features": [
+          [
+            "high_title_similarity",
+            "shared_weighted_entities:another, atone, bamboozled, beans, believe",
+            "same_actor_product_action_72h",
+            "close_time_window",
+            "shared_products:claude are, claude seth, claudeare, claudeseth, under 35",
+            "shared_actors:chatgpt, claude"
+          ],
+          [
+            "shared_weighted_entities:claude",
+            "shared_actors:claude"
+          ],
+          [
+            "shared_weighted_entities:check, claude",
+            "shared_actors:claude"
+          ],
+          [
+            "shared_weighted_entities:claude",
+            "shared_actors:claude"
+          ],
+          [
+            "shared_weighted_entities:claude",
+            "close_time_window",
+            "shared_actors:claude"
+          ]
+        ],
+        "quality_skip_tier": "skipped_must_run_candidates",
+        "reason": "live token budget reached",
+        "relation_id": null,
+        "remaining_budget": {},
+        "semantic_run_id": "semantic_eval_20260517_085257_673166",
+        "skip_reason": "live token budget reached",
+        "skip_type": "skipped_due_to_token_budget",
+        "stage": "item_relation",
+        "would_have_been_stage": "item_relation",
+        "would_have_been_task": "item_relation"
+      }
+    ],
+    "likely_valid_multi_item_clusters_per_100k_tokens": 0.0,
+    "multi_item_cluster_count": 0,
+    "multi_item_cluster_likely_valid_count": 0,
+    "multi_item_cluster_needs_review_count": 0,
+    "multi_item_cluster_per_100k_tokens": 0.0,
+    "multi_item_cluster_suspect_count": 0,
+    "must_run_skip_count": 18,
+    "must_run_skip_examples": [
+      {
+        "candidate_priority": "must_run,medium,low,low,low",
+        "candidate_score": 7.543,
+        "cluster_candidate_id": null,
+        "created_at": "2026-05-17T08:56:49.471620+00:00",
+        "event_signature_key": "",
+        "is_high_priority_skip": true,
+        "item_id": "item_2e666bd8d4fd4488b2714a89fe13530f",
+        "negative_features": [
+          [
+            "generic_overlap:powered"
+          ],
+          [
+            "generic_overlap:powered"
+          ],
+          [
+            "generic_overlap:powered",
+            "wide_time_window_hours:311.5"
+          ],
+          [],
+          [
+            "wide_time_window_hours:363.5"
+          ]
+        ],
+        "positive_features": [
+          [
+            "high_title_similarity",
+            "shared_weighted_entities:cir0it4g3t, make, skywork, skywork.ai, skyworkai",
+            "same_actor_product_action_72h",
+            "close_time_window",
+            "shared_products:cir0it4g3t",
+            "shared_actors:skywork"
+          ],
+          [
+            "shared_weighted_entities:cir0it4g3t, skywork, skywork.ai, skyworkai",
+            "close_time_window",
+            "shared_products:cir0it4g3t",
+            "shared_actors:skywork"
+          ],
+          [
+            "shared_weighted_entities:something"
+          ],
+          [],
+          []
+        ],
+        "quality_skip_tier": "skipped_must_run_candidates",
+        "reason": "live token budget reached",
+        "relation_id": null,
+        "remaining_budget": {},
+        "semantic_run_id": "semantic_eval_20260517_085257_673166",
+        "skip_reason": "live token budget reached",
+        "skip_type": "skipped_due_to_token_budget",
+        "stage": "item_relation",
+        "would_have_been_stage": "item_relation",
+        "would_have_been_task": "item_relation"
+      },
+      {
+        "candidate_priority": "must_run,medium,low,low,low",
+        "candidate_score": 7.543,
+        "cluster_candidate_id": null,
+        "created_at": "2026-05-17T08:56:49.627458+00:00",
+        "event_signature_key": "",
+        "is_high_priority_skip": true,
+        "item_id": "item_9f8e3c665165483ba2ce7d44d15c756e",
+        "negative_features": [
+          [
+            "generic_overlap:powered"
+          ],
+          [
+            "generic_overlap:powered"
+          ],
+          [
+            "generic_overlap:powered",
+            "wide_time_window_hours:296.6"
+          ],
+          [
+            "generic_overlap:powered",
+            "wide_time_window_hours:286.3"
+          ],
+          [
+            "wide_time_window_hours:177.9"
+          ]
+        ],
+        "positive_features": [
+          [
+            "high_title_similarity",
+            "shared_weighted_entities:cir0it4g3t, make, skywork, skywork.ai, skyworkai",
+            "same_actor_product_action_72h",
+            "close_time_window",
+            "shared_products:cir0it4g3t",
+            "shared_actors:skywork"
+          ],
+          [
+            "shared_weighted_entities:cir0it4g3t, skywork, skywork.ai, skyworkai",
+            "close_time_window",
+            "shared_products:cir0it4g3t",
+            "shared_actors:skywork"
+          ],
+          [
+            "shared_weighted_entities:own"
+          ],
+          [
+            "shared_weighted_entities:own"
+          ],
+          []
+        ],
+        "quality_skip_tier": "skipped_must_run_candidates",
+        "reason": "live token budget reached",
+        "relation_id": null,
+        "remaining_budget": {},
+        "semantic_run_id": "semantic_eval_20260517_085257_673166",
+        "skip_reason": "live token budget reached",
+        "skip_type": "skipped_due_to_token_budget",
+        "stage": "item_relation",
+        "would_have_been_stage": "item_relation",
+        "would_have_been_task": "item_relation"
+      },
+      {
+        "candidate_priority": "must_run,low,low,low,low",
+        "candidate_score": 9.7,
+        "cluster_candidate_id": null,
+        "created_at": "2026-05-17T08:56:50.222729+00:00",
+        "event_signature_key": "",
+        "is_high_priority_skip": true,
+        "item_id": "item_106c2cedfe5a47ae86c6491166525b9d",
+        "negative_features": [
+          [],
+          [
+            "wide_time_window_hours:351.1"
+          ],
+          [
+            "wide_time_window_hours:263.9"
+          ],
+          [
+            "wide_time_window_hours:311.5"
+          ],
+          [
+            "wide_time_window_hours:323.9"
+          ]
+        ],
+        "positive_features": [
+          [
+            "high_title_similarity",
+            "shared_weighted_entities:gpt-5.5, gpt55, openai",
+            "same_actor_product_action_72h",
+            "close_time_window",
+            "shared_products:at 50, at50, may 14, may14",
+            "shared_actors:gpt-5.5, gpt55, openai"
+          ],
+          [
+            "shared_weighted_entities:openai",
+            "shared_actors:openai"
+          ],
+          [
+            "shared_weighted_entities:openai",
+            "shared_actors:openai"
+          ],
+          [
+            "shared_weighted_entities:may"
+          ],
+          [
+            "shared_weighted_entities:openai",
+            "shared_actors:openai"
+          ]
+        ],
+        "quality_skip_tier": "skipped_must_run_candidates",
+        "reason": "live token budget reached",
+        "relation_id": null,
+        "remaining_budget": {},
+        "semantic_run_id": "semantic_eval_20260517_085257_673166",
+        "skip_reason": "live token budget reached",
+        "skip_type": "skipped_due_to_token_budget",
+        "stage": "item_relation",
+        "would_have_been_stage": "item_relation",
+        "would_have_been_task": "item_relation"
+      },
+      {
+        "candidate_priority": "must_run,must_run,low,low,low",
+        "candidate_score": 6.938,
+        "cluster_candidate_id": null,
+        "created_at": "2026-05-17T08:56:53.338360+00:00",
+        "event_signature_key": "",
+        "is_high_priority_skip": true,
+        "item_id": "item_29290780dd8a406f8ea49c0183f4d040",
+        "negative_features": [
+          [
+            "generic_overlap:github"
+          ],
+          [
+            "generic_overlap:github"
+          ],
+          [],
+          [],
+          []
+        ],
+        "positive_features": [
+          [
+            "shared_weighted_entities:gateway, github.com, githubcom, kubernetes, nvidia",
+            "same_actor_product_action_72h",
+            "shared_event_phrases:release, released",
+            "shared_concrete_event_phrases:released",
+            "close_time_window",
+            "shared_actors:github, nvidia, v0.0, v00"
+          ],
+          [
+            "shared_weighted_entities:cli, control, fixes, github.com, githubcom",
+            "same_actor_product_action_72h",
+            "shared_event_phrases:release, released",
+            "shared_concrete_event_phrases:released",
+            "close_time_window",
+            "shared_actors:github, nvidia, v0.0, v00"
+          ],
+          [
+            "shared_weighted_entities:nvidia",
+            "close_time_window",
+            "shared_actors:nvidia"
+          ],
+          [
+            "shared_weighted_entities:nvidia",
+            "close_time_window",
+            "shared_actors:nvidia"
+          ],
+          [
+            "shared_weighted_entities:cli",
+            "close_time_window"
+          ]
+        ],
+        "quality_skip_tier": "skipped_must_run_candidates",
+        "reason": "live token budget reached",
+        "relation_id": null,
+        "remaining_budget": {},
+        "semantic_run_id": "semantic_eval_20260517_085257_673166",
+        "skip_reason": "live token budget reached",
+        "skip_type": "skipped_due_to_token_budget",
+        "stage": "item_relation",
+        "would_have_been_stage": "item_relation",
+        "would_have_been_task": "item_relation"
+      },
+      {
+        "candidate_priority": "must_run,low,low,low,low",
+        "candidate_score": 8.746,
+        "cluster_candidate_id": null,
+        "created_at": "2026-05-17T08:56:55.156204+00:00",
+        "event_signature_key": "",
+        "is_high_priority_skip": true,
+        "item_id": "item_1caa97823cd445c2958d62d36604c3b4",
+        "negative_features": [
+          [
+            "generic_overlap:but"
+          ],
+          [
+            "generic_overlap:but",
+            "wide_time_window_hours:464.1"
+          ],
+          [
+            "wide_time_window_hours:1157.5"
+          ],
+          [
+            "wide_time_window_hours:174.8"
+          ],
+          []
+        ],
+        "positive_features": [
+          [
+            "high_title_similarity",
+            "shared_weighted_entities:another, atone, bamboozled, beans, believe",
+            "same_actor_product_action_72h",
+            "close_time_window",
+            "shared_products:claude are, claude seth, claudeare, claudeseth, under 35",
+            "shared_actors:chatgpt, claude"
+          ],
+          [
+            "shared_weighted_entities:claude",
+            "shared_actors:claude"
+          ],
+          [
+            "shared_weighted_entities:check, claude",
+            "shared_actors:claude"
+          ],
+          [
+            "shared_weighted_entities:claude",
+            "shared_actors:claude"
+          ],
+          [
+            "shared_weighted_entities:claude",
+            "close_time_window",
+            "shared_actors:claude"
+          ]
+        ],
+        "quality_skip_tier": "skipped_must_run_candidates",
+        "reason": "live token budget reached",
+        "relation_id": null,
+        "remaining_budget": {},
+        "semantic_run_id": "semantic_eval_20260517_085257_673166",
+        "skip_reason": "live token budget reached",
+        "skip_type": "skipped_due_to_token_budget",
+        "stage": "item_relation",
+        "would_have_been_stage": "item_relation",
+        "would_have_been_task": "item_relation"
+      }
+    ],
+    "non_different_count": 1,
+    "non_different_per_100k_tokens": 0.437,
+    "raw_relation_count": 77,
+    "tokens_by_stage": [
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 25605.1,
+        "cache_hit_tokens": 20096,
+        "cache_miss_tokens": 0,
+        "calls": 20,
+        "failed": 2,
+        "input_tokens": 53226,
+        "llm_call_count": 20,
+        "operation_count": 29,
+        "output_tokens": 53439,
+        "p50_latency_ms": 27486,
+        "p95_latency_ms": 35362,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 2,
+        "skipped": 9,
+        "success": 18,
+        "task_type": "item_card",
+        "total_tokens": 106665
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 13263.2,
+        "cache_hit_tokens": 21120,
+        "cache_miss_tokens": 0,
+        "calls": 19,
+        "failed": 2,
+        "input_tokens": 40862,
+        "llm_call_count": 19,
+        "operation_count": 149,
+        "output_tokens": 23944,
+        "p50_latency_ms": 13143,
+        "p95_latency_ms": 19925,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 2,
+        "skipped": 130,
+        "success": 17,
+        "task_type": "item_relation",
+        "total_tokens": 64806
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 5948.9,
+        "cache_hit_tokens": 32256,
+        "cache_miss_tokens": 0,
+        "calls": 22,
+        "failed": 0,
+        "input_tokens": 38989,
+        "llm_call_count": 22,
+        "operation_count": 139,
+        "output_tokens": 11021,
+        "p50_latency_ms": 5549,
+        "p95_latency_ms": 7548,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 117,
+        "success": 22,
+        "task_type": "item_cluster_relation",
+        "total_tokens": 50010
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 10148.0,
+        "cache_hit_tokens": 1536,
+        "cache_miss_tokens": 0,
+        "calls": 3,
+        "failed": 0,
+        "input_tokens": 4353,
+        "llm_call_count": 3,
+        "operation_count": 14,
+        "output_tokens": 2825,
+        "p50_latency_ms": 10241,
+        "p95_latency_ms": 12707,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 11,
+        "success": 3,
+        "task_type": "cluster_card_patch",
+        "total_tokens": 7178
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 0.0,
+        "cache_hit_tokens": 0,
+        "cache_miss_tokens": 0,
+        "calls": 0,
+        "failed": 0,
+        "input_tokens": 0,
+        "llm_call_count": 0,
+        "operation_count": 0,
+        "output_tokens": 0,
+        "p50_latency_ms": 0,
+        "p95_latency_ms": 0,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 0,
+        "success": 0,
+        "task_type": "cluster_card_rebuild",
+        "total_tokens": 0
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 0.0,
+        "cache_hit_tokens": 0,
+        "cache_miss_tokens": 0,
+        "calls": 0,
+        "failed": 0,
+        "input_tokens": 0,
+        "llm_call_count": 0,
+        "operation_count": 0,
+        "output_tokens": 0,
+        "p50_latency_ms": 0,
+        "p95_latency_ms": 0,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 0,
+        "success": 0,
+        "task_type": "source_review",
+        "total_tokens": 0
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 0.0,
+        "cache_hit_tokens": 0,
+        "cache_miss_tokens": 0,
+        "calls": 0,
+        "failed": 0,
+        "input_tokens": 0,
+        "llm_call_count": 0,
+        "operation_count": 0,
+        "output_tokens": 0,
+        "p50_latency_ms": 0,
+        "p95_latency_ms": 0,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 0,
+        "success": 0,
+        "task_type": "json_repair",
+        "total_tokens": 0
+      }
+    ],
+    "unique_relation_pair_count": 75
+  },
+  "current_phase": "phase1_2e"
+}

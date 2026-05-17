@@ -134,6 +134,9 @@ def generate_item_cards(
         "dry_run": dry_run,
         "card_tiers": dict(tier_counts),
         "local_minimal_cards": 0,
+        "failed_batch_count": 0,
+        "split_retry_success_count": 0,
+        "single_retry_success_count": 0,
     }
     results: list[dict[str, Any]] = []
     local_items = [item for item in items if choose_card_tier(item) == "minimal"]
@@ -219,9 +222,26 @@ def generate_item_cards(
 
         output, call_id, reason = call_cards(batch, "initial_batch", 1)
         call_results.append((output, call_id, reason, batch, "initial_batch", 1))
-        if not output and is_transient_or_parse_failure(reason):
-            output, call_id, reason = call_cards(batch, "same_batch", 2)
-            call_results.append((output, call_id, reason, batch, "same_batch", 2))
+        if not output and len(batch) > 1 and is_transient_or_parse_failure(reason):
+            midpoint = max(1, len(batch) // 2)
+            merged_cards: dict[str, ItemCardData] = {}
+            merged_call_id = call_id
+            merged_reason = reason
+            split_success = False
+            for half_index, half in enumerate([batch[:midpoint], batch[midpoint:]], start=1):
+                if not half:
+                    continue
+                half_output, half_call_id, half_reason = call_cards(half, f"split_half_{half_index}", 3)
+                call_results.append((half_output, half_call_id, half_reason, half, f"split_half_{half_index}", 3))
+                merged_call_id = half_call_id
+                merged_reason = half_reason
+                if half_output:
+                    split_success = True
+                    merged_cards.update({card.item_id: card for card in half_output.item_cards})
+            if split_success:
+                output = ItemCardBatchOutput(item_cards=list(merged_cards.values()))
+                call_id = merged_call_id
+                reason = merged_reason
         cards_by_id: dict[str, ItemCardData] = {}
         final_call_id_by_item: dict[str, int | None] = {}
         final_reason_by_item: dict[str, str] = {}
@@ -230,12 +250,18 @@ def generate_item_cards(
             for item in batch:
                 final_call_id_by_item[item["item_id"]] = call_id
                 final_reason_by_item[item["item_id"]] = reason
-        else:
-            for item in batch:
-                single_output, single_call_id, single_reason = call_cards([item], "split_single", 3)
-                call_results.append((single_output, single_call_id, single_reason, [item], "split_single", 3))
+            if any(result[4].startswith("split_half") and result[0] for result in call_results):
+                local["split_retry_success_count"] = 1
+        if not output:
+            local["failed_batch_count"] = 1
+        missing_items = [item for item in batch if item["item_id"] not in cards_by_id]
+        if missing_items:
+            for item in missing_items:
+                single_output, single_call_id, single_reason = call_cards([item], "split_single", 4)
+                call_results.append((single_output, single_call_id, single_reason, [item], "split_single", 4))
                 if single_output:
                     cards_by_id.update({card.item_id: card for card in single_output.item_cards})
+                    local["single_retry_success_count"] = int(local.get("single_retry_success_count", 0)) + 1
                 final_call_id_by_item[item["item_id"]] = single_call_id
                 final_reason_by_item[item["item_id"]] = single_reason
         local["llm_calls"] = client.calls
@@ -281,12 +307,16 @@ def generate_item_cards(
                 local = future.result()
                 for key in ["written", "llm_calls", "skipped", "errors"]:
                     stats[key] += int(local[key])
+                for key in ["failed_batch_count", "split_retry_success_count", "single_retry_success_count"]:
+                    stats[key] += int(local.get(key, 0))
                 results.extend(local["items"])
     else:
         for batch in batches:
             local = process_batch(batch)
             for key in ["written", "llm_calls", "skipped", "errors"]:
                 stats[key] += int(local[key])
+            for key in ["failed_batch_count", "split_retry_success_count", "single_retry_success_count"]:
+                stats[key] += int(local.get(key, 0))
             results.extend(local["items"])
     return {"ok": stats["errors"] == 0, "stats": stats, "items": results}
 
