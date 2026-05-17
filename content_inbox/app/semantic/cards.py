@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import uuid
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
@@ -80,6 +81,13 @@ def detect_language(text: str) -> str:
     if ascii_letters:
         return "en"
     return "unknown"
+
+
+def is_transient_or_parse_failure(reason: str | None) -> bool:
+    text = (reason or "").lower()
+    if not text:
+        return True
+    return any(token in text for token in ["json", "validation", "timeout", "timed out", "request failed", "temporarily", "rate", "429"])
 
 
 def item_payload(item: dict[str, Any]) -> dict[str, Any]:
@@ -179,25 +187,58 @@ def generate_item_cards(
             global_call_limit=global_call_limit,
         )
         local = {"written": 0, "llm_calls": 0, "skipped": 0, "errors": 0, "items": []}
-        input_data = {
-            "task": "item_card_batch",
-            "tier_policy": "minimal cards are generated locally; this batch contains standard/full cards only",
-            "items": [item_payload(item) for item in batch],
-        }
-        output, call_id, reason = client.call_json(
-            task_type="item_card",
-            prompt_version=ITEM_CARD_PROMPT_VERSION,
-            schema_version=SCHEMA_VERSION,
-            input_data=input_data,
-            output_model=ItemCardBatchOutput,
-            max_tokens=4000,
-            item_id=",".join(item["item_id"] for item in batch),
-            source_id=",".join(str(item.get("source_id") or item.get("feed_url") or item.get("source_name") or "") for item in batch),
-        )
-        local["llm_calls"] = client.calls
+        batch_id = f"card_batch_{uuid.uuid4().hex[:12]}"
+        call_results: list[tuple[ItemCardBatchOutput | None, int | None, str, list[dict[str, Any]], str, int]] = []
+
+        def call_cards(items_for_call: list[dict[str, Any]], retry_strategy: str, attempt: int) -> tuple[ItemCardBatchOutput | None, int | None, str]:
+            input_data = {
+                "task": "item_card_batch",
+                "tier_policy": "minimal cards are generated locally; this batch contains standard/full cards only",
+                "items": [item_payload(item) for item in items_for_call],
+            }
+            return client.call_json(
+                task_type="item_card",
+                prompt_version=ITEM_CARD_PROMPT_VERSION,
+                schema_version=SCHEMA_VERSION,
+                input_data=input_data,
+                output_model=ItemCardBatchOutput,
+                max_tokens=4000 if len(items_for_call) > 1 else 1800,
+                item_id=",".join(item["item_id"] for item in items_for_call),
+                source_id=",".join(str(item.get("source_id") or item.get("feed_url") or item.get("source_name") or "") for item in items_for_call),
+                request_metadata={
+                    "batch_id": batch_id,
+                    "batch_size": len(items_for_call),
+                    "attempt_number": attempt,
+                    "retry_attempt": attempt - 1,
+                    "retry_strategy": retry_strategy,
+                    "affected_item_count": len(items_for_call),
+                    "prompt_variant": "retry" if attempt > 1 or retry_strategy != "initial_batch" else "full",
+                    "card_tier": "mixed_llm",
+                },
+            )
+
+        output, call_id, reason = call_cards(batch, "initial_batch", 1)
+        call_results.append((output, call_id, reason, batch, "initial_batch", 1))
+        if not output and is_transient_or_parse_failure(reason):
+            output, call_id, reason = call_cards(batch, "same_batch", 2)
+            call_results.append((output, call_id, reason, batch, "same_batch", 2))
         cards_by_id: dict[str, ItemCardData] = {}
+        final_call_id_by_item: dict[str, int | None] = {}
+        final_reason_by_item: dict[str, str] = {}
         if output:
             cards_by_id = {card.item_id: card for card in output.item_cards}
+            for item in batch:
+                final_call_id_by_item[item["item_id"]] = call_id
+                final_reason_by_item[item["item_id"]] = reason
+        else:
+            for item in batch:
+                single_output, single_call_id, single_reason = call_cards([item], "split_single", 3)
+                call_results.append((single_output, single_call_id, single_reason, [item], "split_single", 3))
+                if single_output:
+                    cards_by_id.update({card.item_id: card for card in single_output.item_cards})
+                final_call_id_by_item[item["item_id"]] = single_call_id
+                final_reason_by_item[item["item_id"]] = single_reason
+        local["llm_calls"] = client.calls
         for item in batch:
             card = cards_by_id.get(item["item_id"]) or build_heuristic_card(item)
             fingerprint = db.input_fingerprint({"item": item_payload(item), "prompt": ITEM_CARD_PROMPT_VERSION})
@@ -213,13 +254,13 @@ def generate_item_cards(
                     store,
                     card_data,
                     schema_version=SCHEMA_VERSION,
-                    prompt_version=ITEM_CARD_PROMPT_VERSION if output else None,
-                    model=client.model if output else "heuristic",
+                    prompt_version=ITEM_CARD_PROMPT_VERSION if item["item_id"] in cards_by_id else None,
+                    model=client.model if item["item_id"] in cards_by_id else "heuristic",
                     fingerprint=fingerprint,
-                    llm_call_id=call_id if output else None,
+                    llm_call_id=final_call_id_by_item.get(item["item_id"]) if item["item_id"] in cards_by_id else None,
                 )
                 local["written"] += 1
-                local["items"].append({"id": row["id"], "item_id": item["item_id"], "source": "llm" if output else "heuristic", "reason": reason})
+                local["items"].append({"id": row["id"], "item_id": item["item_id"], "source": "llm" if item["item_id"] in cards_by_id else "heuristic", "reason": final_reason_by_item.get(item["item_id"])})
             except Exception as exc:
                 mark_item_semantic_error(store, item["item_id"], str(exc))
                 local["errors"] += 1

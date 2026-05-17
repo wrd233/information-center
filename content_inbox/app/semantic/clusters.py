@@ -8,6 +8,7 @@ from typing import Any
 from app.semantic import db
 from app.semantic.cards import generate_item_cards
 from app.semantic.llm_client import SemanticLLMClient
+from app.semantic.candidates import assess_candidate
 from app.semantic.relations import card_public, hours_apart, insert_review, normalized_entity_terms, semantic_tokens
 from app.semantic.schemas import (
     CLUSTER_CARD_PROMPT_VERSION,
@@ -182,6 +183,10 @@ def process_item_clusters(
             max_tokens=2600,
             item_id=item_id,
             source_id=item.get("source_id") or item.get("feed_url") or item.get("source_name"),
+            request_metadata={
+                "prompt_variant": "full",
+                "candidate_priority": "high" if any(same_event_cluster_candidate(store, item, item_card, cluster) for cluster in candidates) else "medium",
+            },
         )
         stats["llm_calls"] = client.calls
         stats["llm_items"] += 1
@@ -190,6 +195,16 @@ def process_item_clusters(
             stats["review"] += 1
             continue
         decision = output.best_relation
+        if not cluster_decision_attach_eligible(decision):
+            review_type = "same_topic" if decision.primary_relation in {"same_topic", "unrelated"} else "uncertain_cluster_relation"
+            payload = decision.model_dump()
+            payload.setdefault("attach_disqualifiers", [])
+            payload["attach_eligible"] = False
+            if not payload["attach_disqualifiers"]:
+                payload["attach_disqualifiers"] = ["not_same_event_eligible"]
+            insert_review(store, review_type, "item", item_id, payload)
+            stats["review"] += 1
+            continue
         action = cluster_relation_action(decision.primary_relation)
         if action == "create_follow_up_cluster":
             previous_cluster_id = decision.cluster_id or candidates[0]["cluster_id"]
@@ -242,6 +257,35 @@ def process_item_clusters(
                 global_call_limit=global_call_limit,
             )
     return {"ok": True, "stats": stats}
+
+
+def cluster_decision_attach_eligible(decision: Any) -> bool:
+    if getattr(decision, "attach_eligible", False):
+        return True
+    return decision.primary_relation in {"source_material", "repeat", "new_info", "analysis", "experience", "context"} and (
+        bool(decision.same_event) or decision.primary_relation == "source_material"
+    )
+
+
+def same_event_cluster_candidate(store: InboxStore, item: dict[str, Any], item_card: dict[str, Any], cluster: dict[str, Any]) -> bool:
+    with store.connect() as conn:
+        row = conn.execute(
+            """
+            SELECT ii.*, ic.*
+            FROM cluster_items ci
+            JOIN inbox_items ii ON ii.item_id = ci.item_id
+            JOIN item_cards ic ON ic.item_id = ci.item_id AND ic.is_current = 1
+            WHERE ci.cluster_id = ?
+            ORDER BY ci.created_at ASC
+            LIMIT 1
+            """,
+            (cluster["cluster_id"],),
+        ).fetchone()
+    if not row:
+        return False
+    representative = dict(row)
+    assessment = assess_candidate(item, representative, item_card, representative)
+    return assessment.candidate_priority in {"must_run", "high"} and not assessment.suppressed
 
 
 def cluster_prompt_payload(store: InboxStore, cluster: dict[str, Any]) -> dict[str, Any]:

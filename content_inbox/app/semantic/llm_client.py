@@ -92,6 +92,7 @@ class SemanticLLMClient:
         item_id: str | None = None,
         source_id: str | None = None,
         cluster_id: str | None = None,
+        request_metadata: dict[str, Any] | None = None,
     ) -> tuple[T | None, int | None, str]:
         fingerprint = db.input_fingerprint({"task": task_type, "prompt": prompt_version, "input": input_data})
         ok, reason = self.enabled()
@@ -105,7 +106,7 @@ class SemanticLLMClient:
                 fingerprint=fingerprint,
                 latency_ms=0,
                 status="skipped",
-                request={"reason": reason},
+                request={"reason": reason, **(request_metadata or {})},
                 error=reason,
                 item_id=item_id,
                 source_id=source_id,
@@ -120,6 +121,7 @@ class SemanticLLMClient:
             "item_ids": extract_item_ids(input_data),
             "candidate_item_ids": extract_candidate_item_ids(input_data),
             "cluster_ids": extract_cluster_ids(input_data),
+            **(request_metadata or {}),
         }
         request_body = {
             "model": self.model,

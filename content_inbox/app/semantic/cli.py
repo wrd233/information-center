@@ -167,7 +167,7 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--token-budget", type=int, default=200000)
     evaluate.add_argument(
         "--stage-budget-profile",
-        choices=["balanced", "relation_heavy", "cluster_heavy", "card_heavy"],
+        choices=["balanced", "relation_heavy", "cluster_heavy", "card_heavy", "phase1_2e_profile"],
         default="balanced",
     )
     evaluate.add_argument("--concurrency", type=int, default=4)

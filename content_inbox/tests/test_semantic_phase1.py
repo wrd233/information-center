@@ -10,6 +10,7 @@ import pytest
 
 from app.models import NormalizedContent, ScreeningResult
 from app.semantic.cards import generate_item_cards
+from app.semantic.candidates import assess_candidate, hotspot_key_candidates, normalize_relation_label, relation_pair_key
 from app.semantic.clusters import process_item_clusters, show_cluster, update_cluster_statuses
 from app.semantic.clusters import candidate_clusters
 from app.semantic.evaluate import run_evaluation
@@ -413,6 +414,113 @@ def test_phase1_2d_evidence_persistence_exports_auditable_files(tmp_path: Path) 
     assert all(row["dedupe_key"] for row in items)
     with source_store.connect() as conn:
         assert conn.execute("SELECT COUNT(*) AS n FROM item_cards").fetchone()["n"] == 0
+
+
+def test_phase1_2e_relation_pair_key_is_canonical() -> None:
+    a = {"item_id": "dry-a", "raw_json": json.dumps({"source_item_id": "prod-a"})}
+    b = {"item_id": "dry-b", "raw_json": json.dumps({"source_item_id": "prod-b"})}
+    assert relation_pair_key(a, b) == relation_pair_key(b, a)
+
+
+def test_phase1_2e_relation_tightening_same_topic_and_same_event() -> None:
+    pika = {"item_id": "a", "title": "Pika launches UGC ads for creators", "summary": "AI video advertising update"}
+    skywork = {"item_id": "b", "title": "Skywork Hermes Agent adds browser skills", "summary": "Agent workflow demo"}
+    weak = assess_candidate(pika, skywork)
+    label, event_type, eligible, disqualifiers = normalize_relation_label(
+        "related_with_new_info",
+        weak,
+        reason="Both discuss agent skills.",
+        evidence=["agent skills"],
+        new_information=[],
+    )
+    assert label == "different"
+    assert event_type in {"same_topic_only", "entity_overlap_only", "same_product_different_event"}
+    assert eligible is False
+    assert disqualifiers
+
+    redis_a = {"item_id": "a", "title": "Redis adds vector set array support", "summary": "Redis releases array support on Monday"}
+    redis_b = {"item_id": "b", "title": "Redis array support rollout includes playground", "summary": "Adds playground link and pricing detail"}
+    strong = assess_candidate(redis_a, redis_b)
+    label, event_type, eligible, _disqualifiers = normalize_relation_label(
+        "related_with_new_info",
+        strong,
+        reason="Both cover the same Redis array support rollout.",
+        evidence=["Redis array support"],
+        new_information=["Adds playground link"],
+    )
+    assert label == "related_with_new_info"
+    assert event_type == "same_event"
+    assert eligible is True
+
+
+def test_phase1_2e_hotspot_filters_xgo_proxy_key() -> None:
+    item = {
+        "item_id": "x",
+        "title": "Qwen3.6 FlashQLA benchmark released",
+        "summary": "powered by xgo.ing view on twitter",
+        "url": "https://api.xgo.ing/rss/abc",
+    }
+    keys = hotspot_key_candidates(item)
+    assert keys["selected_hotspot_key"] != "xgo.ing"
+    assert keys["selected_hotspot_key"] != "api.xgo.ing"
+    assert keys["proxy_domain_filtered"] is True
+
+
+def test_phase1_2e_candidate_suppression_and_priority() -> None:
+    generic_a = {"item_id": "a", "title": "AI agent tips", "summary": "General agent ideas"}
+    generic_b = {"item_id": "b", "title": "Agent workflow notes", "summary": "Generic AI agent ideas"}
+    generic = assess_candidate(generic_a, generic_b)
+    assert generic.candidate_priority in {"low", "suppress"}
+
+    dup_a = {"item_id": "a", "title": "Qwen FlashQLA ships", "url": "https://example.com/qwen"}
+    dup_b = {"item_id": "b", "title": "Qwen FlashQLA ships", "url": "https://example.com/qwen"}
+    duplicate = assess_candidate(dup_a, dup_b)
+    assert duplicate.candidate_priority == "must_run"
+
+
+def test_phase1_2e_evidence_exports_new_candidate_files(tmp_path: Path) -> None:
+    source_store = make_store(tmp_path / "phase1_2e-source")
+    seed_item(source_store, "Qwen FlashQLA ships", source_id="xgo-a", url="https://api.xgo.ing/qwen-a")
+    seed_item(source_store, "Qwen FlashQLA benchmark ships", source_id="xgo-b", url="https://api.xgo.ing/qwen-b")
+    output = tmp_path / "phase1_2e_eval"
+    result = run_evaluation(
+        db_path=str(source_store.database_path),
+        output=str(output),
+        limit=10,
+        max_calls=0,
+        max_candidates=5,
+        batch_size=2,
+        live=False,
+        dry_run=True,
+        write_real_db=False,
+        model=None,
+        strong_model=None,
+        token_budget=1,
+        include_archived=False,
+        concurrency=5,
+        source_filter=None,
+        source_url_prefix="api.xgo.ing",
+        sample_mode="event_hotspots",
+        stage_budget_profile="phase1_2e_profile",
+        persist_evidence=True,
+        phase_label="phase1_2e",
+    )
+    assert result["ok"] is True
+    for name in [
+        "candidate_generation.jsonl",
+        "candidate_suppression.jsonl",
+        "cost_quality_metrics.json",
+        "phase1_2d_vs_1_2e_comparison.json",
+    ]:
+        assert (output / name).exists()
+    relation_rows = [json.loads(line) for line in (output / "relations_all.jsonl").read_text(encoding="utf-8").splitlines()]
+    for row in relation_rows:
+        assert "relation_pair_key" in row
+        assert "event_relation_type" in row
+        assert "cluster_eligible" in row
+        assert "candidate_priority" in row
+    manifest = json.loads((output / "semantic_run_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["phase"] == "phase1_2e"
 
 
 @pytest.mark.live_deepseek

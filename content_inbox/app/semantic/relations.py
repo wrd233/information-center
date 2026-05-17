@@ -2,12 +2,21 @@ from __future__ import annotations
 
 import json
 import re
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from typing import Any
 
 from app.semantic import db
 from app.semantic.cards import generate_item_cards
+from app.semantic.candidates import (
+    CandidateAssessment,
+    assess_candidate,
+    deterministic_duplicate,
+    normalize_relation_label,
+    relation_cluster_eligible,
+    relation_pair_key,
+)
 from app.semantic.llm_client import SemanticLLMClient
 from app.semantic.schemas import (
     ITEM_RELATION_PROMPT_VERSION,
@@ -32,16 +41,7 @@ def card_public(row: dict[str, Any]) -> dict[str, Any]:
 
 
 def hard_relation(new_item: dict[str, Any], candidate_item: dict[str, Any]) -> tuple[str, list[str]] | None:
-    roles: list[str] = []
-    if new_item.get("url") and candidate_item.get("url") and normalize_url(new_item["url"]) == normalize_url(candidate_item["url"]):
-        roles.append("same_url")
-    if new_item.get("guid") and candidate_item.get("guid") and new_item["guid"] == candidate_item["guid"]:
-        roles.append("same_guid")
-    if roles:
-        return "duplicate", roles
-    if stable_hash((new_item.get("title") or "").strip().lower()) == stable_hash((candidate_item.get("title") or "").strip().lower()):
-        return "near_duplicate", ["same_title_hash"]
-    return None
+    return deterministic_duplicate(new_item, candidate_item)
 
 
 def normalized_entity_terms(values: list[str]) -> set[str]:
@@ -82,7 +82,67 @@ def hours_apart(left: str | None, right: str | None) -> float | None:
     return abs((a - b).total_seconds()) / 3600
 
 
-def find_relation_candidates(store: InboxStore, item_id: str, max_candidates: int) -> list[dict[str, Any]]:
+def ensure_candidate_event_table(store: InboxStore) -> None:
+    with store.connect() as conn:
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS semantic_candidate_events (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                stage TEXT NOT NULL,
+                item_a_id TEXT,
+                item_b_id TEXT,
+                relation_pair_key TEXT,
+                candidate_priority TEXT,
+                candidate_score REAL,
+                candidate_score_components_json TEXT,
+                candidate_suppression_reason TEXT,
+                status TEXT NOT NULL,
+                metadata_json TEXT,
+                created_at TEXT NOT NULL
+            )
+            """
+        )
+
+
+def insert_candidate_event(
+    store: InboxStore,
+    *,
+    stage: str,
+    item_a_id: str | None,
+    item_b_id: str | None,
+    pair_key: str | None,
+    assessment: CandidateAssessment | None,
+    status: str,
+    metadata: dict[str, Any] | None = None,
+) -> None:
+    ensure_candidate_event_table(store)
+    with store.connect() as conn:
+        conn.execute(
+            """
+            INSERT INTO semantic_candidate_events (
+                stage, item_a_id, item_b_id, relation_pair_key, candidate_priority,
+                candidate_score, candidate_score_components_json, candidate_suppression_reason,
+                status, metadata_json, created_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                stage,
+                item_a_id,
+                item_b_id,
+                pair_key,
+                assessment.candidate_priority if assessment else None,
+                assessment.candidate_score if assessment else None,
+                db.dumps(assessment.candidate_score_components if assessment else {}),
+                assessment.candidate_suppression_reason if assessment else None,
+                status,
+                db.dumps(metadata or {}),
+                utc_now(),
+            ),
+        )
+
+
+def find_relation_candidates(store: InboxStore, item_id: str, max_candidates: int, *, include_suppressed: bool = False) -> list[dict[str, Any]]:
     new_card = db.get_current_item_card(store, item_id)
     if not new_card:
         return []
@@ -92,7 +152,8 @@ def find_relation_candidates(store: InboxStore, item_id: str, max_candidates: in
         f"{new_card['canonical_title']} {new_card.get('event_hint') or ''} {new_card.get('short_summary') or ''}"
     )
     new_entities = normalized_entity_terms(json.loads(new_card["entities_json"] or "[]"))
-    scored: list[tuple[float, str, dict[str, Any]]] = []
+    scored: list[tuple[float, int, str, dict[str, Any]]] = []
+    priority_order = {"must_run": 5, "high": 4, "medium": 3, "low": 2, "suppress": 1}
     for card in cards:
         candidate_item = db.get_item(store, card["item_id"]) or {}
         terms = semantic_tokens(f"{card['canonical_title']} {card.get('event_hint') or ''} {card.get('short_summary') or ''}")
@@ -111,10 +172,21 @@ def find_relation_candidates(store: InboxStore, item_id: str, max_candidates: in
                 score += 1
         if normalize_url(new_item.get("url") or "") and normalize_url(new_item.get("url") or "") == normalize_url(candidate_item.get("url") or ""):
             score += 10
-        if score > 0:
-            scored.append((score, card["created_at"], card))
-    scored.sort(key=lambda pair: (pair[0], pair[1]), reverse=True)
-    return [card for _score, _created, card in scored[:max_candidates]]
+        assessment = assess_candidate(new_item, candidate_item, new_card, card)
+        score = max(score, assessment.candidate_score)
+        if score > 0 or include_suppressed:
+            enriched = dict(card)
+            enriched["_candidate_item"] = candidate_item
+            enriched["_candidate_assessment"] = assessment
+            enriched["_relation_pair_key"] = relation_pair_key(new_item, candidate_item)
+            scored.append((score, priority_order.get(assessment.candidate_priority, 0), card["created_at"], enriched))
+    scored.sort(key=lambda pair: (pair[1], pair[0], pair[2]), reverse=True)
+    if include_suppressed:
+        return [card for _score, _priority, _created, card in scored[: max(max_candidates * 3, max_candidates)]]
+    runnable = [card for _score, _priority, _created, card in scored if not card["_candidate_assessment"].suppressed]
+    lows = [card for card in runnable if card["_candidate_assessment"].candidate_priority == "low"]
+    non_lows = [card for card in runnable if card["_candidate_assessment"].candidate_priority != "low"]
+    return (non_lows + lows[: max(1, max_candidates // 3)])[:max_candidates]
 
 
 def process_item_relations(
@@ -143,6 +215,9 @@ def process_item_relations(
             (limit,),
         ).fetchall()
     stats = {"selected": len(rows), "written": 0, "folded": 0, "review": 0, "llm_calls": 0, "candidate_pairs": 0, "no_candidate_items": 0, "llm_items": 0}
+    ensure_candidate_event_table(store)
+    seen_pair_keys: set[str] = set()
+    seen_lock = threading.Lock()
 
     def process_one(row: Any) -> dict[str, int]:
         client = SemanticLLMClient(
@@ -159,7 +234,26 @@ def process_item_relations(
         new_card = db.get_current_item_card(store, item_id)
         if not item or not new_card:
             return local
-        candidates = find_relation_candidates(store, item_id, max_candidates)
+        candidates_all = find_relation_candidates(store, item_id, max_candidates, include_suppressed=True)
+        for candidate_card in candidates_all:
+            assessment: CandidateAssessment = candidate_card["_candidate_assessment"]
+            candidate_item = candidate_card.get("_candidate_item") or db.get_item(store, candidate_card["item_id"]) or {}
+            insert_candidate_event(
+                store,
+                stage="item_relation",
+                item_a_id=item_id,
+                item_b_id=candidate_card["item_id"],
+                pair_key=candidate_card.get("_relation_pair_key"),
+                assessment=assessment,
+                status="suppressed" if assessment.suppressed else "generated",
+                metadata={
+                    "candidate_generation_reason": "; ".join(assessment.same_event_evidence or assessment.disqualifiers),
+                    "item_a_title": item.get("title"),
+                    "item_b_title": candidate_item.get("title"),
+                    **assessment.model_dump(),
+                },
+            )
+        candidates = [candidate for candidate in candidates_all if not candidate["_candidate_assessment"].suppressed][:max_candidates]
         if not candidates:
             local["no_candidate_items"] += 1
             return local
@@ -169,6 +263,21 @@ def process_item_relations(
             candidate_item = db.get_item(store, candidate_card["item_id"])
             if not candidate_item:
                 continue
+            pair_key = candidate_card.get("_relation_pair_key") or relation_pair_key(item, candidate_item)
+            with seen_lock:
+                if pair_key in seen_pair_keys:
+                    insert_candidate_event(
+                        store,
+                        stage="item_relation",
+                        item_a_id=item_id,
+                        item_b_id=candidate_card["item_id"],
+                        pair_key=pair_key,
+                        assessment=candidate_card.get("_candidate_assessment"),
+                        status="duplicate_direction_suppressed",
+                        metadata={"duplicate_of_relation_id": None},
+                    )
+                    continue
+                seen_pair_keys.add(pair_key)
             hard = hard_relation(item, candidate_item)
             if hard:
                 primary, roles = hard
@@ -187,6 +296,17 @@ def process_item_relations(
                     llm_call_id=None,
                     prompt_version=None,
                     model="rule",
+                )
+                assessment = candidate_card.get("_candidate_assessment")
+                insert_candidate_event(
+                    store,
+                    stage="item_relation",
+                    item_a_id=item_id,
+                    item_b_id=candidate_card["item_id"],
+                    pair_key=pair_key,
+                    assessment=assessment,
+                    status="rule_relation_written",
+                    metadata={"primary_relation": primary, "event_relation_type": "same_event", "cluster_eligible": True},
                 )
                 local["written"] += 1
                 local["folded"] += 1
@@ -207,6 +327,11 @@ def process_item_relations(
             max_tokens=2200,
             item_id=item_id,
             source_id=item.get("source_id") or item.get("feed_url") or item.get("source_name"),
+            request_metadata={
+                "prompt_variant": "full" if any(c["_candidate_assessment"].candidate_priority in {"must_run", "high"} for c in candidates) else "short",
+                "candidate_priorities": [c["_candidate_assessment"].candidate_priority for c in candidates],
+                "candidate_scores": [c["_candidate_assessment"].candidate_score for c in candidates],
+            },
         )
         local["llm_calls"] = client.calls
         local["llm_items"] += 1
@@ -215,26 +340,54 @@ def process_item_relations(
             local["review"] += 1
             return local
         for relation in output.relations:
+            candidate_item = db.get_item(store, relation.candidate_item_id) or {}
+            candidate_card = next((card for card in candidates if card["item_id"] == relation.candidate_item_id), None)
+            assessment = candidate_card.get("_candidate_assessment") if candidate_card else assess_candidate(item, candidate_item, new_card, db.get_current_item_card(store, relation.candidate_item_id))
+            primary_relation, event_relation_type, cluster_eligible, disqualifiers = normalize_relation_label(
+                relation.primary_relation,
+                assessment,
+                reason=relation.reason,
+                evidence=relation.evidence,
+                new_information=relation.new_information,
+            )
             insert_item_relation(
                 store,
                 item_id,
                 relation.candidate_item_id,
-                primary_relation=relation.primary_relation,
+                primary_relation=primary_relation,
                 secondary_roles=relation.secondary_roles,
                 confidence=relation.confidence,
                 canonical_item_id=relation.canonical_item_id,
                 new_information=relation.new_information,
                 reason=relation.reason,
-                evidence=relation.evidence,
+                evidence=relation.evidence + [f"event_relation_type={event_relation_type}", f"cluster_eligible={cluster_eligible}"] + [f"disqualifier={d}" for d in disqualifiers],
                 decision_source="llm",
                 llm_call_id=call_id,
                 prompt_version=ITEM_RELATION_PROMPT_VERSION,
                 model=client.model,
             )
+            insert_candidate_event(
+                store,
+                stage="item_relation",
+                item_a_id=item_id,
+                item_b_id=relation.candidate_item_id,
+                pair_key=relation_pair_key(item, candidate_item) if candidate_item else None,
+                assessment=assessment,
+                status="llm_relation_written",
+                metadata={
+                    "primary_relation": primary_relation,
+                    "raw_primary_relation": relation.primary_relation,
+                    "event_relation_type": event_relation_type,
+                    "cluster_eligible": cluster_eligible,
+                    "disqualifiers": disqualifiers,
+                    "same_event_evidence": relation.same_event_evidence or assessment.same_event_evidence,
+                    "new_info_evidence": relation.new_info_evidence or relation.new_information,
+                },
+            )
             local["written"] += 1
-            if item_relation_should_fold(relation.primary_relation):
+            if item_relation_should_fold(primary_relation):
                 local["folded"] += 1
-            if relation.primary_relation == "uncertain":
+            if primary_relation == "uncertain":
                 insert_review(store, "uncertain_relation", "item", item_id, relation.model_dump())
                 local["review"] += 1
         return local

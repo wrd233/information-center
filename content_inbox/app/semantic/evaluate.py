@@ -14,6 +14,7 @@ from typing import Any
 from app.config import BASE_DIR, settings
 from app.models import NormalizedContent, ScreeningResult
 from app.semantic.cards import generate_item_cards
+from app.semantic.candidates import assess_candidate, hotspot_key_candidates, infer_event_relation_type, relation_cluster_eligible, relation_pair_key
 from app.semantic.clusters import patch_cluster_card, process_item_clusters
 from app.semantic.evidence import build_review_bundle, export_evidence, write_json
 from app.semantic.live_smoke import live_enabled
@@ -247,6 +248,13 @@ def stage_budget_split(total_budget: int, profile: str) -> dict[str, int]:
             "cluster_card_patch": 0.07,
             "source_profile": 0.03,
         },
+        "phase1_2e_profile": {
+            "item_card": 0.30,
+            "item_relation": 0.30,
+            "item_cluster_relation": 0.27,
+            "cluster_card_patch": 0.08,
+            "source_profile": 0.05,
+        },
     }
     ratios = profiles.get(profile, profiles["balanced"])
     return {stage: int(total_budget * ratio) for stage, ratio in ratios.items()}
@@ -308,8 +316,8 @@ def sample_event_hotspots(conn: sqlite3.Connection, where: str, params: list[str
     token_sources: dict[str, set[str]] = {}
     token_items: dict[str, list[Any]] = {}
     for row in items:
-        text = f"{row['title'] or ''} {row['summary'] or ''} {row['content_text'] or ''}"
-        entities = normalized_entity_terms(list(semantic_tokens(text)))
+        keys = hotspot_key_candidates(dict(row))
+        entities = normalized_entity_terms([keys["selected_hotspot_key"], *keys.get("dominant_entities", [])[:5], *keys.get("dominant_event_phrases", [])[:3]])
         for token in entities:
             if len(token) < 3:
                 continue
@@ -684,6 +692,29 @@ def avg_tokens_by_tier(llm_logs: list[Any]) -> dict[str, float]:
 
 def item_relation_summary(rows: list[Any], llm_logs: list[Any], store: InboxStore) -> dict[str, Any]:
     rels = Counter(row["primary_relation"] for row in rows)
+    unique_pairs: set[str] = set()
+    duplicate_direction_count = 0
+    event_types = Counter()
+    cluster_eligible_count = 0
+    for row in rows:
+        left_item = get_item_dict(store, row["item_a_id"])
+        right_item = get_item_dict(store, row["item_b_id"])
+        key = relation_pair_key(left_item, right_item) if left_item and right_item else f"{row['item_a_id']}|{row['item_b_id']}"
+        if key in unique_pairs:
+            duplicate_direction_count += 1
+        unique_pairs.add(key)
+        assessment = assess_candidate(left_item or {}, right_item or {})
+        event_type = infer_event_relation_type(
+            row["primary_relation"],
+            assessment,
+            reason=row["reason"] or "",
+            evidence=json.loads(row["evidence_json"] or "[]"),
+            new_information=json.loads(row["new_information_json"] or "[]"),
+        )
+        event_types[event_type] += 1
+        if relation_cluster_eligible(row["primary_relation"], event_type):
+            cluster_eligible_count += 1
+    candidate_stats = candidate_event_summary(store)
     confidences = [float(row["confidence"] or 0.0) for row in rows]
     examples = []
     low_conf = []
@@ -695,6 +726,14 @@ def item_relation_summary(rows: list[Any], llm_logs: list[Any], store: InboxStor
             low_conf.append(example)
     return {
         "candidate_pairs_considered": len(rows),
+        "raw_relation_count": len(rows),
+        "unique_relation_pair_count": len(unique_pairs),
+        "duplicate_direction_suppressed_count": duplicate_direction_count + candidate_stats.get("duplicate_direction_suppressed_count", 0),
+        "event_relation_type_distribution": dict(event_types),
+        "cluster_eligible_count": cluster_eligible_count,
+        "candidate_priority_distribution": candidate_stats.get("candidate_priority_distribution", {}),
+        "candidates_suppressed_without_llm": candidate_stats.get("candidates_suppressed_without_llm", 0),
+        "high_priority_skips": candidate_stats.get("high_priority_skips", 0),
         "llm_item_relation_calls": sum(1 for row in llm_logs if row["task_type"] == "item_relation" and row["status"] in {"ok", "failed"}),
         "duplicate": rels.get("duplicate", 0),
         "near_duplicate": rels.get("near_duplicate", 0),
@@ -732,6 +771,32 @@ def get_title(store: InboxStore, item_id: str) -> dict[str, Any]:
             "SELECT title, source_id, source_name, published_at FROM inbox_items WHERE item_id = ?", (item_id,)
         ).fetchone()
     return dict(row) if row else {"title": item_id}
+
+
+def get_item_dict(store: InboxStore, item_id: str) -> dict[str, Any]:
+    with store.connect() as conn:
+        row = conn.execute("SELECT * FROM inbox_items WHERE item_id = ?", (item_id,)).fetchone()
+    return dict(row) if row else {}
+
+
+def candidate_event_summary(store: InboxStore) -> dict[str, Any]:
+    with store.connect() as conn:
+        try:
+            rows = conn.execute("SELECT * FROM semantic_candidate_events").fetchall()
+        except Exception:
+            return {}
+    priority = Counter(row["candidate_priority"] or "unknown" for row in rows)
+    return {
+        "candidate_priority_distribution": dict(priority),
+        "candidates_suppressed_without_llm": sum(1 for row in rows if row["status"] == "suppressed" or row["candidate_priority"] == "suppress"),
+        "duplicate_direction_suppressed_count": sum(1 for row in rows if row["status"] == "duplicate_direction_suppressed"),
+        "high_priority_skips": sum(
+            1
+            for row in rows
+            if row["status"] == "suppressed"
+            and row["candidate_priority"] in {"must_run", "high"}
+        ),
+    }
 
 
 def cluster_relation_summary(cluster_items: list[Any], clusters: list[Any], cluster_cards: list[Any]) -> dict[str, Any]:

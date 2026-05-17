@@ -7,8 +7,8 @@ from pydantic import BaseModel, Field, field_validator
 
 SCHEMA_VERSION = "semantic_v1"
 ITEM_CARD_PROMPT_VERSION = "item_card_v1"
-ITEM_RELATION_PROMPT_VERSION = "item_relation_v1"
-ITEM_CLUSTER_PROMPT_VERSION = "item_cluster_relation_v1"
+ITEM_RELATION_PROMPT_VERSION = "item_relation_v2"
+ITEM_CLUSTER_PROMPT_VERSION = "item_cluster_relation_v2"
 CLUSTER_CARD_PROMPT_VERSION = "cluster_card_patch_v1"
 SOURCE_REVIEW_PROMPT_VERSION = "source_review_v1"
 
@@ -121,6 +121,14 @@ class ItemRelationDecision(BaseModel):
     confidence: float = Field(default=0.0, ge=0.0, le=1.0)
     reason: str = ""
     evidence: list[str] = Field(default_factory=list)
+    event_relation_type: str = "different"
+    cluster_eligible: bool = False
+    same_event_evidence: list[str] = Field(default_factory=list)
+    new_info_evidence: list[str] = Field(default_factory=list)
+    disqualifiers: list[str] = Field(default_factory=list)
+    shared_entities: list[str] = Field(default_factory=list)
+    boilerplate_detected: bool = False
+    generic_entity_overlap: bool = False
 
 
 class ItemRelationOutput(BaseModel):
@@ -144,6 +152,9 @@ class ItemClusterDecision(BaseModel):
     new_angles: list[str] = Field(default_factory=list)
     reason: str = ""
     evidence: list[str] = Field(default_factory=list)
+    cluster_relation_type: str = "uncertain"
+    attach_eligible: bool = False
+    attach_disqualifiers: list[str] = Field(default_factory=list)
 
 
 class ItemClusterOutput(BaseModel):

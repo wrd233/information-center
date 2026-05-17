@@ -1,0 +1,300 @@
+cluster_candidate_id,final_status,final_member_count,diagnostic_reason
+cluster_candidate_1,single_item,1,created initial semantic cluster
+cluster_candidate_2,single_item,1,created initial semantic cluster
+cluster_candidate_3,single_item,1,created initial semantic cluster
+cluster_candidate_4,single_item,1,created initial semantic cluster
+cluster_candidate_5,single_item,1,created initial semantic cluster
+cluster_candidate_6,single_item,1,created initial semantic cluster
+cluster_candidate_7,single_item,1,created initial semantic cluster
+cluster_candidate_8,single_item,1,created initial semantic cluster
+cluster_candidate_9,single_item,1,created initial semantic cluster
+cluster_candidate_10,single_item,1,created initial semantic cluster
+cluster_candidate_11,single_item,1,created initial semantic cluster
+cluster_candidate_12,single_item,1,created initial semantic cluster
+cluster_candidate_13,single_item,1,created initial semantic cluster
+cluster_candidate_14,single_item,1,created initial semantic cluster
+cluster_candidate_15,single_item,1,created initial semantic cluster
+cluster_candidate_16,single_item,1,created initial semantic cluster
+cluster_candidate_17,single_item,1,created initial semantic cluster
+cluster_candidate_18,single_item,1,created initial semantic cluster
+cluster_candidate_review_234,rejected,0,"Only overlapping entity is generic 'Powered' from source attribution, no evidence of same event."
+cluster_candidate_review_235,rejected,0,"New item is about a newsletter subscription, while cluster is about a video tweet with no thematic connection."
+cluster_candidate_review_236,rejected,0,"Cluster discusses a generic team message with a video, while new item describes OpenRouter API cache scoping and rate limits."
+cluster_candidate_review_237,rejected,0,No entity overlap or thematic connection between the two items.
+cluster_candidate_review_238,rejected,0,"The new item is about Kimi K2.6 availability in Windsurf, while the cluster is about a generic team video tweet."
+cluster_candidate_review_239,rejected,0,"The cluster is a generic tweet about a team video with no specific topic, while the new item is a blog post about Claude Skills; no evidence of same event or topic."
+cluster_candidate_review_240,rejected,0,"The new item is a generic social media post about code and design, unrelated to the cluster's content about a team video."
+cluster_candidate_review_241,rejected,0,"New item is a commentary about faking usage of AI-enhanced video features, while cluster refers to a promotional video from the team."
+cluster_candidate_review_242,rejected,0,"The new item is a reply to a different user about an initiative, while the cluster is a generic team message; they only share the 'Powered' entity from xgo.ing, indicating no concrete event overlap."
+cluster_candidate_review_243,rejected,0,"Both items are about the company's team, but one is a generic greeting and the other is a specific new hire announcement, so they are different events."
+cluster_candidate_review_244,rejected,0,"The new item is about Microsoft Research at CHI2026, while the cluster is a generic 'Hear from our team' tweet with no clear event connection."
+cluster_candidate_review_245,rejected,0,"The new item is about Skywork with Hermes Agent, while the cluster is a generic tweet about hearing from the team with no specific product or event."
+cluster_candidate_review_246,rejected,0,"The new item is a teaser for a blog post, not the same event as the video post in the cluster."
+cluster_candidate_review_247,rejected,0,"The new item is a generic statement about Google, while the cluster is about a vague team tweet; no concrete event overlap."
+cluster_candidate_review_248,rejected,0,No clear topical or entity overlap beyond generic words.
+cluster_candidate_review_249,rejected,0,"The new item discusses Perplexity Computer integration with Microsoft Teams, while the cluster is a generic 'Hear from our team' tweet with no mention of Perplexity or Teams."
+cluster_candidate_review_250,rejected,0,"The new item is about arguing over a snow shoveling picture, while the cluster is about a team announcement video, with no topical overlap."
+cluster_candidate_review_251,rejected,0,"The new item is about a third skill for UGC ads, while the cluster is a generic team announcement; no shared event or entities."
+cluster_candidate_review_252,rejected,0,"No event overlap; cluster is a generic team video, new item is about specific companies doing something."
+cluster_candidate_review_253,rejected,0,"Both items are Twitter posts, but the new item appears to be a separate reply or discussion, not part of the same event."
+cluster_candidate_review_254,rejected,0,"The cluster is about a generic team video tweet, while the new item is about Anthropic's tokenshare leaderboard ranking; no topical or event overlap."
+cluster_candidate_review_255,rejected,0,"No shared entities or topic; cluster about a tweet/video, new item about German garage fines."
+cluster_candidate_review_256,rejected,0,No shared entities or event context between Windsurf 2.0 announcement and generic tweet.
+cluster_candidate_review_257,rejected,0,No evidence of shared event or topic between Midjourney v8 preview and a generic video tweet.
+cluster_candidate_review_258,rejected,0,The new item promotes Codex while the cluster is about a generic team video; no shared event or topic.
+cluster_candidate_review_259,rejected,0,"The new item is about a hackathon winners live event, while the cluster is a generic team announcement, with no entity overlap."
+cluster_candidate_review_260,rejected,0,"Items share similar social media format and the entity 'Powered', but content (team video vs benchmark results) indicates different events."
+cluster_candidate_review_261,rejected,0,"The cluster is a generic promotional video, while the new item is a technical series on vector search; no shared event or topic."
+cluster_candidate_review_262,rejected,0,"The new item is a technical experiment with IBM Granite model, while the cluster is a generic team message with no relation to AI model testing."
+cluster_candidate_review_263,rejected,0,No clear connection between the cluster about a generic team video and the new item about AI effects melting GPUs.
+cluster_candidate_review_264,rejected,0,"The new item is about a Qdrant happy hour event, while the cluster is a generic video tweet with no thematic or entity overlap."
+cluster_candidate_review_265,rejected,0,The new item is about ChatGPT voice updates while the cluster is a generic tweet with no specific topic.
+cluster_candidate_review_266,rejected,0,"Both items are about AI/newsletters, but refer to different posts and authors."
+cluster_candidate_review_267,rejected,0,"The new item describes a PI day celebration event, while the cluster is a generic team message; no overlap in event or topic."
+cluster_candidate_review_268,rejected,0,The new item is about political commentary without any overlap in entities or event with the cluster.
+cluster_candidate_review_269,rejected,0,"The cluster describes a generic 'Hear from our team' tweet, while the new item is about a specific event involving The Dor Brothers making an AI movie."
+cluster_candidate_review_270,rejected,0,"New item is about a movie (Chainsaw Man), while cluster is about a team video tweet."
+cluster_candidate_review_271,rejected,0,"The new item discusses technical latency metrics for a character AI, while the cluster is a generic team announcement with no clear connection."
+cluster_candidate_review_272,rejected,0,The new item is about a NotebookLM sharing feature while the cluster is a generic social media post with no topic overlap.
+cluster_candidate_review_273,rejected,0,No entity or topic overlap between the new item about Nvidia market cap and the cluster about a generic team announcement video.
+cluster_candidate_review_274,rejected,0,"The new item is about a voice-to-action workflow repo, while the cluster is a generic 'Hear from our team' video tweet; no clear event overlap."
+cluster_candidate_review_275,rejected,0,No shared entities or topics between the new item and the cluster.
+cluster_candidate_review_276,rejected,0,"The new item discusses social dynamics of nerds, while the cluster is about a team video announcement; no overlap in topic or entities."
+cluster_candidate_review_277,rejected,0,"Both tweets are from the same source about OpenAI, but no evidence they are the same concrete event."
+cluster_candidate_review_278,rejected,0,"The new item asks a question about reading PR review bot chatter, unrelated to the cluster topic of a team announcement video."
+cluster_candidate_review_279,rejected,0,"The new item discusses AI-for-code progress, while the cluster is a vague team announcement video; no event or topic overlap."
+cluster_candidate_review_280,rejected,0,"The cluster is about a generic social media post, while the new item is about a tech blog with free developer credits; they share no entities or event."
+cluster_candidate_review_281,rejected,0,"New item discusses Recraft V4, while cluster is a generic tweet with no connection to Recraft."
+cluster_candidate_review_282,rejected,0,"New item is a generic 'Get started' link, not the same event as the cluster's video tweet."
+cluster_candidate_review_283,rejected,0,"The new item expresses excitement about voice models, while the cluster is a team announcement; they share the broad topic of AI but are distinct events."
+cluster_candidate_review_284,rejected,0,No overlap in content or event.
+cluster_candidate_review_285,rejected,0,"The cluster is a generic team announcement, while the new item is about Cursor 2.0 and LSP performance; they share only the social media platform context."
+cluster_candidate_review_286,rejected,0,"No overlap in content or entities; cluster is a team video promotion, new item is a research paper link and newsletter ad."
+cluster_candidate_review_287,rejected,0,"The new item is a promotion for a newsletter sharing a Meta article, while the cluster is a vague tweet about a team; no evidence of same event."
+cluster_candidate_review_288,rejected,0,New item about Agent 365 general availability; cluster is a generic team video. No event overlap.
+cluster_candidate_review_289,rejected,0,"The cluster is about a generic team video/tweet, while the new item is about book royalties with no common entities or topic."
+cluster_candidate_review_290,rejected,0,"The new item is a personal tweet about codex tasks, while the cluster is about a team video announcement, no event overlap."
+cluster_candidate_review_291,rejected,0,"New item promotes Grok-4.3 platforms but cluster is a team video, different event."
+cluster_candidate_review_292,rejected,0,"The cluster is about a generic team video, while the new item is a job posting with no shared entities or topic overlap."
+cluster_candidate_review_293,rejected,0,"The new item is a promotion for GPT Image 2 in Skywork, unrelated to a generic team video cluster."
+cluster_candidate_review_294,rejected,0,"The new item is about a feature announcement for private blob stores in v0, while the cluster is about a generic team introduction video; no event or topic overlap."
+cluster_candidate_review_295,rejected,0,"The new item is a link to a Microsoft news article, while the cluster is a vague tweet about a video; no clear event overlap."
+cluster_candidate_review_296,rejected,0,"The new item is a blog link while the cluster is a video tweet, both may be from the same company but no evidence of same event."
+cluster_candidate_review_297,rejected,0,Only common entity is 'Powered' which is a service tag; no clear event match.
+cluster_candidate_review_298,rejected,0,No shared entities or topics between the cluster's generic tweet and the news article about Meta acquisition.
+cluster_candidate_review_299,rejected,0,No evidence of the same event or topic; the cluster is a generic tweet about 'Hear from our team' and the new item is a different tweet with a link.
+cluster_candidate_review_300,rejected,0,"Both posts are from Twitter and mention 'Powered by xgo.ing', but the cluster is a video tweet and the new item is an article link, indicating different content."
+cluster_candidate_review_301,rejected,0,Insufficient information to determine if the new item belongs to the same event as the cluster.
+cluster_candidate_review_302,rejected,0,"The cluster contains a team video about 'Hear from our team', while the new item is a deep dive article by an individual; no evidence of same event."
+cluster_candidate_review_303,rejected,0,"The new item is about Katie Haun and a recommendation, while the cluster is about a generic team video post; no shared entities or event."
+cluster_candidate_review_304,rejected,0,"The new item discusses token-efficient memory from @mem0ai, while the cluster is about a general team message with no clear topic overlap."
+cluster_candidate_review_305,rejected,0,"New item is about a GitHub PR for redis/redis, while cluster is a generic tweet with a video, no shared entities or topic."
+cluster_candidate_review_306,rejected,0,"The new item is about a mem0ai agent memory integration, while the cluster is a generic video tweet with no specific topic overlap."
+cluster_candidate_review_307,rejected,0,"Both items are tweets from Google, but they refer to different content (video vs. remarks) and are separate posts."
+cluster_candidate_review_308,rejected,0,"The new item is about bread being named best in Britain, completely unrelated to the cluster's generic 'Hear from our team' tweet."
+cluster_candidate_review_309,rejected,0,No common entities or topics between new item and cluster.
+cluster_candidate_review_310,rejected,0,No common entities or event context between the cluster and the new item.
+cluster_candidate_review_311,rejected,0,LLM skipped or failed
+cluster_candidate_review_312,rejected,0,Both items are generic tweets from the same platform but different content.
+cluster_candidate_review_313,rejected,0,No shared entities or topical overlap between the new item and the cluster.
+cluster_candidate_review_314,rejected,0,"The new item discusses a new Redis data type, while the cluster is about a generic team video with no clear topic overlap."
+cluster_candidate_review_315,rejected,0,No overlap in entities or topic; one is a generic promotional tweet and the other is a specific research blog post.
+cluster_candidate_review_316,rejected,0,No entity or topic overlap between the generic cluster and the specific Claude event item.
+cluster_candidate_review_317,rejected,0,"The cluster is a generic tweet embed with no specific event, while the new item discusses a talk about Bun project's GitHub bot; no clear topical or event overlap."
+cluster_candidate_review_318,rejected,0,No shared event or topic; cluster is generic tweet about 'Hear from our team' while new item is about Cursor AI codebase indexing.
+cluster_candidate_review_319,rejected,0,"The items share only the entity 'Powered' and the platform xgo.ing, but describe different messages (video vs. teaser)."
+cluster_candidate_review_320,rejected,0,"The cluster is a generic tweet about 'Hear from our team' with no clear event, while the new item is about Runway app launch on mobile, which is a different topic."
+cluster_candidate_review_321,rejected,0,"New item is about GPT-5.5 availability in Windsurf 2.0, while cluster is a generic tweet with a video; no event overlap."
+cluster_candidate_review_322,rejected,0,"No overlap in entities or topic; cluster is about a generic video tweet, new item is about a specific partnership/promotion."
+cluster_candidate_review_323,rejected,0,"The cluster is a generic team message with no specific product reference, while the new item describes a specific product rollout (Nano Banana Pro to Antigravity)."
+cluster_candidate_review_324,rejected,0,"The cluster contains a single tweet/video from a team, while the new item is a roundup of multiple distinct robotics news stories with no event overlap."
+cluster_candidate_review_325,rejected,0,"The new item is about a conference promotion (SXSW), while the cluster is a generic team message with no thematic or entity overlap."
+cluster_candidate_review_326,rejected,0,The new item is about Gemini 3.1 Pro release while the cluster is a generic tweet about a video; no shared topic or entities.
+cluster_candidate_review_327,rejected,0,Both items are social media posts but no evidence they refer to the same specific event.
+cluster_candidate_review_328,rejected,0,No overlap in content or entities between the new item about Vercel AI Gateway and the cluster about a generic team video.
+cluster_candidate_review_329,rejected,0,No shared entities or event context between the new item about Windsurf and the cluster about a generic team announcement.
+cluster_candidate_review_330,rejected,0,"The cluster is a promotional video tweet, while the new item is a free trial link; they share the same product ecosystem but are not the same event."
+cluster_candidate_review_331,rejected,0,"New item is about YC Summer 2026 deadline, while cluster is about a generic team video post."
+cluster_candidate_review_332,rejected,0,"New item is a YouTube link while cluster is about a Twitter video post; only entity 'Powered' overlaps, suggesting different instances of the same broad topic."
+cluster_candidate_review_333,rejected,0,"The new item is about Manus Cloud Computer, entirely unrelated to Moonlake's public launch."
+cluster_candidate_review_334,rejected,0,"No overlap in entities or topic; new item is about modular robot legs, cluster is about moltbook authenticity discussion."
+cluster_candidate_review_335,rejected,0,"The item is a Mother's Day post from a Replit co-founder, unrelated to any of the candidate clusters about AI meetups, moltbook authenticity, or generic team videos."
+cluster_candidate_review_336,rejected,0,"New item is a promotional description of Skywork's AI agent, while the cluster is about a meetup talk on AI agents; they share the topic but are different events."
+cluster_candidate_review_337,rejected,0,"The new item is about the launch of Recursive Superintelligence, which shares only an entity (Richard Socher) with the cluster about moltbook authenticity, but the events are entirely different."
+cluster_candidate_review_338,rejected,0,LLM skipped or failed
+cluster_candidate_review_339,rejected,0,LLM skipped or failed
+cluster_candidate_review_340,rejected,0,LLM skipped or failed
+cluster_candidate_review_341,rejected,0,LLM skipped or failed
+cluster_candidate_review_342,rejected,0,LLM skipped or failed
+cluster_candidate_review_343,rejected,0,LLM skipped or failed
+cluster_candidate_review_344,rejected,0,LLM skipped or failed
+cluster_candidate_review_345,rejected,0,LLM skipped or failed
+cluster_candidate_review_346,rejected,0,LLM skipped or failed
+cluster_candidate_review_347,rejected,0,LLM skipped or failed
+cluster_candidate_review_348,rejected,0,LLM skipped or failed
+cluster_candidate_review_349,rejected,0,LLM skipped or failed
+cluster_candidate_review_350,rejected,0,LLM skipped or failed
+cluster_candidate_review_351,rejected,0,LLM skipped or failed
+cluster_candidate_review_352,rejected,0,LLM skipped or failed
+cluster_candidate_review_353,rejected,0,LLM skipped or failed
+cluster_candidate_review_354,rejected,0,LLM skipped or failed
+cluster_candidate_review_355,rejected,0,LLM skipped or failed
+cluster_candidate_review_356,rejected,0,LLM skipped or failed
+cluster_candidate_review_357,rejected,0,LLM skipped or failed
+cluster_candidate_review_358,rejected,0,LLM skipped or failed
+cluster_candidate_review_359,rejected,0,LLM skipped or failed
+cluster_candidate_review_360,rejected,0,LLM skipped or failed
+cluster_candidate_review_361,rejected,0,LLM skipped or failed
+cluster_candidate_review_362,rejected,0,LLM skipped or failed
+cluster_candidate_review_363,rejected,0,LLM skipped or failed
+cluster_candidate_review_364,rejected,0,LLM skipped or failed
+cluster_candidate_review_365,rejected,0,LLM skipped or failed
+cluster_candidate_review_366,rejected,0,LLM skipped or failed
+cluster_candidate_review_367,rejected,0,LLM skipped or failed
+cluster_candidate_review_368,rejected,0,LLM skipped or failed
+cluster_candidate_review_369,rejected,0,LLM skipped or failed
+cluster_candidate_review_370,rejected,0,LLM skipped or failed
+cluster_candidate_review_371,rejected,0,LLM skipped or failed
+cluster_candidate_review_372,rejected,0,LLM skipped or failed
+cluster_candidate_review_373,rejected,0,LLM skipped or failed
+cluster_candidate_review_374,rejected,0,LLM skipped or failed
+cluster_candidate_review_375,rejected,0,LLM skipped or failed
+cluster_candidate_review_376,rejected,0,LLM skipped or failed
+cluster_candidate_review_377,rejected,0,LLM skipped or failed
+cluster_candidate_review_378,rejected,0,LLM skipped or failed
+cluster_candidate_review_379,rejected,0,LLM skipped or failed
+cluster_candidate_review_380,rejected,0,LLM skipped or failed
+cluster_candidate_review_381,rejected,0,LLM skipped or failed
+cluster_candidate_review_382,rejected,0,LLM skipped or failed
+cluster_candidate_review_383,rejected,0,LLM skipped or failed
+cluster_candidate_review_384,rejected,0,LLM skipped or failed
+cluster_candidate_review_385,rejected,0,LLM skipped or failed
+cluster_candidate_review_386,rejected,0,LLM skipped or failed
+cluster_candidate_review_387,rejected,0,LLM skipped or failed
+cluster_candidate_review_388,rejected,0,LLM skipped or failed
+cluster_candidate_review_389,rejected,0,LLM skipped or failed
+cluster_candidate_review_390,rejected,0,LLM skipped or failed
+cluster_candidate_review_391,rejected,0,LLM skipped or failed
+cluster_candidate_review_392,rejected,0,LLM skipped or failed
+cluster_candidate_review_393,rejected,0,LLM skipped or failed
+cluster_candidate_review_394,rejected,0,LLM skipped or failed
+cluster_candidate_review_395,rejected,0,LLM skipped or failed
+cluster_candidate_review_396,rejected,0,LLM skipped or failed
+cluster_candidate_review_397,rejected,0,LLM skipped or failed
+cluster_candidate_review_398,rejected,0,LLM skipped or failed
+cluster_candidate_review_399,rejected,0,LLM skipped or failed
+cluster_candidate_review_400,rejected,0,LLM skipped or failed
+cluster_candidate_review_401,rejected,0,LLM skipped or failed
+cluster_candidate_review_402,rejected,0,LLM skipped or failed
+cluster_candidate_review_403,rejected,0,LLM skipped or failed
+cluster_candidate_review_404,rejected,0,LLM skipped or failed
+cluster_candidate_review_405,rejected,0,LLM skipped or failed
+cluster_candidate_review_406,rejected,0,LLM skipped or failed
+cluster_candidate_review_407,rejected,0,LLM skipped or failed
+cluster_candidate_review_408,rejected,0,LLM skipped or failed
+cluster_candidate_review_409,rejected,0,LLM skipped or failed
+cluster_candidate_review_410,rejected,0,LLM skipped or failed
+cluster_candidate_review_411,rejected,0,LLM skipped or failed
+cluster_candidate_review_412,rejected,0,LLM skipped or failed
+cluster_candidate_review_413,rejected,0,LLM skipped or failed
+cluster_candidate_review_414,rejected,0,LLM skipped or failed
+cluster_candidate_review_415,rejected,0,LLM skipped or failed
+cluster_candidate_review_416,rejected,0,LLM skipped or failed
+cluster_candidate_review_417,rejected,0,LLM skipped or failed
+cluster_candidate_review_418,rejected,0,LLM skipped or failed
+cluster_candidate_review_419,rejected,0,LLM skipped or failed
+cluster_candidate_review_420,rejected,0,LLM skipped or failed
+cluster_candidate_review_421,rejected,0,LLM skipped or failed
+cluster_candidate_review_422,rejected,0,LLM skipped or failed
+cluster_candidate_review_423,rejected,0,LLM skipped or failed
+cluster_candidate_review_424,rejected,0,LLM skipped or failed
+cluster_candidate_review_425,rejected,0,LLM skipped or failed
+cluster_candidate_review_426,rejected,0,LLM skipped or failed
+cluster_candidate_review_427,rejected,0,LLM skipped or failed
+cluster_candidate_review_428,rejected,0,LLM skipped or failed
+cluster_candidate_review_429,rejected,0,LLM skipped or failed
+cluster_candidate_review_430,rejected,0,LLM skipped or failed
+cluster_candidate_review_431,rejected,0,LLM skipped or failed
+cluster_candidate_review_432,rejected,0,LLM skipped or failed
+cluster_candidate_review_433,rejected,0,LLM skipped or failed
+cluster_candidate_review_434,rejected,0,LLM skipped or failed
+cluster_candidate_review_435,rejected,0,LLM skipped or failed
+cluster_candidate_review_436,rejected,0,LLM skipped or failed
+cluster_candidate_review_437,rejected,0,LLM skipped or failed
+cluster_candidate_review_438,rejected,0,LLM skipped or failed
+cluster_candidate_review_439,rejected,0,LLM skipped or failed
+cluster_candidate_review_440,rejected,0,LLM skipped or failed
+cluster_candidate_review_441,rejected,0,LLM skipped or failed
+cluster_candidate_review_442,rejected,0,LLM skipped or failed
+cluster_candidate_review_443,rejected,0,LLM skipped or failed
+cluster_candidate_review_444,rejected,0,LLM skipped or failed
+cluster_candidate_review_445,rejected,0,LLM skipped or failed
+cluster_candidate_review_446,rejected,0,LLM skipped or failed
+cluster_candidate_review_447,rejected,0,LLM skipped or failed
+cluster_candidate_review_448,rejected,0,LLM skipped or failed
+cluster_candidate_review_449,rejected,0,LLM skipped or failed
+cluster_candidate_review_450,rejected,0,LLM skipped or failed
+cluster_candidate_review_451,rejected,0,LLM skipped or failed
+cluster_candidate_review_452,rejected,0,LLM skipped or failed
+cluster_candidate_review_453,rejected,0,LLM skipped or failed
+cluster_candidate_review_454,rejected,0,LLM skipped or failed
+cluster_candidate_review_455,rejected,0,LLM skipped or failed
+cluster_candidate_review_456,rejected,0,LLM skipped or failed
+cluster_candidate_review_457,rejected,0,LLM skipped or failed
+cluster_candidate_review_458,rejected,0,LLM skipped or failed
+cluster_candidate_review_459,rejected,0,LLM skipped or failed
+cluster_candidate_review_460,rejected,0,LLM skipped or failed
+cluster_candidate_review_461,rejected,0,LLM skipped or failed
+cluster_candidate_review_462,rejected,0,LLM skipped or failed
+cluster_candidate_review_463,rejected,0,LLM skipped or failed
+cluster_candidate_review_464,rejected,0,LLM skipped or failed
+cluster_candidate_review_465,rejected,0,LLM skipped or failed
+cluster_candidate_review_466,rejected,0,LLM skipped or failed
+cluster_candidate_review_467,rejected,0,LLM skipped or failed
+cluster_candidate_review_468,rejected,0,LLM skipped or failed
+cluster_candidate_review_469,rejected,0,LLM skipped or failed
+cluster_candidate_review_470,rejected,0,LLM skipped or failed
+cluster_candidate_review_471,rejected,0,LLM skipped or failed
+cluster_candidate_review_472,rejected,0,LLM skipped or failed
+cluster_candidate_review_473,rejected,0,LLM skipped or failed
+cluster_candidate_review_474,rejected,0,LLM skipped or failed
+cluster_candidate_review_475,rejected,0,LLM skipped or failed
+cluster_candidate_review_476,rejected,0,LLM skipped or failed
+cluster_candidate_review_477,rejected,0,LLM skipped or failed
+cluster_candidate_review_478,rejected,0,LLM skipped or failed
+cluster_candidate_review_479,rejected,0,LLM skipped or failed
+cluster_candidate_review_480,rejected,0,LLM skipped or failed
+cluster_candidate_review_481,rejected,0,LLM skipped or failed
+cluster_candidate_review_482,rejected,0,LLM skipped or failed
+cluster_candidate_review_483,rejected,0,LLM skipped or failed
+cluster_candidate_review_484,rejected,0,LLM skipped or failed
+cluster_candidate_review_485,rejected,0,LLM skipped or failed
+cluster_candidate_review_486,rejected,0,LLM skipped or failed
+cluster_candidate_review_487,rejected,0,LLM skipped or failed
+cluster_candidate_review_488,rejected,0,LLM skipped or failed
+cluster_candidate_review_489,rejected,0,LLM skipped or failed
+cluster_candidate_review_490,rejected,0,LLM skipped or failed
+cluster_candidate_review_491,rejected,0,LLM skipped or failed
+cluster_candidate_review_492,rejected,0,LLM skipped or failed
+cluster_candidate_review_493,rejected,0,LLM skipped or failed
+cluster_candidate_review_494,rejected,0,LLM skipped or failed
+cluster_candidate_review_495,rejected,0,LLM skipped or failed
+cluster_candidate_review_496,rejected,0,LLM skipped or failed
+cluster_candidate_review_497,rejected,0,LLM skipped or failed
+cluster_candidate_review_498,rejected,0,LLM skipped or failed
+cluster_candidate_review_499,rejected,0,LLM skipped or failed
+cluster_candidate_review_500,rejected,0,LLM skipped or failed
+cluster_candidate_review_501,rejected,0,LLM skipped or failed
+cluster_candidate_review_502,rejected,0,LLM skipped or failed
+cluster_candidate_review_503,rejected,0,LLM skipped or failed
+cluster_candidate_review_504,rejected,0,LLM skipped or failed
+cluster_candidate_review_505,rejected,0,LLM skipped or failed
+cluster_candidate_review_506,rejected,0,LLM skipped or failed
+cluster_candidate_review_507,rejected,0,LLM skipped or failed
+cluster_candidate_review_508,rejected,0,LLM skipped or failed
+cluster_candidate_review_509,rejected,0,LLM skipped or failed
+cluster_candidate_review_510,rejected,0,LLM skipped or failed
+cluster_candidate_review_511,rejected,0,LLM skipped or failed
+cluster_candidate_review_512,rejected,0,LLM skipped or failed
+cluster_candidate_review_513,rejected,0,LLM skipped or failed
+cluster_candidate_review_514,rejected,0,LLM skipped or failed

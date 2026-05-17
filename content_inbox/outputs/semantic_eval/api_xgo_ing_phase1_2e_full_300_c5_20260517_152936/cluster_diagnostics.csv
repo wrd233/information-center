@@ -1,0 +1,297 @@
+cluster_candidate_id,final_status,final_member_count,diagnostic_reason
+cluster_candidate_1,multi_item,5,created initial semantic cluster
+cluster_candidate_2,multi_item,5,The new item describes a specific feature that is part of the broader Custom Agents improvement rollout mentioned in the cluster.
+cluster_candidate_3,multi_item,5,New item describes a specific feature improvement that aligns with the cluster's theme of new improvements for Custom Agents.
+cluster_candidate_4,multi_item,5,The new item describes a specific safety improvement that is part of the Custom Agents improvements shipped in the cluster event.
+cluster_candidate_5,multi_item,5,The new item is a 'Learn more' link to a Microsoft news article that likely contains the official announcement of the Custom Agents improvements described in the cluster.
+cluster_candidate_6,single_item,1,created initial semantic cluster
+cluster_candidate_7,single_item,1,created initial semantic cluster
+cluster_candidate_8,single_item,1,created initial semantic cluster
+cluster_candidate_9,single_item,1,created initial semantic cluster
+cluster_candidate_10,single_item,1,created initial semantic cluster
+cluster_candidate_11,single_item,1,created initial semantic cluster
+cluster_candidate_12,single_item,1,created initial semantic cluster
+cluster_candidate_13,single_item,1,created initial semantic cluster
+cluster_candidate_14,single_item,1,created initial semantic cluster
+cluster_candidate_15,single_item,1,created initial semantic cluster
+cluster_candidate_16,single_item,1,created initial semantic cluster
+cluster_candidate_17,single_item,1,created initial semantic cluster
+cluster_candidate_18,single_item,1,created initial semantic cluster
+cluster_candidate_19,single_item,1,created initial semantic cluster
+cluster_candidate_20,single_item,1,created initial semantic cluster
+cluster_candidate_21,single_item,1,created initial semantic cluster
+cluster_candidate_22,single_item,1,created initial semantic cluster
+cluster_candidate_23,single_item,1,created initial semantic cluster
+cluster_candidate_review_235,rejected,0,LLM skipped or failed
+cluster_candidate_review_236,rejected,0,"New item is about Cinematic Video Overviews, cluster is about Custom Agents; no shared entities or event."
+cluster_candidate_review_237,rejected,0,"New item discusses GPT-Realtime-2 voice integration for CRM, while cluster is about Custom Agents improvements; no event overlap."
+cluster_candidate_review_238,rejected,0,"The new item discusses GPT-Realtime-2 for standup updates, which is a different product and use case from the cluster's Custom Agents improvements."
+cluster_candidate_review_239,rejected,0,New item about Runway mobile app launch is unrelated to cluster about Custom Agents improvements.
+cluster_candidate_review_240,rejected,0,"The new item discusses building Runway Characters, while the cluster is about improvements to Custom Agents; they are unrelated."
+cluster_candidate_review_241,rejected,0,"The new item is about a Runway dinner event at CVPR, while the cluster is about Custom Agents improvements; no topic or entity overlap."
+cluster_candidate_review_242,rejected,0,"New item introduces Windsurf 2.0, which is a different product from Custom Agents mentioned in the cluster."
+cluster_candidate_review_243,rejected,0,"Both items relate to improvements involving agents, but the cluster focuses on Custom Agents improvements while the new item promotes downloading Windsurf for different features."
+cluster_candidate_review_244,rejected,0,"The new item is about Quora's mission announcement, while the cluster is about Custom Agents improvements; both are from the same platform but different events."
+cluster_candidate_review_245,rejected,0,"The new item is about Gemma 4 builds, which is unrelated to the cluster about Custom Agents improvements."
+cluster_candidate_review_246,rejected,0,"New item is a general weekend building prompt, not related to the Custom Agents improvements."
+cluster_candidate_review_247,rejected,0,"The new item is about a book's royalties, completely unrelated to Custom Agents improvements in the cluster."
+cluster_candidate_review_248,rejected,0,"New item is about Replit Agent 4, while cluster is about Custom Agents from a different provider; only word 'Agent' overlaps."
+cluster_candidate_review_249,rejected,0,"The new item discusses AI-for-code vs other verticals, while the cluster is about Custom Agents improvements; they share only the 'Powered by xgo.ing' tag but are different events."
+cluster_candidate_review_250,rejected,0,New item about MSPAINTIFY and Uberhuman has no thematic or entity overlap with the Custom Agents cluster.
+cluster_candidate_review_251,rejected,0,"The new item discusses a Web Canvas Draw Element API in early development, while the cluster is about Custom Agents improvements; they are different topics."
+cluster_candidate_review_252,rejected,0,New item is a launch announcement for Custom Models; cluster discusses improvements to Custom Agents; same product family but different events.
+cluster_candidate_review_253,rejected,0,"New item discusses company name availability and a quote about linear neolabs, while the cluster is about Custom Agents improvements and Open Responses API integration. No shared entities or topics."
+cluster_candidate_review_254,rejected,0,"The new item discusses a Swedish founder and YC partner, unrelated to the Custom Agents improvements."
+cluster_candidate_review_255,rejected,0,"New item is a thank you message about Flowise, while cluster is about Custom Agents improvements. Different topics and products."
+cluster_candidate_review_256,rejected,0,"The new item is a casual reply about 'Lore time' and a run, completely unrelated to Custom Agents improvements."
+cluster_candidate_review_257,rejected,0,"The new item discusses Gemma 4 showcases, while the cluster is about Custom Agents improvements; they are separate events."
+cluster_candidate_review_258,rejected,0,"The new item is about a glass effect project using Three.js, completely unrelated to the Custom Agents improvements cluster."
+cluster_candidate_review_259,rejected,0,"The new item discusses a side effect of building a simple business, which is unrelated to the cluster about Custom Agents improvements."
+cluster_candidate_review_260,rejected,0,"The new item discusses social dynamics of nerds, which is unrelated to the cluster about Custom Agents improvements."
+cluster_candidate_review_261,rejected,0,"The new item is about bread, while the cluster is about AI custom agents; no shared entities or topic."
+cluster_candidate_review_262,rejected,0,The new item is about a person (Katie Haun) unrelated to the cluster's topic of Custom Agents improvements.
+cluster_candidate_review_263,rejected,0,Both mention agents but the cluster is about general Custom Agents improvements while the item is a specific promotional installation of ElevenAgent.
+cluster_candidate_review_264,rejected,0,"The new item describes a dashboard for agent credits, which is a different feature than the improvements reported in the cluster."
+cluster_candidate_review_265,rejected,0,"Both discuss agent capabilities but refer to different products; cluster is about Custom Agents, new item introduces Skywork with Hermes."
+cluster_candidate_review_266,rejected,0,"The new item is a different product availability announcement, not directly related to the Custom Agents updates cluster."
+cluster_candidate_review_267,rejected,0,"The new item describes a specific app built on the same platform, not the same event as the cluster which announces platform improvements."
+cluster_candidate_review_268,rejected,0,"The new item is about Midjourney office hours, unrelated to Custom Agents."
+cluster_candidate_review_269,rejected,0,"The new item discusses Nemotron 3 Nano Omni, while the cluster is about Custom Agents improvements; no shared entities or event connection."
+cluster_candidate_review_270,rejected,0,"New item is a question about review bots and PRs, unrelated to Custom Agents improvements."
+cluster_candidate_review_271,rejected,0,"The new item is a blog post link from temporal.io, unrelated to the Custom Agents improvements in the cluster."
+cluster_candidate_review_272,rejected,0,"The new item is about Cohere Transcribe, a different product and company than the Custom Agents improvements in the cluster."
+cluster_candidate_review_273,rejected,0,Link to GroqCloud blog post is topically related to Custom Agents but does not describe the same event.
+cluster_candidate_review_274,rejected,0,The new item is a generic blog link unrelated to Custom Agents.
+cluster_candidate_review_275,rejected,0,"The new item discusses Waymo route preferences, which is unrelated to the Custom Agents improvements in the cluster."
+cluster_candidate_review_276,rejected,0,"The new item discusses a quote about outsourcing thinking, while the cluster is about Custom Agents improvements."
+cluster_candidate_review_277,rejected,0,"The new item discusses sample results from an open source project, while the cluster is about Custom Agents improvements; no shared event or topic."
+cluster_candidate_review_278,rejected,0,New item about Seedance 2.0 on Hailuo AI has no entity or topic overlap with cluster about Custom Agents improvements.
+cluster_candidate_review_279,rejected,0,"New item is about Kling 4K video enhancement, completely unrelated to Custom Agents topic."
+cluster_candidate_review_280,rejected,0,"New item is a vague teaser about an upcoming product, not specifically about Custom Agents improvements."
+cluster_candidate_review_281,rejected,0,"The new item promotes Oracle's booth at AI Dev 26, which is a separate event from the Custom Agents update."
+cluster_candidate_review_282,rejected,0,"The new item is about visiting Vapi_AI at a conference, which is not part of the same event as the product feature updates in the cluster."
+cluster_candidate_review_283,rejected,0,"The new item is a general research focus article about AI agents and data leaks, not specifically about the Custom Agents improvements in the cluster."
+cluster_candidate_review_284,rejected,0,"The new item is about Voxtral Mini Transcribe 2 on Mistral Studio, while the cluster covers Custom Agents improvements; they are unrelated."
+cluster_candidate_review_285,rejected,0,"The new item is about faking use of AI-enhanced video, which is unrelated to the Custom Agents cluster."
+cluster_candidate_review_286,rejected,0,"The new item is about building an NVIDIA AI Spark rig, while the cluster is about improvements to Custom Agents; no entity or topic overlap."
+cluster_candidate_review_287,rejected,0,"New item is about a compromised account and fraudulent post using DeepMind name, while cluster is about Custom Agents improvements."
+cluster_candidate_review_288,rejected,0,"The new item is about Grok TTS, while the cluster covers Custom Agents improvements; no shared entities or event."
+cluster_candidate_review_289,rejected,0,"New item is about Grok STT, which is a different product and event from the Custom Agents cluster."
+cluster_candidate_review_290,rejected,0,"The new item discusses the PM role becoming important, not the Custom Agents improvements."
+cluster_candidate_review_291,rejected,0,"The new item discusses version nostalgia (4.6, 5.5) unrelated to the cluster's topic of Custom Agents improvements."
+cluster_candidate_review_292,rejected,0,"Item discusses film upscaling, cluster discusses custom AI agents; no overlap."
+cluster_candidate_review_293,rejected,0,"The new item is a vague comment with only generic entity overlap, no clear connection to the specific Custom Agents event."
+cluster_candidate_review_294,rejected,0,"The new item discusses a human space launch to the moon, while the cluster covers improvements to Custom Agents software; they are completely unrelated topics."
+cluster_candidate_review_295,rejected,0,"The new item is a promotional tweet linking to a Meta robotics/news article, unrelated to the Custom Agents improvements described in the cluster."
+cluster_candidate_review_296,rejected,0,"The new item is about robotics news, not related to Custom Agents."
+cluster_candidate_review_297,rejected,0,"The new item is about Meta buying a company, while the cluster is about Custom Agents improvements; no topical overlap."
+cluster_candidate_review_298,rejected,0,"The new item is a research paper on agentic systems, while the cluster is about specific Custom Agents product improvements."
+cluster_candidate_review_299,rejected,0,Both involve agents but in different domains: Custom Agents product vs. healthcare research initiative.
+cluster_candidate_review_300,rejected,0,"The new item is a prompt injection test for OpenClaw/Hermes agents, unrelated to the cluster about Custom Agents improvements."
+cluster_candidate_review_301,rejected,0,"The new item discusses Hermes/Pareto Code from NousResearch, while the cluster is about Custom Agents improvements from a different source."
+cluster_candidate_review_302,rejected,0,"New item is a general reflection on Human-Agent collaboration, not about specific Custom Agents improvements."
+cluster_candidate_review_303,rejected,0,"The new item is a general commentary on Agents SDK 2.0, while the cluster is specifically about Custom Agents improvements; they share the same product family but refer to different events."
+cluster_candidate_review_304,rejected,0,"New item links to a DeepSeek model page on Ollama, while the cluster is about Custom Agents improvements; no meaningful overlap."
+cluster_candidate_review_305,rejected,0,"The new item is a documentation link for Ollama integrations, whereas the cluster is about improvements to a different platform's Custom Agents feature."
+cluster_candidate_review_306,rejected,0,"The new item is about Perplexity Computer in Microsoft Teams, which is completely unrelated to the cluster about Custom Agents improvements."
+cluster_candidate_review_307,rejected,0,New item about Perplexity Computer in Microsoft Marketplace is unrelated to Custom Agents improvements.
+cluster_candidate_review_308,rejected,0,"The new item is about Microsoft investor results, which is unrelated to the cluster about Custom Agents improvements."
+cluster_candidate_review_309,rejected,0,"New item announces GA of Agent 365, a different product from Custom Agents in the cluster."
+cluster_candidate_review_310,rejected,0,"The new item is about the Kimi K2.6 model from Moonshot, while the cluster is about improvements to Custom Agents, with no shared entities or topics."
+cluster_candidate_review_311,rejected,0,"The new item promotes a specific model (Kimi-K2.5-FW) on Poe, while the cluster is about general Custom Agents improvements; no event overlap."
+cluster_candidate_review_312,rejected,0,"No overlap in entities or topic; new item about Kimi K2.6 availability in Windsurf, cluster about Custom Agents improvements."
+cluster_candidate_review_313,rejected,0,"The new item is a humorous anecdote about an ICLR recruiting event, which has no connection to the Custom Agents improvements cluster."
+cluster_candidate_review_314,rejected,0,"New item is about a personal experience with DeepSeek V4 Flash translation, while cluster is about Custom Agents improvements."
+cluster_candidate_review_315,rejected,0,New item about DeepSeek v4 Pro is unrelated to the Custom Agents cluster.
+cluster_candidate_review_316,rejected,0,"New item is about Cursor LSP performance, while cluster is about Custom Agents improvements; no entity overlap."
+cluster_candidate_review_317,rejected,0,"The new item is about Nvidia's market cap and CEO comment, completely different topic from Custom Agents improvements."
+cluster_candidate_review_318,rejected,0,"The new item discusses GPT-5.5 in Windsurf 2.0, while the cluster is about Custom Agents improvements; no event or topic overlap."
+cluster_candidate_review_319,rejected,0,LLM skipped or failed
+cluster_candidate_review_320,rejected,0,LLM skipped or failed
+cluster_candidate_review_321,rejected,0,LLM skipped or failed
+cluster_candidate_review_322,rejected,0,LLM skipped or failed
+cluster_candidate_review_323,rejected,0,LLM skipped or failed
+cluster_candidate_review_324,rejected,0,LLM skipped or failed
+cluster_candidate_review_325,rejected,0,LLM skipped or failed
+cluster_candidate_review_326,rejected,0,LLM skipped or failed
+cluster_candidate_review_327,rejected,0,LLM skipped or failed
+cluster_candidate_review_328,rejected,0,LLM skipped or failed
+cluster_candidate_review_329,rejected,0,LLM skipped or failed
+cluster_candidate_review_330,rejected,0,LLM skipped or failed
+cluster_candidate_review_331,rejected,0,LLM skipped or failed
+cluster_candidate_review_332,rejected,0,LLM skipped or failed
+cluster_candidate_review_333,rejected,0,LLM skipped or failed
+cluster_candidate_review_334,rejected,0,LLM skipped or failed
+cluster_candidate_review_335,rejected,0,LLM skipped or failed
+cluster_candidate_review_336,rejected,0,LLM skipped or failed
+cluster_candidate_review_337,rejected,0,LLM skipped or failed
+cluster_candidate_review_338,rejected,0,LLM skipped or failed
+cluster_candidate_review_339,rejected,0,LLM skipped or failed
+cluster_candidate_review_340,rejected,0,LLM skipped or failed
+cluster_candidate_review_341,rejected,0,LLM skipped or failed
+cluster_candidate_review_342,rejected,0,LLM skipped or failed
+cluster_candidate_review_343,rejected,0,LLM skipped or failed
+cluster_candidate_review_344,rejected,0,LLM skipped or failed
+cluster_candidate_review_345,rejected,0,LLM skipped or failed
+cluster_candidate_review_346,rejected,0,LLM skipped or failed
+cluster_candidate_review_347,rejected,0,LLM skipped or failed
+cluster_candidate_review_348,rejected,0,LLM skipped or failed
+cluster_candidate_review_349,rejected,0,LLM skipped or failed
+cluster_candidate_review_350,rejected,0,LLM skipped or failed
+cluster_candidate_review_351,rejected,0,LLM skipped or failed
+cluster_candidate_review_352,rejected,0,LLM skipped or failed
+cluster_candidate_review_353,rejected,0,LLM skipped or failed
+cluster_candidate_review_354,rejected,0,LLM skipped or failed
+cluster_candidate_review_355,rejected,0,LLM skipped or failed
+cluster_candidate_review_356,rejected,0,LLM skipped or failed
+cluster_candidate_review_357,rejected,0,LLM skipped or failed
+cluster_candidate_review_358,rejected,0,LLM skipped or failed
+cluster_candidate_review_359,rejected,0,LLM skipped or failed
+cluster_candidate_review_360,rejected,0,LLM skipped or failed
+cluster_candidate_review_361,rejected,0,LLM skipped or failed
+cluster_candidate_review_362,rejected,0,LLM skipped or failed
+cluster_candidate_review_363,rejected,0,LLM skipped or failed
+cluster_candidate_review_364,rejected,0,LLM skipped or failed
+cluster_candidate_review_365,rejected,0,LLM skipped or failed
+cluster_candidate_review_366,rejected,0,LLM skipped or failed
+cluster_candidate_review_367,rejected,0,LLM skipped or failed
+cluster_candidate_review_368,rejected,0,LLM skipped or failed
+cluster_candidate_review_369,rejected,0,LLM skipped or failed
+cluster_candidate_review_370,rejected,0,LLM skipped or failed
+cluster_candidate_review_371,rejected,0,LLM skipped or failed
+cluster_candidate_review_372,rejected,0,LLM skipped or failed
+cluster_candidate_review_373,rejected,0,LLM skipped or failed
+cluster_candidate_review_374,rejected,0,LLM skipped or failed
+cluster_candidate_review_375,rejected,0,LLM skipped or failed
+cluster_candidate_review_376,rejected,0,LLM skipped or failed
+cluster_candidate_review_377,rejected,0,LLM skipped or failed
+cluster_candidate_review_378,rejected,0,LLM skipped or failed
+cluster_candidate_review_379,rejected,0,LLM skipped or failed
+cluster_candidate_review_380,rejected,0,LLM skipped or failed
+cluster_candidate_review_381,rejected,0,LLM skipped or failed
+cluster_candidate_review_382,rejected,0,LLM skipped or failed
+cluster_candidate_review_383,rejected,0,LLM skipped or failed
+cluster_candidate_review_384,rejected,0,LLM skipped or failed
+cluster_candidate_review_385,rejected,0,LLM skipped or failed
+cluster_candidate_review_386,rejected,0,LLM skipped or failed
+cluster_candidate_review_387,rejected,0,LLM skipped or failed
+cluster_candidate_review_388,rejected,0,LLM skipped or failed
+cluster_candidate_review_389,rejected,0,LLM skipped or failed
+cluster_candidate_review_390,rejected,0,LLM skipped or failed
+cluster_candidate_review_391,rejected,0,LLM skipped or failed
+cluster_candidate_review_392,rejected,0,LLM skipped or failed
+cluster_candidate_review_393,rejected,0,LLM skipped or failed
+cluster_candidate_review_394,rejected,0,LLM skipped or failed
+cluster_candidate_review_395,rejected,0,LLM skipped or failed
+cluster_candidate_review_396,rejected,0,LLM skipped or failed
+cluster_candidate_review_397,rejected,0,LLM skipped or failed
+cluster_candidate_review_398,rejected,0,LLM skipped or failed
+cluster_candidate_review_399,rejected,0,LLM skipped or failed
+cluster_candidate_review_400,rejected,0,LLM skipped or failed
+cluster_candidate_review_401,rejected,0,LLM skipped or failed
+cluster_candidate_review_402,rejected,0,LLM skipped or failed
+cluster_candidate_review_403,rejected,0,LLM skipped or failed
+cluster_candidate_review_404,rejected,0,LLM skipped or failed
+cluster_candidate_review_405,rejected,0,LLM skipped or failed
+cluster_candidate_review_406,rejected,0,LLM skipped or failed
+cluster_candidate_review_407,rejected,0,LLM skipped or failed
+cluster_candidate_review_408,rejected,0,LLM skipped or failed
+cluster_candidate_review_409,rejected,0,LLM skipped or failed
+cluster_candidate_review_410,rejected,0,LLM skipped or failed
+cluster_candidate_review_411,rejected,0,LLM skipped or failed
+cluster_candidate_review_412,rejected,0,LLM skipped or failed
+cluster_candidate_review_413,rejected,0,LLM skipped or failed
+cluster_candidate_review_414,rejected,0,LLM skipped or failed
+cluster_candidate_review_415,rejected,0,LLM skipped or failed
+cluster_candidate_review_416,rejected,0,LLM skipped or failed
+cluster_candidate_review_417,rejected,0,LLM skipped or failed
+cluster_candidate_review_418,rejected,0,LLM skipped or failed
+cluster_candidate_review_419,rejected,0,LLM skipped or failed
+cluster_candidate_review_420,rejected,0,LLM skipped or failed
+cluster_candidate_review_421,rejected,0,LLM skipped or failed
+cluster_candidate_review_422,rejected,0,LLM skipped or failed
+cluster_candidate_review_423,rejected,0,LLM skipped or failed
+cluster_candidate_review_424,rejected,0,LLM skipped or failed
+cluster_candidate_review_425,rejected,0,LLM skipped or failed
+cluster_candidate_review_426,rejected,0,LLM skipped or failed
+cluster_candidate_review_427,rejected,0,LLM skipped or failed
+cluster_candidate_review_428,rejected,0,LLM skipped or failed
+cluster_candidate_review_429,rejected,0,LLM skipped or failed
+cluster_candidate_review_430,rejected,0,LLM skipped or failed
+cluster_candidate_review_431,rejected,0,LLM skipped or failed
+cluster_candidate_review_432,rejected,0,LLM skipped or failed
+cluster_candidate_review_433,rejected,0,LLM skipped or failed
+cluster_candidate_review_434,rejected,0,LLM skipped or failed
+cluster_candidate_review_435,rejected,0,LLM skipped or failed
+cluster_candidate_review_436,rejected,0,LLM skipped or failed
+cluster_candidate_review_437,rejected,0,LLM skipped or failed
+cluster_candidate_review_438,rejected,0,LLM skipped or failed
+cluster_candidate_review_439,rejected,0,LLM skipped or failed
+cluster_candidate_review_440,rejected,0,LLM skipped or failed
+cluster_candidate_review_441,rejected,0,LLM skipped or failed
+cluster_candidate_review_442,rejected,0,LLM skipped or failed
+cluster_candidate_review_443,rejected,0,LLM skipped or failed
+cluster_candidate_review_444,rejected,0,LLM skipped or failed
+cluster_candidate_review_445,rejected,0,LLM skipped or failed
+cluster_candidate_review_446,rejected,0,LLM skipped or failed
+cluster_candidate_review_447,rejected,0,LLM skipped or failed
+cluster_candidate_review_448,rejected,0,LLM skipped or failed
+cluster_candidate_review_449,rejected,0,LLM skipped or failed
+cluster_candidate_review_450,rejected,0,LLM skipped or failed
+cluster_candidate_review_451,rejected,0,LLM skipped or failed
+cluster_candidate_review_452,rejected,0,LLM skipped or failed
+cluster_candidate_review_453,rejected,0,LLM skipped or failed
+cluster_candidate_review_454,rejected,0,LLM skipped or failed
+cluster_candidate_review_455,rejected,0,LLM skipped or failed
+cluster_candidate_review_456,rejected,0,LLM skipped or failed
+cluster_candidate_review_457,rejected,0,LLM skipped or failed
+cluster_candidate_review_458,rejected,0,LLM skipped or failed
+cluster_candidate_review_459,rejected,0,LLM skipped or failed
+cluster_candidate_review_460,rejected,0,LLM skipped or failed
+cluster_candidate_review_461,rejected,0,LLM skipped or failed
+cluster_candidate_review_462,rejected,0,LLM skipped or failed
+cluster_candidate_review_463,rejected,0,LLM skipped or failed
+cluster_candidate_review_464,rejected,0,LLM skipped or failed
+cluster_candidate_review_465,rejected,0,LLM skipped or failed
+cluster_candidate_review_466,rejected,0,LLM skipped or failed
+cluster_candidate_review_467,rejected,0,LLM skipped or failed
+cluster_candidate_review_468,rejected,0,LLM skipped or failed
+cluster_candidate_review_469,rejected,0,LLM skipped or failed
+cluster_candidate_review_470,rejected,0,LLM skipped or failed
+cluster_candidate_review_471,rejected,0,LLM skipped or failed
+cluster_candidate_review_472,rejected,0,LLM skipped or failed
+cluster_candidate_review_473,rejected,0,LLM skipped or failed
+cluster_candidate_review_474,rejected,0,LLM skipped or failed
+cluster_candidate_review_475,rejected,0,LLM skipped or failed
+cluster_candidate_review_476,rejected,0,LLM skipped or failed
+cluster_candidate_review_477,rejected,0,LLM skipped or failed
+cluster_candidate_review_478,rejected,0,LLM skipped or failed
+cluster_candidate_review_479,rejected,0,LLM skipped or failed
+cluster_candidate_review_480,rejected,0,LLM skipped or failed
+cluster_candidate_review_481,rejected,0,LLM skipped or failed
+cluster_candidate_review_482,rejected,0,LLM skipped or failed
+cluster_candidate_review_483,rejected,0,LLM skipped or failed
+cluster_candidate_review_484,rejected,0,LLM skipped or failed
+cluster_candidate_review_485,rejected,0,LLM skipped or failed
+cluster_candidate_review_486,rejected,0,LLM skipped or failed
+cluster_candidate_review_487,rejected,0,LLM skipped or failed
+cluster_candidate_review_488,rejected,0,LLM skipped or failed
+cluster_candidate_review_489,rejected,0,LLM skipped or failed
+cluster_candidate_review_490,rejected,0,LLM skipped or failed
+cluster_candidate_review_491,rejected,0,LLM skipped or failed
+cluster_candidate_review_492,rejected,0,LLM skipped or failed
+cluster_candidate_review_493,rejected,0,LLM skipped or failed
+cluster_candidate_review_494,rejected,0,LLM skipped or failed
+cluster_candidate_review_495,rejected,0,LLM skipped or failed
+cluster_candidate_review_496,rejected,0,LLM skipped or failed
+cluster_candidate_review_497,rejected,0,LLM skipped or failed
+cluster_candidate_review_498,rejected,0,LLM skipped or failed
+cluster_candidate_review_499,rejected,0,LLM skipped or failed
+cluster_candidate_review_500,rejected,0,LLM skipped or failed
+cluster_candidate_review_501,rejected,0,LLM skipped or failed
+cluster_candidate_review_502,rejected,0,LLM skipped or failed
+cluster_candidate_review_503,rejected,0,LLM skipped or failed
+cluster_candidate_review_504,rejected,0,LLM skipped or failed
+cluster_candidate_review_505,rejected,0,LLM skipped or failed
+cluster_candidate_review_506,rejected,0,LLM skipped or failed
+cluster_candidate_review_507,rejected,0,LLM skipped or failed

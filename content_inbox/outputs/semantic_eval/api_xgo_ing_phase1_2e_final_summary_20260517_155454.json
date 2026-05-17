@@ -1,0 +1,243 @@
+{
+  "console_ui_modified": false,
+  "files_changed": [
+    "content_inbox/app/semantic/cards.py",
+    "content_inbox/app/semantic/cli.py",
+    "content_inbox/app/semantic/clusters.py",
+    "content_inbox/app/semantic/evaluate.py",
+    "content_inbox/app/semantic/evidence.py",
+    "content_inbox/app/semantic/llm_client.py",
+    "content_inbox/app/semantic/relations.py",
+    "content_inbox/app/semantic/schemas.py",
+    "content_inbox/tests/test_semantic_phase1.py"
+  ],
+  "git_commit": "601ceafb56a9657d8b5b72b5ba552f8a8b028271",
+  "hotspot_top_keys": [
+    {
+      "group_size": 90,
+      "hotspot_key": "agent",
+      "key_source": "event_phrase",
+      "source_count": 54
+    },
+    {
+      "group_size": 32,
+      "hotspot_key": "api",
+      "key_source": "entity",
+      "source_count": 24
+    },
+    {
+      "group_size": 21,
+      "hotspot_key": "research",
+      "key_source": "entity",
+      "source_count": 17
+    },
+    {
+      "group_size": 20,
+      "hotspot_key": "claude",
+      "key_source": "entity",
+      "source_count": 15
+    },
+    {
+      "group_size": 22,
+      "hotspot_key": "launch",
+      "key_source": "entity",
+      "source_count": 14
+    },
+    {
+      "group_size": 16,
+      "hotspot_key": "github",
+      "key_source": "entity",
+      "source_count": 14
+    },
+    {
+      "group_size": 14,
+      "hotspot_key": "release",
+      "key_source": "entity",
+      "source_count": 14
+    },
+    {
+      "group_size": 14,
+      "hotspot_key": "openai",
+      "key_source": "entity",
+      "source_count": 13
+    },
+    {
+      "group_size": 14,
+      "hotspot_key": "google",
+      "key_source": "entity",
+      "source_count": 13
+    },
+    {
+      "group_size": 13,
+      "hotspot_key": "benchmark",
+      "key_source": "entity",
+      "source_count": 11
+    },
+    {
+      "group_size": 13,
+      "hotspot_key": "gemini",
+      "key_source": "entity",
+      "source_count": 11
+    },
+    {
+      "group_size": 10,
+      "hotspot_key": "paper",
+      "key_source": "entity",
+      "source_count": 8
+    },
+    {
+      "group_size": 9,
+      "hotspot_key": "update",
+      "key_source": "entity",
+      "source_count": 8
+    },
+    {
+      "group_size": 8,
+      "hotspot_key": "anthropic",
+      "key_source": "entity",
+      "source_count": 6
+    },
+    {
+      "group_size": 7,
+      "hotspot_key": "preview",
+      "key_source": "entity",
+      "source_count": 6
+    },
+    {
+      "group_size": 7,
+      "hotspot_key": "arxiv",
+      "key_source": "entity",
+      "source_count": 6
+    },
+    {
+      "group_size": 7,
+      "hotspot_key": "gpt",
+      "key_source": "entity",
+      "source_count": 6
+    },
+    {
+      "group_size": 6,
+      "hotspot_key": "open-source",
+      "key_source": "event_phrase",
+      "source_count": 6
+    },
+    {
+      "group_size": 6,
+      "hotspot_key": "opensource",
+      "key_source": "event_phrase",
+      "source_count": 6
+    },
+    {
+      "group_size": 6,
+      "hotspot_key": "at:agent",
+      "key_source": "event_phrase",
+      "source_count": 6
+    }
+  ],
+  "key_results": {
+    "actual_calls": 234,
+    "actual_tokens": 728728,
+    "budget_skips": {
+      "cluster_card_patch": {
+        "budget": 64000,
+        "calls": 3,
+        "consumed_tokens": 6194,
+        "remaining_budget": 57806,
+        "skipped": 19,
+        "skipped_due_to_budget": 0
+      },
+      "item_card": {
+        "budget": 240000,
+        "calls": 63,
+        "consumed_tokens": 261910,
+        "remaining_budget": 0,
+        "skipped": 17,
+        "skipped_due_to_budget": 17
+      },
+      "item_cluster_relation": {
+        "budget": 216000,
+        "calls": 88,
+        "consumed_tokens": 216071,
+        "remaining_budget": 0,
+        "skipped": 189,
+        "skipped_due_to_budget": 189
+      },
+      "item_relation": {
+        "budget": 240000,
+        "calls": 80,
+        "consumed_tokens": 244553,
+        "remaining_budget": 0,
+        "skipped": 218,
+        "skipped_due_to_budget": 218
+      },
+      "source_profile": {
+        "budget": 40000,
+        "calls": 0,
+        "consumed_tokens": 0,
+        "remaining_budget": 40000,
+        "skipped": 0,
+        "skipped_due_to_budget": 0
+      }
+    },
+    "candidate_suppression_count": 31,
+    "card_fallbacks": 18,
+    "cluster_eligible_count": 7,
+    "db_lock_errors": 0,
+    "duration_seconds": 1517.69,
+    "event_relation_type_distribution": {
+      "different": 36,
+      "entity_overlap_only": 10,
+      "same_account_boilerplate": 15,
+      "same_event": 7,
+      "same_product_different_event": 4,
+      "same_topic_only": 249
+    },
+    "final_failures": 26,
+    "high_priority_skips": 0,
+    "item_card_failed_calls": 9,
+    "multi_item_cluster_count": 1,
+    "parse_failures": 3,
+    "rate_limit_errors": 0,
+    "raw_relation_count": 321,
+    "relations_by_primary_relation": {
+      "different": 314,
+      "near_duplicate": 4,
+      "related_with_new_info": 3
+    },
+    "unique_relation_pair_count": 284
+  },
+  "known_blockers": [
+    "budget skips remain high (443 rows)",
+    "event hotspot keys improved from proxy domains but still broad (agent/api/research)",
+    "multi-item clusters only 1",
+    "item-card failed call rows increased to 37 though final heuristic fallback is 18",
+    "relation/cluster candidate generation still overproduces high/medium candidates"
+  ],
+  "phase": "phase1_2e",
+  "readiness": {
+    "cluster_write": "NO",
+    "full_semantic_write_real_db": "NO",
+    "near_duplicate_only_write": "not recommended yet",
+    "reason": "precision improved, but budget skips remain high, hotspot keys are still broad, card failures increased as failed-call rows, and multi-item cluster evidence is too thin."
+  },
+  "real_db_writes": {
+    "backup_path": null,
+    "ingest_source_scope": "NO",
+    "semantic_write_real_db": "NO"
+  },
+  "review_bundle": {
+    "bundle_json": "/Users/wangrundong/work/infomation-center/content_inbox/outputs/exports/phase1_2e_review_export_20260517_155454/phase1_2e_review_bundle.json",
+    "bundle_md": "/Users/wangrundong/work/infomation-center/content_inbox/outputs/exports/phase1_2e_review_export_20260517_155454/phase1_2e_review_bundle.md",
+    "bundle_zip": "/Users/wangrundong/work/infomation-center/content_inbox/outputs/exports/phase1_2e_review_export_20260517_155454/phase1_2e_review_evidence.zip"
+  },
+  "run_dir": "/Users/wangrundong/work/infomation-center/content_inbox/outputs/semantic_eval/api_xgo_ing_phase1_2e_full_300_c5_20260517_152936",
+  "run_parameters": {
+    "concurrency": 5,
+    "item_count": 300,
+    "model": "deepseek-v4-flash",
+    "sample_mode": "event_hotspots",
+    "scope": "api.xgo.ing*",
+    "stage_budget_profile": "phase1_2e_profile",
+    "write_real_db": false
+  }
+}
