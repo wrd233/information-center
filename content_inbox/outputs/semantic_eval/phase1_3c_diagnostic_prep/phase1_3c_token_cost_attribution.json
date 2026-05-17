@@ -1,0 +1,541 @@
+{
+  "overall": {
+    "total_items": 300,
+    "actual_tokens": 877140,
+    "actual_calls": 220,
+    "tokens_per_item": 2923.8,
+    "cache_hit_tokens": 236160,
+    "cache_hit_rate": 0.2692,
+    "failure_tokens": 0,
+    "failure_token_pct": 0.0
+  },
+  "by_stage": [
+    {
+      "task_type": "item_card",
+      "calls": 54,
+      "success": 51,
+      "failed": 3,
+      "total_tokens": 282644,
+      "input_tokens": 148766,
+      "output_tokens": 133878,
+      "avg_tokens_per_call": 5234.1,
+      "tokens_per_item": 942.1,
+      "cache_hit_tokens": 62208,
+      "avg_latency_ms": 24780.8,
+      "retry_count": 3
+    },
+    {
+      "task_type": "item_relation",
+      "calls": 157,
+      "success": 129,
+      "failed": 28,
+      "total_tokens": 539265,
+      "input_tokens": 322931,
+      "output_tokens": 216334,
+      "avg_tokens_per_call": 3434.8,
+      "tokens_per_item": 1797.5,
+      "cache_hit_tokens": 167040,
+      "avg_latency_ms": 17257.6,
+      "retry_count": 28
+    },
+    {
+      "task_type": "item_cluster_relation",
+      "calls": 6,
+      "success": 6,
+      "failed": 0,
+      "total_tokens": 48727,
+      "input_tokens": 38448,
+      "output_tokens": 10279,
+      "avg_tokens_per_call": 8121.2,
+      "tokens_per_item": 162.4,
+      "cache_hit_tokens": 5376,
+      "avg_latency_ms": 18622.2,
+      "retry_count": 0
+    },
+    {
+      "task_type": "cluster_card_patch",
+      "calls": 3,
+      "success": 3,
+      "failed": 0,
+      "total_tokens": 6504,
+      "input_tokens": 3843,
+      "output_tokens": 2661,
+      "avg_tokens_per_call": 2168.0,
+      "tokens_per_item": 21.7,
+      "cache_hit_tokens": 1536,
+      "avg_latency_ms": 9837.7,
+      "retry_count": 0
+    }
+  ],
+  "by_semantic_level": {
+    "event_signature": {
+      "estimated_tokens": 521088.1,
+      "items_touching": 860,
+      "avg_tokens_per_item": 605.9
+    },
+    "thread_signature": {
+      "estimated_tokens": 278420.8,
+      "items_touching": 464,
+      "avg_tokens_per_item": 600.0
+    },
+    "reject": {
+      "estimated_tokens": 75732.2,
+      "items_touching": 71,
+      "avg_tokens_per_item": 1066.7
+    },
+    "content_signature": {
+      "estimated_tokens": 1898.9,
+      "items_touching": 4,
+      "avg_tokens_per_item": 474.7
+    }
+  },
+  "top_expensive_calls": [
+    {
+      "call_id": "315",
+      "stage": "item_cluster_relation",
+      "input_tokens": 6732,
+      "output_tokens": 2289,
+      "total_tokens": 9021,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 9,
+      "item_ids": [
+        "item_a62690a8b34644dc959a77ddde1c7e70",
+        "item_e6f115055b3b43cd9bcc6d7189b70cfd",
+        "item_a909448d3c234d02a5fe7da50df043f7"
+      ]
+    },
+    {
+      "call_id": "3",
+      "stage": "item_card",
+      "input_tokens": 5102,
+      "output_tokens": 3799,
+      "total_tokens": 8901,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 5,
+      "item_ids": [
+        "item_60e5d2df9cb74fee927334cde3f7b8c8",
+        "item_aec7ba3620ae40b7a752e7f5f1543bb9",
+        "item_4c1cf2b00ead48d8bbd63164e51441d5"
+      ]
+    },
+    {
+      "call_id": "313",
+      "stage": "item_cluster_relation",
+      "input_tokens": 6664,
+      "output_tokens": 1900,
+      "total_tokens": 8564,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 9,
+      "item_ids": [
+        "item_fdfb204d25754a14aa007f4ec33d25cb",
+        "item_6f1015d8145d463096fd6d2f5823f078",
+        "item_a909448d3c234d02a5fe7da50df043f7"
+      ]
+    },
+    {
+      "call_id": "312",
+      "stage": "item_cluster_relation",
+      "input_tokens": 6223,
+      "output_tokens": 2269,
+      "total_tokens": 8492,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 10,
+      "item_ids": [
+        "item_10a1ce10998841a6918dedc924175c2d",
+        "item_6158804009654a348b271d1235155975",
+        "item_4adf9a26397a4a0db2da39926ea8431b"
+      ]
+    },
+    {
+      "call_id": "43",
+      "stage": "item_card",
+      "input_tokens": 4445,
+      "output_tokens": 3729,
+      "total_tokens": 8174,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 5,
+      "item_ids": [
+        "item_33e076638ab8429496f67137c0a342b4",
+        "item_974fcb9fd04b4f188ef1c5fa2d39b98b",
+        "item_9d1a4330d2b94b5a8efbf0dccbea5ad1"
+      ]
+    },
+    {
+      "call_id": "2",
+      "stage": "item_card",
+      "input_tokens": 4920,
+      "output_tokens": 3218,
+      "total_tokens": 8138,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 5,
+      "item_ids": [
+        "item_ff107f9dcddb49178d303f9f1c55f711",
+        "item_a04589d329024c97918a1b6687aaa8c2",
+        "item_880c11f1351143cbb4b7b1f729005c63"
+      ]
+    },
+    {
+      "call_id": "311",
+      "stage": "item_cluster_relation",
+      "input_tokens": 6270,
+      "output_tokens": 1600,
+      "total_tokens": 7870,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 9,
+      "item_ids": [
+        "item_4adf9a26397a4a0db2da39926ea8431b",
+        "item_6158804009654a348b271d1235155975",
+        "item_9d1a4330d2b94b5a8efbf0dccbea5ad1"
+      ]
+    },
+    {
+      "call_id": "322",
+      "stage": "item_cluster_relation",
+      "input_tokens": 6291,
+      "output_tokens": 1435,
+      "total_tokens": 7726,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 11,
+      "item_ids": [
+        "item_20a0c2bcfd9f4280bf66ac1ed7508dc6",
+        "item_9f131041f088460fbc7db3fd7de172d5",
+        "item_fef20066df524b90a1044d1b1ce3ab36"
+      ]
+    },
+    {
+      "call_id": "41",
+      "stage": "item_card",
+      "input_tokens": 4972,
+      "output_tokens": 2575,
+      "total_tokens": 7547,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 5,
+      "item_ids": [
+        "item_050e5a4a15e24ca5b984101c4741fa54",
+        "item_12864804ee7b41ad805d2f31dde79a03",
+        "item_325f8975afb647eeb8a90456e3fbb5bc"
+      ]
+    },
+    {
+      "call_id": "7",
+      "stage": "item_card",
+      "input_tokens": 4725,
+      "output_tokens": 2734,
+      "total_tokens": 7459,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 5,
+      "item_ids": [
+        "item_0bea403e70384581b6a16f7ed9303894",
+        "item_f8f8a4f39aa74f85b82f70acc58ef44f",
+        "item_0cabbd2be8224c239efd856641a51f59"
+      ]
+    },
+    {
+      "call_id": "25",
+      "stage": "item_card",
+      "input_tokens": 3552,
+      "output_tokens": 3888,
+      "total_tokens": 7440,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 5,
+      "item_ids": [
+        "item_ada8548e98444d609a560660ba8db1f1",
+        "item_9d0967dbc96b4c769897a436562d8634",
+        "item_6497b2f027a24a3eb9a4b9680c6af220"
+      ]
+    },
+    {
+      "call_id": "16",
+      "stage": "item_card",
+      "input_tokens": 3644,
+      "output_tokens": 3758,
+      "total_tokens": 7402,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 5,
+      "item_ids": [
+        "item_9074658486ba44b6aee380c2c04f81c7",
+        "item_2c3511efb40a443cacd59eaaf93b3899",
+        "item_924e19bde6f641f4bf38d3b27f5bc576"
+      ]
+    },
+    {
+      "call_id": "19",
+      "stage": "item_card",
+      "input_tokens": 3745,
+      "output_tokens": 3604,
+      "total_tokens": 7349,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 5,
+      "item_ids": [
+        "item_11ccbd2914654171b1c633decf55dc0b",
+        "item_6ffb5f230a554c09a275a6b51c448676",
+        "item_ea5e144423244e6684c14af24ffd3220"
+      ]
+    },
+    {
+      "call_id": "42",
+      "stage": "item_card",
+      "input_tokens": 3409,
+      "output_tokens": 3862,
+      "total_tokens": 7271,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 5,
+      "item_ids": [
+        "item_5481d9d7e3204dfab120d8ffd41e5b7b",
+        "item_2d1f92300b134213a246e683184f11ef",
+        "item_d5e175dae5ac44d18d8bac85fbf27d13"
+      ]
+    },
+    {
+      "call_id": "24",
+      "stage": "item_card",
+      "input_tokens": 3692,
+      "output_tokens": 3489,
+      "total_tokens": 7181,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 5,
+      "item_ids": [
+        "item_931679110a564395a100fd9a6bb00fbb",
+        "item_517f76e3e4da47b1a68e976729b72dba",
+        "item_c175c3820ab644acb62c6043d6297e87"
+      ]
+    },
+    {
+      "call_id": "1",
+      "stage": "item_card",
+      "input_tokens": 3709,
+      "output_tokens": 3436,
+      "total_tokens": 7145,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 5,
+      "item_ids": [
+        "item_c52026599fe74d0798704579bb2e2507",
+        "item_5f749646932f417485ac539e4a434808",
+        "item_c96041fbd0a94ecfa37626041240912d"
+      ]
+    },
+    {
+      "call_id": "9",
+      "stage": "item_card",
+      "input_tokens": 3523,
+      "output_tokens": 3598,
+      "total_tokens": 7121,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 5,
+      "item_ids": [
+        "item_c31ab2c724f145d09732f4c99c8cbe1e",
+        "item_e8e0f0d00a0e409bbe75648f03a363be",
+        "item_d5a78d239fcf4ef08a5711b32c66a68e"
+      ]
+    },
+    {
+      "call_id": "319",
+      "stage": "item_cluster_relation",
+      "input_tokens": 6268,
+      "output_tokens": 786,
+      "total_tokens": 7054,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 9,
+      "item_ids": [
+        "item_580ab8a81c864bc3a7083e8122e2b74b",
+        "item_9b9dd690121b476b994ffc282324e399",
+        "item_445908ccd5234b7ba305d5cd8a7be275"
+      ]
+    },
+    {
+      "call_id": "50",
+      "stage": "item_card",
+      "input_tokens": 3340,
+      "output_tokens": 3649,
+      "total_tokens": 6989,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 5,
+      "item_ids": [
+        "item_580ab8a81c864bc3a7083e8122e2b74b",
+        "item_fef20066df524b90a1044d1b1ce3ab36",
+        "item_9f131041f088460fbc7db3fd7de172d5"
+      ]
+    },
+    {
+      "call_id": "44",
+      "stage": "item_card",
+      "input_tokens": 3403,
+      "output_tokens": 3563,
+      "total_tokens": 6966,
+      "success": true,
+      "prompt_variant": "full",
+      "item_count": 5,
+      "item_ids": [
+        "item_ff8c9467986d426e90becc6e1ecf654e",
+        "item_107661efeb1343b5b3a1576c6a4a39db",
+        "item_34c167815aea4d79bc92978d66340e95"
+      ]
+    }
+  ],
+  "top_expensive_items": [
+    {
+      "item_id": "item_9d0967dbc96b4c769897a436562d8634",
+      "title": "Code Arena's frontend leaderboard for models using visual inputs in agentic coding has turned over f...",
+      "source_name": "lmarena.ai(@lmarena_ai)",
+      "semantic_level": "event_signature",
+      "estimated_tokens": 16424.8
+    },
+    {
+      "item_id": "item_bb7e8c917d314f0eb996a1df026c74b6",
+      "title": "The best companies to work at today: 1. Anthropic 2. OpenAI 3. Google DeepMind 4. SpaceX 5. xAI 6. ...",
+      "source_name": "Aadit Sheth(@aaditsh)",
+      "semantic_level": "thread_signature",
+      "estimated_tokens": 12899.7
+    },
+    {
+      "item_id": "item_00a7372d41284c28931a28e579a03d61",
+      "title": "田渊栋 (前 Meta FAIR Director) 以联合创始人身份正式官宣新公司：Recursive @Recursive_SI Recursive 的使命是构建递归自改进超智能 (Recur...",
+      "source_name": "meng shao(@shao__meng)",
+      "semantic_level": "event_signature",
+      "estimated_tokens": 11857.6
+    },
+    {
+      "item_id": "item_c8aa2dd69e2b4f12a6954bdf92ae0d17",
+      "title": "哪个模型最牛逼？arena榜都被刷烂了。 要看就看 Vercel的最新报告。 20万个项目，7个月十万亿个 token的消耗分析，有些结论有意思： 1. 按费用消耗 Anthropic 占 61...",
+      "source_name": "向阳乔木(@vista8)",
+      "semantic_level": "thread_signature",
+      "estimated_tokens": 10414.0
+    },
+    {
+      "item_id": "item_5af5b0c651eb4d6dbe3a4173312d28b8",
+      "title": "The future of the industry involves the model and product evolving together rather than existing as ...",
+      "source_name": "Fireworks AI(@FireworksAI_HQ)",
+      "semantic_level": "thread_signature",
+      "estimated_tokens": 9448.2
+    },
+    {
+      "item_id": "item_6158804009654a348b271d1235155975",
+      "title": "With the new Chrome extension, Codex can quickly move through repetitive browser work, like navigati...",
+      "source_name": "OpenAI(@OpenAI)",
+      "semantic_level": "event_signature",
+      "estimated_tokens": 9325.7
+    },
+    {
+      "item_id": "item_088c6d5128b44f2ab4ef70f800809d11",
+      "title": "playing around with local AI models after I recently built out my home lab (DGX spark, mac mini, 509...",
+      "source_name": "andrew chen(@andrewchen)",
+      "semantic_level": "event_signature",
+      "estimated_tokens": 8702.4
+    },
+    {
+      "item_id": "item_e6f115055b3b43cd9bcc6d7189b70cfd",
+      "title": "We've partnered with @OpenAI to offer GPT-5.5 in Devin at 50% off through May 14 starting today.",
+      "source_name": "Cognition(@cognition_labs)",
+      "semantic_level": "event_signature",
+      "estimated_tokens": 8684.6
+    },
+    {
+      "item_id": "item_d743cfc40753479a81a1b6b28739d291",
+      "title": "This is how you announce a compute deal. Anthropic drops a thread: 1. Starts with what changes for...",
+      "source_name": "Aadit Sheth(@aaditsh)",
+      "semantic_level": "event_signature",
+      "estimated_tokens": 8533.1
+    },
+    {
+      "item_id": "item_e8c1433e1223438ca1da6a754d88f42c",
+      "title": "Anthropic 首次在企业采用率上超越 OpenAI。 根据 tryramp 的数据，最新一期 Ramp AI Index 显示，34.4% 的企业在使用 Anthropic，OpenAI 为 ...",
+      "source_name": "AI Will(@FinanceYF5)",
+      "semantic_level": "thread_signature",
+      "estimated_tokens": 8347.1
+    },
+    {
+      "item_id": "item_895f7a15bea045d3ad39bcd367991e9b",
+      "title": "If you’re interested in helping us research these questions, apply to become an Anthropic Fellow. Th...",
+      "source_name": "Anthropic(@AnthropicAI)",
+      "semantic_level": "thread_signature",
+      "estimated_tokens": 8317.0
+    },
+    {
+      "item_id": "item_29c1459ec5d0457a9a7348fce60e4d89",
+      "title": "AI-driven R&D We expect AI systems to contribute more and more to AI R&D: that is, to be ab...",
+      "source_name": "Anthropic(@AnthropicAI)",
+      "semantic_level": "thread_signature",
+      "estimated_tokens": 8268.3
+    },
+    {
+      "item_id": "item_2caa7c0db00c43d587471db36cb41da7",
+      "title": "For every $1 companies spend on software, they spend $6 on services. Anthropic basically just built ...",
+      "source_name": "Aadit Sheth(@aaditsh)",
+      "semantic_level": "event_signature",
+      "estimated_tokens": 8193.6
+    },
+    {
+      "item_id": "item_10a1ce10998841a6918dedc924175c2d",
+      "title": "If a task needs multiple tools, Codex chooses the best one for each step. It uses plugins when they...",
+      "source_name": "OpenAI(@OpenAI)",
+      "semantic_level": "event_signature",
+      "estimated_tokens": 7957.2
+    },
+    {
+      "item_id": "item_4adf9a26397a4a0db2da39926ea8431b",
+      "title": "Codex now works directly in Chrome on macOS and Windows. It’s even better at working with apps and ...",
+      "source_name": "OpenAI(@OpenAI)",
+      "semantic_level": "event_signature",
+      "estimated_tokens": 7955.7
+    },
+    {
+      "item_id": "item_a62690a8b34644dc959a77ddde1c7e70",
+      "title": "We've partnered with @OpenAI to offer GPT-5.5 in Windsurf at 50% off through May 14 starting today.",
+      "source_name": "Windsurf(@windsurf_ai)",
+      "semantic_level": "event_signature",
+      "estimated_tokens": 7786.0
+    },
+    {
+      "item_id": "item_9c3b6ce177d54263899ce2fb01b47c3b",
+      "title": "Codex can now help you build AI apps and agents faster with OpenAI APIs using the OpenAI Developers ...",
+      "source_name": "OpenAI Developers(@OpenAIDevs)",
+      "semantic_level": "event_signature",
+      "estimated_tokens": 7746.4
+    },
+    {
+      "item_id": "item_6f1015d8145d463096fd6d2f5823f078",
+      "title": "GPT-5.5 and GPT Image 2 are both in Skywork. OpenAI's latest text and image models—available in one...",
+      "source_name": "Skywork(@Skywork_ai)",
+      "semantic_level": "event_signature",
+      "estimated_tokens": 7498.3
+    },
+    {
+      "item_id": "item_b763bb9706144074b138b2840373a7d7",
+      "title": "Cancer kills because it's caught late. Adialante is changing that by making mobile MRI accessible — ...",
+      "source_name": "Y Combinator(@ycombinator)",
+      "semantic_level": "event_signature",
+      "estimated_tokens": 7484.7
+    },
+    {
+      "item_id": "item_da0687f030824a8e899f7173214aa6c9",
+      "title": "GPT-5.5 Instant is rolling out starting today to all ChatGPT users. https://t.co/koUSLfKXeU",
+      "source_name": "ChatGPT(@ChatGPTapp)",
+      "semantic_level": "event_signature",
+      "estimated_tokens": 7468.8
+    }
+  ],
+  "failure_cost": {
+    "total_failure_tokens": 0,
+    "pct_of_total": 0.0,
+    "failed_call_count": 141
+  }
+}

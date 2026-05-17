@@ -1,0 +1,54 @@
+{
+  "total_errors": 31,
+  "real_llm_failures": 31,
+  "potential_budget_or_control_flow": 0,
+  "by_category": {
+    "json_unterminated_string": 14,
+    "json_missing_comma": 4,
+    "json_empty_or_non_json_output": 4,
+    "json_unquoted_property": 4,
+    "json_unexpected_value": 3,
+    "schema_validation_error": 2
+  },
+  "by_stage": {
+    "item_relation": 28,
+    "item_card": 3
+  },
+  "by_prompt_variant": {
+    "short": 24,
+    "full": 7
+  },
+  "by_category_and_stage": {
+    "json_unterminated_string|item_relation": 12,
+    "json_empty_or_non_json_output|item_relation": 4,
+    "json_unquoted_property|item_relation": 4,
+    "json_missing_comma|item_relation": 3,
+    "json_unexpected_value|item_relation": 3,
+    "json_unterminated_string|item_card": 2,
+    "schema_validation_error|item_relation": 2,
+    "json_missing_comma|item_card": 1
+  },
+  "top_repeat_offender_items": {
+    "item_9d0967dbc96b4c769897a436562d8634": 6,
+    "item_b6a1daec5e7c4789ba183ccc53b1f379": 5,
+    "item_7e9109be35834a689cca1a8e534b7373": 5,
+    "item_e6f115055b3b43cd9bcc6d7189b70cfd": 5,
+    "item_4aae6911a50a414288469f3cfd4261cc": 4,
+    "item_92a9e82e74654bf695b05644aed07005": 4,
+    "item_e22aa290a8f74b5a88f75179e33a69b0": 4,
+    "item_e147cfadf270482aa9a8c6de9b1f9407": 4,
+    "item_6f1015d8145d463096fd6d2f5823f078": 4,
+    "item_b37e433468004a78b7db33d32d563eba": 4,
+    "item_1d4c37b426ec4b7c9cb80d9bd9b7d96f": 4,
+    "item_5d8c86286d4b41cab3f469c659183a58": 3,
+    "item_b763bb9706144074b138b2840373a7d7": 3,
+    "item_a62690a8b34644dc959a77ddde1c7e70": 3,
+    "item_5c72b7f0be8f43d2a275c1e7f48d2c61": 3,
+    "item_d6302b1f42db42e68580c335eb1688e9": 3,
+    "item_b17566d1b5934aa6a996f41b74e691a9": 3,
+    "item_687f55f00e0e4148b1520abe1a6d50d1": 3,
+    "item_49c4b3e308b34003ab5373f583a7c13f": 3,
+    "item_7400e04b57534198a39889e6ec0be5f3": 3
+  },
+  "note": "All 31 failures are genuine LLM JSON parse errors, not control-flow/budget miscounts. The JSON parse rate from deepseek-v4-flash is high."
+}

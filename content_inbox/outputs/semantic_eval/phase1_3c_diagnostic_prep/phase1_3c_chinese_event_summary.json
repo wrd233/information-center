@@ -1,0 +1,28 @@
+{
+  "total_items": 300,
+  "chinese_items": 50,
+  "chinese_event_detection_rate": 0.3,
+  "chinese_event_signature_count": 15,
+  "truly_event_like_estimate": 19,
+  "classification_counts": {
+    "correct_event_signature": 15,
+    "correct_reject": 13,
+    "correct_thread_signature": 10,
+    "likely_false_negative_thread": 7,
+    "correct_content_signature": 1,
+    "likely_false_negative_event": 4
+  },
+  "trigger_coverage": {
+    "官宣/新公司/联合创始人/创业/成立/融资": 7,
+    "发布/发布了/刚刚发布/正式发布": 5,
+    "支持/接入/打通/集成/连接/对接": 3,
+    "推出/上线/开放/开源/释出": 3,
+    "套餐/免费/降价/价格/1块钱/元/折扣/优惠": 3,
+    "漏洞/安全/修复/补丁": 2,
+    "超过/超越/领先/采用率/市场份额/市值/用户数/增长": 2,
+    "评测/跑分/榜单/基准/准确率": 2,
+    "技术预览/预览版/内测/公测/候补/waitlist": 1,
+    "大会/活动/直播/研讨会/峰会/报名": 1
+  },
+  "false_negative_count": 11
+}

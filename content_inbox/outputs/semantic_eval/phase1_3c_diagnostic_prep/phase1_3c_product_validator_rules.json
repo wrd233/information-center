@@ -1,0 +1,179 @@
+{
+  "version": "1.3c-draft",
+  "generated_from": "Phase 1.3b 300-run evidence audit",
+  "rules": [
+    {
+      "id": "PV-001",
+      "name": "reject_short_random_alphanumeric",
+      "pattern": "^[a-z0-9]{6,10}$",
+      "description": "Reject product if it is a short random alphanumeric token (e.g., sow0e7ym, iobqd8a9, ay4dy8o5)",
+      "severity": "blocker",
+      "examples": [
+        "sow0e7ym",
+        "iobqd8a9",
+        "ay4dy8o5",
+        "CERX3N35",
+        "ns123abc",
+        "trq212",
+        "DeYA2K",
+        "Yeuoly1"
+      ],
+      "field": "product_or_model"
+    },
+    {
+      "id": "PV-002",
+      "name": "reject_month_day_phrase",
+      "pattern": "^(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s+\\d{1,2}(st|nd|rd|th)?$",
+      "description": "Reject product if it is a month+day phrase (e.g., May 4th, June 4th)",
+      "severity": "blocker",
+      "examples": [
+        "May 4th",
+        "June 4th"
+      ],
+      "field": "product_or_model"
+    },
+    {
+      "id": "PV-003",
+      "name": "reject_pure_number_product",
+      "pattern": "^[\\d,]+\\s*(million|billion|trillion|k|%|percent)?$|^(a\\s+|an\\s+)?\\d+[\\d\\s,.-]*\\w*$",
+      "description": "Reject product if it is a pure number or numeric phrase (e.g., around 1897, of 12M, a 24, up 130)",
+      "severity": "blocker",
+      "examples": [
+        "around 1897",
+        "of 12M",
+        "a 24",
+        "up 130",
+        "to 100x",
+        "to 55",
+        "of 1",
+        "a 0",
+        "a 48-hour",
+        "crossed 4",
+        "top 12",
+        "top 10",
+        "under 35",
+        "up 80"
+      ],
+      "field": "product_or_model"
+    },
+    {
+      "id": "PV-004",
+      "name": "reject_date_fragment_product",
+      "pattern": "(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s+\\d+",
+      "description": "Reject product if it contains date-like fragments",
+      "severity": "blocker",
+      "examples": [
+        "since 2018"
+      ],
+      "field": "product_or_model"
+    },
+    {
+      "id": "PV-005",
+      "name": "reject_weak_preposition_start_product",
+      "pattern": "^(for|with|from|every|just|and|or|in|on|to|of|as|by|the|a|an|that|this|its|our|your|their)\\s",
+      "description": "Reject product if it starts with weak preposition/determiner unless in known product list",
+      "severity": "warning",
+      "examples": [],
+      "field": "product_or_model",
+      "exceptions": [
+        "Notion Developer Platform",
+        "Notion Custom Agents"
+      ]
+    },
+    {
+      "id": "PV-006",
+      "name": "reject_verb_phrase_product",
+      "pattern": "^(build|create|make|use|get|run|try|learn|see|find|give|take|send|launch|release|announce|introduce|ship|add|fix|update|upgrade|improve|integrate|support|meet)\\s",
+      "description": "Reject product if it starts with a verb (looks like a sentence fragment, not a product name)",
+      "severity": "warning",
+      "examples": [
+        "Give Your Chat Agent",
+        "Meet Replit Parallel Agents",
+        "Try Parallel Agents"
+      ],
+      "field": "product_or_model"
+    },
+    {
+      "id": "PV-007",
+      "name": "reject_long_phrase_product",
+      "pattern": "^\\w+(\\s+\\w+){6,}$",
+      "description": "Reject product if longer than 6 words and not a known valid product",
+      "severity": "warning",
+      "examples": [
+        "data then skip the interface entirely Agents",
+        "everything when you build products for Finance"
+      ],
+      "field": "product_or_model"
+    },
+    {
+      "id": "PV-008",
+      "name": "reject_sentence_fragment_product",
+      "pattern": "[.!?;,].*\\s+\\w+\\s+\\w+",
+      "description": "Reject product if contains sentence punctuation in a multi-word phrase",
+      "severity": "warning",
+      "examples": [
+        "CI failures. Set up always-on agents",
+        "just built issue was the initial characters"
+      ],
+      "field": "product_or_model"
+    },
+    {
+      "id": "PV-009",
+      "name": "reject_generic_for_every_product",
+      "pattern": "for\\s+every|for\\s+your|for\\s+all",
+      "description": "Reject product containing 'for every/your/all' pattern — these are descriptive phrases not products",
+      "severity": "blocker",
+      "examples": [
+        "Git semantics for every file your agent"
+      ],
+      "field": "product_or_model"
+    },
+    {
+      "id": "PV-010",
+      "name": "reject_url_fragment_product",
+      "pattern": "https?://|t\\.co/|\\.com|\\.org|\\.io|\\.dev|\\.ai\\b",
+      "description": "Reject product if it contains URL fragments",
+      "severity": "blocker",
+      "examples": [
+        "com 1Dl"
+      ],
+      "field": "product_or_model"
+    }
+  ],
+  "actor_rules": [
+    {
+      "id": "AV-001",
+      "name": "former_employer_is_not_actor",
+      "description": "Former employer mentioned in context (e.g., '前 Meta FAIR Director') is not the actor. The actor is the person or new company.",
+      "severity": "warning",
+      "examples": [
+        "Meta mentioned as former employer, actor should be 田渊栋 or Recursive"
+      ]
+    },
+    {
+      "id": "AV-002",
+      "name": "product_is_not_organization_actor",
+      "description": "Product/model name (e.g., GPT-5.5, Gemini) should not be used as actor unless the source is the official product account.",
+      "severity": "warning",
+      "examples": [
+        "GPT-5.5 as actor → should be OpenAI",
+        "Gemini as actor → should be Google"
+      ]
+    },
+    {
+      "id": "AV-003",
+      "name": "source_account_as_actor_only_if_official",
+      "description": "Social media account name can be actor only if it's the official source making an announcement about itself.",
+      "severity": "info"
+    },
+    {
+      "id": "AV-004",
+      "name": "prefer_empty_actor_over_wrong_actor",
+      "description": "Leave actor empty rather than populating it with a wrong organization/product name.",
+      "severity": "blocker",
+      "examples": [
+        "arxiv as actor for pricing → wrong, should be empty"
+      ]
+    }
+  ]
+}

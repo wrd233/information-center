@@ -1,0 +1,145 @@
+[
+  {
+    "cluster_id": "cluster_c56c3a0e17404cfcafb080f8798037d2",
+    "cluster_title": "OpenAI releases Codex Chrome extension",
+    "cluster_summary": "OpenAI announces Codex Chrome extension for automating browser tasks.",
+    "quality_label": "likely_valid",
+    "member_count": 3,
+    "source_count": 1,
+    "time_window_days": 0.0,
+    "time_window_start": "2026-05-07T20:08:50+00:00",
+    "time_window_end": "2026-05-07T20:08:51+00:00",
+    "event_signature_keys": [
+      "openaicodex|codex|integration|2026-05-07",
+      "openaicodex|codex|integration|2026-05-07",
+      "openaicodex|codex|integration|2026-05-07"
+    ],
+    "relation_summary": {
+      "new_info": 2,
+      "source_material": 1
+    },
+    "members": [
+      {
+        "item_id": "item_6158804009654a348b271d1235155975",
+        "title": "With the new Chrome extension, Codex can quickly move through repetitive browser work, like navigati...",
+        "source_name": "OpenAI(@OpenAI)",
+        "published_at": "2026-05-07T20:08:50+00:00",
+        "semantic_level": "event_signature",
+        "action": "integration",
+        "actor": "OpenAI/Codex",
+        "product_or_model": "Codex",
+        "signature_key": "openaicodex|codex|integration|2026-05-07",
+        "invalid_reasons": []
+      },
+      {
+        "item_id": "item_4adf9a26397a4a0db2da39926ea8431b",
+        "title": "Codex now works directly in Chrome on macOS and Windows. It’s even better at working with apps and ...",
+        "source_name": "OpenAI(@OpenAI)",
+        "published_at": "2026-05-07T20:08:50+00:00",
+        "semantic_level": "event_signature",
+        "action": "integration",
+        "actor": "OpenAI/Codex",
+        "product_or_model": "Codex",
+        "signature_key": "openaicodex|codex|integration|2026-05-07",
+        "invalid_reasons": []
+      },
+      {
+        "item_id": "item_10a1ce10998841a6918dedc924175c2d",
+        "title": "If a task needs multiple tools, Codex chooses the best one for each step. It uses plugins when they...",
+        "source_name": "OpenAI(@OpenAI)",
+        "published_at": "2026-05-07T20:08:51+00:00",
+        "semantic_level": "event_signature",
+        "action": "integration",
+        "actor": "OpenAI/Codex",
+        "product_or_model": "Codex",
+        "signature_key": "openaicodex|codex|integration|2026-05-07",
+        "invalid_reasons": []
+      }
+    ],
+    "member_relations": [],
+    "all_event_levels": true,
+    "has_thread_or_reject": false,
+    "same_source_only": true,
+    "verdict": "valid_event_cluster",
+    "issues": [
+      "All members from same source (source_count=1)",
+      "All same actor — may be same_product_different_event or same_thread rather than same_event"
+    ],
+    "should_write_to_db": true,
+    "evidence_for": [
+      "All members share 'OpenAI/Codex|codex|integration' signature key",
+      "All members are event_signature level",
+      "Topic is clearly the same product launch event"
+    ],
+    "evidence_against": [
+      "All 3 members are from same source — could be duplicates/near_duplicates of same announcement",
+      "0.0 day time window suggests they published simultaneously (duplicate tweets)"
+    ],
+    "recommendation": "Likely a valid event cluster but check if members are near_duplicates. If they're different tweets about same Codex launch from same source, consider folding near_duplicates and keeping one representative."
+  },
+  {
+    "cluster_id": "cluster_aaa6f1924b304940a57a8b7f458afcff",
+    "cluster_title": "DeepSeek open-sources DeepSeek-V4 Preview",
+    "cluster_summary": "AI Breakfast comments on DeepSeek open-sourcing strategy, while DeepSeek announces V4 Preview with models including V4-Pro (1.6T/49B) and V4-Flash (284B/13B).",
+    "quality_label": "likely_valid",
+    "member_count": 2,
+    "source_count": 2,
+    "time_window_days": 0.283,
+    "time_window_start": "2026-04-24T07:24:53+00:00",
+    "time_window_end": "2026-04-24T14:12:36+00:00",
+    "event_signature_keys": [
+      "deepseek|com1dl|pricing|2026-04-24",
+      "deepseek|com1dl|pricing|2026-04-24"
+    ],
+    "relation_summary": {
+      "new_info": 1,
+      "source_material": 1
+    },
+    "members": [
+      {
+        "item_id": "item_9b9dd690121b476b994ffc282324e399",
+        "title": "I swear DeepSeek open-sourcing everything is some Sun-Tzu shit. America is trying to build trillio...",
+        "source_name": "AI Breakfast(@AiBreakfast)",
+        "published_at": "2026-04-24T14:12:36+00:00",
+        "semantic_level": "event_signature",
+        "action": "pricing",
+        "actor": "DeepSeek",
+        "product_or_model": "com 1Dl",
+        "signature_key": "deepseek|com1dl|pricing|2026-04-24",
+        "invalid_reasons": []
+      },
+      {
+        "item_id": "item_580ab8a81c864bc3a7083e8122e2b74b",
+        "title": "why preview",
+        "source_name": "Junyang Lin(@JustinLin610)",
+        "published_at": "2026-04-24T07:24:53+00:00",
+        "semantic_level": "event_signature",
+        "action": "pricing",
+        "actor": "DeepSeek",
+        "product_or_model": "com 1Dl",
+        "signature_key": "deepseek|com1dl|pricing|2026-04-24",
+        "invalid_reasons": []
+      }
+    ],
+    "member_relations": [],
+    "all_event_levels": true,
+    "has_thread_or_reject": false,
+    "same_source_only": false,
+    "verdict": "valid_event_cluster",
+    "issues": [
+      "All same actor — may be same_product_different_event or same_thread rather than same_event"
+    ],
+    "should_write_to_db": true,
+    "evidence_for": [
+      "2 members from 2 different sources",
+      "Both event_signature level with pricing action",
+      "0.283 day time window is reasonable",
+      "DeepSeek V4 open-source is clearly an event"
+    ],
+    "evidence_against": [
+      "Product field 'com 1Dl' appears to be a URL fragment (garbage product)",
+      "The product should be 'DeepSeek-V4' or 'DeepSeek-V4 Preview' not 'com 1Dl'"
+    ],
+    "recommendation": "Valid event cluster. Fix product extraction: 'com 1Dl' → 'DeepSeek-V4 Preview'. This cluster should be written to DB after product fix."
+  }
+]
