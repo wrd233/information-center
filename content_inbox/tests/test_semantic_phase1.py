@@ -13,6 +13,7 @@ from app.semantic.cards import generate_item_cards
 from app.semantic.clusters import process_item_clusters, show_cluster, update_cluster_statuses
 from app.semantic.clusters import candidate_clusters
 from app.semantic.evaluate import run_evaluation
+from app.semantic.evidence import export_evidence
 from app.semantic.live_smoke import run_live_smoke
 from app.semantic.relations import process_item_relations
 from app.semantic.review import decide_review, list_reviews
@@ -363,6 +364,55 @@ def test_evaluate_source_scope_filter_and_report_sections(tmp_path: Path) -> Non
     assert "## 2. Source Scope" in report
     assert "## 10. Concurrency Summary" in report
     assert "## 14. Readiness Assessment" in report
+
+
+def test_phase1_2d_evidence_persistence_exports_auditable_files(tmp_path: Path) -> None:
+    source_store = make_store(tmp_path / "evidence-source")
+    first = seed_item(source_store, "OpenAI launches Codex agent", source_id="xgo-openai", url="https://api.xgo.ing/a")
+    second = seed_item(source_store, "OpenAI launches Codex coding agent", source_id="xgo-dev", url="https://api.xgo.ing/b")
+    output = tmp_path / "phase1_2d_eval"
+    result = run_evaluation(
+        db_path=str(source_store.database_path),
+        output=str(output),
+        limit=10,
+        max_calls=0,
+        max_candidates=5,
+        batch_size=2,
+        live=False,
+        dry_run=True,
+        write_real_db=False,
+        model=None,
+        strong_model=None,
+        token_budget=1,
+        include_archived=False,
+        concurrency=5,
+        source_filter=None,
+        source_url_prefix="api.xgo.ing",
+        sample_mode="event_hotspots",
+        stage_budget_profile="relation_heavy",
+        persist_evidence=True,
+        phase_label="phase1_2d",
+    )
+    assert result["ok"] is True
+    manifest = output / "semantic_run_manifest.json"
+    assert manifest.exists()
+    manifest_data = json.loads(manifest.read_text(encoding="utf-8"))
+    assert manifest_data["phase"] == "phase1_2d"
+    assert manifest_data["concurrency"] == 5
+    items_path = output / "semantic_items.jsonl"
+    relations_path = output / "relations_all.jsonl"
+    interesting_path = output / "relations_interesting.jsonl"
+    hotspots_path = output / "event_hotspots.jsonl"
+    failures_path = output / "item_card_failures.jsonl"
+    attachments_path = output / "cluster_attachments.jsonl"
+    budget_skips_path = output / "budget_skips.jsonl"
+    for path in [items_path, relations_path, interesting_path, hotspots_path, failures_path, attachments_path, budget_skips_path]:
+        assert path.exists()
+    items = [json.loads(line) for line in items_path.read_text(encoding="utf-8").splitlines()]
+    assert {row["original_item_id"] for row in items} == {first, second}
+    assert all(row["dedupe_key"] for row in items)
+    with source_store.connect() as conn:
+        assert conn.execute("SELECT COUNT(*) AS n FROM item_cards").fetchone()["n"] == 0
 
 
 @pytest.mark.live_deepseek

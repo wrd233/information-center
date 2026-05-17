@@ -191,6 +191,8 @@ def generate_item_cards(
             input_data=input_data,
             output_model=ItemCardBatchOutput,
             max_tokens=4000,
+            item_id=",".join(item["item_id"] for item in batch),
+            source_id=",".join(str(item.get("source_id") or item.get("feed_url") or item.get("source_name") or "") for item in batch),
         )
         local["llm_calls"] = client.calls
         cards_by_id: dict[str, ItemCardData] = {}

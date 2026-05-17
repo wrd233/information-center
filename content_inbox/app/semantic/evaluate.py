@@ -15,6 +15,7 @@ from app.config import BASE_DIR, settings
 from app.models import NormalizedContent, ScreeningResult
 from app.semantic.cards import generate_item_cards
 from app.semantic.clusters import patch_cluster_card, process_item_clusters
+from app.semantic.evidence import build_review_bundle, export_evidence, write_json
 from app.semantic.live_smoke import live_enabled
 from app.semantic.relations import normalized_entity_terms, process_item_relations, semantic_tokens
 from app.semantic.source_profiles import recompute_source_profiles
@@ -42,6 +43,10 @@ def run_evaluation(
     source_url_prefix: str | None = None,
     sample_mode: str = "recent",
     stage_budget_profile: str = "balanced",
+    persist_evidence: bool = False,
+    evidence_dir: str | None = None,
+    phase_label: str = "semantic_eval",
+    backup_path: str | None = None,
 ) -> dict[str, Any]:
     started = datetime.now(timezone.utc)
     t0 = time.monotonic()
@@ -176,6 +181,24 @@ def run_evaluation(
     metadata["duration_seconds"] = round(time.monotonic() - t0, 3)
     source_scope = source_scope_summary(source_store, sampled_items, source_filter, source_url_prefix)
     summary = build_summary(target_store, metadata, steps, sampled_items, source_scope)
+    evidence_result: dict[str, Any] | None = None
+    if persist_evidence:
+        evidence_result = export_evidence(
+            run_dir=Path(evidence_dir) if evidence_dir else run_dir,
+            source_store=source_store,
+            target_store=target_store,
+            metadata=metadata,
+            summary=summary,
+            sampled_items=sampled_items,
+            phase_label=phase_label,
+            backup_path=backup_path,
+        )
+        summary["evidence"] = {
+            "persisted": True,
+            "manifest_path": str((Path(evidence_dir) if evidence_dir else run_dir) / "semantic_run_manifest.json"),
+            "counts": evidence_result.get("counts", {}),
+            "files": evidence_result.get("evidence_files", []),
+        }
     report = build_markdown_report(summary)
     report_path = run_dir / "semantic_quality_report.md"
     summary_path = run_dir / "semantic_quality_summary.json"
@@ -188,6 +211,7 @@ def run_evaluation(
         "summary_path": str(summary_path),
         "metadata": metadata,
         "summary": compact_console_summary(summary),
+        "evidence": evidence_result,
     }
 
 

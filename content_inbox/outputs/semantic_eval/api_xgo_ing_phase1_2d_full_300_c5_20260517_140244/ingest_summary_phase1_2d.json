@@ -1,0 +1,13 @@
+{
+  "backup_path": null,
+  "failures": 0,
+  "ingest_performed": false,
+  "item_delta": 0,
+  "partial_write_suspects": 0,
+  "phase": "phase1_2d",
+  "reason": "Data was already refreshed in Phase 1.2c; this phase focused on dry-run evidence persistence.",
+  "running_run_residue": "not_checked_no_ingest",
+  "selected_sources": 0,
+  "successes": 0,
+  "timeouts": 0
+}

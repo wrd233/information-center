@@ -173,6 +173,10 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--concurrency", type=int, default=4)
     evaluate.add_argument("--include-archived", action="store_true")
     evaluate.add_argument("--output", "--output-dir", dest="output")
+    evaluate.add_argument("--persist-evidence", action="store_true")
+    evaluate.add_argument("--evidence-dir")
+    evaluate.add_argument("--phase-label", default="semantic_eval")
+    evaluate.add_argument("--backup-path")
     evaluate.add_argument("--source-filter")
     evaluate.add_argument("--source-url-prefix")
     evaluate.add_argument(
@@ -238,6 +242,10 @@ def main(argv: list[str] | None = None) -> int:
                 source_url_prefix=args.source_url_prefix,
                 sample_mode=args.sample_mode,
                 stage_budget_profile=args.stage_budget_profile,
+                persist_evidence=args.persist_evidence,
+                evidence_dir=args.evidence_dir,
+                phase_label=args.phase_label,
+                backup_path=args.backup_path,
             )
             write_json(data)
             return 0 if data.get("ok", True) else 1

@@ -1,0 +1,146 @@
+source_id,source_name,items_added
+socialmedia-ray-dalio-raydalio,Ray Dalio(@RayDalio),3
+socialmedia-geoffrey-hinton-geoffreyhinton,Geoffrey Hinton(@geoffreyhinton),3
+socialmedia-guillermo-rauch-rauchg,Guillermo Rauch(@rauchg),3
+socialmedia-junyang-lin-justinlin610,Junyang Lin(@JustinLin610),2
+socialmedia-openai-openai,OpenAI(@OpenAI),2
+socialmedia-dify-dify-ai,Dify(@dify_ai),2
+socialmedia-andrew-ng-andrewyng,Andrew Ng(@AndrewYNg),2
+socialmedia-replicate-replicate,Replicate(@replicate),2
+socialmedia-poe-poe-platform,Poe(@poe_platform),2
+socialmedia-aadit-sheth-aaditsh,Aadit Sheth(@aaditsh),2
+socialmedia-elevenlabs-elevenlabsio,ElevenLabs(@elevenlabsio),2
+socialmedia-weaviate-vector-database-weaviate-io,Weaviate • vector database(@weaviate_io),2
+socialmedia-notebooklm-notebooklm,NotebookLM(@NotebookLM),2
+socialmedia-ai-sdk-aisdk,AI SDK(@aisdk),2
+socialmedia-simon-willison-simonw,Simon Willison(@simonw),2
+socialmedia-adam-d-angelo-adamdangelo,Adam D'Angelo(@adamdangelo),2
+socialmedia-manusai-manusai-hq,ManusAI(@ManusAI_HQ),2
+socialmedia-akshay-kothari-akothari,Akshay Kothari(@akothari),2
+socialmedia-ak-akhaliq,AK(@_akhaliq),2
+socialmedia-gary-marcus-garymarcus,Gary Marcus(@GaryMarcus),2
+socialmedia-pika-pika-labs,Pika(@pika_labs),2
+socialmedia-character-ai-character-ai,Character.AI(@character_ai),2
+socialmedia-mustafa-suleyman-mustafasuleyman,Mustafa Suleyman(@mustafasuleyman),2
+socialmedia-fellou-fellouai,Fellou(@FellouAI),2
+socialmedia-xai-xai,xAI(@xai),2
+socialmedia-milvus-milvusio,Milvus(@milvusio),2
+socialmedia-deeplearning-ai-deeplearningai,DeepLearning.AI(@DeepLearningAI),2
+socialmedia-cohere-cohere,cohere(@cohere),2
+socialmedia-kevin-weil-127482-127480-kevinweil,Kevin Weil 🇺🇸(@kevinweil),2
+socialmedia-julien-chaumond-julien-c,Julien Chaumond(@julien_c),2
+socialmedia-meng-shao-shao-meng,meng shao(@shao__meng),2
+socialmedia-fish-audio-fishaudio,Fish Audio(@FishAudio),2
+socialmedia-dario-amodei-darioamodei,Dario Amodei(@DarioAmodei),2
+socialmedia-cognition-cognition-labs,Cognition(@cognition_labs),2
+socialmedia-windsurf-windsurf-ai,Windsurf(@windsurf_ai),2
+socialmedia-thomas-wolf-thom-wolf,Thomas Wolf(@Thom_Wolf),2
+socialmedia-demis-hassabis-demishassabis,Demis Hassabis(@demishassabis),2
+socialmedia-google-ai-googleai,Google AI(@GoogleAI),2
+socialmedia-richard-socher-richardsocher,Richard Socher(@RichardSocher),2
+socialmedia-logan-kilpatrick-officiallogank,Logan Kilpatrick(@OfficialLoganK),2
+socialmedia-justin-welsh-thejustinwelsh,Justin Welsh(@thejustinwelsh),2
+socialmedia-aravind-srinivas-aravsrinivas,Aravind Srinivas(@AravSrinivas),2
+socialmedia-cursor-cursor-ai,Cursor(@cursor_ai),2
+socialmedia-kling-ai-kling-ai,Kling AI(@Kling_ai),2
+socialmedia-alex-albert-alexalbert,Alex Albert(@alexalbert__),2
+socialmedia-clem-129303-clementdelangue,clem 🤗(@ClementDelangue),2
+socialmedia-amjad-masad-amasad,Amjad Masad(@amasad),2
+socialmedia-microsoft-research-msftresearch,Microsoft Research(@MSFTResearch),2
+socialmedia-scott-wu-scottwu46,Scott Wu(@ScottWu46),2
+socialmedia-anton-osika-eu-acc-antonosika,Anton Osika – eu/acc(@antonosika),2
+socialmedia-ollama-ollama,ollama(@ollama),2
+socialmedia-replit-replit,Replit ⠕(@Replit),2
+socialmedia-marc-andreessen-127482-127480-pmarca,Marc Andreessen 🇺🇸(@pmarca),2
+socialmedia-dia-diabrowser,Dia(@diabrowser),2
+socialmedia-llamaindex-129433-llama-index,LlamaIndex 🦙(@llama_index),2
+socialmedia-deepseek-deepseek-ai,DeepSeek(@deepseek_ai),2
+socialmedia-lovable-lovable-dev,Lovable(@lovable_dev),2
+socialmedia-cat-catwu,cat(@_catwu),2
+socialmedia-skywork-skywork-ai,Skywork(@Skywork_ai),2
+socialmedia-google-ai-developers-googleaidevs,Google AI Developers(@googleaidevs),2
+socialmedia-eric-zakariasson-ericzakariasson,eric zakariasson(@ericzakariasson),2
+socialmedia-hunyuan-txhunyuan,Hunyuan(@TXhunyuan),2
+socialmedia-nick-st-pierre-nickfloats,Nick St. Pierre(@nickfloats),2
+socialmedia-imxiaohu,小互(@imxiaohu),2
+socialmedia-bolt-new-boltdotnew,bolt.new(@boltdotnew),2
+socialmedia-groq-inc-groqinc,Groq Inc(@GroqInc),2
+socialmedia-genspark-genspark-ai,Genspark(@genspark_ai),2
+socialmedia-google-gemini-app-geminiapp,Google Gemini App(@GeminiApp),2
+socialmedia-midjourney-midjourney,Midjourney(@midjourney),2
+socialmedia-varun-mohan-mohansolo,Varun Mohan(@_mohansolo),2
+socialmedia-sundar-pichai-sundarpichai,Sundar Pichai(@sundarpichai),2
+socialmedia-guizang-ai-op7418,歸藏(guizang.ai)(@op7418),2
+socialmedia-lenny-rachitsky-lennysan,Lenny Rachitsky(@lennysan),2
+socialmedia-qwen-alibaba-qwen,Qwen(@Alibaba_Qwen),2
+socialmedia-mike-krieger-mikeyk,Mike Krieger(@mikeyk),2
+socialmedia-ai-engineer-aidotengineer,AI Engineer(@aiDotEngineer),2
+socialmedia-the-rundown-ai-therundownai,The Rundown AI(@TheRundownAI),2
+socialmedia-langchain-langchainai,LangChain(@LangChainAI),2
+socialmedia-mem0-mem0ai,mem0(@mem0ai),2
+socialmedia-paul-graham-paulg,Paul Graham(@paulg),2
+socialmedia-mistral-ai-mistralai,Mistral AI(@MistralAI),2
+socialmedia-fireworks-ai-fireworksai-hq,Fireworks AI(@FireworksAI_HQ),2
+socialmedia-openai-developers-openaidevs,OpenAI Developers(@OpenAIDevs),2
+socialmedia-elvis-omarsar0,elvis(@omarsar0),2
+socialmedia-vista8,向阳乔木(@vista8),2
+socialmedia-ideogram-ideogram-ai,Ideogram(@ideogram_ai),2
+socialmedia-rowan-cheung-rowancheung,Rowan Cheung(@rowancheung),2
+socialmedia-fei-fei-li-drfeifei,Fei-Fei Li(@drfeifei),2
+socialmedia-qdrant-qdrant-engine,Qdrant(@qdrant_engine),2
+socialmedia-latent-space-latentspacepod,Latent.Space(@latentspacepod),2
+socialmedia-lilian-weng-lilianweng,Lilian Weng(@lilianweng),2
+socialmedia-heygen-heygen-official,HeyGen(@HeyGen_Official),2
+socialmedia-recraft-recraftai,Recraft(@recraftai),2
+socialmedia-greg-brockman-gdb,Greg Brockman(@gdb),2
+socialmedia-ai-will-financeyf5,AI Will(@FinanceYF5),2
+socialmedia-lex-fridman-lexfridman,Lex Fridman(@lexfridman),2
+socialmedia-y-combinator-ycombinator,Y Combinator(@ycombinator),2
+socialmedia-jerry-liu-jerryjliu0,Jerry Liu(@jerryjliu0),2
+socialmedia-browser-use-browser-use,Browser Use(@browser_use),2
+socialmedia-paul-couvert-itspaulai,Paul Couvert(@itsPaulAi),2
+socialmedia-naval-naval,Naval(@naval),2
+socialmedia-flowiseai-flowiseai,FlowiseAI(@FlowiseAI),2
+socialmedia-sahil-lavingia-shl,Sahil Lavingia(@shl),2
+socialmedia-firecrawl-firecrawl-dev,Firecrawl(@firecrawl_dev),2
+socialmedia-satya-nadella-satyanadella,Satya Nadella(@satyanadella),2
+socialmedia-justine-moore-venturetwins,Justine Moore(@venturetwins),2
+socialmedia-patrick-loeber-patloeber,Patrick Loeber(@patloeber),2
+socialmedia-suhail-suhail,Suhail(@Suhail),2
+socialmedia-lijigang-com,李继刚(@lijigang_com),2
+socialmedia-jim-fan-drjimfan,Jim Fan(@DrJimFan),2
+socialmedia-philipp-schmid-philschmid,Philipp Schmid(@_philschmid),2
+socialmedia-lovartai-lovart-ai,LovartAI(@lovart_ai),2
+socialmedia-v0-v0,v0(@v0),2
+socialmedia-jan-leike-janleike,Jan Leike(@janleike),2
+socialmedia-lee-robinson-leerob,Lee Robinson(@leerob),2
+socialmedia-openrouter-openrouterai,OpenRouter(@OpenRouterAI),2
+socialmedia-hailuo-ai-minimax-hailuo-ai,Hailuo AI (MiniMax)(@Hailuo_AI),2
+socialmedia-sam-altman-sama,Sam Altman(@sama),2
+socialmedia-augment-code-augmentcode,Augment Code(@augmentcode),2
+socialmedia-runway-runwayml,Runway(@runwayml),2
+socialmedia-lmarena-ai-lmarena-ai,lmarena.ai(@lmarena_ai),2
+socialmedia-ai-at-meta-aiatmeta,AI at Meta(@AIatMeta),2
+socialmedia-andrej-karpathy-karpathy,Andrej Karpathy(@karpathy),2
+socialmedia-harrison-chase-hwchase17,Harrison Chase(@hwchase17),2
+socialmedia-jina-ai-jinaai,Jina AI(@JinaAI_),2
+socialmedia-a16z-a16z,a16z(@a16z),2
+socialmedia-chatgpt-chatgptapp,ChatGPT(@ChatGPTapp),2
+socialmedia-binyuan-hui-huybery,Binyuan Hui(@huybery),2
+socialmedia-sualeh-asif-sualehasif996,Sualeh Asif(@sualehasif996),2
+socialmedia-notion-notionhq,Notion(@NotionHQ),2
+socialmedia-figma-figma,Figma(@figma),2
+socialmedia-anthropic-anthropicai,Anthropic(@AnthropicAI),2
+socialmedia-yann-lecun-ylecun,Yann LeCun(@ylecun),2
+socialmedia-hugging-face-huggingface,Hugging Face(@huggingface),2
+socialmedia-perplexity-perplexity-ai,Perplexity(@perplexity_ai),2
+socialmedia-orange-ai-oran-ge,orange.ai(@oran_ge),1
+socialmedia-taranjeet-taranjeetio,Taranjeet(@taranjeetio),1
+socialmedia-ian-goodfellow-goodfellow-ian,Ian Goodfellow(@goodfellow_ian),1
+socialmedia-monica-im-hey-im-monica,Monica_IM(@hey_im_monica),1
+socialmedia-aman-sanger-amanrsanger,Aman Sanger(@amanrsanger),1
+socialmedia-google-deepmind-googledeepmind,Google DeepMind(@GoogleDeepMind),1
+socialmedia-jeff-dean-jeffdean,Jeff Dean(@JeffDean),1
+socialmedia-eric-jing-ericjing-ai,Eric Jing(@ericjing_ai),1
+socialmedia-ai-breakfast-aibreakfast,AI Breakfast(@AiBreakfast),1
+socialmedia-andrew-chen-andrewchen,andrew chen(@andrewchen),1

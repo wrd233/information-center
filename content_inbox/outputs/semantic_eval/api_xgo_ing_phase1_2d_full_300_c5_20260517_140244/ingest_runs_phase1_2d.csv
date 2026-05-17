@@ -1,0 +1,2 @@
+phase,ingest_performed,reason,selected_sources,successes,failures,timeouts,item_delta,backup_path
+phase1_2d,False,Data was already refreshed in Phase 1.2c; this phase focused on dry-run evidence persistence.,0,0,0,0,0,

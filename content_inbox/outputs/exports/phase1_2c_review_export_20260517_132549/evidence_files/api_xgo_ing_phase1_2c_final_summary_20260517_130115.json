@@ -1,0 +1,381 @@
+{
+  "backup_paths": [
+    "data/backups/content_inbox.sqlite3.before_api_xgo_semantic_phase1_2c_20260517_105648.sqlite3",
+    "data/backups/content_inbox.sqlite3.before_api_xgo_semantic_phase1_2c_20260517_111621.sqlite3"
+  ],
+  "concurrency": {
+    "generated_at": "2026-05-17T12:39:10.521850",
+    "reason": "concurrency=4 was fastest in the 150-item hotspot comparison, with no rate-limit or DB-lock errors and comparable relation/cluster coverage.",
+    "recommended_concurrency": 4,
+    "runs": [
+      {
+        "actual_calls": 137,
+        "actual_tokens": 431332,
+        "avg_latency_ms": 10396.8,
+        "cache_hit_rate": 0.3433,
+        "cache_hit_tokens": 148096,
+        "calls_per_sec": 0.1291,
+        "cluster_non_empty": 12,
+        "db_lock_errors": 0,
+        "duration_seconds": 1061.492,
+        "final_failures": 2,
+        "heuristic_card_fallback_count": 10,
+        "item_cards_generated": 150,
+        "item_cluster_relation_calls": 53,
+        "item_relation_calls": 60,
+        "item_relations_non_different": 30,
+        "label": "c2",
+        "multi_item_cluster_count": 0,
+        "p50_latency_ms": 7691,
+        "p95_latency_ms": 28603,
+        "parse_failures": 0,
+        "path": "outputs/semantic_eval/api_xgo_ing_phase1_2c_hotspots_150_c2_cmp/semantic_quality_summary.json",
+        "rate_limit_errors": 0,
+        "repair_retry_count": 2,
+        "tokens_per_sec": 406.35
+      },
+      {
+        "actual_calls": 139,
+        "actual_tokens": 427440,
+        "avg_latency_ms": 11750.9,
+        "cache_hit_rate": 0.3363,
+        "cache_hit_tokens": 143744,
+        "calls_per_sec": 0.144,
+        "cluster_non_empty": 13,
+        "db_lock_errors": 0,
+        "duration_seconds": 965.421,
+        "final_failures": 5,
+        "heuristic_card_fallback_count": 15,
+        "item_cards_generated": 150,
+        "item_cluster_relation_calls": 52,
+        "item_relation_calls": 63,
+        "item_relations_non_different": 28,
+        "label": "c3",
+        "multi_item_cluster_count": 1,
+        "p50_latency_ms": 8298,
+        "p95_latency_ms": 29756,
+        "parse_failures": 0,
+        "path": "outputs/semantic_eval/api_xgo_ing_phase1_2c_hotspots_150_c3/semantic_quality_summary.json",
+        "rate_limit_errors": 1,
+        "repair_retry_count": 5,
+        "tokens_per_sec": 442.75
+      },
+      {
+        "actual_calls": 140,
+        "actual_tokens": 430957,
+        "avg_latency_ms": 11060.0,
+        "cache_hit_rate": 0.3644,
+        "cache_hit_tokens": 157056,
+        "calls_per_sec": 0.1756,
+        "cluster_non_empty": 17,
+        "db_lock_errors": 0,
+        "duration_seconds": 797.469,
+        "final_failures": 5,
+        "heuristic_card_fallback_count": 20,
+        "item_cards_generated": 150,
+        "item_cluster_relation_calls": 54,
+        "item_relation_calls": 62,
+        "item_relations_non_different": 33,
+        "label": "c4",
+        "multi_item_cluster_count": 0,
+        "p50_latency_ms": 8355,
+        "p95_latency_ms": 27528,
+        "parse_failures": 0,
+        "path": "outputs/semantic_eval/api_xgo_ing_phase1_2c_hotspots_150_c4_cmp/semantic_quality_summary.json",
+        "rate_limit_errors": 0,
+        "repair_retry_count": 5,
+        "tokens_per_sec": 540.41
+      }
+    ]
+  },
+  "console_changed_files": [],
+  "console_ui_modified": false,
+  "files_changed": [
+    "content_inbox/app/semantic/cards.py",
+    "content_inbox/app/semantic/cli.py",
+    "content_inbox/app/semantic/clusters.py",
+    "content_inbox/app/semantic/evaluate.py",
+    "content_inbox/app/semantic/probe.py",
+    "content_inbox/app/semantic/relations.py",
+    "content_inbox/app/semantic/source_profiles.py"
+  ],
+  "generated_at": "2026-05-17T13:01:15.672744",
+  "git_commit": "e7d51ad7bd188d0d986f52ec19a05ce2cbab9f41",
+  "ingest": {
+    "backup_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/backups/content_inbox.sqlite3.before_api_xgo_semantic_phase1_2c_20260517_111621.sqlite3",
+    "db_item_delta": 283,
+    "duplicate_only_count": 5,
+    "duplicates": 68,
+    "empty_feed_count": 0,
+    "failure_count": 144,
+    "failures_by_reason": {
+      "http_error": 1,
+      "timeout": 143
+    },
+    "latest_item_time_after": "2026-05-17T02:16:56+00:00",
+    "latest_item_time_before": "2026-05-16T19:50:51+00:00",
+    "new_items": 2,
+    "success_count": 7,
+    "timeout_count": 143,
+    "total_active": 151
+  },
+  "probe_after": {
+    "html_entity_source_name_issues": 5,
+    "latest_item_time": "2026-05-17T02:16:56+00:00",
+    "scope_missing_feed_url_items": 0,
+    "scope_missing_source_id_items": 0,
+    "sources_with_items": 151,
+    "total_items": 3123,
+    "total_items_via_direct_search": 1354,
+    "total_items_via_rss_join": 1354,
+    "total_items_with_null_feed_url": 1769,
+    "total_items_with_null_source_id": 1769,
+    "total_rss_sources": 151,
+    "total_sources_matched": 151,
+    "zero_item_sources": 0
+  },
+  "probe_before": {
+    "html_entity_source_name_issues": 5,
+    "latest_item_time": "2026-05-16T10:18:27+00:00",
+    "scope_missing_feed_url_items": 0,
+    "scope_missing_source_id_items": 0,
+    "sources_with_items": 147,
+    "total_items": 2551,
+    "total_items_via_direct_search": 782,
+    "total_items_via_rss_join": 782,
+    "total_items_with_null_feed_url": 1769,
+    "total_items_with_null_source_id": 1769,
+    "total_rss_sources": 151,
+    "total_sources_matched": 151,
+    "zero_item_sources": 4
+  },
+  "readiness": {
+    "blockers": [
+      "Scoped ingest still times out on most sources and can leave partial writes before per-source kill.",
+      "Final 300 run produced useful item-item relations but multi_item_cluster_count remained 0.",
+      "Final run still had 35 heuristic fallbacks / 300 and 7 item-card failures.",
+      "Relation/cluster stages still skip many candidates due stage budgets at 300-item scale.",
+      "Review queue contains many non-source review entries; source priority reviews are now suppressed/aggregated but cluster/failure review noise still needs work."
+    ],
+    "write_real_db_recommended": false
+  },
+  "real_db_writes": {
+    "ingest_source_scope": true,
+    "semantic_write_real_db": false
+  },
+  "reports": [
+    "outputs/semantic_eval/api_xgo_ing_phase1_2c_probe_before_20260517_105638.json",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2c_probe_after_20260517_113505.json",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2c_ingest_20260517_111620.json",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2c_smoke_hotspots_c3/semantic_quality_summary.json",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2c_smoke_hotspots_c3_iter2/semantic_quality_summary.json",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2c_hotspots_150_c3/semantic_quality_summary.json",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2c_hotspots_150_c2_cmp/semantic_quality_summary.json",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2c_hotspots_150_c4_cmp/semantic_quality_summary.json",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2c_full_300_final/semantic_quality_summary.json",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2c_concurrency_comparison_20260517_123910.json"
+  ],
+  "runs": {
+    "cmp_c2": {
+      "all_pending_reviews": 222,
+      "calls": 137,
+      "card_failed": 2,
+      "cluster_calls": 53,
+      "cluster_relations": {
+        "new_info": 12
+      },
+      "downstream_starved": false,
+      "duration": 1061.492,
+      "fallbacks": 10,
+      "final_failures": 2,
+      "items": 150,
+      "multi_clusters": 0,
+      "parse_failures": 0,
+      "rate_limits": 0,
+      "relation_calls": 60,
+      "relations": {
+        "different": 264,
+        "duplicate": 0,
+        "near_duplicate": 4,
+        "related_with_new_info": 26,
+        "uncertain": 0
+      },
+      "source_priority_reviews": 0,
+      "tiers": {
+        "full": 54,
+        "minimal": 45,
+        "standard": 51
+      },
+      "tokens": 431332
+    },
+    "cmp_c4": {
+      "all_pending_reviews": 224,
+      "calls": 140,
+      "card_failed": 4,
+      "cluster_calls": 54,
+      "cluster_relations": {
+        "new_info": 14,
+        "source_material": 3
+      },
+      "downstream_starved": false,
+      "duration": 797.469,
+      "fallbacks": 20,
+      "final_failures": 5,
+      "items": 150,
+      "multi_clusters": 0,
+      "parse_failures": 0,
+      "rate_limits": 0,
+      "relation_calls": 62,
+      "relations": {
+        "different": 263,
+        "duplicate": 0,
+        "near_duplicate": 4,
+        "related_with_new_info": 29,
+        "uncertain": 0
+      },
+      "source_priority_reviews": 0,
+      "tiers": {
+        "full": 54,
+        "minimal": 45,
+        "standard": 51
+      },
+      "tokens": 430957
+    },
+    "final": {
+      "all_pending_reviews": 475,
+      "calls": 223,
+      "card_failed": 7,
+      "cluster_calls": 82,
+      "cluster_relations": {
+        "new_info": 16,
+        "source_material": 4
+      },
+      "downstream_starved": false,
+      "duration": 1232.673,
+      "fallbacks": 35,
+      "final_failures": 9,
+      "items": 300,
+      "multi_clusters": 0,
+      "parse_failures": 1,
+      "rate_limits": 0,
+      "relation_calls": 97,
+      "relations": {
+        "different": 453,
+        "duplicate": 0,
+        "near_duplicate": 7,
+        "related_with_new_info": 23,
+        "uncertain": 0
+      },
+      "source_priority_reviews": 0,
+      "tiers": {
+        "full": 99,
+        "minimal": 96,
+        "standard": 105
+      },
+      "tokens": 714640
+    },
+    "medium_c3": {
+      "all_pending_reviews": 221,
+      "calls": 139,
+      "card_failed": 3,
+      "cluster_calls": 52,
+      "cluster_relations": {
+        "new_info": 9,
+        "source_material": 4
+      },
+      "downstream_starved": false,
+      "duration": 965.421,
+      "fallbacks": 15,
+      "final_failures": 5,
+      "items": 150,
+      "multi_clusters": 1,
+      "parse_failures": 0,
+      "rate_limits": 1,
+      "relation_calls": 63,
+      "relations": {
+        "different": 271,
+        "duplicate": 0,
+        "near_duplicate": 3,
+        "related_with_new_info": 25,
+        "uncertain": 0
+      },
+      "source_priority_reviews": 0,
+      "tiers": {
+        "full": 54,
+        "minimal": 45,
+        "standard": 51
+      },
+      "tokens": 427440
+    },
+    "smoke1": {
+      "all_pending_reviews": null,
+      "calls": 61,
+      "card_failed": 0,
+      "cluster_calls": 26,
+      "cluster_relations": {
+        "context": 1,
+        "follow_up": 1,
+        "new_info": 5,
+        "source_material": 1
+      },
+      "downstream_starved": false,
+      "duration": 476.013,
+      "fallbacks": 0,
+      "final_failures": 1,
+      "items": 50,
+      "multi_clusters": 1,
+      "parse_failures": 0,
+      "rate_limits": 0,
+      "relation_calls": 25,
+      "relations": {
+        "different": 114,
+        "duplicate": 0,
+        "near_duplicate": 1,
+        "related_with_new_info": 1,
+        "uncertain": 0
+      },
+      "source_priority_reviews": 67,
+      "tiers": {
+        "full": 8,
+        "minimal": 18,
+        "standard": 24
+      },
+      "tokens": 179739
+    },
+    "smoke2": {
+      "all_pending_reviews": 61,
+      "calls": 68,
+      "card_failed": 1,
+      "cluster_calls": 25,
+      "cluster_relations": {
+        "experience": 1,
+        "follow_up": 1,
+        "new_info": 6,
+        "source_material": 3
+      },
+      "downstream_starved": false,
+      "duration": 429.014,
+      "fallbacks": 5,
+      "final_failures": 1,
+      "items": 50,
+      "multi_clusters": 1,
+      "parse_failures": 0,
+      "rate_limits": 0,
+      "relation_calls": 33,
+      "relations": {
+        "different": 150,
+        "duplicate": 0,
+        "near_duplicate": 0,
+        "related_with_new_info": 6,
+        "uncertain": 0
+      },
+      "source_priority_reviews": 0,
+      "tiers": {
+        "full": 8,
+        "minimal": 18,
+        "standard": 24
+      },
+      "tokens": 194761
+    }
+  }
+}

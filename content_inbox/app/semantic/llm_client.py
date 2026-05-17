@@ -114,6 +114,13 @@ class SemanticLLMClient:
             return None, call_id, reason
 
         input_json = json.dumps(input_data, ensure_ascii=False, sort_keys=True)
+        request_summary = {
+            "model": self.model,
+            "messages_count": 0,
+            "item_ids": extract_item_ids(input_data),
+            "candidate_item_ids": extract_candidate_item_ids(input_data),
+            "cluster_ids": extract_cluster_ids(input_data),
+        }
         request_body = {
             "model": self.model,
             "temperature": float(settings.llm.get("temperature", 0.2)),
@@ -127,6 +134,7 @@ class SemanticLLMClient:
             schema_version=schema_version,
             fingerprint=fingerprint,
             request_body=request_body,
+            request_summary=request_summary,
             output_model=output_model,
             input_json=input_json,
             item_id=item_id,
@@ -142,6 +150,7 @@ class SemanticLLMClient:
         schema_version: str,
         fingerprint: str,
         request_body: dict[str, Any],
+        request_summary: dict[str, Any],
         output_model: type[T],
         input_json: str,
         item_id: str | None,
@@ -157,6 +166,8 @@ class SemanticLLMClient:
                 raw = payload["choices"][0]["message"]["content"]
                 parsed = json.loads(raw)
                 validated = output_model.model_validate(parsed)
+                request_summary = dict(request_summary)
+                request_summary["messages_count"] = len(request_body.get("messages", []))
                 call_id = db.insert_llm_call_log(
                     self.store,
                     task_type=task_type,
@@ -166,7 +177,7 @@ class SemanticLLMClient:
                     fingerprint=fingerprint,
                     latency_ms=latency_ms,
                     status="ok",
-                    request={"model": self.model, "messages_count": len(request_body.get("messages", []))},
+                    request=request_summary,
                     raw_output=raw,
                     parsed_output=validated.model_dump(),
                     usage=payload.get("usage", {}),
@@ -183,6 +194,8 @@ class SemanticLLMClient:
                     request_body["messages"] = build_messages(prompt_version, input_json, repair_error=last_error)
                     continue
                 latency_ms = int((time.monotonic() - started) * 1000)
+                request_summary = dict(request_summary)
+                request_summary["messages_count"] = len(request_body.get("messages", []))
                 call_id = db.insert_llm_call_log(
                     self.store,
                     task_type=task_type,
@@ -192,7 +205,7 @@ class SemanticLLMClient:
                     fingerprint=fingerprint,
                     latency_ms=latency_ms,
                     status="failed",
-                    request={"model": self.model, "messages_count": len(request_body.get("messages", []))},
+                    request=request_summary,
                     error=last_error,
                     item_id=item_id,
                     source_id=source_id,
@@ -219,3 +232,39 @@ class SemanticLLMClient:
             raise RuntimeError(f"DeepSeek API returned {exc.code}: {detail}") from exc
         except (urllib.error.URLError, socket.timeout) as exc:
             raise RuntimeError(f"DeepSeek request failed: {exc}") from exc
+
+
+def extract_item_ids(value: Any) -> list[str]:
+    found: list[str] = []
+
+    def walk(node: Any) -> None:
+        if isinstance(node, dict):
+            if isinstance(node.get("item_id"), str) and node["item_id"] not in found:
+                found.append(node["item_id"])
+            for child in node.values():
+                walk(child)
+        elif isinstance(node, list):
+            for child in node:
+                walk(child)
+
+    walk(value)
+    return found
+
+
+def extract_candidate_item_ids(value: Any) -> list[str]:
+    out: list[str] = []
+    if isinstance(value, dict):
+        for key in ("candidate_item_cards", "candidate_items"):
+            for item in value.get(key) or []:
+                if isinstance(item, dict) and item.get("item_id") not in out:
+                    out.append(item.get("item_id"))
+    return [item_id for item_id in out if item_id]
+
+
+def extract_cluster_ids(value: Any) -> list[str]:
+    out: list[str] = []
+    if isinstance(value, dict):
+        for cluster in value.get("candidate_clusters") or []:
+            if isinstance(cluster, dict) and cluster.get("cluster_id") not in out:
+                out.append(cluster.get("cluster_id"))
+    return [cluster_id for cluster_id in out if cluster_id]

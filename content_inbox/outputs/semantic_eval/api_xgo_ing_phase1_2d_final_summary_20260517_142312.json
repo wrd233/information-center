@@ -1,0 +1,380 @@
+{
+  "changed_files": [
+    "content_inbox/app/semantic/cards.py",
+    "content_inbox/app/semantic/cli.py",
+    "content_inbox/app/semantic/evaluate.py",
+    "content_inbox/app/semantic/llm_client.py",
+    "content_inbox/tests/test_semantic_phase1.py"
+  ],
+  "console_ui_modified": false,
+  "evidence_counts": {
+    "budget_skips.jsonl": 415,
+    "cluster_attachments.jsonl": 431,
+    "cluster_candidates.jsonl": 232,
+    "clusters_final.jsonl": 18,
+    "event_hotspots.jsonl": 50,
+    "item_card_failures.jsonl": 25,
+    "item_cards.jsonl": 300,
+    "llm_calls.jsonl": 636,
+    "llm_errors.jsonl": 8,
+    "relations_all.jsonl": 479,
+    "relations_interesting.jsonl": 60,
+    "semantic_items.jsonl": 300
+  },
+  "evidence_dir": "outputs/semantic_eval/api_xgo_ing_phase1_2d_full_300_c5_20260517_140244",
+  "generated_at": "2026-05-17T14:23:12.819349",
+  "git_commit": "b30e4834ebf710177acced15fca3e1befb97f550",
+  "manifest_path": "outputs/semantic_eval/api_xgo_ing_phase1_2d_full_300_c5_20260517_140244/semantic_run_manifest.json",
+  "readiness": {
+    "blockers": [
+      "Multi-item clusters are still not stable in final run.",
+      "Cluster candidate alternatives are reconstructed from decisions/logs; future runs should persist pre-LLM candidate alternatives at generation time.",
+      "25 item-card failure evidence rows were produced from failed LLM batches, although fallback cards existed for all 300 items.",
+      "415 budget skip rows show relation/cluster stages still exhaust stage budgets at 300-item scale.",
+      "No fresh ingest was performed in 1.2d; ingest atomicity remains a known blocker from 1.2c."
+    ],
+    "semantic_write_real_db_recommended": false
+  },
+  "real_db_writes": {
+    "ingest_source_scope": false,
+    "semantic_write_real_db": false
+  },
+  "reports": [
+    "outputs/semantic_eval/api_xgo_ing_phase1_2d_full_300_c5_20260517_140244/semantic_quality_report.md",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2d_full_300_c5_20260517_140244/semantic_quality_summary.json",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2d_full_300_c5_20260517_140244/semantic_run_manifest.json",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2d_full_300_c5_20260517_140244/relations_all.jsonl",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2d_full_300_c5_20260517_140244/relations_interesting.jsonl",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2d_full_300_c5_20260517_140244/item_card_failures.jsonl",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2d_full_300_c5_20260517_140244/cluster_attachments.jsonl",
+    "outputs/semantic_eval/api_xgo_ing_phase1_2d_full_300_c5_20260517_140244/event_hotspots.jsonl"
+  ],
+  "run_parameters": {
+    "concurrency": 5,
+    "item_count": 300,
+    "model": "deepseek-v4-flash",
+    "sample_mode": "event_hotspots",
+    "scope": "api.xgo.ing*",
+    "stage_budget_profile": "relation_heavy"
+  },
+  "semantic_summary": {
+    "actual_calls": 221,
+    "actual_tokens": 737878,
+    "concurrency": {
+      "actual_calls": 221,
+      "actual_tokens": 737878,
+      "avg_latency_ms": 12325.7,
+      "by_task": {
+        "cluster_card_patch": {
+          "avg_latency_ms": 9100.3,
+          "cache_hit_tokens": 1536,
+          "calls": 3,
+          "concurrency": 5,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 7186,
+          "p95_latency_ms": 13094,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 3,
+          "task_type": "cluster_card_patch",
+          "total_tokens": 6612
+        },
+        "cluster_card_rebuild": {
+          "avg_latency_ms": 0.0,
+          "cache_hit_tokens": 0,
+          "calls": 0,
+          "concurrency": 5,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 0,
+          "p95_latency_ms": 0,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 0,
+          "task_type": "cluster_card_rebuild",
+          "total_tokens": 0
+        },
+        "item_card": {
+          "avg_latency_ms": 27806.4,
+          "cache_hit_tokens": 62848,
+          "calls": 41,
+          "concurrency": 5,
+          "db_lock_errors": 0,
+          "failed": 5,
+          "p50_latency_ms": 28205,
+          "p95_latency_ms": 33210,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 5,
+          "success": 36,
+          "task_type": "item_card",
+          "total_tokens": 252174
+        },
+        "item_cluster_relation": {
+          "avg_latency_ms": 6234.8,
+          "cache_hit_tokens": 129664,
+          "calls": 79,
+          "concurrency": 5,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 5590,
+          "p95_latency_ms": 10657,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 79,
+          "task_type": "item_cluster_relation",
+          "total_tokens": 192179
+        },
+        "item_relation": {
+          "avg_latency_ms": 10857.7,
+          "cache_hit_tokens": 72192,
+          "calls": 98,
+          "concurrency": 5,
+          "db_lock_errors": 0,
+          "failed": 3,
+          "p50_latency_ms": 9192,
+          "p95_latency_ms": 18103,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 3,
+          "success": 95,
+          "task_type": "item_relation",
+          "total_tokens": 286913
+        },
+        "json_repair": {
+          "avg_latency_ms": 0.0,
+          "cache_hit_tokens": 0,
+          "calls": 0,
+          "concurrency": 5,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 0,
+          "p95_latency_ms": 0,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 0,
+          "task_type": "json_repair",
+          "total_tokens": 0
+        },
+        "source_review": {
+          "avg_latency_ms": 0.0,
+          "cache_hit_tokens": 0,
+          "calls": 0,
+          "concurrency": 5,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 0,
+          "p95_latency_ms": 0,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 0,
+          "task_type": "source_review",
+          "total_tokens": 0
+        }
+      },
+      "cache_hit_rate": 0.3608,
+      "cache_hit_tokens": 266240,
+      "calls_per_sec": 0.1892,
+      "db_lock_errors": 0,
+      "duration_seconds": 1168.356,
+      "final_failures": 8,
+      "max_concurrency": 5,
+      "p50_latency_ms": 8350,
+      "p95_latency_ms": 30641,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "repair_retry_count": 8,
+      "tokens_per_sec": 631.55
+    },
+    "duration_seconds": 1168.356,
+    "errors_fallbacks": {
+      "db_lock_errors": 0,
+      "final_failures": 8,
+      "llm_parse_failures": 0,
+      "repair_retry_count": 8,
+      "review_queue_entries_due_to_failure": 400,
+      "skipped_due_to_max_calls": false,
+      "skipped_due_to_missing_card": 0,
+      "skipped_due_to_no_candidate": 0,
+      "skipped_due_to_token_budget": false
+    },
+    "interesting_distribution": {
+      "near_duplicate": 4,
+      "related_with_new_info": 24,
+      "suspicious_different": 30,
+      "uncertain": 2
+    },
+    "item_cards": {
+      "avg_confidence": 0.697,
+      "avg_confidence_by_tier": {
+        "full": 0.777,
+        "minimal": 0.55,
+        "standard": 0.755
+      },
+      "avg_tokens_by_tier": {
+        "mixed_llm": 6150.6
+      },
+      "card_tier_distribution": {
+        "full": 99,
+        "minimal": 96,
+        "standard": 105
+      },
+      "content_role_distribution": {
+        "aggregator": 2,
+        "analysis": 29,
+        "commentary": 39,
+        "firsthand": 6,
+        "low_signal": 14,
+        "report": 123,
+        "source_material": 87
+      },
+      "entity_count_distribution": {
+        "0": 3,
+        "1": 15,
+        "10": 2,
+        "11": 3,
+        "15": 2,
+        "17": 1,
+        "2": 35,
+        "23": 1,
+        "3": 57,
+        "4": 57,
+        "5": 56,
+        "6": 32,
+        "7": 15,
+        "8": 16,
+        "9": 5
+      },
+      "heuristic_card_fallback_count": 25,
+      "item_cards_failed": 5,
+      "item_cards_generated": 300,
+      "item_cards_generated_or_reused": 300,
+      "item_cards_reused": 0,
+      "llm_failures_by_tier": {
+        "unknown": 5
+      },
+      "samples": [
+        {
+          "item_id": "item_0020227c5ffa4367900ddf24be017f2c",
+          "role": "low_signal",
+          "summary": "Now it's time to really execute. Episode 2 is here. Two builders, two wildly different bets. One building AI voice tools from a farm. The other turning bartending gigs into a career engine. Who hits revenue first? Race To Revenue out Wednesday. Don't miss it.",
+          "title": "Now it's time to really execute. Episode 2 is here."
+        },
+        {
+          "item_id": "item_0021aa7f75a54dd1bd164345557e5263",
+          "role": "low_signal",
+          "summary": "Recraft shares four photorealistic image prompts for generating nature scenes.",
+          "title": "Prompt 1: Photorealistic still life scene in a lush garden..."
+        },
+        {
+          "item_id": "item_014630969a4643f78c953f1e7b742209",
+          "role": "analysis",
+          "summary": "Test-Time Training enables AI to make discoveries on open scientific problems, outperforming prompt engineering with closed models.",
+          "title": "New research: Test-Time Training enables AI to discover SOTA in science with a few hundred dollars"
+        },
+        {
+          "item_id": "item_01941afc962546799b5fcd84c9f4a44a",
+          "role": "report",
+          "summary": "Hallelujah I found something but I won’t reveal due to selfish gpu hoarding. 💬 8 🔄 1 ❤️ 135 👀 35956 📊 19 ⚡ Powered by xgo.ing",
+          "title": "Hallelujah I found something but I won’t reveal due to selfish gpu hoarding."
+        },
+        {
+          "item_id": "item_023cc431a62b4c13ab300e0c4d05bea7",
+          "role": "report",
+          "summary": "We just crossed 100k developers using Mem0 What began as an experiment to solve AI amnesia problem is now used by thousands of developers building AI agents. Grateful to everyone building and pushing us to make it better every day. Still early. A lot more to build. 💬 8 🔄 3 ❤️ 47 👀 2695 📊 15 ⚡ Powered by xgo.ing",
+          "title": "We just crossed 100k developers using Mem0 What began as an experiment to solve AI amnesia problem ..."
+        },
+        {
+          "item_id": "item_02b209317d0e4aa6822b2bd6afb87c19",
+          "role": "analysis",
+          "summary": "Satya Nadella describes the Rubber Duck agent that uses GPT-5.5 as a reviewer in a multi-model reflection loop.",
+          "title": "Rubber Duck agent with GPT-5.5 as reviewer"
+        },
+        {
+          "item_id": "item_02b9c8e2d9344cf290e67b12b1a7b3db",
+          "role": "source_material",
+          "summary": "PLAN0 (@PLAN0AI) turns architectural plans into construction cost estimates and analytics in minutes. They are building the Bloomberg of construction, with $20B of projects already running through the platform.",
+          "title": "PLAN0 (@PLAN0AI) turns architectural plans into construction cost estimates and analytics"
+        },
+        {
+          "item_id": "item_02e17f7619c845f8b3dbc4fecfaf2f3d",
+          "role": "commentary",
+          "summary": "Ray Dalio promotes his digital twin tool Digital Ray, emphasizing that improving outcomes requires evolving both design and people.",
+          "title": "Your success depends on two things: your design and your people."
+        },
+        {
+          "item_id": "item_0309c0c3bf0c4d34822379c6c70b9db0",
+          "role": "commentary",
+          "summary": "Paul Graham states that the motivation of the hobbyist is a powerful force that keeps successful founders working on their companies beyond financial need.",
+          "title": "It's an unimpressive-sounding word, but one of the most powerful motivations is the motivation of the hobbyist"
+        },
+        {
+          "item_id": "item_04face20eb404395b4827f8ac965855a",
+          "role": "report",
+          "summary": "we are gonna do something nice for everyone who applied for the GPT-5.5 party and that we didn't have space for. hope you enjoy! 💬 1126 🔄 158 ❤️ 6811 👀 468608 📊 1372 ⚡ Powered by xgo.ing",
+          "title": "we are gonna do something nice for everyone who applied for the GPT-5.5 party and that we didn't hav..."
+        }
+      ],
+      "warnings_distribution": {
+        "biased_opinion": 1,
+        "contains promotional language": 1,
+        "firsthand account": 1,
+        "heuristic_card": 25,
+        "informal_announcement": 1,
+        "job_posting": 1,
+        "likely_unreliable": 1,
+        "low information": 1,
+        "low_engagement": 2,
+        "marketing": 1,
+        "marketing content": 1,
+        "marketing_content": 1,
+        "minimal_card": 96,
+        "no factual content": 1,
+        "no_verifiable_facts": 2,
+        "opinion": 4,
+        "opinion piece": 2,
+        "opinion_based": 1,
+        "opinion_heavy": 1,
+        "opinion_included": 1,
+        "opinion_only": 3,
+        "opinion_present": 2,
+        "opinion_statement": 2,
+        "promotional": 3,
+        "promotional language": 1,
+        "promotional_content": 10,
+        "results claimed, verify": 1,
+        "social media source": 2,
+        "social_media": 1,
+        "social_media_source": 2,
+        "social_media_summary": 2,
+        "speculation": 2,
+        "summary_only": 6,
+        "thin_content": 2,
+        "third_party_summary": 1,
+        "too_short": 1,
+        "translation_needed": 1,
+        "tweet context incomplete": 1,
+        "unnamed model": 1,
+        "unsubstantiated_claim": 1,
+        "unsupported claims": 1,
+        "unverifiable claims": 1,
+        "unverified_claims": 2,
+        "vendor_case_study": 1,
+        "转述笔记，可能失真": 1
+      }
+    },
+    "multi_item_cluster_count": 1,
+    "relation_distribution": {
+      "different": 449,
+      "near_duplicate": 4,
+      "related_with_new_info": 24,
+      "uncertain": 2
+    }
+  }
+}
