@@ -1,0 +1,19 @@
+cluster_candidate_id,final_status,final_member_count,diagnostic_reason
+cluster_candidate_1,single_item,1,created initial semantic cluster
+cluster_candidate_2,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_3,single_item,1,created initial semantic cluster
+cluster_candidate_4,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_5,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_6,single_item,1,created initial semantic cluster
+cluster_candidate_7,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_8,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_9,single_item,1,created initial semantic cluster after weak candidate rejection
+cluster_candidate_review_14,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_17,rejected,0,"New item announces webhooks in Gemini API; cluster is a general resource post by same author, not the same announcement."
+cluster_candidate_review_20,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_21,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_23,rejected,0,"New item describes Codex tool selection capability, not the Chrome integration event."
+cluster_candidate_review_24,rejected,0,"New item announces Webhooks in Gemini API, while cluster is about File Search multimodal support; both concern Gemini API but different features."
+cluster_candidate_review_27,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_28,rejected,0,candidate clusters lacked same-event seed evidence
+cluster_candidate_review_29,rejected,0,candidate clusters lacked same-event seed evidence

@@ -38,18 +38,18 @@ EVENT_ACTIONS = {
 }
 
 ACTION_TRIGGERS: tuple[tuple[str, tuple[str, ...]], ...] = (
-    ("company_launch", ("congrats on the launch", "new company", "founded", "stealth", "官宣", "新公司", "联合创始人", "正式成立")),
-    ("pricing", ("free", "discount", "price", "pricing", "plan", "tier", "dollar", "cost", "免费", "降价", "价格", "套餐", "1块钱", "元", "优惠", "折扣")),
-    ("adoption_metric", ("market share", "adoption", "revenue", "users", "subscribers", "market cap", "valuation", "surpassed", "hit a $", "采用率", "市场份额", "用户数", "营收", "市值", "增长", "超过", "超越", "领先")),
-    ("availability", ("now available", "available on", "coming to", "waitlist", "preview", "beta", "early access", "shipping", "rolling out", "技术预览", "候补", "内测", "公测", "开放申请")),
+    ("company_launch", ("congrats on the launch", "new company", "founded", "stealth", "官宣", "新公司", "联合创始人", "正式成立", "创业", "成立")),
+    ("pricing", ("free", "discount", "price", "pricing", "plan", "tier", "dollar", "cost", "免费", "降价", "价格", "套餐", "1块钱", "元", "优惠", "折扣", "限时免费")),
+    ("adoption_metric", ("market share", "adoption", "revenue", "users", "subscribers", "market cap", "valuation", "surpassed", "hit a $", "采用率", "市场份额", "用户数", "营收", "市值", "增长", "超过", "超越", "领先", "破万星", "万星")),
+    ("availability", ("now available", "available on", "coming to", "waitlist", "preview", "beta", "early access", "shipping", "rolling out", "技术预览", "预览版", "候补", "内测", "公测", "开放申请")),
     ("integration", ("integrate", "integration", "connect", "plugin", "extension", "api", "sdk", "works with", "集成", "接入", "接进", "连接", "打通", "对接", "兼容")),
     ("partnership", ("partner", "partnership", "collaboration", "together with", "teaming up", "合作", "联手", "战略合作", "签约")),
     ("funding", ("raised", "funding", "series", "seed", "investor", "round", "融资", "投资", "估值", "资本")),
     ("technical_blog", ("how we built", "deep dive", "under the hood", "architecture", "implementation", "engineering", "技术博客", "深度", "架构", "实现", "工程", "沙箱")),
     ("security", ("vulnerability", "cve", "security fix", "patch", "advisory", "incident", "breach", "漏洞", "修复", "补丁")),
     ("event", ("summit", "conference", "webinar", "meetup", "livestream", "workshop", "register", "ticket", "fireside chat", "ask the experts", "大会", "研讨会", "直播", "活动", "报名", "门票", "峰会")),
-    ("research_paper", ("paper:", "paper", "arxiv", "preprint", "published", "proceedings", "论文", "预印本", "发表", "研究", "实验")),
-    ("benchmark", ("benchmark", "evaluation", "score", "accuracy", "performance", "tested on", "基准", "评测", "跑分", "分数", "准确率")),
+    ("research_paper", ("paper:", "paper", "arxiv", "preprint", "published", "proceedings", "论文", "预印本", "发表")),
+    ("benchmark", ("benchmark", "evaluation", "score", "accuracy", "performance", "tested on", "基准", "评测", "跑分", "榜单", "分数", "准确率")),
     ("feature_update", ("now supports", "can now", "new feature", "update", "now you can", "support", "支持", "新增", "更新", "功能", "现在可以")),
     ("release", ("release", "launch", "ship", "shipped", "introducing", "announcing", "new way", "opensourced", "open-source", "发布", "推出", "上线", "开源", "释出", "正式发布", "出了")),
     ("case_study", ("case study", "customer", "how we", "how i", "built with", "using", "实践", "案例", "客户")),
@@ -81,6 +81,48 @@ KNOWN_PRODUCT_OWNER = {
     "stelline": "NVIDIA",
     "claude": "Anthropic",
     "qveris": "QVeris",
+    "deepseek": "DeepSeek",
+    "colaos": "ColaOS",
+    "syncless": "Syncless",
+    "飞书": "Feishu",
+    "gemini": "Google",
+    "firecrawl": "Firecrawl",
+    "elevenagents": "ElevenLabs",
+}
+
+KNOWN_VALID_PRODUCTS = {
+    "ai 100",
+    "ai security summit",
+    "agent harness",
+    "agent view",
+    "bridge",
+    "claude code",
+    "codex",
+    "codex for windows",
+    "codex remote control",
+    "colaos",
+    "deepseek v4",
+    "deepseek-v4",
+    "deepseek-v4 preview",
+    "elevenagents",
+    "feishu cli",
+    "firecrawl php sdk",
+    "gemini api",
+    "github copilot desktop",
+    "googlebook",
+    "langsmith fleet",
+    "nemotron 3 nano omni",
+    "notion agent tools",
+    "notion cli",
+    "notion custom agents",
+    "notion developer platform",
+    "notion workers",
+    "openshell",
+    "php sdk",
+    "qveris cli",
+    "stelline developer kit",
+    "syncless",
+    "token calling plan",
 }
 
 
@@ -95,10 +137,11 @@ PRODUCT_RE = re.compile(
 )
 
 VERSION_ONLY_RE = re.compile(r"^v?\d+(?:\.\d+)*(?:[-_\w]*)?$", re.IGNORECASE)
-PRICE_OR_MEASURE_RE = re.compile(r"^(?:\$?\d+(?:\.\d+)?(?:m|k|b|%|x)?|at\s+\d+|effective\s+\d+[mkb]?)$", re.IGNORECASE)
+PRICE_OR_MEASURE_RE = re.compile(r"^(?:(?:around|of|a|an|up|to|under|top|crossed|at|effective)\s+)?\$?\d[\d,]*(?:\.\d+)?(?:m|k|b|%|x|million|billion|trillion|percent|[-\s]?hour)?$", re.IGNORECASE)
 MONTH_DATE_RE = re.compile(r"^(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\s+\d{1,2}(?:st|nd|rd|th)?$", re.IGNORECASE)
 RANDOM_ID_RE = re.compile(r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z0-9_-]{8,}$")
-LEADING_FRAGMENT_RE = re.compile(r"^(?:for|with|from|at|in|on|by|our|all|the|this|these|those)\b", re.IGNORECASE)
+LEADING_FRAGMENT_RE = re.compile(r"^(?:for|with|from|every|just|and|or|in|on|to|of|as|by|the|a|an|that|this|its|our|your|their|all|these|those)\b", re.IGNORECASE)
+VERB_FRAGMENT_RE = re.compile(r"^(?:build|create|make|use|get|run|try|learn|see|find|give|take|send|launch|release|announce|introduce|ship|add|fix|update|upgrade|improve|integrate|support|meet)\b", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -251,21 +294,38 @@ def is_invalid_product(value: str) -> bool:
     if not text:
         return True
     lowered = text.lower()
+    compact = normalize_key(text)
+    if lowered in KNOWN_VALID_PRODUCTS or re.match(r"^openshell\s+v\d+(?:\.\d+)+$", lowered):
+        return False
+    if lowered.startswith(("deepseek v4", "deepseek-v4", "gpt-", "gpt ")):
+        return False
     if lowered in GENERIC_ENTITY_TOKENS or is_generic_or_noise(lowered):
         return True
-    if lowered in {"googlebook", "langsmith fleet", "github copilot desktop", "openshell", "qveris cli", "notion cli", "notion workers", "notion custom agents", "notion developer platform", "token calling plan"}:
-        return False
+    if lowered in {"ai", "agent", "agents", "api", "model", "models", "data", "research", "paper", "code", "cli"}:
+        return True
+    if re.fullmatch(r"[A-Za-z0-9_-]{6,10}", text) and re.search(r"\d", text) and compact not in {"gpt5", "gpt55"}:
+        return True
+    if re.search(r"\b(?:com|org|io|dev|ai)\s+[A-Za-z0-9]{1,8}\b", lowered):
+        return True
+    if re.search(r"https?://|t\.co/|(?:^|\s)[A-Za-z0-9.-]+\.(?:com|org|io|dev|ai)\b", text, re.IGNORECASE):
+        return True
     if PRICE_OR_MEASURE_RE.match(lowered) or MONTH_DATE_RE.match(text) or RANDOM_ID_RE.match(text):
+        return True
+    if re.search(r"\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\s+\d{1,2}(?:st|nd|rd|th)?\b", lowered):
         return True
     if LEADING_FRAGMENT_RE.match(text):
         return True
+    if VERB_FRAGMENT_RE.match(text):
+        return True
+    if re.search(r"for\s+(?:every|your|all)\b", lowered):
+        return True
     if VERSION_ONLY_RE.match(text):
         return True
-    if word_count(text) > 8:
+    if word_count(text) > 6:
         return True
     if len(text) >= 8 and re.fullmatch(r"[A-Za-z0-9_-]+", text) and not re.search(r"(gpt|qwen|kimi|claude|gemini|llama|mistral|nemotron|openshell|seedance)", lowered):
         return True
-    if re.search(r"^https?://|t\.co/[A-Za-z0-9]+", text):
+    if word_count(text) >= 3 and re.search(r"[.!?;,]", text):
         return True
     if any(phrase in lowered for phrase in ("for updates from my phone", "made just for developers", "give your custom agents", "build video analytics ai agents")):
         return True
@@ -279,6 +339,34 @@ def is_invalid_actor(value: str) -> bool:
     lowered = text.lower().lstrip("@")
     if text in {"GitHub", "OpenAI/Codex"}:
         return False
+    known_actor_lowers = {
+        "anthropic",
+        "china telecom shanghai",
+        "colaos",
+        "cursor",
+        "deepseek",
+        "elevenlabs",
+        "feishu",
+        "firecrawl",
+        "github",
+        "google",
+        "jc he",
+        "langchain",
+        "llamaindex",
+        "microsoft",
+        "notion",
+        "nvidia",
+        "openai",
+        "plan0",
+        "qveris",
+        "recursive",
+        "runway",
+        "snyk",
+        "syncless",
+        "y combinator",
+    }
+    if lowered in known_actor_lowers:
+        return False
     if lowered in GENERIC_ENTITY_TOKENS or is_generic_or_noise(lowered):
         return True
     if VERSION_ONLY_RE.match(text) or RANDOM_ID_RE.match(text):
@@ -290,6 +378,8 @@ def is_invalid_actor(value: str) -> bool:
 
 def event_action(text: str) -> str:
     lowered = (text or "").lower()
+    if "破万星" in text or "万星" in text:
+        return "adoption_metric"
     if re.search(r"\b[A-Za-z][A-Za-z0-9_.-]{1,40}\s+v\d+(?:\.\d+)+", text or "", re.IGNORECASE):
         return "release"
     if re.search(r"\b(event|summit|conference|webinar)\b", lowered):
@@ -318,6 +408,12 @@ def explicit_products(text: str) -> list[str]:
     patterns = [
         r"\b(OpenShell\s+v\d+(?:\.\d+)+)\b",
         r"\b(AI Security Summit)\b",
+        r"\b(Agent View)\b",
+        r"\b(ColaOS)\b",
+        r"\b(DeepSeek[-\s]?V4(?:\s+Preview)?)\b",
+        r"\b(ElevenAgents)\b",
+        r"\b(Firecrawl\s+PHP\s+SDK|PHP\s+SDK)\b",
+        r"\b(Gemini\s+API)\b",
         r"\b(Googlebook)\b",
         r"\b(GitHub Copilot Desktop)\b",
         r"(GitHub Copilot\s*桌面端)",
@@ -332,6 +428,9 @@ def explicit_products(text: str) -> list[str]:
         r"\b(PLAN0)\b",
         r"\b(Adialante(?: mobile MRI)?)\b",
         r"\b(Recursive(?: Superintelligence)?)\b",
+        r"\b(Syncless)\b",
+        r"(飞书\s*CLI|Feishu\s*CLI)",
+        r"(嘉琛的\s+bridge|bridge)",
         r"(Token\s*(?:calling\s*)?plan|Token\s*话费套餐|话费套餐)",
     ]
     for pattern in patterns:
@@ -341,6 +440,10 @@ def explicit_products(text: str) -> list[str]:
                 product = "GitHub Copilot Desktop"
             if "话费套餐" in product:
                 product = "Token calling plan"
+            if product.startswith("嘉琛"):
+                product = "bridge"
+            if "飞书" in product:
+                product = "Feishu CLI"
             if product and not is_invalid_product(product) and product.lower() not in {p.lower() for p in products}:
                 products.append(product)
     if "Notion" in (text or "") and any(term in text for term in ["CLI", "Workers", "Custom Agents", "Tools", "Developer Platform"]):
@@ -350,7 +453,12 @@ def explicit_products(text: str) -> list[str]:
         products.append("Token calling plan")
     if re.search(r"\bNVDA\b|Nvidia became", text or "", re.IGNORECASE):
         products.append("NVDA")
-    if "Anthropic" in (text or "") and ("surpassed OpenAI" in (text or "") or "enterprise AI spending" in (text or "")):
+    if "Anthropic" in (text or "") and (
+        "surpassed OpenAI" in (text or "")
+        or "enterprise AI spending" in (text or "")
+        or "超越 OpenAI" in (text or "")
+        or "采用率" in (text or "")
+    ):
         products.append("Claude")
     if "Custom Agents" in (text or ""):
         products.append("Notion Custom Agents")
@@ -360,6 +468,12 @@ def explicit_products(text: str) -> list[str]:
         products.append("Stelline Developer Kit")
     if re.search(r"\bOpenAI\b.*\bevent\b", text or "", re.IGNORECASE):
         products.append("OpenAI event")
+    if "Claude code 发布" in (text or "") and "Agent View" in (text or ""):
+        products.append("Agent View")
+    if "DeepSeek" in (text or "") and ("open-sourcing" in (text or "").lower() or "why preview" in (text or "").lower() or "开源" in (text or "")):
+        products.append("DeepSeek-V4 Preview")
+    if "企业里的人+Agent" in (text or "") and "Syncless" in (text or ""):
+        products.append("Syncless")
     return products
 
 
@@ -373,6 +487,16 @@ def infer_actor(text: str, products: list[str], actors: list[str]) -> str:
         return "China Telecom Shanghai"
     if "qveris cli" in lowered or "qveris" in lowered:
         return "QVeris"
+    if "colaos" in lowered:
+        return "ColaOS"
+    if "syncless" in lowered:
+        return "Syncless"
+    if "飞书 cli" in lowered:
+        return "Feishu"
+    if "嘉琛" in (text or "") and "bridge" in lowered:
+        return "Jc He"
+    if "deepseek" in lowered:
+        return "DeepSeek"
     if "googlebook" in lowered:
         return "Google"
     if "plan0" in lowered:
@@ -391,9 +515,22 @@ def infer_actor(text: str, products: list[str], actors: list[str]) -> str:
         return "LangChain"
     if "github copilot" in lowered:
         return "GitHub"
+    if "gemini api" in lowered:
+        return "Google"
+    if "php sdk" in lowered and "firecrawl" in lowered:
+        return "Firecrawl"
+    if "elevenagents" in lowered:
+        return "ElevenLabs"
+    if "ai 100" in lowered and ("llama_index" in lowered or "llamaindex" in lowered):
+        return "LlamaIndex"
     if "nvidia became" in lowered or "nvda" in lowered:
         return "NVIDIA"
-    if "anthropic" in lowered and "surpassed openai" in lowered:
+    if "anthropic" in lowered and (
+        "surpassed openai" in lowered
+        or "enterprise ai spending" in lowered
+        or "超越 openai" in lowered
+        or "采用率" in (text or "")
+    ):
         return "Anthropic"
     if "luigi" in lowered and "box is headed to your desk" in lowered:
         return "NVIDIA"
@@ -434,6 +571,8 @@ def classify_semantic_level(text: str, action: str, actor: str, product: str, so
         return "reject", "opinion_without_event"
     if action == "research_paper" and not (actor and product):
         return "thread_signature", "paper_thread"
+    if has_cjk(compact) and product and action in {"funding", "adoption_metric", "research_paper", "case_study"} and not actor:
+        return "thread_signature", "chinese_thread_without_concrete_actor"
     if actor and product and action != "other":
         return "event_signature", ""
     if actor and product and any(term in lowered for term in ("turns ", "is changing", "made accessible", "construction cost", "mobile mri")):
@@ -493,7 +632,7 @@ def extract_event_signature(item: dict[str, Any], card: dict[str, Any] | None = 
     products = deduped_products
     actor = infer_actor(text, products, actors)
     product = products[0] if products else ""
-    obj = products[1] if len(products) > 1 else ""
+    obj = products[1] if len(products) > 1 and not is_invalid_product(products[1]) else ""
     source_text = " ".join(str(item.get(key) or "") for key in ("source_id", "source_name", "feed_url", "url"))
     semantic_level, reject_reason = classify_semantic_level(text, action, actor, product, source_text)
     invalid: list[str] = []

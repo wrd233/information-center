@@ -1,0 +1,36 @@
+{
+  "high_count": 20,
+  "lane_distribution": {
+    "exploratory_recall": 501,
+    "precision_event": 22,
+    "same_event_recall": 60,
+    "same_product_different_event": 8,
+    "same_thread": 891,
+    "suppressed": 648,
+    "unknown": 140
+  },
+  "lane_priority_distribution": {
+    "exploratory_recall:low": 471,
+    "exploratory_recall:medium": 30,
+    "precision_event:must_run": 22,
+    "same_event_recall:high": 12,
+    "same_event_recall:medium": 48,
+    "same_product_different_event:medium": 8,
+    "same_thread:low": 811,
+    "same_thread:medium": 80,
+    "suppressed:suppress": 648,
+    "unknown:high": 8,
+    "unknown:low": 55,
+    "unknown:medium": 56,
+    "unknown:must_run": 21
+  },
+  "must_run_count": 43,
+  "priority_distribution": {
+    "high": 20,
+    "low": 1337,
+    "medium": 222,
+    "must_run": 43,
+    "suppress": 648
+  },
+  "suppressed_count": 648
+}

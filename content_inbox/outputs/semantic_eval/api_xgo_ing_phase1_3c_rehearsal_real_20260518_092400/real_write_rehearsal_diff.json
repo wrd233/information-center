@@ -1,0 +1,5461 @@
+{
+  "semantic_row_counts_after_write": {
+    "cluster_items": 7,
+    "event_clusters": 1059,
+    "item_cards": 90,
+    "item_relations": 86,
+    "llm_call_logs": 86,
+    "source_profiles": 469
+  },
+  "summary": {
+    "concurrency": {
+      "actual_calls": 12,
+      "actual_tokens": 61019,
+      "avg_latency_ms": 15780.1,
+      "by_task": {
+        "cluster_card_patch": {
+          "avg_latency_ms": 12101.0,
+          "cache_hit_tokens": 1536,
+          "calls": 3,
+          "concurrency": 3,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 9957,
+          "p95_latency_ms": 19872,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 3,
+          "task_type": "cluster_card_patch",
+          "total_tokens": 7816
+        },
+        "cluster_card_rebuild": {
+          "avg_latency_ms": 0.0,
+          "cache_hit_tokens": 0,
+          "calls": 0,
+          "concurrency": 3,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 0,
+          "p95_latency_ms": 0,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 0,
+          "task_type": "cluster_card_rebuild",
+          "total_tokens": 0
+        },
+        "item_card": {
+          "avg_latency_ms": 22031.4,
+          "cache_hit_tokens": 4480,
+          "calls": 5,
+          "concurrency": 3,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 21796,
+          "p95_latency_ms": 27463,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 5,
+          "task_type": "item_card",
+          "total_tokens": 41132
+        },
+        "item_cluster_relation": {
+          "avg_latency_ms": 0.0,
+          "cache_hit_tokens": 0,
+          "calls": 0,
+          "concurrency": 3,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 0,
+          "p95_latency_ms": 0,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 0,
+          "task_type": "item_cluster_relation",
+          "total_tokens": 0
+        },
+        "item_relation": {
+          "avg_latency_ms": 10725.2,
+          "cache_hit_tokens": 4096,
+          "calls": 4,
+          "concurrency": 3,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 11148,
+          "p95_latency_ms": 12188,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 4,
+          "task_type": "item_relation",
+          "total_tokens": 12071
+        },
+        "json_repair": {
+          "avg_latency_ms": 0.0,
+          "cache_hit_tokens": 0,
+          "calls": 0,
+          "concurrency": 3,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 0,
+          "p95_latency_ms": 0,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 0,
+          "task_type": "json_repair",
+          "total_tokens": 0
+        },
+        "source_review": {
+          "avg_latency_ms": 0.0,
+          "cache_hit_tokens": 0,
+          "calls": 0,
+          "concurrency": 3,
+          "db_lock_errors": 0,
+          "failed": 0,
+          "p50_latency_ms": 0,
+          "p95_latency_ms": 0,
+          "parse_failures": 0,
+          "rate_limit_errors": 0,
+          "retry_count": 0,
+          "success": 0,
+          "task_type": "source_review",
+          "total_tokens": 0
+        }
+      },
+      "cache_hit_rate": 0.1657,
+      "cache_hit_tokens": 10112,
+      "calls_per_sec": 0.1055,
+      "db_lock_errors": 0,
+      "duration_seconds": 113.726,
+      "final_failures": 0,
+      "max_concurrency": 3,
+      "p50_latency_ms": 17924,
+      "p95_latency_ms": 24319,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "repair_retry_count": 0,
+      "tokens_per_sec": 536.54
+    },
+    "errors_fallbacks": {
+      "db_lock_errors": 0,
+      "failed_batch_count": 0,
+      "fallback_rate": 0.0,
+      "final_failures": 0,
+      "heuristic_fallback_count": 0,
+      "item_card_count": 30,
+      "llm_card_count": 5,
+      "llm_parse_failures": 0,
+      "repair_retry_count": 0,
+      "review_queue_entries_due_to_failure": 0,
+      "single_retry_success_count": 0,
+      "skipped_due_to_max_calls": false,
+      "skipped_due_to_missing_card": 0,
+      "skipped_due_to_no_candidate": 0,
+      "skipped_due_to_token_budget": false,
+      "split_retry_success_count": 0
+    },
+    "event_signatures": {
+      "accepted_examples": [
+        {
+          "action": "integration",
+          "actor": "Google",
+          "actor_type": "organization",
+          "concreteness_score": 1.0,
+          "confidence": 1.0,
+          "date_bucket": "2026-05-04",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [],
+          "is_concrete": true,
+          "is_event_like": true,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "Gemini API",
+          "reject_reason": "",
+          "semantic_level": "event_signature",
+          "signature_key": "google|geminiapi|integration|2026-05-04",
+          "source_item_ids": [
+            "item_a2af0dec0af34b328b90242800a31c7d"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "batch",
+            "big",
+            "by",
+            "devx",
+            "etc",
+            "gemini",
+            "genmedia",
+            "google",
+            "googleaistudio",
+            "in",
+            "is",
+            "just",
+            "long",
+            "making",
+            "running",
+            "shipped",
+            "step",
+            "studio",
+            "tasks",
+            "towards"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "integration",
+          "actor": "Google",
+          "actor_type": "organization",
+          "concreteness_score": 1.0,
+          "confidence": 1.0,
+          "date_bucket": "2026-05-04",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [],
+          "is_concrete": true,
+          "is_event_like": true,
+          "is_thread_like": false,
+          "object": "Eliminate wasted API",
+          "product_or_model": "Gemini API",
+          "reject_reason": "",
+          "semantic_level": "event_signature",
+          "signature_key": "google|geminiapi|integration|2026-05-04",
+          "source_item_ids": [
+            "item_f628e83f76484916aeee02cbbc542a85"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "agentic",
+            "building",
+            "by",
+            "complex",
+            "continuous",
+            "eliminate",
+            "gemini",
+            "goodbye",
+            "in",
+            "logic",
+            "long-running",
+            "orchestration",
+            "polling",
+            "say",
+            "simplify",
+            "to",
+            "traffic",
+            "wasted",
+            "webhooks",
+            "while"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "integration",
+          "actor": "OpenAI/Codex",
+          "actor_type": "organization",
+          "concreteness_score": 1.0,
+          "confidence": 1.0,
+          "date_bucket": "2026-05-07",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [],
+          "is_concrete": true,
+          "is_event_like": true,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "Codex",
+          "reject_reason": "",
+          "semantic_level": "event_signature",
+          "signature_key": "openaicodex|codex|integration|2026-05-07",
+          "source_item_ids": [
+            "item_cea51e2cd94343f4aef488a6d3f3fbce"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "approaches",
+            "as",
+            "best",
+            "by",
+            "chooses",
+            "chrome",
+            "codex",
+            "combines",
+            "does",
+            "each",
+            "handle",
+            "if",
+            "it",
+            "job",
+            "logged-in",
+            "multiple",
+            "needed",
+            "needs",
+            "not",
+            "on"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "integration",
+          "actor": "OpenAI/Codex",
+          "actor_type": "organization",
+          "concreteness_score": 1.0,
+          "confidence": 1.0,
+          "date_bucket": "2026-05-07",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [],
+          "is_concrete": true,
+          "is_event_like": true,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "Codex",
+          "reject_reason": "",
+          "semantic_level": "event_signature",
+          "signature_key": "openaicodex|codex|integration|2026-05-07",
+          "source_item_ids": [
+            "item_7609b64565c3419d9bb2376461e45e90"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "at",
+            "background",
+            "by",
+            "chrome",
+            "codex",
+            "directly",
+            "does",
+            "even",
+            "in",
+            "install",
+            "it",
+            "macos",
+            "not",
+            "on",
+            "over",
+            "parallel",
+            "plugin",
+            "sites",
+            "support",
+            "tabs"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "integration",
+          "actor": "OpenAI/Codex",
+          "actor_type": "organization",
+          "concreteness_score": 1.0,
+          "confidence": 1.0,
+          "date_bucket": "2026-05-07",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [],
+          "is_concrete": true,
+          "is_event_like": true,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "Codex",
+          "reject_reason": "",
+          "semantic_level": "event_signature",
+          "signature_key": "openaicodex|codex|integration|2026-05-07",
+          "source_item_ids": [
+            "item_f1961ef1b2d34d9b8cc1536bef99083d"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "by",
+            "chrome",
+            "code",
+            "codex",
+            "complete",
+            "complex",
+            "does",
+            "entry",
+            "extension",
+            "flows",
+            "hood",
+            "it",
+            "like",
+            "move",
+            "navigate",
+            "navigati",
+            "navigating",
+            "not",
+            "on",
+            "pages"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "integration",
+          "actor": "Google",
+          "actor_type": "organization",
+          "concreteness_score": 1.0,
+          "confidence": 1.0,
+          "date_bucket": "2026-05-05",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [],
+          "is_concrete": true,
+          "is_event_like": true,
+          "is_thread_like": false,
+          "object": "File Search",
+          "product_or_model": "Gemini API",
+          "reject_reason": "",
+          "semantic_level": "event_signature",
+          "signature_key": "google|geminiapi|integration|2026-05-05",
+          "source_item_ids": [
+            "item_a06f2a316f5947d490e0c81579e4c036"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "by",
+            "cite",
+            "create",
+            "created",
+            "developer",
+            "documents",
+            "does",
+            "em",
+            "embed",
+            "embedding",
+            "excited",
+            "file",
+            "gemini",
+            "guide",
+            "images",
+            "in",
+            "it",
+            "makes",
+            "multimodal",
+            "not"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "integration",
+          "actor": "Google",
+          "actor_type": "organization",
+          "concreteness_score": 1.0,
+          "confidence": 1.0,
+          "date_bucket": "2026-05-05",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [],
+          "is_concrete": true,
+          "is_event_like": true,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "gemini-api",
+          "reject_reason": "",
+          "semantic_level": "event_signature",
+          "signature_key": "google|geminiapi|integration|2026-05-05",
+          "source_item_ids": [
+            "item_545cf6d45e1d4005b9489f5882a5c91f"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "ai.google.dev",
+            "by",
+            "cloudflare",
+            "cookbook",
+            "doc",
+            "docs",
+            "example",
+            "gemini-api",
+            "github.com",
+            "google-gemini",
+            "hv16mqvgil",
+            "patrickloeber",
+            "qoungi1hcm",
+            "repo",
+            "worker"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "integration",
+          "actor": "Google",
+          "actor_type": "organization",
+          "concreteness_score": 1.0,
+          "confidence": 1.0,
+          "date_bucket": "2026-05-05",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [],
+          "is_concrete": true,
+          "is_event_like": true,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "Gemini API",
+          "reject_reason": "",
+          "semantic_level": "event_signature",
+          "signature_key": "google|geminiapi|integration|2026-05-05",
+          "source_item_ids": [
+            "item_44ad8c182f124c0bbcbe02a556ed3c9b"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "an",
+            "by",
+            "cloudflare",
+            "cookbook",
+            "created",
+            "devx",
+            "easy",
+            "end-to-end",
+            "events",
+            "function",
+            "gemini",
+            "great",
+            "handles",
+            "improvement",
+            "in",
+            "incoming",
+            "it",
+            "long",
+            "played",
+            "pretty"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "pricing",
+          "actor": "China Telecom Shanghai",
+          "actor_type": "organization",
+          "concreteness_score": 1.0,
+          "confidence": 1.0,
+          "date_bucket": "2026-05-16",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [],
+          "is_concrete": true,
+          "is_event_like": true,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "Token calling plan",
+          "reject_reason": "",
+          "semantic_level": "event_signature",
+          "signature_key": "chinatelecomshanghai|tokencallingplan|pricing|2026-05-16",
+          "source_item_ids": [
+            "item_889f9177375c482d867a10b955d5a429"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "by",
+            "token",
+            "万额度点",
+            "万额度点体验",
+            "上海电信用户免费",
+            "上海电信直接把",
+            "主流大模型调用",
+            "么做",
+            "做成话费套餐了",
+            "入口",
+            "具体方案",
+            "后的经营主线",
+            "块钱",
+            "多模态",
+            "手机厂商还在想怎",
+            "支持",
+            "文本",
+            "服务是中国电",
+            "服务是中国电信今",
+            "甚至还说"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "integration",
+          "actor": "Notion",
+          "actor_type": "organization",
+          "concreteness_score": 1.0,
+          "confidence": 1.0,
+          "date_bucket": "2026-05-16",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [],
+          "is_concrete": true,
+          "is_event_like": true,
+          "is_thread_like": false,
+          "object": "Notion CLI",
+          "product_or_model": "Notion Developer Platform",
+          "reject_reason": "",
+          "semantic_level": "event_signature",
+          "signature_key": "notion|notiondeveloperplatform|integration|2026-05-16",
+          "source_item_ids": [
+            "item_9fecae5ed5f9420fab9b1e9ffe26ec1c"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "any",
+            "anywhere",
+            "be",
+            "big",
+            "bring",
+            "bunch",
+            "by",
+            "cli",
+            "code",
+            "database",
+            "developer",
+            "devs",
+            "does",
+            "external",
+            "improvements",
+            "in",
+            "infra",
+            "introducing",
+            "more",
+            "need"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "adoption_metric",
+          "actor": "Anthropic",
+          "actor_type": "organization",
+          "concreteness_score": 1.0,
+          "confidence": 1.0,
+          "date_bucket": "2026-05-15",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [],
+          "is_concrete": true,
+          "is_event_like": true,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "Claude",
+          "reject_reason": "",
+          "semantic_level": "event_signature",
+          "signature_key": "anthropic|claude|adoptionmetric|2026-05-15",
+          "source_item_ids": [
+            "item_018a0485cd6a46a492a6e16e02785f62"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "anthropic",
+            "by",
+            "index",
+            "openai",
+            "ramp",
+            "tryramp",
+            "上超越",
+            "仅增长",
+            "显示",
+            "最新一期",
+            "根据",
+            "的企业在使用",
+            "的数据",
+            "的采用率翻了四倍",
+            "过去一年",
+            "首次在企业采用率"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "integration",
+          "actor": "QVeris",
+          "actor_type": "organization",
+          "concreteness_score": 1.0,
+          "confidence": 1.0,
+          "date_bucket": "2026-05-15",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [],
+          "is_concrete": true,
+          "is_event_like": true,
+          "is_thread_like": false,
+          "object": "Claude Code",
+          "product_or_model": "QVeris CLI",
+          "reject_reason": "",
+          "semantic_level": "event_signature",
+          "signature_key": "qveris|qveriscli|integration|2026-05-15",
+          "source_item_ids": [
+            "item_d25cefc8e64640cabc52fa91fa38361f"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "bands",
+            "bollinger",
+            "by",
+            "callable",
+            "candles",
+            "claude",
+            "cli",
+            "code",
+            "company",
+            "connect",
+            "does",
+            "financial",
+            "full",
+            "fundamentals",
+            "here",
+            "in",
+            "indicators",
+            "language",
+            "natural",
+            "not"
+          ],
+          "time_window_hours": 72.0
+        }
+      ],
+      "accepted_garbage_product_count": 0,
+      "accepted_garbage_product_examples": [],
+      "accepted_signature_count": 12,
+      "chinese_event_detection_rate": 0.4444,
+      "chinese_event_potential_count": 9,
+      "concreteness_score_avg": 0.625,
+      "event_signature_valid_rate": 1.0,
+      "invalid_reason_distribution": {
+        "missing_concrete_actor_or_product": 12,
+        "semantic_level_reject": 12,
+        "semantic_level_thread_signature": 6,
+        "weak_action_without_entity": 10
+      },
+      "product_validator_blocker_count": 0,
+      "product_validator_warning_count": 0,
+      "rejected_examples": [
+        {
+          "action": "other",
+          "actor": "",
+          "actor_type": "unknown",
+          "concreteness_score": 0.18,
+          "confidence": 0.35,
+          "date_bucket": "2026-05-17",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "missing_concrete_actor_or_product",
+            "weak_action_without_entity",
+            "semantic_level_reject"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "",
+          "reject_reason": "missing_concrete_actor_or_product",
+          "semantic_level": "reject",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_1f4d69af5b784e77a344cf5358af104e"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "by",
+            "xumaubwhio"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "other",
+          "actor": "",
+          "actor_type": "unknown",
+          "concreteness_score": 0.18,
+          "confidence": 0.35,
+          "date_bucket": "2026-05-16",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "missing_concrete_actor_or_product",
+            "weak_action_without_entity",
+            "semantic_level_reject"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "",
+          "reject_reason": "missing_concrete_actor_or_product",
+          "semantic_level": "reject",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_0bd28b41925d44098d021d4a6bf96ca2"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "best",
+            "by",
+            "chris",
+            "chrisbest",
+            "custom",
+            "domains",
+            "lot",
+            "misses",
+            "of",
+            "revolution",
+            "substack",
+            "to",
+            "too",
+            "traffic"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "other",
+          "actor": "",
+          "actor_type": "unknown",
+          "concreteness_score": 0.18,
+          "confidence": 0.35,
+          "date_bucket": "2026-05-16",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "missing_concrete_actor_or_product",
+            "weak_action_without_entity",
+            "semantic_level_reject"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "",
+          "reject_reason": "missing_concrete_actor_or_product",
+          "semantic_level": "reject",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_d70adb1377d841808812e1e24b04ab47"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "ambitious",
+            "best",
+            "by",
+            "chris",
+            "chrisbest",
+            "develop",
+            "interesting",
+            "manhattan",
+            "metaphors",
+            "need",
+            "project",
+            "projects",
+            "technology",
+            "to",
+            "we"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "pricing",
+          "actor": "",
+          "actor_type": "unknown",
+          "concreteness_score": 0.7,
+          "confidence": 0.7,
+          "date_bucket": "2026-05-16",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "semantic_level_thread_signature"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": true,
+          "object": "",
+          "product_or_model": "big computer",
+          "reject_reason": "entity_without_valid_event_action",
+          "semantic_level": "thread_signature",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_89ff73e0d2194a98a65cbd599ce6433f"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "against",
+            "always",
+            "america",
+            "an",
+            "any",
+            "anything",
+            "area",
+            "aren",
+            "as",
+            "become",
+            "being",
+            "big",
+            "bought",
+            "bringing",
+            "building",
+            "by",
+            "center",
+            "centers",
+            "chance",
+            "citizens"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "integration",
+          "actor": "",
+          "actor_type": "unknown",
+          "concreteness_score": 0.7,
+          "confidence": 0.7,
+          "date_bucket": "2026-05-16",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "semantic_level_thread_signature"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": true,
+          "object": "",
+          "product_or_model": "Form 990",
+          "reject_reason": "entity_without_valid_event_action",
+          "semantic_level": "thread_signature",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_947a041a034543b4bfcae62ae63b2c53"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "activity",
+            "against",
+            "aggressive",
+            "aka",
+            "alliance",
+            "american",
+            "amount",
+            "an",
+            "appears",
+            "arabella",
+            "audit",
+            "back",
+            "been",
+            "behind",
+            "box",
+            "by",
+            "called",
+            "campaigns",
+            "capacity",
+            "center"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "other",
+          "actor": "",
+          "actor_type": "unknown",
+          "concreteness_score": 0.18,
+          "confidence": 0.35,
+          "date_bucket": "2026-05-16",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "missing_concrete_actor_or_product",
+            "weak_action_without_entity",
+            "semantic_level_reject"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "",
+          "reject_reason": "missing_concrete_actor_or_product",
+          "semantic_level": "reject",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_abddd87cc9af454eb01cbd1fbb405c4c"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "agi",
+            "by",
+            "cod",
+            "coding",
+            "一个人或一个组织",
+            "么能直接赚钱了",
+            "什么时候",
+            "今天看到一个牛逼",
+            "但是不能告诉你到",
+            "但是正确呢",
+            "力的定义",
+            "可以无限放大速度",
+            "可以让你",
+            "在单位时间内进行",
+            "就是在智力上到达",
+            "底要做什么产品",
+            "智力",
+            "核心要做的最重要",
+            "正确",
+            "正确选择的能力"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "other",
+          "actor": "",
+          "actor_type": "unknown",
+          "concreteness_score": 0.18,
+          "confidence": 0.35,
+          "date_bucket": "2026-05-15",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "missing_concrete_actor_or_product",
+            "weak_action_without_entity",
+            "semantic_level_reject"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "",
+          "reject_reason": "missing_concrete_actor_or_product",
+          "semantic_level": "reject",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_2f3893520643421a8e3714181f1b8aa6"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "by",
+            "cuda",
+            "game",
+            "in",
+            "oran_ge",
+            "orange",
+            "skin",
+            "个决定辩经",
+            "也就不能做出正确",
+            "人只有在真实的环",
+            "人类太沉迷寻找证",
+            "人类学研究表明",
+            "人类的决策过程主",
+            "会有一万个人为这",
+            "再用智慧去寻找证",
+            "决定是正确的",
+            "在压力下产生这些",
+            "境里才能做出正确",
+            "大概也没想到后来",
+            "如果决策者本人不"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "other",
+          "actor": "",
+          "actor_type": "unknown",
+          "concreteness_score": 0.18,
+          "confidence": 0.35,
+          "date_bucket": "2026-05-15",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "missing_concrete_actor_or_product",
+            "weak_action_without_entity",
+            "semantic_level_reject"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "",
+          "reject_reason": "missing_concrete_actor_or_product",
+          "semantic_level": "reject",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_7d29a0d540a94e5f83e2f7f3c485f38d"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "by",
+            "信念",
+            "原来一个人最真的",
+            "友听的那版",
+            "是凌晨随口说给朋"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "other",
+          "actor": "",
+          "actor_type": "unknown",
+          "concreteness_score": 0.18,
+          "confidence": 0.35,
+          "date_bucket": "2026-05-15",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "missing_concrete_actor_or_product",
+            "weak_action_without_entity",
+            "semantic_level_reject"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "",
+          "reject_reason": "missing_concrete_actor_or_product",
+          "semantic_level": "reject",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_88584e4afe624d2d8dbff538a2b099c6"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "arcee_ai",
+            "by",
+            "closed",
+            "xeophon"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "case_study",
+          "actor": "",
+          "actor_type": "unknown",
+          "concreteness_score": 0.38,
+          "confidence": 0.38,
+          "date_bucket": "2026-05-15",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "missing_concrete_actor_or_product",
+            "semantic_level_reject"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "",
+          "reject_reason": "missing_concrete_actor_or_product",
+          "semantic_level": "reject",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_a40712c64e3f482b88d5389d8daf88a4"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "by",
+            "实践是获得真理和",
+            "获悉真相的唯一途"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "other",
+          "actor": "",
+          "actor_type": "unknown",
+          "concreteness_score": 0.18,
+          "confidence": 0.35,
+          "date_bucket": "2026-05-15",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "missing_concrete_actor_or_product",
+            "weak_action_without_entity",
+            "semantic_level_reject"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "",
+          "reject_reason": "missing_concrete_actor_or_product",
+          "semantic_level": "reject",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_456ca570e6c54ad78af46cf9af348a8b"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "by",
+            "game",
+            "in",
+            "skin",
+            "也就不能做出正确",
+            "人只有在真实的环",
+            "人类学研究表明",
+            "人类的决策过程主",
+            "再用智慧去寻找证",
+            "决定",
+            "决定是正确的",
+            "在压力下产生这些",
+            "境里才能做出正确",
+            "如果决策者本人不",
+            "定之后",
+            "就不能身临其境地",
+            "我们往往是做出决",
+            "所起的作用并不大",
+            "承担决策失误的风",
+            "据以便证明自己的"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "other",
+          "actor": "NVIDIA",
+          "actor_type": "organization",
+          "concreteness_score": 0.8,
+          "confidence": 0.8,
+          "date_bucket": "2026-05-15",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "semantic_level_thread_signature"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": true,
+          "object": "DGX Spark",
+          "product_or_model": "Stelline Developer Kit",
+          "reject_reason": "entity_without_valid_event_action",
+          "semantic_level": "thread_signature",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_f2568a9f5be84431844af847e08b453c"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "astronomy",
+            "based",
+            "box",
+            "by",
+            "capabilities",
+            "chance",
+            "compute",
+            "confident",
+            "cruz",
+            "deploying",
+            "desk",
+            "develop",
+            "developer",
+            "dgx",
+            "first",
+            "future",
+            "good",
+            "gpu-accelerated",
+            "headed",
+            "if"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "other",
+          "actor": "vercel",
+          "actor_type": "organization",
+          "concreteness_score": 0.48,
+          "confidence": 0.5,
+          "date_bucket": "2026-05-15",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "semantic_level_thread_signature"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": true,
+          "object": "",
+          "product_or_model": "",
+          "reject_reason": "entity_without_valid_event_action",
+          "semantic_level": "thread_signature",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_3aed1582ad97460c9f099e7ba451b125"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "ai-gatewa",
+            "bhyueybctw",
+            "blog.qiaomu.ai",
+            "by",
+            "pvtjim12ce",
+            "vercel-ai-gate",
+            "vercel.com",
+            "原文",
+            "翻译"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "other",
+          "actor": "Anthropic",
+          "actor_type": "organization",
+          "concreteness_score": 0.8,
+          "confidence": 0.8,
+          "date_bucket": "2026-05-15",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "semantic_level_thread_signature"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": true,
+          "object": "Gemini Flash",
+          "product_or_model": "Claude Opus",
+          "reject_reason": "entity_without_valid_event_action",
+          "semantic_level": "thread_signature",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_66b971837281498eabd60e67da56c300"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "anthropic",
+            "arena",
+            "b2b",
+            "by",
+            "claude",
+            "flash",
+            "gemini",
+            "google",
+            "opus",
+            "token",
+            "vercel",
+            "一次",
+            "万个项目",
+            "个月十万亿个",
+            "个月翻近一倍",
+            "个模型",
+            "份额越高",
+            "便宜量大",
+            "却占了",
+            "原文见评论"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "other",
+          "actor": "",
+          "actor_type": "unknown",
+          "concreteness_score": 0.18,
+          "confidence": 0.35,
+          "date_bucket": "2026-05-15",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "missing_concrete_actor_or_product",
+            "weak_action_without_entity",
+            "semantic_level_reject"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "",
+          "reject_reason": "missing_concrete_actor_or_product",
+          "semantic_level": "reject",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_ea9ee2ca8079426b8140ee07de435141"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "by",
+            "skill",
+            "优秀模型",
+            "就是顶级翻译学习",
+            "工具"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "event",
+          "actor": "",
+          "actor_type": "unknown",
+          "concreteness_score": 0.7,
+          "confidence": 0.7,
+          "date_bucket": "2026-05-15",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "semantic_level_thread_signature"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": true,
+          "object": "",
+          "product_or_model": "SF 2026",
+          "reject_reason": "entity_without_valid_event_action",
+          "semantic_level": "thread_signature",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_43482856e2dc4829bd02c13698c21825"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "arts",
+            "by",
+            "code",
+            "eventbrite",
+            "eventbrite.com",
+            "financeyf5",
+            "fine",
+            "genai",
+            "genaisummit26",
+            "luma",
+            "luma.com",
+            "natetepper",
+            "of",
+            "offer",
+            "palace",
+            "sf",
+            "sta",
+            "summit",
+            "一次的地方",
+            "专属"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "pricing",
+          "actor": "",
+          "actor_type": "unknown",
+          "concreteness_score": 0.38,
+          "confidence": 0.38,
+          "date_bucket": "2026-05-15",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "missing_concrete_actor_or_product",
+            "semantic_level_reject"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "",
+          "reject_reason": "missing_concrete_actor_or_product",
+          "semantic_level": "reject",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_39e8df8318b24f87a8aba9bb518b0cb9"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "by",
+            "does",
+            "eyi7bdcy",
+            "financeyf5",
+            "nate",
+            "natetepper",
+            "not",
+            "on",
+            "sta",
+            "support",
+            "tag",
+            "tepper",
+            "top",
+            "trueshort",
+            "video",
+            "your",
+            "万美元",
+            "万美元年化收入",
+            "个月",
+            "他们已做到"
+          ],
+          "time_window_hours": 72.0
+        },
+        {
+          "action": "other",
+          "actor": "",
+          "actor_type": "unknown",
+          "concreteness_score": 0.18,
+          "confidence": 0.35,
+          "date_bucket": "2026-05-15",
+          "extraction_notes": "deterministic_phase1_3b_hybrid_fast_path",
+          "invalid_reasons": [
+            "missing_concrete_actor_or_product",
+            "weak_action_without_entity",
+            "semantic_level_reject"
+          ],
+          "is_concrete": false,
+          "is_event_like": false,
+          "is_thread_like": false,
+          "object": "",
+          "product_or_model": "",
+          "reject_reason": "missing_concrete_actor_or_product",
+          "semantic_level": "reject",
+          "signature_key": null,
+          "source_item_ids": [
+            "item_9e3f6012ded847a9a3baf6f5c2323c94"
+          ],
+          "source_type": "social",
+          "supporting_tokens": [
+            "by",
+            "ollama"
+          ],
+          "time_window_hours": 72.0
+        }
+      ],
+      "rejected_signature_count": 18,
+      "semantic_level_distribution": {
+        "event_signature": 12,
+        "reject": 12,
+        "thread_signature": 6
+      },
+      "top_signatures": [
+        [
+          "openaicodex|codex|integration|2026-05-07",
+          3
+        ],
+        [
+          "google|geminiapi|integration|2026-05-05",
+          3
+        ],
+        [
+          "google|geminiapi|integration|2026-05-04",
+          2
+        ],
+        [
+          "chinatelecomshanghai|tokencallingplan|pricing|2026-05-16",
+          1
+        ],
+        [
+          "notion|notiondeveloperplatform|integration|2026-05-16",
+          1
+        ],
+        [
+          "anthropic|claude|adoptionmetric|2026-05-15",
+          1
+        ],
+        [
+          "qveris|qveriscli|integration|2026-05-15",
+          1
+        ]
+      ],
+      "total_items": 30,
+      "valid_signature_rate": 0.4
+    },
+    "evidence": {
+      "counts": {
+        "budget_skips": 74,
+        "candidate_generation": 838,
+        "candidate_suppression": 512,
+        "cluster_attachments": 12,
+        "cluster_candidates": 12,
+        "clusters_final": 1059,
+        "event_hotspots": 3,
+        "item_card_failures": 0,
+        "item_cards": 90,
+        "llm_calls": 86,
+        "llm_errors": 0,
+        "relations_all": 86,
+        "relations_interesting": 39,
+        "semantic_items": 30
+      },
+      "files": [
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/semantic_run_manifest.json",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/semantic_items.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/semantic_items.csv",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/item_cards.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/item_cards.csv",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/item_card_failures.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/relations_all.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/relations_all.csv",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/relations_interesting.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/relations_interesting.csv",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/candidate_generation.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/candidate_suppression.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/relation_conflicts.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/event_signatures.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/event_hotspots.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/event_hotspot_items.csv",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/cluster_candidates.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/cluster_seed_candidates.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/cluster_seed_rejections.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/cluster_attachments.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/clusters_final.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/cluster_diagnostics.csv",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/llm_calls.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/llm_errors.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/budget_skips.jsonl",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/stage_metrics.json",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/candidate_lanes_summary.json",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/budget_summary.json",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/event_signature_quality_report.json",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/event_signature_quality_report.md",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/phase1_3_readiness_report.md",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/phase1_3_complexity_control_report.md",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/cost_quality_metrics.json",
+        "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/phase1_2d_vs_1_2e_comparison.json"
+      ],
+      "manifest_path": "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400/semantic_run_manifest.json",
+      "persisted": true
+    },
+    "input_sample": {
+      "items_sampled": 30,
+      "items_too_short": 0,
+      "items_with_raw_content": 30,
+      "items_with_summary_only": 0,
+      "languages": {
+        "en_or_unknown": 16,
+        "zh": 14
+      },
+      "source_count": 9,
+      "time_range": {
+        "max_created_at": "2026-05-17T03:32:44.220243+00:00",
+        "min_created_at": "2026-05-05T04:22:36.562663+00:00"
+      },
+      "top_sources": [
+        [
+          "socialmedia-orange-ai-oran-ge",
+          8
+        ],
+        [
+          "socialmedia-marc-andreessen-127482-127480-pmarca",
+          4
+        ],
+        [
+          "socialmedia-ai-will-financeyf5",
+          4
+        ],
+        [
+          "socialmedia-openai-openai",
+          3
+        ],
+        [
+          "socialmedia-patrick-loeber-patloeber",
+          3
+        ],
+        [
+          "socialmedia-nvidia-ai-nvidiaai",
+          3
+        ],
+        [
+          "socialmedia-vista8",
+          3
+        ],
+        [
+          "socialmedia-logan-kilpatrick-officiallogank",
+          1
+        ],
+        [
+          "socialmedia-google-ai-developers-googleaidevs",
+          1
+        ]
+      ]
+    },
+    "item_cards": {
+      "avg_confidence": 0.587,
+      "avg_confidence_by_tier": {
+        "full": 0.707,
+        "minimal": 0.55,
+        "standard": 0.552
+      },
+      "avg_tokens_by_tier": {
+        "mixed_llm": 8226.4
+      },
+      "budget_skip_fallback_count": 0,
+      "card_tier_distribution": {
+        "full": 21,
+        "minimal": 39,
+        "standard": 30
+      },
+      "content_role_distribution": {
+        "aggregator": 4,
+        "analysis": 3,
+        "commentary": 5,
+        "firsthand": 6,
+        "low_signal": 4,
+        "report": 54,
+        "source_material": 14
+      },
+      "deterministic_minimal_card_count": 39,
+      "entity_count_distribution": {
+        "0": 2,
+        "1": 5,
+        "2": 4,
+        "3": 8,
+        "4": 7,
+        "5": 5,
+        "6": 3,
+        "7": 13,
+        "8": 40,
+        "10": 1,
+        "11": 1,
+        "14": 1
+      },
+      "heuristic_card_fallback_count": 28,
+      "item_cards_failed": 0,
+      "item_cards_generated": 90,
+      "item_cards_generated_or_reused": 90,
+      "item_cards_reused": 0,
+      "llm_failures_by_tier": {},
+      "parse_error_fallback_count": 0,
+      "samples": [
+        {
+          "item_id": "item_00fe6642f7024f8a96b9036af5c8ef3b",
+          "role": "report",
+          "summary": "民政部 财政部关于进一步健全完善临时救助制度的意见",
+          "title": "民政部 财政部关于进一步健全完善临时救助制度的意见"
+        },
+        {
+          "item_id": "item_032f748321034800bc8730938850d4e2",
+          "role": "report",
+          "summary": "你有没有一种感觉，就是你现在的生活，是“演”出来的",
+          "title": "如果你也在“演”一个大人，一定要知道这个心理学概念丨次级皮肤"
+        },
+        {
+          "item_id": "item_043a246074e440479369c10552805287",
+          "role": "report",
+          "summary": "通过改变关于职业、销售、技能和风险的四个根深蒂固的观念，我将赚钱的核心逻辑从“找一份更好的工作”转向“创造价值并捕获更多价值”。",
+          "title": "金钱心理学｜“好学生”想赚钱，你必须摒弃学校给你的4个“毒观念”"
+        },
+        {
+          "item_id": "item_0c53962187384d368f104ef531433d23",
+          "role": "report",
+          "summary": "本周 Epic Games 再次送出《霍格沃兹之遗》，截止日期为明日（2026年5月3日），尽快领取。这款游戏青小蛙刚玩了个开头…😂 另外的限免还有《火花奇遇记：自动化冒险》全平台、《火之",
+          "title": "本周赛博领鸡蛋：《霍格沃兹之遗》再次限免"
+        },
+        {
+          "item_id": "item_0cf25ad4e04544ba9f48c278947f80a5",
+          "role": "report",
+          "summary": "新华社塔那那利佛5月4日电 专访｜中国零关税举措助力非洲经济现代化转型——访马达加斯加经济学家于格·拉让松 新华社记者陈绍华 马达加斯加经济学家于格·拉让松日前接受新华社记者采访时表示，中国5月1日起对53个非洲建交国全面实施零关税举措，这为提升非洲国家产品在全球贸易体系中的地位提供了重要机遇，为非洲经济现代化发展注入新动能。 拉让松认为，近年来非洲国家对中国市场的兴趣日益浓厚。在此背景下，中国对非全面实施零关税举措，充分体现了其对非洲发展的支持。这一举措既有助于扩大非洲产品对华出口规模，改善当地人民生活条件，也将加强非洲生产商与中国企业的合作，鼓励非洲企业发展壮大。 拉让松说，中国消费群体庞大、消费需求多元、市场前景广阔，零关税举措降低了非洲产品进入中国市场的成本，帮助其获得更稳定、更广阔的消费空间，进而增…",
+          "title": "专访丨中国零关税举措助力非洲经济现代化转型——访马达加斯加经济学家于格·拉让松"
+        },
+        {
+          "item_id": "item_12db175eda884063ae4672aa13560cdb",
+          "role": "report",
+          "summary": "国家发展改革委 国家能源局关于完善发电侧容量电价机制的通知",
+          "title": "国家发展改革委 国家能源局关于完善发电侧容量电价机制的通知"
+        },
+        {
+          "item_id": "item_1ba4a4f50da341cb85cd0e8652d69d9f",
+          "role": "report",
+          "summary": "中年，是一段从痛苦到意义的旅程，勇敢踏上中年之路，会让我们更加清醒，为人生余下篇章担负起责任。本书为我们提供了一个机会来重新审视、界定、调整自己的人格，从而了解内心真正的需求。",
+          "title": "[每周一书]《中年之路》人格的第二次成型"
+        },
+        {
+          "item_id": "item_1e961aed2f654443b7f533c88a4fdef8",
+          "role": "report",
+          "summary": "一篇给家人朋友也能看懂的 AI 概念说明书今天大家理解 AI 最大的障碍，不是技术太难，而是名字太吓人。Agent、Skills、MCP、LLM、模型、算法……这些词一摆出来，很多人第一反应不是...",
+          "title": "通俗易懂的解释什么是Agent"
+        },
+        {
+          "item_id": "item_2220a68974a8430092460a009fad4764",
+          "role": "report",
+          "summary": "This life gives you nothing这篇文章以个人经验出发，讨论了一个看似隐蔽、却极其根本的问题：当我们的生活被手机、社交媒体和影像不断中介，我们是否还在真实地看世界、感受世界...",
+          "title": "在一个被屏幕和算法全面包围的时代，我们正逐渐失去对“注意力”的主权"
+        },
+        {
+          "item_id": "item_23d8f4bf7cca49ff9b472830f11e2e67",
+          "role": "report",
+          "summary": "为什么大家的幸福都长一个样？",
+          "title": "为什么大家的幸福都长一个样？"
+        }
+      ],
+      "warnings_distribution": {
+        "adult_content": 2,
+        "deterministic_minimal_card": 39,
+        "editorial_analysis": 1,
+        "fallback_heuristic": 28,
+        "gossip": 1,
+        "heuristic_card": 28,
+        "low_information": 1,
+        "opinion_piece": 1,
+        "personal_reflection": 1,
+        "promotional": 2,
+        "spam": 1,
+        "subjective_opinion": 3,
+        "unverified_claims": 1
+      }
+    },
+    "item_clusters": {
+      "actions": {
+        "attach_to_cluster": 7
+      },
+      "attached_existing_clusters": 0,
+      "avg_confidence": 0.6,
+      "avg_items_per_cluster": 1.033,
+      "candidate_clusters_considered": 1059,
+      "cluster_samples": [
+        {
+          "cluster_status": "archived",
+          "cluster_title": "RSSHub维护者重写项目核心架构，解决技术债务并更新技术栈",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_a746fd352b8b4096a4dfa4087a6e9194"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "OpenStax发布60余本免费开源教材",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_b6d9fe5dc50f4e8db9ba504f74fcf249"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "开放教科书平台Open Textbook Library介绍",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_67d23d58ff1346eb871e2d6a7827bcaa"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "Google Read Along被推荐为成人英语发音练习工具",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_6c0cb55f80c441da9fa9653dc0c1380f"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "作者分享使用Beancount处理复杂金融交易和Crypto资产的实践经验",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_7568194de817482497196a49e33aeb67"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "AI Foundations发布Claude Skills自动化教程，介绍DBS框架并演示两个自动化构建。",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_dd85c169526e4e0c92484dc6454f8d2a"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "一篇关于‘知见立知即无明本’的心灵哲思文章",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_af9a5c5b818c40178899c83e8cdde4e2"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "作者记录个人跑步时体验到“不消耗”状态的感悟",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_65f810e2275c42aa8bf8676568620490"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "Claude发布Live Artifacts功能，提升AI工作流交互性。",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_8a9a10805a6144b5a2ca734487df8081"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "Rolen分享花钱买体验的消费哲学",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_607d2a8e42834f85a4edac65dad3d4f5"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "2026年4月30日习近平在上海出席加强基础研究座谈会并发表重要讲话",
+          "core_facts": [],
+          "item_count": 2,
+          "known_angles": [],
+          "representative_items": [
+            "item_3179288bdbc84873930a64c195f36a19"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "2026年4月30日国内外资讯及即刻社区分享汇总",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_9046b84ad54f40e0a62cd6149411d2cd"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "现代人自嘲文化演变的社会观察",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_4ed7a336d8fe49cb8757e2a82f5eb36a"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "心理学概念科普：次级皮肤与角色扮演",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_032f748321034800bc8730938850d4e2"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "生数科技发布Vidu 1.5，实现多主体一致性，被视为视频模型首次智能涌现，CTO鲍凡深入解读技术路线与商业化。",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_afc3ba2ec9674417ab04f68220b6ca7d"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "2024年末，极客公园邀请AI行业人士回顾2024年变化并展望2025年创业方向。",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_66bc203401674a358a161b265604bb05"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "2025 CES AI硬件趋势讨论与未来方向预测",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_7af12aae0ca047d09ae4f815b993923a"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "解释时间折现率与人生差距的关系",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_bf8e16388d7844d5be15b4668a370a1e"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "MIT的48小时速成学习方法视频",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_d4c4aae87a6842f8b64d3c8d0dc8f67f"
+          ]
+        },
+        {
+          "cluster_status": "archived",
+          "cluster_title": "作者发布职业跃迁底层结构讲解内容。",
+          "core_facts": [],
+          "item_count": 1,
+          "known_angles": [],
+          "representative_items": [
+            "item_655e92edbd7642bfa4327885a2e4c9e6"
+          ]
+        }
+      ],
+      "created_clusters": 7,
+      "effective_multi_item_cluster_count": 0,
+      "follow_up_event": {
+        "false": 7
+      },
+      "manual_review_suggestions": {
+        "high_uncertain": [],
+        "possible_miscluster": [],
+        "possible_missplit": [],
+        "top_review_items_or_clusters": []
+      },
+      "multi_item_cluster_count": 34,
+      "relations": {
+        "new_info": 7
+      },
+      "reported_multi_item_cluster_count": 34,
+      "reviewed_multi_item_cluster_count": 34,
+      "same_event": {
+        "true": 7
+      },
+      "same_topic": {
+        "true": 7
+      },
+      "should_notify_count": 0,
+      "should_update_cluster_card_count": 7,
+      "suspect_multi_item_cluster_count": 34,
+      "top_clusters": [
+        {
+          "cluster_id": "cluster_76b66e1deed34a5992ed521313d70e48",
+          "cluster_title": "Genspark 发布 Agent 专用 Git 服务器 sb-git",
+          "item_count": 3
+        },
+        {
+          "cluster_id": "cluster_37a2c7afb27e40cca32c0a6c97cc3e63",
+          "cluster_title": "2026年4月30日习近平在上海出席加强基础研究座谈会并发表重要讲话",
+          "item_count": 2
+        },
+        {
+          "cluster_id": "cluster_e729f6f1c33342b0abc2160164125540",
+          "cluster_title": "2026年Claude Cowork教程发布，聚焦工作流自动化",
+          "item_count": 2
+        },
+        {
+          "cluster_id": "cluster_6c8ee377e1b94f7a9ca330bdec0f325b",
+          "cluster_title": "2026-05-01 AI行业产品更新与研究进展汇总",
+          "item_count": 2
+        },
+        {
+          "cluster_id": "cluster_a0074d10db734038b197a3c1b84e05c0",
+          "cluster_title": "2026-05-02 AI行业周报，多项产品与研究更新",
+          "item_count": 2
+        },
+        {
+          "cluster_id": "cluster_5b85a38a5dce4a97956735859bb9dc71",
+          "cluster_title": "OpenAI开放OpenClaw直连及苹果酝酿AI收购等科技动态",
+          "item_count": 2
+        },
+        {
+          "cluster_id": "cluster_c1ba77dba18c4ffdaf9c13db502ae9d0",
+          "cluster_title": "多模态模型发布、苹果财报、Figure量产提速、小红书组织调整、三星良率突破、AI成本讨论、脑机接口手术机器人、泡泡玛特冰箱秒罄、宇树人形机器人发布、钉钉AI硬件发布",
+          "item_count": 2
+        },
+        {
+          "cluster_id": "cluster_037b6be94b954328affb0b97f1a94170",
+          "cluster_title": "科技新闻日报：谷歌市值、英伟达中国、AI广告、存储、xAI算力、iOS27、红果VIP、小米SU7",
+          "item_count": 2
+        },
+        {
+          "cluster_id": "cluster_5a2ee29eb6fe4970bbdfd70d7a816f47",
+          "cluster_title": "魔法原子在硅谷举办GEIS，发布人形机器人和世界模型Magic-Mix，布局海外生态。",
+          "item_count": 2
+        },
+        {
+          "cluster_id": "cluster_46683504448544d6aea703d5be062b3a",
+          "cluster_title": "DeepSeek-V4-Pro API 降价并更新工具集成",
+          "item_count": 2
+        }
+      ],
+      "uncertain_clusters": 0
+    },
+    "item_relations": {
+      "avg_confidence": 0.88,
+      "candidate_lane_distribution": {
+        "exploratory_recall": 19,
+        "same_event_recall": 2,
+        "same_product_different_event": 12,
+        "same_thread": 266,
+        "suppressed": 512,
+        "unknown": 27
+      },
+      "candidate_pairs_considered": 86,
+      "candidate_priority_distribution": {
+        "low": 272,
+        "medium": 54,
+        "suppress": 512
+      },
+      "candidates_suppressed_without_llm": 512,
+      "cluster_eligible_count": 0,
+      "different": 76,
+      "duplicate": 0,
+      "duplicate_direction_suppressed_count": 9,
+      "event_relation_type_distribution": {
+        "different": 1,
+        "same_product_different_event": 9,
+        "same_thread": 75,
+        "same_topic_only": 1
+      },
+      "examples": [
+        {
+          "candidate_item_title": "Vol.27 对话汪华、袁进辉、胡修涵：2025年，活下来最重要，但机会一定要抓住",
+          "confidence": 0.88,
+          "new_item_title": "Read Along：每天十分钟，从零开始，重塑英语发音",
+          "primary_relation": "different",
+          "published_at": "2025-07-26T10:23:14+00:00",
+          "reason": "weak thread lane without shared actor/product",
+          "secondary_roles": [
+            "weak_thread_lane"
+          ],
+          "should_fold": false,
+          "source": "图书推荐 – 书伴"
+        },
+        {
+          "candidate_item_title": "Automate ANY Task Using Claude Skills! (Full Cowork Setup)",
+          "confidence": 0.88,
+          "new_item_title": "Read Along：每天十分钟，从零开始，重塑英语发音",
+          "primary_relation": "different",
+          "published_at": "2025-07-26T10:23:14+00:00",
+          "reason": "weak thread lane without shared actor/product",
+          "secondary_roles": [
+            "weak_thread_lane"
+          ],
+          "should_fold": false,
+          "source": "图书推荐 – 书伴"
+        },
+        {
+          "candidate_item_title": "Full Claude Skills Tutorial for Beginners in 2026! (Become a PRO)",
+          "confidence": 0.88,
+          "new_item_title": "Read Along：每天十分钟，从零开始，重塑英语发音",
+          "primary_relation": "different",
+          "published_at": "2025-07-26T10:23:14+00:00",
+          "reason": "weak thread lane without shared actor/product",
+          "secondary_roles": [
+            "weak_thread_lane"
+          ],
+          "should_fold": false,
+          "source": "图书推荐 – 书伴"
+        },
+        {
+          "candidate_item_title": "网易龙虾邮箱 ClawEmail：与 Cloudflare 邮件服务类似，支持 OpenClaw、Hermes",
+          "confidence": 0.88,
+          "new_item_title": "Read Along：每天十分钟，从零开始，重塑英语发音",
+          "primary_relation": "different",
+          "published_at": "2025-07-26T10:23:14+00:00",
+          "reason": "weak thread lane without shared actor/product",
+          "secondary_roles": [
+            "weak_thread_lane"
+          ],
+          "should_fold": false,
+          "source": "图书推荐 – 书伴"
+        },
+        {
+          "candidate_item_title": "无羁：现代化的开源 Windows 在线和本地音乐播放器",
+          "confidence": 0.88,
+          "new_item_title": "Read Along：每天十分钟，从零开始，重塑英语发音",
+          "primary_relation": "different",
+          "published_at": "2025-07-26T10:23:14+00:00",
+          "reason": "weak thread lane without shared actor/product",
+          "secondary_roles": [
+            "weak_thread_lane"
+          ],
+          "should_fold": false,
+          "source": "图书推荐 – 书伴"
+        },
+        {
+          "candidate_item_title": "本周赛博领鸡蛋：《霍格沃兹之遗》再次限免",
+          "confidence": 0.88,
+          "new_item_title": "Read Along：每天十分钟，从零开始，重塑英语发音",
+          "primary_relation": "different",
+          "published_at": "2025-07-26T10:23:14+00:00",
+          "reason": "weak thread lane without shared actor/product",
+          "secondary_roles": [
+            "weak_thread_lane"
+          ],
+          "should_fold": false,
+          "source": "图书推荐 – 书伴"
+        },
+        {
+          "candidate_item_title": "Vol.26 对谈生数科技CTO鲍凡：视频模型迎来了「首次涌现」，视觉更有可能通往 AGI",
+          "confidence": 0.88,
+          "new_item_title": "Read Along：每天十分钟，从零开始，重塑英语发音",
+          "primary_relation": "different",
+          "published_at": "2025-07-26T10:23:14+00:00",
+          "reason": "weak thread lane without shared actor/product",
+          "secondary_roles": [
+            "weak_thread_lane"
+          ],
+          "should_fold": false,
+          "source": "图书推荐 – 书伴"
+        },
+        {
+          "candidate_item_title": "一觉醒来发生了什么 05月03日",
+          "confidence": 0.88,
+          "new_item_title": "Read Along：每天十分钟，从零开始，重塑英语发音",
+          "primary_relation": "different",
+          "published_at": "2025-07-26T10:23:14+00:00",
+          "reason": "weak thread lane without shared actor/product",
+          "secondary_roles": [
+            "weak_thread_lane"
+          ],
+          "should_fold": false,
+          "source": "图书推荐 – 书伴"
+        },
+        {
+          "candidate_item_title": "网易龙虾邮箱 ClawEmail：与 Cloudflare 邮件服务类似，支持 OpenClaw、Hermes",
+          "confidence": 0.88,
+          "new_item_title": "同城高颜值交友大厅上线｜精彩内容不容错过",
+          "primary_relation": "different",
+          "published_at": "2025-05-14T03:41:00+00:00",
+          "reason": "weak thread lane without shared actor/product",
+          "secondary_roles": [
+            "weak_thread_lane"
+          ],
+          "should_fold": false,
+          "source": "51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台"
+        },
+        {
+          "candidate_item_title": "无羁：现代化的开源 Windows 在线和本地音乐播放器",
+          "confidence": 0.88,
+          "new_item_title": "同城高颜值交友大厅上线｜精彩内容不容错过",
+          "primary_relation": "different",
+          "published_at": "2025-05-14T03:41:00+00:00",
+          "reason": "weak thread lane without shared actor/product",
+          "secondary_roles": [
+            "weak_thread_lane"
+          ],
+          "should_fold": false,
+          "source": "51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台"
+        }
+      ],
+      "fold_candidates": 0,
+      "high_priority_skips": 0,
+      "item_relation_failures": 0,
+      "item_relation_json_parse_failures": 0,
+      "llm_item_relation_calls": 4,
+      "low_confidence_examples": [],
+      "must_run_skips": 0,
+      "near_duplicate": 0,
+      "pair_conflict_count": 0,
+      "raw_relation_count": 86,
+      "related_with_new_info": 0,
+      "related_with_new_info_count": 0,
+      "relations_by_primary_relation": {
+        "different": 76,
+        "same_product_different_event": 9,
+        "same_thread": 1
+      },
+      "rule_relations": 91,
+      "skipped_relation_llm_due_to_deterministic_decision": 7,
+      "uncertain_count": 0,
+      "unique_relation_pair_count": 83
+    },
+    "metadata": {
+      "actual_calls": 12,
+      "actual_tokens": 61019,
+      "backup_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/backups/content_inbox_semantic_phase1_3_20260518_092401.sqlite3",
+      "batch_size": 5,
+      "cache_hit_tokens": 10112,
+      "cache_miss_tokens": 0,
+      "concurrency": 3,
+      "db_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3",
+      "dry_run": false,
+      "duration_seconds": 113.726,
+      "evaluation_db_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3",
+      "finished_at": "2026-05-18T01:25:54.937473+00:00",
+      "git_commit": "63bdcb566fdce47999298b50b48e93160f781bfd",
+      "include_archived": false,
+      "items_sampled": 30,
+      "live": true,
+      "max_calls": 100,
+      "max_candidates": 8,
+      "max_items": 30,
+      "model": "deepseek-v4-flash",
+      "recall_strategy": "lexical/entity/time/source hybrid",
+      "run_id": "semantic_eval_20260518_012401_212140",
+      "sample_mode": "event_hotspots",
+      "source_filter": null,
+      "source_url_prefix": "api.xgo.ing",
+      "stage_budget_profile": "phase1_3_advisory",
+      "stage_budgets": {
+        "cluster_card_patch": 6300,
+        "item_card": 30600,
+        "item_cluster_relation": 22500,
+        "item_relation": 27900,
+        "source_profile": 2700
+      },
+      "started_at": "2026-05-18T01:24:01.212140+00:00",
+      "strong_model": null,
+      "token_budget": 90000,
+      "vector_index": false,
+      "warnings": [],
+      "write_confirmation": "api.xgo.ing",
+      "write_real_db": true
+    },
+    "prompt_iteration_notes": [
+      {
+        "changes": [
+          "event-signature hotspot keys",
+          "generic AI/template token suppression",
+          "scarcer must_run/high candidate priorities",
+          "same_product_different_event and same_thread secondary roles",
+          "cluster seed precision diagnostics",
+          "budget skip quality tiers",
+          "item-card split retry metrics"
+        ],
+        "concurrency": 3,
+        "iteration": "phase1_2f",
+        "max_calls": 100,
+        "max_items": 30,
+        "notes": "Primary relation enums remain stable; prompt versions bumped to v3 with stricter same-event rules.",
+        "sample_mode": "event_hotspots"
+      }
+    ],
+    "readiness_assessment": {
+      "blockers": [
+        {
+          "name": "heuristic_fallback_rate",
+          "passed": false,
+          "reason": "heuristic emergency fallback must stay low",
+          "threshold": "< 0.1",
+          "value": 0.9333
+        },
+        {
+          "name": "chinese_event_detection_rate",
+          "passed": false,
+          "reason": "Chinese event-like items must not all be rejected",
+          "threshold": ">= 0.5",
+          "value": 0.4444
+        },
+        {
+          "name": "effective_multi_item_clusters",
+          "passed": false,
+          "reason": "dry-run produced useful same-event clusters",
+          "threshold": ">= 1",
+          "value": 0
+        },
+        {
+          "name": "suspect_multi_item_clusters",
+          "passed": false,
+          "reason": "no suspect multi-item clusters accepted",
+          "threshold": 0,
+          "value": 34
+        },
+        {
+          "name": "small_scoped_real_write_rehearsal",
+          "passed": false,
+          "reason": "production readiness requires a scoped write rehearsal",
+          "threshold": true,
+          "value": false
+        }
+      ],
+      "gates": [
+        {
+          "name": "heuristic_fallback_rate",
+          "passed": false,
+          "reason": "heuristic emergency fallback must stay low",
+          "threshold": "< 0.1",
+          "value": 0.9333
+        },
+        {
+          "name": "parse_failure_fallback_rate",
+          "passed": true,
+          "reason": "parse failures must not dominate cards",
+          "threshold": "< 0.03",
+          "value": 0.0
+        },
+        {
+          "name": "budget_skip_fallback_rate",
+          "passed": true,
+          "reason": "budget fallback must not starve candidate-bearing cards",
+          "threshold": "< 0.05",
+          "value": 0.0
+        },
+        {
+          "name": "skipped_must_run_candidates",
+          "passed": true,
+          "reason": "must-run candidates are protected",
+          "threshold": 0,
+          "value": 0
+        },
+        {
+          "name": "pair_relation_conflicts",
+          "passed": true,
+          "reason": "canonical pair verdicts cannot conflict",
+          "threshold": 0,
+          "value": 0
+        },
+        {
+          "name": "db_lock_errors",
+          "passed": true,
+          "reason": "no DB lock errors",
+          "threshold": 0,
+          "value": 0
+        },
+        {
+          "name": "event_signature_valid_rate",
+          "passed": true,
+          "reason": "signatures are concrete enough",
+          "threshold": ">= 0.6",
+          "value": 1.0
+        },
+        {
+          "name": "chinese_event_detection_rate",
+          "passed": false,
+          "reason": "Chinese event-like items must not all be rejected",
+          "threshold": ">= 0.5",
+          "value": 0.4444
+        },
+        {
+          "name": "accepted_garbage_product_count",
+          "passed": true,
+          "reason": "URL/date/number/long-fragment products must be rejected",
+          "threshold": 0,
+          "value": 0
+        },
+        {
+          "name": "effective_multi_item_clusters",
+          "passed": false,
+          "reason": "dry-run produced useful same-event clusters",
+          "threshold": ">= 1",
+          "value": 0
+        },
+        {
+          "name": "suspect_multi_item_clusters",
+          "passed": false,
+          "reason": "no suspect multi-item clusters accepted",
+          "threshold": 0,
+          "value": 34
+        },
+        {
+          "name": "small_scoped_real_write_rehearsal",
+          "passed": false,
+          "reason": "production readiness requires a scoped write rehearsal",
+          "threshold": true,
+          "value": false
+        }
+      ],
+      "ready": false,
+      "verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE"
+    },
+    "recommendations": [
+      "Add vector indexes for item_cards and cluster_cards before larger runs.",
+      "Keep primary relation enum unchanged for now; it covered Phase 1.1 control flow.",
+      "Collect more source_signals before trusting source_profile priority suggestions.",
+      "Run a larger dry-run before any write-real-db semantic pass."
+    ],
+    "source_profiles": {
+      "disabled_for_llm_candidates": [],
+      "high_candidates": [],
+      "llm_total_tokens_by_source": {
+        "#UNTAG": 0,
+        "- 政府文件库": 0,
+        "- 求是网": 0,
+        "-LKs-": 0,
+        "01Founder": 0,
+        "3Blue1Brown": 0,
+        "51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台": 0,
+        "AGI Hunt": 0,
+        "AI Foundations": 14353,
+        "AIGC开放社区": 0,
+        "AI产品银海": 0,
+        "AI产品阿颖": 0,
+        "AI产品黄叔": 0,
+        "AI前线": 0,
+        "AI故事计划": 0,
+        "AI洞察日报 RSS Feed": 0,
+        "AI科技评论": 0,
+        "APPSO": 0,
+        "Ahead of AI": 0,
+        "Airing 的博客": 0,
+        "AliAbdaal": 0,
+        "Barsee 🐶(@heyBarsee)": 0,
+        "Ben's Love": 0,
+        "Blog - Remote Work Prep": 0,
+        "Boo布姐自译": 0,
+        "CVer": 0,
+        "CoCoVii": 0,
+        "Datawhale": 0,
+        "Hi, DIYgod": 1829,
+        "一觉醒来发生了什么 - 即刻圈子": 3705
+      },
+      "low_candidates": [],
+      "pending_reviews_created": 0,
+      "pending_reviews_created_all_types": 28,
+      "reviews_suppressed_due_to_insufficient_data": 469,
+      "sources_recomputed": 469,
+      "sources_with_insufficient_data": [
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "#UNTAG",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "- 政府文件库",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 20,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "- 求是网",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 4,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "-LKs-",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "01Founder",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "3Blue1Brown",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 42,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AGI Hunt",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 3.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 14353,
+          "llm_yield_score": 2.75,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 1.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 3.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AI Foundations",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 15,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AIGC开放社区",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AI产品银海",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AI产品阿颖",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AI产品黄叔",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AI前线",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AI故事计划",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AI洞察日报 RSS Feed",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AI科技评论",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "APPSO",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "Ahead of AI",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "Airing 的博客",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 4,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        }
+      ],
+      "top_sources_by_duplicate_rate": [
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "#UNTAG",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "- 政府文件库",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 20,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "- 求是网",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 4,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "-LKs-",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "01Founder",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "3Blue1Brown",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 42,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AGI Hunt",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 3.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 14353,
+          "llm_yield_score": 2.75,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 1.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 3.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AI Foundations",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 15,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AIGC开放社区",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        }
+      ],
+      "top_sources_by_incremental_value_avg": [
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 3.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 14353,
+          "llm_yield_score": 2.75,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 1.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 3.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AI Foundations",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 15,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 3.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 1829,
+          "llm_yield_score": 2.75,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 1.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 3.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "Hi, DIYgod",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 3.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 3705,
+          "llm_yield_score": 2.75,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 1.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 3.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "一觉醒来发生了什么 - 即刻圈子",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 10,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "#UNTAG",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "- 政府文件库",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 20,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "- 求是网",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 4,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "-LKs-",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "01Founder",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "3Blue1Brown",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 42,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        }
+      ],
+      "top_sources_by_llm_yield": [
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 3.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 14353,
+          "llm_yield_score": 2.75,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 1.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 3.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AI Foundations",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 15,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 3.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 1829,
+          "llm_yield_score": 2.75,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 1.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 3.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "Hi, DIYgod",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 3.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 3705,
+          "llm_yield_score": 2.75,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 1.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 3.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "一觉醒来发生了什么 - 即刻圈子",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 10,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "#UNTAG",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "- 政府文件库",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 20,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "- 求是网",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 4,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "-LKs-",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "01Founder",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "3Blue1Brown",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 42,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        }
+      ],
+      "top_sources_by_report_value_avg": [
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 3.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 14353,
+          "llm_yield_score": 2.75,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 1.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 3.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "AI Foundations",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 15,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 3.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 1829,
+          "llm_yield_score": 2.75,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 1.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 3.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "Hi, DIYgod",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 3.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 3705,
+          "llm_yield_score": 2.75,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 1.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 3.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "一觉醒来发生了什么 - 即刻圈子",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 10,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "#UNTAG",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "- 政府文件库",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 20,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "- 求是网",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 4,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "-LKs-",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "01Founder",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "3Blue1Brown",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 5,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        },
+        {
+          "created_at": "2026-05-18T01:25:51.510427+00:00",
+          "duplicate_rate": 0.0,
+          "incremental_value_avg": 0.0,
+          "llm_high_value_outputs": 0,
+          "llm_priority": "new_source_under_evaluation",
+          "llm_processed_items": 0,
+          "llm_total_tokens": 0,
+          "llm_yield_score": 0.0,
+          "near_duplicate_rate": 0.0,
+          "new_event_rate": 0.0,
+          "priority_suggestion": "new_source_under_evaluation",
+          "report_value_avg": 0.0,
+          "representative_item_rate": 0.0,
+          "review_status": "none",
+          "source_id": "51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台",
+          "source_item_rate": 0.0,
+          "source_material_rate": 0.0,
+          "total_items": 42,
+          "updated_at": "2026-05-18T01:25:51.510427+00:00"
+        }
+      ]
+    },
+    "source_scope": {
+      "matched_source_count": 151,
+      "source_filter": null,
+      "source_url_prefix": "api.xgo.ing",
+      "sources": [
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/0277b0bbefd54df7bc6b7880122da8f7",
+          "item_count": 26,
+          "latest_item_time": "2026-05-17T02:16:56+00:00",
+          "sampled_item_count": 8,
+          "source_id": "socialmedia-orange-ai-oran-ge",
+          "source_name": "orange.ai(@oran_ge)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/05f1492e43514dc3862a076d3697c390",
+          "item_count": 25,
+          "latest_item_time": "2026-05-15T19:17:19+00:00",
+          "sampled_item_count": 3,
+          "source_id": "socialmedia-nvidia-ai-nvidiaai",
+          "source_name": "NVIDIA AI(@NVIDIAAI)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/74e542992cf7441390c708f5601071d4",
+          "item_count": 11,
+          "latest_item_time": "2026-05-12T23:47:03+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-imxiaohu",
+          "source_name": "小互(@imxiaohu)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/082097117b4543e9a741cd2580f936d3",
+          "item_count": 11,
+          "latest_item_time": "2026-04-24T07:24:53+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-junyang-lin-justinlin610",
+          "source_name": "Junyang Lin(@JustinLin610)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/179bcc4b8e5d4274b6e9e935f9fd4434",
+          "item_count": 10,
+          "latest_item_time": "2026-05-06T19:30:36+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-aadit-sheth-aaditsh",
+          "source_name": "Aadit Sheth(@aaditsh)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/22af005b21ec45b1a4503acca777b7f0",
+          "item_count": 10,
+          "latest_item_time": "2026-03-10T20:50:07+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-ai-sdk-aisdk",
+          "source_name": "AI SDK(@aisdk)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/08b5488b20bc437c8bfc317a52e5c26d",
+          "item_count": 10,
+          "latest_item_time": "2026-04-30T16:21:35+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-andrew-ng-andrewyng",
+          "source_name": "Andrew Ng(@AndrewYNg)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/f7992687b8d74b14bf2341eb3a0a5ec4",
+          "item_count": 10,
+          "latest_item_time": "2026-05-05T17:02:24+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-chatgpt-chatgptapp",
+          "source_name": "ChatGPT(@ChatGPTapp)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/0be252fedbe84ad7bea21be44b18da89",
+          "item_count": 10,
+          "latest_item_time": "2026-04-30T19:00:00+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-dify-dify-ai",
+          "source_name": "Dify(@dify_ai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/1897eed387064dfab443764d6da50bc6",
+          "item_count": 10,
+          "latest_item_time": "2026-05-07T14:00:37+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-elevenlabs-elevenlabsio",
+          "source_name": "ElevenLabs(@elevenlabsio)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/931d6e88e067496cac6bf23f69d60f33",
+          "item_count": 10,
+          "latest_item_time": "2026-05-10T16:39:05+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-elvis-omarsar0",
+          "source_name": "elvis(@omarsar0)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/cb6169815e2e447e8e6148a4af3f9686",
+          "item_count": 10,
+          "latest_item_time": "2026-05-01T17:33:11+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-geoffrey-hinton-geoffreyhinton",
+          "source_name": "Geoffrey Hinton(@geoffreyhinton)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/771b32075fe54a83bdb6966de9647b4f",
+          "item_count": 10,
+          "latest_item_time": "2026-02-18T22:04:39+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-groq-inc-groqinc",
+          "source_name": "Groq Inc(@GroqInc)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/e8750659b8154dbfa0489f451e044af1",
+          "item_count": 10,
+          "latest_item_time": "2026-05-10T19:32:11+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-guillermo-rauch-rauchg",
+          "source_name": "Guillermo Rauch(@rauchg)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/58894bf2934a426ca833c682da2bc810",
+          "item_count": 10,
+          "latest_item_time": "2026-05-11T17:00:14+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-justin-welsh-thejustinwelsh",
+          "source_name": "Justin Welsh(@thejustinwelsh)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/db648e4d4eae4822aa0d34f0faef7ad2",
+          "item_count": 10,
+          "latest_item_time": "2026-04-30T06:49:02+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-lovartai-lovart-ai",
+          "source_name": "LovartAI(@lovart_ai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/221a88341acb475db221a12fed8208d0",
+          "item_count": 10,
+          "latest_item_time": "2026-04-30T17:30:36+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-notebooklm-notebooklm",
+          "source_name": "NotebookLM(@NotebookLM)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/0c0856a69f9f49cf961018c32a0b0049",
+          "item_count": 10,
+          "latest_item_time": "2026-05-07T20:08:51+00:00",
+          "sampled_item_count": 3,
+          "source_id": "socialmedia-openai-openai",
+          "source_name": "OpenAI(@OpenAI)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/17687b1051204b2dbaed4ea4c9178f28",
+          "item_count": 10,
+          "latest_item_time": "2026-05-02T04:37:44+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-poe-poe-platform",
+          "source_name": "Poe(@poe_platform)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/4838204097ed422eac24ad48e68dc3ff",
+          "item_count": 10,
+          "latest_item_time": "2026-05-07T21:07:12+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-ray-dalio-raydalio",
+          "source_name": "Ray Dalio(@RayDalio)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/12eba9c3db4940c5ab2a72bd00f9ff2c",
+          "item_count": 10,
+          "latest_item_time": "2026-04-30T14:02:05+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-replicate-replicate",
+          "source_name": "Replicate(@replicate)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/3953aa71e87a422eb9d7bf6ff1c7c43e",
+          "item_count": 10,
+          "latest_item_time": "2026-05-05T16:39:00+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-xai-xai",
+          "source_name": "xAI(@xai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/f3fedf817599470dbf8d8d11f0872475",
+          "item_count": 9,
+          "latest_item_time": "2026-05-08T18:00:28+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-a16z-a16z",
+          "source_name": "a16z(@a16z)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/3042b6f912b24f64982cc23f7bd59681",
+          "item_count": 9,
+          "latest_item_time": "2026-04-28T15:15:29+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-adam-d-angelo-adamdangelo",
+          "source_name": "Adam D'Angelo(@adamdangelo)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/0e3ebaf288014c45b0d24b71fe37312b",
+          "item_count": 9,
+          "latest_item_time": "2026-04-27T11:31:05+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-ai-breakfast-aibreakfast",
+          "source_name": "AI Breakfast(@AiBreakfast)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/7d19a619a1cc4a9896129211269d2c85",
+          "item_count": 9,
+          "latest_item_time": "2026-05-12T18:36:29+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-ai-engineer-aidotengineer",
+          "source_name": "AI Engineer(@aiDotEngineer)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/aa74321087f9405a872fd9a76b743bf8",
+          "item_count": 9,
+          "latest_item_time": "2026-05-15T08:22:59+00:00",
+          "sampled_item_count": 4,
+          "source_id": "socialmedia-ai-will-financeyf5",
+          "source_name": "AI Will(@FinanceYF5)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/341f7b9f8d9b477e8bb200caa7f32c6e",
+          "item_count": 9,
+          "latest_item_time": "2026-05-13T12:46:05+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-ak-akhaliq",
+          "source_name": "AK(@_akhaliq)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/3434c0d56ee0446f991fb6af42bfac4b",
+          "item_count": 9,
+          "latest_item_time": "2026-05-08T00:50:20+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-akshay-kothari-akothari",
+          "source_name": "Akshay Kothari(@akothari)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/524525de0d69407b80f0a7d891fdc8df",
+          "item_count": 9,
+          "latest_item_time": "2026-04-20T17:19:14+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-alex-albert-alexalbert",
+          "source_name": "Alex Albert(@alexalbert__)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/edf707b5c0b248579085f66d7a3c5524",
+          "item_count": 9,
+          "latest_item_time": "2026-04-30T17:43:06+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-andrej-karpathy-karpathy",
+          "source_name": "Andrej Karpathy(@karpathy)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/fc28a211471b496682feff329ec616e5",
+          "item_count": 9,
+          "latest_item_time": "2026-05-07T17:08:35+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-anthropic-anthropicai",
+          "source_name": "Anthropic(@AnthropicAI)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/5f13b32b124a41cfb659f903a84032b1",
+          "item_count": 9,
+          "latest_item_time": "2026-05-04T10:49:37+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-anton-osika-eu-acc-antonosika",
+          "source_name": "Anton Osika – eu/acc(@antonosika)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/59e6b63ae9684d11be0ae13d9e7420f2",
+          "item_count": 9,
+          "latest_item_time": "2026-05-06T14:33:15+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-aravind-srinivas-aravsrinivas",
+          "source_name": "Aravind Srinivas(@AravSrinivas)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/e153fdd077df458b8298d975c060dcc3",
+          "item_count": 9,
+          "latest_item_time": "2026-05-04T23:25:51+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-augment-code-augmentcode",
+          "source_name": "Augment Code(@augmentcode)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/760ab7cd9708452c9ce1f9144b92a430",
+          "item_count": 9,
+          "latest_item_time": "2026-04-30T23:30:36+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-bolt-new-boltdotnew",
+          "source_name": "bolt.new(@boltdotnew)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/b8d7530f0b294405825013bbc1cc198f",
+          "item_count": 9,
+          "latest_item_time": "2026-05-06T00:48:01+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-browser-use-browser-use",
+          "source_name": "Browser Use(@browser_use)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/66a6b39ddcfa42e39621e0ab293c1bdd",
+          "item_count": 9,
+          "latest_item_time": "2026-04-30T21:29:34+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-cat-catwu",
+          "source_name": "cat(@_catwu)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/3877c31cdb554cffb750b3b683c98c4d",
+          "item_count": 9,
+          "latest_item_time": "2026-04-30T21:37:28+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-character-ai-character-ai",
+          "source_name": "Character.AI(@character_ai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/4cc14cbd15c74e189d537c415369e1a7",
+          "item_count": 9,
+          "latest_item_time": "2026-05-05T17:00:56+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-cognition-cognition-labs",
+          "source_name": "Cognition(@cognition_labs)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/462aa134ed914f98b3491680ad9b36ed",
+          "item_count": 9,
+          "latest_item_time": "2026-04-30T13:11:45+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-cohere-cohere",
+          "source_name": "cohere(@cohere)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/49666ce6fe3e4cb786c6574684542ec5",
+          "item_count": 9,
+          "latest_item_time": "2026-04-07T18:14:19+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-dario-amodei-darioamodei",
+          "source_name": "Dario Amodei(@DarioAmodei)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/42e6b4901b97498eab2ab64c07d56177",
+          "item_count": 9,
+          "latest_item_time": "2026-05-01T00:09:55+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-deeplearning-ai-deeplearningai",
+          "source_name": "DeepLearning.AI(@DeepLearningAI)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/68b610deb24b47ae9a236811563cda86",
+          "item_count": 9,
+          "latest_item_time": "2026-04-29T02:20:52+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-deepseek-deepseek-ai",
+          "source_name": "DeepSeek(@deepseek_ai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/4a884d5e2f3740c5a26c9c093de6388a",
+          "item_count": 9,
+          "latest_item_time": "2026-05-02T11:34:21+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-demis-hassabis-demishassabis",
+          "source_name": "Demis Hassabis(@demishassabis)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/6384ee3c656c48fea5e8b3cdacece4d0",
+          "item_count": 9,
+          "latest_item_time": "2026-03-26T17:03:19+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-dia-diabrowser",
+          "source_name": "Dia(@diabrowser)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/65f321be670b4ffba7f40d0afd38c94d",
+          "item_count": 9,
+          "latest_item_time": "2026-05-07T18:18:58+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-eric-zakariasson-ericzakariasson",
+          "source_name": "eric zakariasson(@ericzakariasson)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/a4bfe44bfc0d4c949da21ebd3f5f42a5",
+          "item_count": 9,
+          "latest_item_time": "2026-04-07T16:48:36+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-fei-fei-li-drfeifei",
+          "source_name": "Fei-Fei Li(@drfeifei)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/326763c2f6154826babcfd71c5ab0f70",
+          "item_count": 9,
+          "latest_item_time": "2026-05-08T19:47:00+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-fellou-fellouai",
+          "source_name": "Fellou(@FellouAI)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/c04abb206bbf4f91b22795024d6c0614",
+          "item_count": 9,
+          "latest_item_time": "2026-05-06T16:11:06+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-firecrawl-firecrawl-dev",
+          "source_name": "Firecrawl(@firecrawl_dev)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/9f35c76341554bd78c2b9e63dc4fa5d8",
+          "item_count": 9,
+          "latest_item_time": "2026-05-06T23:42:49+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-fireworks-ai-fireworksai-hq",
+          "source_name": "Fireworks AI(@FireworksAI_HQ)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/4900b3dcd592424687582ff9e0f148ea",
+          "item_count": 9,
+          "latest_item_time": "2026-04-29T10:59:12+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-fish-audio-fishaudio",
+          "source_name": "Fish Audio(@FishAudio)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/be74da51698d4cefb12b39830d6cd201",
+          "item_count": 9,
+          "latest_item_time": "2026-03-16T20:10:48+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-flowiseai-flowiseai",
+          "source_name": "FlowiseAI(@FlowiseAI)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/35a38c5646d946fb894d8c30c1d9629e",
+          "item_count": 9,
+          "latest_item_time": "2026-05-14T06:35:28+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-gary-marcus-garymarcus",
+          "source_name": "Gary Marcus(@GaryMarcus)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/71ffd342cb5d478185ef7d55bdfca011",
+          "item_count": 9,
+          "latest_item_time": "2026-05-05T02:48:37+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-genspark-genspark-ai",
+          "source_name": "Genspark(@genspark_ai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/69d925d4a8d44221b03eecbe07bd0f74",
+          "item_count": 9,
+          "latest_item_time": "2026-05-04T23:11:31+00:00",
+          "sampled_item_count": 1,
+          "source_id": "socialmedia-google-ai-developers-googleaidevs",
+          "source_name": "Google AI Developers(@googleaidevs)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/4de0bd2d5cef4333a0260dc8157054a7",
+          "item_count": 9,
+          "latest_item_time": "2026-05-01T16:10:11+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-google-ai-googleai",
+          "source_name": "Google AI(@GoogleAI)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/6fb337feeec44ca38b79491b971d868d",
+          "item_count": 9,
+          "latest_item_time": "2026-05-04T18:39:22+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-google-gemini-app-geminiapp",
+          "source_name": "Google Gemini App(@GeminiApp)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/af19d054e26a49129f23abfa82d9e268",
+          "item_count": 9,
+          "latest_item_time": "2026-05-11T21:00:48+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-greg-brockman-gdb",
+          "source_name": "Greg Brockman(@gdb)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/831fac36aa0a49a9af79f35dc1c9b5d9",
+          "item_count": 9,
+          "latest_item_time": "2026-05-15T02:21:02+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-guizang-ai-op7418",
+          "source_name": "歸藏(guizang.ai)(@op7418)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/e65b5e59fcb544918c1ba17f5758f0f8",
+          "item_count": 9,
+          "latest_item_time": "2026-05-06T04:10:52+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-hailuo-ai-minimax-hailuo-ai",
+          "source_name": "Hailuo AI (MiniMax)(@Hailuo_AI)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/f299207df53745bca04a03db8d11c5aa",
+          "item_count": 9,
+          "latest_item_time": "2026-05-06T16:31:58+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-harrison-chase-hwchase17",
+          "source_name": "Harrison Chase(@hwchase17)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/a9aff6b016c143ed8728dd86eb70d7db",
+          "item_count": 9,
+          "latest_item_time": "2026-05-11T16:14:16+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-heygen-heygen-official",
+          "source_name": "HeyGen(@HeyGen_Official)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/6e8e7b42cb434818810f87bcf77d86fb",
+          "item_count": 9,
+          "latest_item_time": "2026-04-29T13:55:43+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-hunyuan-txhunyuan",
+          "source_name": "Hunyuan(@TXhunyuan)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/a719880fe66e4156a111187f50dae91b",
+          "item_count": 9,
+          "latest_item_time": "2026-04-22T16:46:12+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-ideogram-ideogram-ai",
+          "source_name": "Ideogram(@ideogram_ai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/dceb5cd131b34c72a8376cba8ea5d864",
+          "item_count": 9,
+          "latest_item_time": "2026-04-14T19:43:38+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-jan-leike-janleike",
+          "source_name": "Jan Leike(@janleike)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/b1013166769c49f8aa3fbdc222867054",
+          "item_count": 9,
+          "latest_item_time": "2026-04-28T20:16:21+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-jeff-dean-jeffdean",
+          "source_name": "Jeff Dean(@JeffDean)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/b3d904c0d7c446558ef3a1e7f2eb362b",
+          "item_count": 9,
+          "latest_item_time": "2026-05-06T17:44:01+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-jerry-liu-jerryjliu0",
+          "source_name": "Jerry Liu(@jerryjliu0)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/c6cfe7c0d6b74849997073233fdea840",
+          "item_count": 9,
+          "latest_item_time": "2026-04-01T15:15:09+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-jim-fan-drjimfan",
+          "source_name": "Jim Fan(@DrJimFan)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/f510f6e7eecf456ca7e2895a46752888",
+          "item_count": 9,
+          "latest_item_time": "2026-03-13T12:29:21+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-jina-ai-jinaai",
+          "source_name": "Jina AI(@JinaAI_)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/44d9fa384087448a94d3c8595f8d535e",
+          "item_count": 9,
+          "latest_item_time": "2026-05-01T17:08:33+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-julien-chaumond-julien-c",
+          "source_name": "Julien Chaumond(@julien_c)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/c61046471f174d86bc0eb76cb44a21c3",
+          "item_count": 9,
+          "latest_item_time": "2026-05-12T15:17:41+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-justine-moore-venturetwins",
+          "source_name": "Justine Moore(@venturetwins)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/564237c3de274d58a04f064920817888",
+          "item_count": 9,
+          "latest_item_time": "2026-05-11T09:31:09+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-kling-ai-kling-ai",
+          "source_name": "Kling AI(@Kling_ai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/862fee50a745423c87e2633b274caf1d",
+          "item_count": 9,
+          "latest_item_time": "2026-05-14T19:33:28+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-langchain-langchainai",
+          "source_name": "LangChain(@LangChainAI)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/a7be8b61a1264ea7984abfaea3eff686",
+          "item_count": 9,
+          "latest_item_time": "2026-05-06T16:25:16+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-latent-space-latentspacepod",
+          "source_name": "Latent.Space(@latentspacepod)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/dc2426bc8348495189b45451d1707a1c",
+          "item_count": 9,
+          "latest_item_time": "2026-05-02T23:47:09+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-lee-robinson-leerob",
+          "source_name": "Lee Robinson(@leerob)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/77d5ce4736854b0ebae603e4b54d3095",
+          "item_count": 9,
+          "latest_item_time": "2026-05-12T15:41:09+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-lenny-rachitsky-lennysan",
+          "source_name": "Lenny Rachitsky(@lennysan)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/adf65931519340f795e2336910b4cd15",
+          "item_count": 9,
+          "latest_item_time": "2026-04-09T17:56:46+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-lex-fridman-lexfridman",
+          "source_name": "Lex Fridman(@lexfridman)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/ca2fa444b6ea4b8b974fe148056e497a",
+          "item_count": 9,
+          "latest_item_time": "2026-05-06T04:41:58+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-lijigang-com",
+          "source_name": "李继刚(@lijigang_com)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/a8f7e2238039461cbc8bf55f5f194498",
+          "item_count": 9,
+          "latest_item_time": "2026-03-10T17:08:44+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-lilian-weng-lilianweng",
+          "source_name": "Lilian Weng(@lilianweng)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/f01b088d5a39473e854b07143df77ec5",
+          "item_count": 9,
+          "latest_item_time": "2026-05-08T16:01:31+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-lmarena-ai-lmarena-ai",
+          "source_name": "lmarena.ai(@lmarena_ai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/4f63d960de644aeebd0aa97e4994dafe",
+          "item_count": 9,
+          "latest_item_time": "2026-05-04T22:53:00+00:00",
+          "sampled_item_count": 1,
+          "source_id": "socialmedia-logan-kilpatrick-officiallogank",
+          "source_name": "Logan Kilpatrick(@OfficialLoganK)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/639cd13d44284e10ac89fbd1c5399767",
+          "item_count": 9,
+          "latest_item_time": "2026-05-07T16:03:04+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-lovable-lovable-dev",
+          "source_name": "Lovable(@lovable_dev)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/320181c4651a41a08015946b55f704ab",
+          "item_count": 9,
+          "latest_item_time": "2026-05-06T15:01:44+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-manusai-manusai-hq",
+          "source_name": "ManusAI(@ManusAI_HQ)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/94bb691baeff461686326af619beb116",
+          "item_count": 9,
+          "latest_item_time": "2026-05-01T23:08:57+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-mem0-mem0ai",
+          "source_name": "mem0(@mem0ai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/48aae530e0bf413aa7d44380f418e2e3",
+          "item_count": 9,
+          "latest_item_time": "2026-05-14T09:27:33+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-meng-shao-shao-meng",
+          "source_name": "meng shao(@shao__meng)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/61f4b78554fb4b8fa5653ec5d924d15a",
+          "item_count": 9,
+          "latest_item_time": "2026-05-04T16:57:40+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-microsoft-research-msftresearch",
+          "source_name": "Microsoft Research(@MSFTResearch)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/72dd496bfd9d44c5a5761a974630376d",
+          "item_count": 9,
+          "latest_item_time": "2026-04-30T22:04:00+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-midjourney-midjourney",
+          "source_name": "Midjourney(@midjourney)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/424e67b19eed4500b7a440976bbd2ade",
+          "item_count": 9,
+          "latest_item_time": "2026-05-04T15:00:01+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-milvus-milvusio",
+          "source_name": "Milvus(@milvusio)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/394acfaff8c44e09936f5bc0b8504f2c",
+          "item_count": 9,
+          "latest_item_time": "2026-04-28T17:12:10+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-mustafa-suleyman-mustafasuleyman",
+          "source_name": "Mustafa Suleyman(@mustafasuleyman)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/b43bc203409e4c5a9c3ae86fe1ac00c9",
+          "item_count": 9,
+          "latest_item_time": "2026-05-05T03:38:58+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-naval-naval",
+          "source_name": "Naval(@naval)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/6ebdf0d91eef4c149acd0ef110635866",
+          "item_count": 9,
+          "latest_item_time": "2026-04-24T19:15:41+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-nick-st-pierre-nickfloats",
+          "source_name": "Nick St. Pierre(@nickfloats)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/f97a26863aec4425b021720d4f8e4ede",
+          "item_count": 9,
+          "latest_item_time": "2026-05-13T16:27:37+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-notion-notionhq",
+          "source_name": "Notion(@NotionHQ)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/6326c63a2dfa445bbde88bea0c3112c2",
+          "item_count": 9,
+          "latest_item_time": "2026-05-04T23:36:39+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-ollama-ollama",
+          "source_name": "ollama(@ollama)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/971dc1fc90da449bac23e5fad8a33d55",
+          "item_count": 9,
+          "latest_item_time": "2026-05-11T22:23:07+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-openai-developers-openaidevs",
+          "source_name": "OpenAI Developers(@OpenAIDevs)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/e503a90c035c4b1d8f8dd34907d15bf4",
+          "item_count": 9,
+          "latest_item_time": "2026-05-10T18:53:21+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-openrouter-openrouterai",
+          "source_name": "OpenRouter(@OpenRouterAI)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/c65c68f3713747bba863f92d6b5e996f",
+          "item_count": 9,
+          "latest_item_time": "2026-05-05T18:12:41+00:00",
+          "sampled_item_count": 3,
+          "source_id": "socialmedia-patrick-loeber-patloeber",
+          "source_name": "Patrick Loeber(@patloeber)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/b9912ac9a29042cf8c834419dc44cb1f",
+          "item_count": 9,
+          "latest_item_time": "2026-05-05T20:47:13+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-paul-couvert-itspaulai",
+          "source_name": "Paul Couvert(@itsPaulAi)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/900549ddadf04e839d3f7a17ebaba3fc",
+          "item_count": 9,
+          "latest_item_time": "2026-05-12T13:08:46+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-paul-graham-paulg",
+          "source_name": "Paul Graham(@paulg)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/ce352bbf72e44033985bc756db2ee0e2",
+          "item_count": 9,
+          "latest_item_time": "2026-05-06T16:20:22+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-philipp-schmid-philschmid",
+          "source_name": "Philipp Schmid(@_philschmid)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/3306d8b253ec4e03aca3c2e9967e7119",
+          "item_count": 9,
+          "latest_item_time": "2026-05-02T01:52:21+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-pika-pika-labs",
+          "source_name": "Pika(@pika_labs)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/a55f6e33dd224235aabaabaaf9d58a06",
+          "item_count": 9,
+          "latest_item_time": "2026-05-04T15:00:02+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-qdrant-qdrant-engine",
+          "source_name": "Qdrant(@qdrant_engine)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/80032d016d654eb4afe741ff34b7643d",
+          "item_count": 9,
+          "latest_item_time": "2026-05-01T15:14:01+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-qwen-alibaba-qwen",
+          "source_name": "Qwen(@Alibaba_Qwen)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/acc648327c614d9b985b9fc3d737165b",
+          "item_count": 9,
+          "latest_item_time": "2026-05-11T09:54:46+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-recraft-recraftai",
+          "source_name": "Recraft(@recraftai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/613f859e4bc440c5a28f40732840f5cf",
+          "item_count": 9,
+          "latest_item_time": "2026-05-11T17:34:29+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-replit-replit",
+          "source_name": "Replit ⠕(@Replit)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/a636de3cbda0495daabd15b9fd298614",
+          "item_count": 9,
+          "latest_item_time": "2026-05-04T15:18:21+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-rowan-cheung-rowancheung",
+          "source_name": "Rowan Cheung(@rowancheung)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/e6bb4f612dd24db5bc1a6811e6dd5820",
+          "item_count": 9,
+          "latest_item_time": "2026-05-05T14:22:35+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-runway-runwayml",
+          "source_name": "Runway(@runwayml)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/baad3713defe4182844d2756b4c2c9ed",
+          "item_count": 9,
+          "latest_item_time": "2026-05-04T16:41:48+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-sahil-lavingia-shl",
+          "source_name": "Sahil Lavingia(@shl)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/e30d4cd223f44bed9d404807105c8927",
+          "item_count": 9,
+          "latest_item_time": "2026-05-09T19:16:31+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-sam-altman-sama",
+          "source_name": "Sam Altman(@sama)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/baa68dbd9a9e461a96fd9b2e3f35dcbf",
+          "item_count": 9,
+          "latest_item_time": "2026-05-02T12:11:51+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-satya-nadella-satyanadella",
+          "source_name": "Satya Nadella(@satyanadella)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/30ad80be93c84e44acc37d5ddf31db57",
+          "item_count": 9,
+          "latest_item_time": "2026-05-07T17:13:19+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-simon-willison-simonw",
+          "source_name": "Simon Willison(@simonw)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/6d7d398dd80b48d79669c92745d32cf6",
+          "item_count": 9,
+          "latest_item_time": "2026-05-06T12:03:54+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-skywork-skywork-ai",
+          "source_name": "Skywork(@Skywork_ai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/fafa6df3c67644b1a367a177240e0173",
+          "item_count": 9,
+          "latest_item_time": "2026-04-21T22:41:39+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-sualeh-asif-sualehasif996",
+          "source_name": "Sualeh Asif(@sualehasif996)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/c961547e08df4396b3ab69367a07a1cd",
+          "item_count": 9,
+          "latest_item_time": "2026-05-11T16:44:53+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-suhail-suhail",
+          "source_name": "Suhail(@Suhail)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/8324d65a63dc42c584a8c08cc8323c9f",
+          "item_count": 9,
+          "latest_item_time": "2026-04-29T20:49:27+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-sundar-pichai-sundarpichai",
+          "source_name": "Sundar Pichai(@sundarpichai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/83b1ea38940b4a1d81ea57d1ffb12ad7",
+          "item_count": 9,
+          "latest_item_time": "2026-05-13T15:45:57+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-the-rundown-ai-therundownai",
+          "source_name": "The Rundown AI(@TheRundownAI)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/4918efb13c47459b8dcaa79cfdf72d09",
+          "item_count": 9,
+          "latest_item_time": "2026-04-29T19:01:30+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-thomas-wolf-thom-wolf",
+          "source_name": "Thomas Wolf(@Thom_Wolf)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/dbf37973e6fc4eae91d4be9669a78fc7",
+          "item_count": 9,
+          "latest_item_time": "2026-04-30T00:36:35+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-v0-v0",
+          "source_name": "v0(@v0)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/7794c4268a504019a94af1778857a703",
+          "item_count": 9,
+          "latest_item_time": "2026-02-24T01:40:04+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-varun-mohan-mohansolo",
+          "source_name": "Varun Mohan(@_mohansolo)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/9de19c78f7454ad08c956c1a00d237fe",
+          "item_count": 9,
+          "latest_item_time": "2026-05-15T08:40:27+00:00",
+          "sampled_item_count": 3,
+          "source_id": "socialmedia-vista8",
+          "source_name": "向阳乔木(@vista8)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/2f1035ec6b28475987af06b600e1d04c",
+          "item_count": 9,
+          "latest_item_time": "2026-04-30T16:02:39+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-weaviate-vector-database-weaviate-io",
+          "source_name": "Weaviate • vector database(@weaviate_io)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/4a8273800ed34a069eecdb6c5c1b9ccf",
+          "item_count": 9,
+          "latest_item_time": "2026-04-30T17:14:35+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-windsurf-windsurf-ai",
+          "source_name": "Windsurf(@windsurf_ai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/b1ab109f6afd42ab8ea32e17a19a3a3e",
+          "item_count": 9,
+          "latest_item_time": "2026-05-14T15:50:00+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-y-combinator-ycombinator",
+          "source_name": "Y Combinator(@ycombinator)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/f5f4f928dede472ea55053672ad27ab6",
+          "item_count": 9,
+          "latest_item_time": "2026-05-04T16:44:38+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-yann-lecun-ylecun",
+          "source_name": "Yann LeCun(@ylecun)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/ef7c70f9568d45f4915169fef4ce90b4",
+          "item_count": 8,
+          "latest_item_time": "2026-04-24T12:03:30+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-ai-at-meta-aiatmeta",
+          "source_name": "AI at Meta(@AIatMeta)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/a02496979a0e4d86baf2b72c24db52a4",
+          "item_count": 8,
+          "latest_item_time": "2026-03-24T23:59:57+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-aman-sanger-amanrsanger",
+          "source_name": "Aman Sanger(@amanrsanger)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/5fb1814c610c4af2911caa98c5c5ef82",
+          "item_count": 8,
+          "latest_item_time": "2026-05-05T21:08:54+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-amjad-masad-amasad",
+          "source_name": "Amjad Masad(@amasad)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/a3eb6beb2d894da3a9b7ab6d2e46790e",
+          "item_count": 8,
+          "latest_item_time": "2026-05-07T18:02:57+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-andrew-chen-andrewchen",
+          "source_name": "andrew chen(@andrewchen)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/f54b2b40185943ce8f48a880110b7bc2",
+          "item_count": 8,
+          "latest_item_time": "2026-04-22T02:10:13+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-binyuan-hui-huybery",
+          "source_name": "Binyuan Hui(@huybery)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/5287b4e0e13a4ab7ab7b1d56f9d88960",
+          "item_count": 8,
+          "latest_item_time": "2026-05-06T16:15:44+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-cursor-cursor-ai",
+          "source_name": "Cursor(@cursor_ai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/ddfdcdd4e390495c942f0b5da62af0fb",
+          "item_count": 8,
+          "latest_item_time": "2026-05-05T02:41:21+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-eric-jing-ericjing-ai",
+          "source_name": "Eric Jing(@ericjing_ai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/f8a106a09a7d404fb8de7eb0c5ddd2a2",
+          "item_count": 8,
+          "latest_item_time": "2026-05-04T16:33:18+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-figma-figma",
+          "source_name": "Figma(@figma)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/a99538443a484fcc846bdcc8f50745ec",
+          "item_count": 8,
+          "latest_item_time": "2026-05-01T16:01:19+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-google-deepmind-googledeepmind",
+          "source_name": "Google DeepMind(@GoogleDeepMind)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/fc16750ce50741f1b1f05ea1fb29436f",
+          "item_count": 8,
+          "latest_item_time": "2026-04-24T07:06:35+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-hugging-face-huggingface",
+          "source_name": "Hugging Face(@huggingface)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/57831559d22440debbfb2f2528e4ba84",
+          "item_count": 8,
+          "latest_item_time": "2026-04-09T18:58:45+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-ian-goodfellow-goodfellow-ian",
+          "source_name": "Ian Goodfellow(@goodfellow_ian)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/78d7b99318b04b309b04000f7e24da29",
+          "item_count": 8,
+          "latest_item_time": "2026-04-16T15:36:13+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-mike-krieger-mikeyk",
+          "source_name": "Mike Krieger(@mikeyk)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/8d2d03aea8af49818096da4ea00409d1",
+          "item_count": 8,
+          "latest_item_time": "2026-04-30T23:06:24+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-mistral-ai-mistralai",
+          "source_name": "Mistral AI(@MistralAI)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/5d749cc613ec4069bb2a47334739e1b6",
+          "item_count": 8,
+          "latest_item_time": "2026-04-23T07:39:32+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-monica-im-hey-im-monica",
+          "source_name": "Monica_IM(@hey_im_monica)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/4d2d4165a7524217a08d3f57f27fa190",
+          "item_count": 8,
+          "latest_item_time": "2026-05-04T04:34:32+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-richard-socher-richardsocher",
+          "source_name": "Richard Socher(@RichardSocher)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/5fca8ccd87344d388bc863304ed6fd86",
+          "item_count": 8,
+          "latest_item_time": "2026-05-04T17:57:54+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-scott-wu-scottwu46",
+          "source_name": "Scott Wu(@ScottWu46)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/2de92402f4a24c90bb27e7580b93a878",
+          "item_count": 8,
+          "latest_item_time": "2026-04-24T21:21:51+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-taranjeet-taranjeetio",
+          "source_name": "Taranjeet(@taranjeetio)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/fdd601ea751949e7bec9e4cdad7c8e6c",
+          "item_count": 7,
+          "latest_item_time": "2026-05-06T14:09:37+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-perplexity-perplexity-ai",
+          "source_name": "Perplexity(@perplexity_ai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/d5fc365556e641cba2278f501e8c6f92",
+          "item_count": 7,
+          "latest_item_time": "2026-04-23T07:26:58+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-stanford-ai-lab-stanfordailab",
+          "source_name": "Stanford AI Lab(@StanfordAILab)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/d8121d969fb34c7daad2dd2aac4ba270",
+          "item_count": 5,
+          "latest_item_time": "2026-03-16T23:24:00+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-arthur-mensch-arthurmensch",
+          "source_name": "Arthur Mensch(@arthurmensch)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/6bbf31cac345443585c3280320ba9009",
+          "item_count": 5,
+          "latest_item_time": "2026-04-29T15:45:00+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-berkeley-ai-research-berkeley-ai",
+          "source_name": "Berkeley AI Research(@berkeley_ai)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/97f1484ae48c430fbbf3438099743674",
+          "item_count": 5,
+          "latest_item_time": "2026-05-04T02:33:59+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-dotey",
+          "source_name": "宝玉(@dotey)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/5dbd038a8f5140938d0877511571797b",
+          "item_count": 4,
+          "latest_item_time": "2026-05-08T14:47:57+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-clem-129303-clementdelangue",
+          "source_name": "clem 🤗(@ClementDelangue)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/3ca3c7698fd04611a0e7d14fae93c84c",
+          "item_count": 4,
+          "latest_item_time": "2026-04-07T17:48:19+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-kevin-weil-127482-127480-kevinweil",
+          "source_name": "Kevin Weil 🇺🇸(@kevinweil)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/67e259bd5be544ce84bbc867eace54c2",
+          "item_count": 4,
+          "latest_item_time": "2026-04-21T13:47:55+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-llamaindex-129433-llama-index",
+          "source_name": "LlamaIndex 🦙(@llama_index)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/63316630d94543f5a6480f230f483008",
+          "item_count": 4,
+          "latest_item_time": "2026-05-16T20:13:06+00:00",
+          "sampled_item_count": 4,
+          "source_id": "socialmedia-marc-andreessen-127482-127480-pmarca",
+          "source_name": "Marc Andreessen 🇺🇸(@pmarca)"
+        },
+        {
+          "feed_url": "https://api.xgo.ing/rss/user/244eb9fa77ce4fa3b7fa5ceba80027a4",
+          "item_count": 2,
+          "latest_item_time": "2025-05-23T14:50:37+00:00",
+          "sampled_item_count": 0,
+          "source_id": "socialmedia-barsee-128054-heybarsee",
+          "source_name": "Barsee 🐶(@heyBarsee)"
+        }
+      ]
+    },
+    "stage_budgets": {
+      "downstream_starved": true,
+      "stage_budget_profile": "phase1_3_advisory",
+      "stages": {
+        "cluster_card_patch": {
+          "budget": 6300,
+          "calls": 3,
+          "consumed_tokens": 7816,
+          "remaining_budget": 0,
+          "skipped": 7,
+          "skipped_due_to_budget": 7
+        },
+        "item_card": {
+          "budget": 30600,
+          "calls": 5,
+          "consumed_tokens": 41132,
+          "remaining_budget": 0,
+          "skipped": 67,
+          "skipped_due_to_budget": 67
+        },
+        "item_cluster_relation": {
+          "budget": 22500,
+          "calls": 0,
+          "consumed_tokens": 0,
+          "remaining_budget": 22500,
+          "skipped": 0,
+          "skipped_due_to_budget": 0
+        },
+        "item_relation": {
+          "budget": 27900,
+          "calls": 4,
+          "consumed_tokens": 12071,
+          "remaining_budget": 15829,
+          "skipped": 0,
+          "skipped_due_to_budget": 0
+        },
+        "source_profile": {
+          "budget": 2700,
+          "calls": 0,
+          "consumed_tokens": 0,
+          "remaining_budget": 2700,
+          "skipped": 0,
+          "skipped_due_to_budget": 0
+        }
+      },
+      "total_token_budget": 90000
+    },
+    "steps": {
+      "cluster_card_patch": [
+        {
+          "cluster_card": {
+            "card_version": 2,
+            "cluster_id": "cluster_8143ecc0d8834adab49b1c3db375bae5",
+            "cluster_title": "Daily news roundup for April 30, 2026",
+            "confidence": 0.65,
+            "core_facts_json": "[\"The roundup includes four major news items: China's mineral resources, top archaeological discoveries, online food regulation, and 147 game approvals; and four Jike Town posts.\"]",
+            "created_at": "2026-05-18T01:25:35.045968+00:00",
+            "event_type": null,
+            "first_seen_at": "2026-05-18T01:25:15.150779+00:00",
+            "id": 8,
+            "input_fingerprint": "52274240f9fd7ac7601a1b68902012822cf370bf842fecfcbc1d10abf174ff89",
+            "is_current": 1,
+            "known_angles_json": "[]",
+            "last_major_update_at": "2026-05-18T01:25:15.150779+00:00",
+            "llm_call_id": 84,
+            "main_entities_json": "[\"China\", \"GPT-Image-2\"]",
+            "model": "deepseek-v4-flash",
+            "open_questions_json": "[]",
+            "prompt_version": "cluster_card_patch_v1",
+            "representative_items_json": "[\"item_9046b84ad54f40e0a62cd6149411d2cd\"]",
+            "schema_version": "semantic_v1",
+            "source_items_json": "[]",
+            "updated_at": "2026-05-18T01:25:35.045968+00:00"
+          },
+          "llm_call_id": 84,
+          "ok": true
+        },
+        {
+          "cluster_card": {
+            "card_version": 2,
+            "cluster_id": "cluster_97adeda7e3324cc2a48fc168680e880f",
+            "cluster_title": "Claude Skills automation tutorial by AI Foundations",
+            "confidence": 0.6,
+            "core_facts_json": "[\"A tutorial on automating tasks using Claude Skills and Claude Cowork with the DBS framework. Builds two automations: a proposal generator and an interactive dashboard creator.\"]",
+            "created_at": "2026-05-18T01:25:45.020015+00:00",
+            "event_type": null,
+            "first_seen_at": "2026-05-18T01:25:15.093096+00:00",
+            "id": 9,
+            "input_fingerprint": "ade8cacd246df2597b11e41c9f70863508c1c71cb6e0d13177d12ae8fbe7d62a",
+            "is_current": 1,
+            "known_angles_json": "[]",
+            "last_major_update_at": "2026-05-18T01:25:15.095887+00:00",
+            "llm_call_id": 85,
+            "main_entities_json": "[\"Claude Skills\", \"Claude Cowork\", \"DBS framework\", \"Direction\", \"Blueprints\", \"Solutions\", \"Gamma\"]",
+            "model": "deepseek-v4-flash",
+            "open_questions_json": "[]",
+            "prompt_version": "cluster_card_patch_v1",
+            "representative_items_json": "[\"item_dd85c169526e4e0c92484dc6454f8d2a\"]",
+            "schema_version": "semantic_v1",
+            "source_items_json": "[]",
+            "updated_at": "2026-05-18T01:25:45.020015+00:00"
+          },
+          "llm_call_id": 85,
+          "ok": true
+        },
+        {
+          "cluster_card": {
+            "card_version": 2,
+            "cluster_id": "cluster_bc6d4b5266044895982b05c2f6a9e47c",
+            "cluster_title": "个人年度回顾与 AI 反思",
+            "confidence": 0.6,
+            "core_facts_json": "[\"作者回顾 2025 年，涵盖 AI 对插画和编程的影响、女儿出生及 NICU 经历、金钱观变化、开源项目维护思考等内容。\"]",
+            "created_at": "2026-05-18T01:25:51.506101+00:00",
+            "event_type": null,
+            "first_seen_at": "2026-05-18T01:25:15.021064+00:00",
+            "id": 10,
+            "input_fingerprint": "7ca9bfd9d91b2711226c8523cb53e59dc7b49b9b4cba91ef4f75f46a546dd4ce",
+            "is_current": 1,
+            "known_angles_json": "[]",
+            "last_major_update_at": "2026-05-18T01:25:15.024254+00:00",
+            "llm_call_id": 86,
+            "main_entities_json": "[\"GPT-4\", \"Stable Diffusion\", \"GitHub Copilot\", \"vibe coding\", \"RSSHub\", \"NICU\", \"币安\"]",
+            "model": "deepseek-v4-flash",
+            "open_questions_json": "[]",
+            "prompt_version": "cluster_card_patch_v1",
+            "representative_items_json": "[\"item_aba6f203413c4043b9b2cdab65393db1\"]",
+            "schema_version": "semantic_v1",
+            "source_items_json": "[]",
+            "updated_at": "2026-05-18T01:25:51.506101+00:00"
+          },
+          "llm_call_id": 86,
+          "ok": true
+        }
+      ],
+      "item_cards": {
+        "items": [
+          {
+            "id": 1,
+            "item_id": "item_8bb4983df1614f70bdac29ebc50151e1",
+            "reason": "local deterministic minimal card",
+            "source": "deterministic_minimal"
+          },
+          {
+            "id": 2,
+            "item_id": "item_b6d9fe5dc50f4e8db9ba504f74fcf249",
+            "reason": "local deterministic minimal card",
+            "source": "deterministic_minimal"
+          },
+          {
+            "id": 3,
+            "item_id": "item_67d23d58ff1346eb871e2d6a7827bcaa",
+            "reason": "local deterministic minimal card",
+            "source": "deterministic_minimal"
+          },
+          {
+            "id": 4,
+            "item_id": "item_6c0cb55f80c441da9fa9653dc0c1380f",
+            "reason": "local deterministic minimal card",
+            "source": "deterministic_minimal"
+          },
+          {
+            "id": 5,
+            "item_id": "item_effbf6a5d234410a80b0559a2c2c6f96",
+            "reason": "local deterministic minimal card",
+            "source": "deterministic_minimal"
+          },
+          {
+            "id": 6,
+            "item_id": "item_00fe6642f7024f8a96b9036af5c8ef3b",
+            "reason": "local deterministic minimal card",
+            "source": "deterministic_minimal"
+          },
+          {
+            "id": 7,
+            "item_id": "item_2f84d6c0717b4e4f97128b0b50e6e083",
+            "reason": "local deterministic minimal card",
+            "source": "deterministic_minimal"
+          },
+          {
+            "id": 8,
+            "item_id": "item_607d2a8e42834f85a4edac65dad3d4f5",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 9,
+            "item_id": "item_3179288bdbc84873930a64c195f36a19",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 10,
+            "item_id": "item_c2a9d3334440438fa26b53ecb490f82a",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 11,
+            "item_id": "item_a069a43e75c4445c83d1b26c3f8cbc3c",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 12,
+            "item_id": "item_bac94e836bb549abb5c5ba45842b4152",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 13,
+            "item_id": "item_6e0534da57b64c48b4689bc4ad3ab2cf",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 14,
+            "item_id": "item_af9a5c5b818c40178899c83e8cdde4e2",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 15,
+            "item_id": "item_65f810e2275c42aa8bf8676568620490",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 16,
+            "item_id": "item_8a9a10805a6144b5a2ca734487df8081",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 17,
+            "item_id": "item_f4223598ff334edf8c9f0a472d98c5e6",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 18,
+            "item_id": "item_a746fd352b8b4096a4dfa4087a6e9194",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 19,
+            "item_id": "item_7568194de817482497196a49e33aeb67",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 20,
+            "item_id": "item_61bff8175eaa497ca7d23f9941cfb6e5",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 21,
+            "item_id": "item_aba6f203413c4043b9b2cdab65393db1",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 22,
+            "item_id": "item_dd85c169526e4e0c92484dc6454f8d2a",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 23,
+            "item_id": "item_e13cd337570a417ca15893bf9e135959",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 24,
+            "item_id": "item_b581a803958544469898977fb8180bdf",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 25,
+            "item_id": "item_7dcc81d02ca54413bf1c44d1d2c3e669",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 26,
+            "item_id": "item_8711584e80a740309d8a872002418209",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 27,
+            "item_id": "item_9046b84ad54f40e0a62cd6149411d2cd",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 28,
+            "item_id": "item_db0db94fe7ea412eb44770fe8da9c861",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 29,
+            "item_id": "item_5e1de67a284f4c40815197d8e2d0b130",
+            "reason": "ok",
+            "source": "llm"
+          },
+          {
+            "id": 30,
+            "item_id": "item_47468b3e3cae455d8aafa4cedcd85bc5",
+            "reason": "ok",
+            "source": "llm"
+          }
+        ],
+        "ok": true,
+        "stats": {
+          "budget_skip_fallback_count": 0,
+          "card_tiers": {
+            "full": 10,
+            "minimal": 7,
+            "standard": 13
+          },
+          "deterministic_minimal_cards": 7,
+          "dry_run": false,
+          "errors": 0,
+          "failed_batch_count": 0,
+          "heuristic_fallback_count": 0,
+          "llm_calls": 5,
+          "local_minimal_cards": 7,
+          "parse_error_fallback_count": 0,
+          "selected": 30,
+          "single_retry_success_count": 0,
+          "skipped": 0,
+          "split_retry_success_count": 0,
+          "written": 30
+        }
+      },
+      "item_clusters": {
+        "ok": true,
+        "stats": {
+          "attached": 0,
+          "candidate_clusters": 9,
+          "created_clusters": 7,
+          "llm_calls": 0,
+          "llm_items": 0,
+          "no_candidate_items": 2,
+          "review": 28,
+          "selected": 30,
+          "skipped_non_event_signature": 23
+        }
+      },
+      "item_relations": {
+        "ok": true,
+        "stats": {
+          "candidate_pairs": 13,
+          "folded": 0,
+          "llm_calls": 4,
+          "llm_items": 4,
+          "no_candidate_items": 26,
+          "review": 0,
+          "rule_relations": 91,
+          "selected": 30,
+          "skipped_relation_llm_due_to_deterministic_decision": 91,
+          "skipped_relation_llm_due_to_semantic_level": 0,
+          "written": 104
+        }
+      },
+      "source_profiles": {
+        "ok": true,
+        "stats": {
+          "disabled_for_llm_candidates": 0,
+          "high_candidates": 0,
+          "low_candidates": 0,
+          "pending_review_count": 28,
+          "priority_suggestions_created": 0,
+          "profiles_created": 469,
+          "profiles_updated": 0,
+          "review_entries_created": 0,
+          "reviews_suppressed_insufficient_data": 0,
+          "suggestions_unchanged": 469,
+          "total_sources_processed": 469,
+          "warnings": []
+        }
+      }
+    },
+    "token_cost": [
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 22031.4,
+        "cache_hit_tokens": 4480,
+        "cache_miss_tokens": 0,
+        "calls": 5,
+        "failed": 0,
+        "input_tokens": 26861,
+        "llm_call_count": 5,
+        "operation_count": 72,
+        "output_tokens": 14271,
+        "p50_latency_ms": 21796,
+        "p95_latency_ms": 27463,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 67,
+        "success": 5,
+        "task_type": "item_card",
+        "total_tokens": 41132
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 10725.2,
+        "cache_hit_tokens": 4096,
+        "cache_miss_tokens": 0,
+        "calls": 4,
+        "failed": 0,
+        "input_tokens": 7354,
+        "llm_call_count": 4,
+        "operation_count": 4,
+        "output_tokens": 4717,
+        "p50_latency_ms": 11148,
+        "p95_latency_ms": 12188,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 0,
+        "success": 4,
+        "task_type": "item_relation",
+        "total_tokens": 12071
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 0.0,
+        "cache_hit_tokens": 0,
+        "cache_miss_tokens": 0,
+        "calls": 0,
+        "failed": 0,
+        "input_tokens": 0,
+        "llm_call_count": 0,
+        "operation_count": 0,
+        "output_tokens": 0,
+        "p50_latency_ms": 0,
+        "p95_latency_ms": 0,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 0,
+        "success": 0,
+        "task_type": "item_cluster_relation",
+        "total_tokens": 0
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 12101.0,
+        "cache_hit_tokens": 1536,
+        "cache_miss_tokens": 0,
+        "calls": 3,
+        "failed": 0,
+        "input_tokens": 4596,
+        "llm_call_count": 3,
+        "operation_count": 10,
+        "output_tokens": 3220,
+        "p50_latency_ms": 9957,
+        "p95_latency_ms": 19872,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 7,
+        "success": 3,
+        "task_type": "cluster_card_patch",
+        "total_tokens": 7816
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 0.0,
+        "cache_hit_tokens": 0,
+        "cache_miss_tokens": 0,
+        "calls": 0,
+        "failed": 0,
+        "input_tokens": 0,
+        "llm_call_count": 0,
+        "operation_count": 0,
+        "output_tokens": 0,
+        "p50_latency_ms": 0,
+        "p95_latency_ms": 0,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 0,
+        "success": 0,
+        "task_type": "cluster_card_rebuild",
+        "total_tokens": 0
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 0.0,
+        "cache_hit_tokens": 0,
+        "cache_miss_tokens": 0,
+        "calls": 0,
+        "failed": 0,
+        "input_tokens": 0,
+        "llm_call_count": 0,
+        "operation_count": 0,
+        "output_tokens": 0,
+        "p50_latency_ms": 0,
+        "p95_latency_ms": 0,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 0,
+        "success": 0,
+        "task_type": "source_review",
+        "total_tokens": 0
+      },
+      {
+        "avg_candidates_per_call": null,
+        "avg_latency_ms": 0.0,
+        "cache_hit_tokens": 0,
+        "cache_miss_tokens": 0,
+        "calls": 0,
+        "failed": 0,
+        "input_tokens": 0,
+        "llm_call_count": 0,
+        "operation_count": 0,
+        "output_tokens": 0,
+        "p50_latency_ms": 0,
+        "p95_latency_ms": 0,
+        "parse_failures": 0,
+        "rate_limit_errors": 0,
+        "retry_count": 0,
+        "skipped": 0,
+        "success": 0,
+        "task_type": "json_repair",
+        "total_tokens": 0
+      }
+    ]
+  }
+}

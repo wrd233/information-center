@@ -184,6 +184,26 @@ class ItemRelationDecision(BaseModel):
     boilerplate_detected: bool = False
     generic_entity_overlap: bool = False
 
+    @field_validator(
+        "secondary_roles",
+        "new_information",
+        "evidence",
+        "same_event_evidence",
+        "new_info_evidence",
+        "disqualifiers",
+        "shared_entities",
+        mode="before",
+    )
+    @classmethod
+    def coerce_string_list(cls, value: object) -> list[str]:
+        if value is None or value is False:
+            return []
+        if isinstance(value, str):
+            return [value] if value.strip() else []
+        if isinstance(value, list):
+            return [str(item) for item in value if str(item).strip()]
+        return [str(value)] if str(value).strip() else []
+
 
 class ItemRelationOutput(BaseModel):
     new_item_id: str

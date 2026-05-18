@@ -21,7 +21,7 @@ from app.semantic.evidence import build_review_bundle, export_evidence, write_js
 from app.semantic.live_smoke import live_enabled
 from app.semantic.readiness import assess_readiness
 from app.semantic.relations import process_item_relations, semantic_tokens
-from app.semantic.signatures import extract_event_signature
+from app.semantic.signatures import extract_event_signature, is_invalid_product
 from app.semantic.source_profiles import recompute_source_profiles
 from app.semantic.write_rehearsal import create_db_backup, validate_scoped_write_request, write_rehearsal_report
 from app.storage import InboxStore, row_to_item
@@ -720,8 +720,8 @@ def event_signature_summary(items: list[dict[str, Any]]) -> dict[str, Any]:
     scores = [float(row.get("concreteness_score") or 0.0) for row in signatures]
     accepted_garbage = [
         row for row in valid
-        if any(reason.startswith("invalid_product") for reason in row.get("invalid_reasons", []))
-        or str(row.get("product_or_model") or "").lower() in {"may 14", "our 25", "for 50", "just 0.3"}
+        if is_invalid_product(str(row.get("product_or_model") or ""))
+        or any(reason.startswith("invalid_product") for reason in row.get("invalid_reasons", []))
     ]
     chinese_items = [row for item, row in zip(items, signatures) if has_cjk((item.get("title") or "") + (item.get("summary") or "") + (item.get("content_text") or ""))]
     chinese_event_potential = [
@@ -741,6 +741,9 @@ def event_signature_summary(items: list[dict[str, Any]]) -> dict[str, Any]:
         "chinese_event_detection_rate": round(len(chinese_events) / max(len(chinese_event_potential), 1), 4),
         "chinese_event_potential_count": len(chinese_event_potential),
         "accepted_garbage_product_count": len(accepted_garbage),
+        "accepted_garbage_product_examples": accepted_garbage[:20],
+        "product_validator_blocker_count": len(accepted_garbage),
+        "product_validator_warning_count": int(invalid_reasons.get("invalid_product_fragment_without_actor", 0) or 0),
         "invalid_reason_distribution": dict(invalid_reasons),
         "top_signatures": by_key.most_common(20),
         "concreteness_score_avg": round(sum(scores) / max(len(scores), 1), 3),
@@ -804,6 +807,10 @@ def item_relation_summary(rows: list[Any], llm_logs: list[Any], store: InboxStor
         if relation_cluster_eligible(row["primary_relation"], event_type):
             cluster_eligible_count += 1
     candidate_stats = candidate_event_summary(store)
+    relation_failures = [
+        row for row in llm_logs
+        if row["task_type"] == "item_relation" and row["status"] == "failed"
+    ]
     confidences = [float(row["confidence"] or 0.0) for row in rows]
     examples = []
     low_conf = []
@@ -827,6 +834,10 @@ def item_relation_summary(rows: list[Any], llm_logs: list[Any], store: InboxStor
         "must_run_skips": candidate_stats.get("must_run_skips", 0),
         "pair_conflict_count": relation_conflict_count(store),
         "llm_item_relation_calls": sum(1 for row in llm_logs if row["task_type"] == "item_relation" and row["status"] in {"ok", "failed"}),
+        "item_relation_failures": len(relation_failures),
+        "item_relation_json_parse_failures": sum(1 for row in relation_failures if "json" in (row["error"] or "").lower() or "expecting" in (row["error"] or "").lower() or "unterminated" in (row["error"] or "").lower()),
+        "rule_relations": candidate_stats.get("rule_relations", 0),
+        "skipped_relation_llm_due_to_deterministic_decision": candidate_stats.get("skipped_relation_llm_due_to_deterministic_decision", 0),
         "duplicate": rels.get("duplicate", 0),
         "near_duplicate": rels.get("near_duplicate", 0),
         "related_with_new_info": rels.get("related_with_new_info", 0),
@@ -879,10 +890,15 @@ def candidate_event_summary(store: InboxStore) -> dict[str, Any]:
             return {}
     priority = Counter(row["candidate_priority"] or "unknown" for row in rows)
     lanes = Counter()
+    metadata_counts = Counter()
     for row in rows:
         try:
             metadata = json.loads(row["metadata_json"] or "{}")
             lanes[metadata.get("lane") or metadata.get("candidate_lane") or "unknown"] += 1
+            if row["status"] == "rule_relation_written":
+                metadata_counts["rule_relations"] += 1
+            if metadata.get("reason") == "deterministic same-thread lane" or metadata.get("reason") == "deterministic same-product-different-event lane":
+                metadata_counts["skipped_relation_llm_due_to_deterministic_decision"] += 1
         except Exception:
             lanes["unknown"] += 1
     return {
@@ -902,6 +918,7 @@ def candidate_event_summary(store: InboxStore) -> dict[str, Any]:
             if row["status"] == "suppressed"
             and row["candidate_priority"] == "must_run"
         ),
+        **dict(metadata_counts),
     }
 
 

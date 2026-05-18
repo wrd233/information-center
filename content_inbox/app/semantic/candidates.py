@@ -626,7 +626,7 @@ def assess_candidate(
     generic_only = bool(shared_generic) and not weighted and not concrete_event_match and title_score < 0.55
     if generic_only and "generic_only_overlap" not in disqualifiers:
         disqualifiers.append("generic_only_overlap")
-    if left_sig_obj.semantic_level == "reject" or right_sig_obj.semantic_level == "reject":
+    if left_sig_obj.semantic_level in {"reject", "content_signature"} or right_sig_obj.semantic_level in {"reject", "content_signature"}:
         disqualifiers.append("semantic_level_reject")
     if time_gap is not None and time_gap > 168 and not hard and not signature_match:
         disqualifiers.append("wide_time_window")
@@ -634,10 +634,10 @@ def assess_candidate(
     if hard:
         lane = "deterministic"
         priority = "must_run"
-    elif left_sig_obj.semantic_level == "reject" or right_sig_obj.semantic_level == "reject":
+    elif left_sig_obj.semantic_level in {"reject", "content_signature"} or right_sig_obj.semantic_level in {"reject", "content_signature"}:
         lane = "suppressed"
         priority = "suppress"
-        suppression_reason = "suppressed_reject_semantic_level"
+        suppression_reason = "suppressed_non_relation_semantic_level"
     elif "proxy_domain_only" in disqualifiers:
         lane = "suppressed"
         priority = "suppress"

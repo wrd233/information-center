@@ -1,0 +1,32 @@
+{
+  "high_count": 23,
+  "lane_distribution": {
+    "exploratory_recall": 82,
+    "precision_event": 14,
+    "same_event_recall": 12,
+    "same_thread": 183,
+    "suppressed": 486,
+    "unknown": 54
+  },
+  "lane_priority_distribution": {
+    "exploratory_recall:low": 80,
+    "exploratory_recall:medium": 2,
+    "precision_event:must_run": 14,
+    "same_event_recall:high": 12,
+    "same_thread:low": 183,
+    "suppressed:suppress": 486,
+    "unknown:high": 11,
+    "unknown:low": 26,
+    "unknown:medium": 3,
+    "unknown:must_run": 14
+  },
+  "must_run_count": 28,
+  "priority_distribution": {
+    "high": 23,
+    "low": 289,
+    "medium": 5,
+    "must_run": 28,
+    "suppress": 486
+  },
+  "suppressed_count": 486
+}

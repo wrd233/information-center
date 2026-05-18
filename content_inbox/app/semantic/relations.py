@@ -26,6 +26,7 @@ from app.semantic.schemas import (
     ItemRelationOutput,
     item_relation_should_fold,
 )
+from app.semantic.signatures import extract_event_signature
 from app.storage import InboxStore
 from app.utils import normalize_url, stable_hash, utc_now
 
@@ -42,8 +43,42 @@ def card_public(row: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def card_relation_public(item: dict[str, Any], row: dict[str, Any], assessment: CandidateAssessment | None = None) -> dict[str, Any]:
+    signature = extract_event_signature(item, row)
+    return {
+        "item_id": row["item_id"],
+        "title": row["canonical_title"],
+        "entities": json.loads(row["entities_json"] or "[]")[:8],
+        "semantic_level": signature.semantic_level,
+        "signature": {
+            "actor": signature.actor,
+            "product_or_model": signature.product_or_model,
+            "action": signature.action,
+            "date_bucket": signature.date_bucket,
+            "is_concrete": signature.is_concrete,
+        },
+        "event_hint": (row.get("event_hint") or "")[:180],
+        "lane": assessment.lane if assessment else None,
+        "priority": assessment.candidate_priority if assessment else None,
+    }
+
+
 def hard_relation(new_item: dict[str, Any], candidate_item: dict[str, Any]) -> tuple[str, list[str]] | None:
     return deterministic_duplicate(new_item, candidate_item)
+
+
+def rule_relation_from_assessment(assessment: CandidateAssessment) -> tuple[str, list[str], float, str] | None:
+    if assessment.suppressed:
+        return None
+    if assessment.lane == "same_thread" and assessment.candidate_priority in {"low", "medium"}:
+        if assessment.same_actor or assessment.same_product:
+            return "same_thread", ["same_thread"], 0.72, "deterministic same-thread lane"
+        return "different", ["weak_thread_lane"], 0.88, "weak thread lane without shared actor/product"
+    if assessment.lane == "same_product_different_event" and assessment.candidate_priority in {"low", "medium"}:
+        return "same_product_different_event", ["same_product_different_event"], 0.74, "deterministic same-product-different-event lane"
+    if assessment.generic_only:
+        return "different", ["generic_topic_overlap"], 0.90, "generic-only overlap suppressed by rule"
+    return None
 
 
 def normalized_entity_terms(values: list[str]) -> set[str]:
@@ -234,7 +269,7 @@ def process_item_relations(
             """,
             (limit,),
         ).fetchall()
-    stats = {"selected": len(rows), "written": 0, "folded": 0, "review": 0, "llm_calls": 0, "candidate_pairs": 0, "no_candidate_items": 0, "llm_items": 0}
+    stats = {"selected": len(rows), "written": 0, "folded": 0, "review": 0, "llm_calls": 0, "candidate_pairs": 0, "no_candidate_items": 0, "llm_items": 0, "rule_relations": 0, "skipped_relation_llm_due_to_semantic_level": 0, "skipped_relation_llm_due_to_deterministic_decision": 0}
     ensure_candidate_event_table(store)
     seen_pair_keys: set[str] = set()
     seen_lock = threading.Lock()
@@ -248,7 +283,7 @@ def process_item_relations(
             token_budget=token_budget,
             global_call_limit=global_call_limit,
         )
-        local = {"written": 0, "folded": 0, "review": 0, "llm_calls": 0, "candidate_pairs": 0, "no_candidate_items": 0, "llm_items": 0}
+        local = {"written": 0, "folded": 0, "review": 0, "llm_calls": 0, "candidate_pairs": 0, "no_candidate_items": 0, "llm_items": 0, "rule_relations": 0, "skipped_relation_llm_due_to_semantic_level": 0, "skipped_relation_llm_due_to_deterministic_decision": 0}
         item_id = row["item_id"]
         item = db.get_item(store, item_id)
         new_card = db.get_current_item_card(store, item_id)
@@ -275,6 +310,48 @@ def process_item_relations(
                 },
             )
         candidates = [candidate for candidate in candidates_all if not candidate["_candidate_assessment"].suppressed][:max_candidates]
+        if not candidates:
+            local["no_candidate_items"] += 1
+            return local
+        runnable_for_llm: list[dict[str, Any]] = []
+        for candidate_card in candidates:
+            assessment = candidate_card["_candidate_assessment"]
+            candidate_item = db.get_item(store, candidate_card["item_id"]) or {}
+            rule = rule_relation_from_assessment(assessment)
+            if rule:
+                primary, roles, confidence, reason = rule
+                insert_item_relation(
+                    store,
+                    item_id,
+                    candidate_card["item_id"],
+                    primary_relation=primary,
+                    secondary_roles=roles,
+                    confidence=confidence,
+                    canonical_item_id=None,
+                    new_information=[],
+                    reason=reason,
+                    evidence=roles + [f"lane={assessment.lane}", "decision_source=rule_cost_control"],
+                    decision_source="rule",
+                    llm_call_id=None,
+                    prompt_version=None,
+                    model="rule",
+                )
+                insert_candidate_event(
+                    store,
+                    stage="item_relation",
+                    item_a_id=item_id,
+                    item_b_id=candidate_card["item_id"],
+                    pair_key=candidate_card.get("_relation_pair_key"),
+                    assessment=assessment,
+                    status="rule_relation_written",
+                    metadata={"primary_relation": primary, "lane": assessment.lane, "reason": reason},
+                )
+                local["written"] += 1
+                local["rule_relations"] += 1
+                local["skipped_relation_llm_due_to_deterministic_decision"] += 1
+            else:
+                runnable_for_llm.append(candidate_card)
+        candidates = runnable_for_llm[: min(max_candidates, 4)]
         if not candidates:
             local["no_candidate_items"] += 1
             return local
@@ -350,8 +427,11 @@ def process_item_relations(
         if hard_written:
             return local
         input_data = {
-            "new_item_card": card_public(new_card),
-            "candidate_item_cards": [card_public(card) for card in candidates],
+            "new_item_card": card_relation_public(item, new_card),
+            "candidate_item_cards": [
+                card_relation_public(card.get("_candidate_item") or db.get_item(store, card["item_id"]) or {}, card, card["_candidate_assessment"])
+                for card in candidates
+            ],
         }
         output, call_id, _reason = client.call_json(
             task_type="item_relation",
@@ -359,7 +439,7 @@ def process_item_relations(
             schema_version=SCHEMA_VERSION,
             input_data=input_data,
             output_model=ItemRelationOutput,
-            max_tokens=2200,
+            max_tokens=1600,
             item_id=item_id,
             source_id=item.get("source_id") or item.get("feed_url") or item.get("source_name"),
             request_metadata={
@@ -441,12 +521,12 @@ def process_item_relations(
             futures = [executor.submit(process_one, row) for row in rows]
             for future in as_completed(futures):
                 local = future.result()
-                for key in ["written", "folded", "review", "llm_calls", "candidate_pairs", "no_candidate_items", "llm_items"]:
+                for key in ["written", "folded", "review", "llm_calls", "candidate_pairs", "no_candidate_items", "llm_items", "rule_relations", "skipped_relation_llm_due_to_semantic_level", "skipped_relation_llm_due_to_deterministic_decision"]:
                     stats[key] += int(local[key])
     else:
         for row in rows:
             local = process_one(row)
-            for key in ["written", "folded", "review", "llm_calls", "candidate_pairs", "no_candidate_items", "llm_items"]:
+            for key in ["written", "folded", "review", "llm_calls", "candidate_pairs", "no_candidate_items", "llm_items", "rule_relations", "skipped_relation_llm_due_to_semantic_level", "skipped_relation_llm_due_to_deterministic_decision"]:
                 stats[key] += int(local[key])
     return {"ok": True, "stats": stats}
 

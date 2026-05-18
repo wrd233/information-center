@@ -1,0 +1,11 @@
+{
+  "by_priority": {
+    "unknown": 74
+  },
+  "by_stage": {
+    "cluster_card_patch": 7,
+    "item_card": 67
+  },
+  "must_run_skip_count": 0,
+  "total": 74
+}

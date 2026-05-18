@@ -1,0 +1,40 @@
+{
+  "high_count": 53,
+  "lane_distribution": {
+    "deterministic": 2,
+    "exploratory_recall": 1573,
+    "precision_event": 50,
+    "same_actor_product": 2,
+    "same_event_recall": 157,
+    "same_product_different_event": 114,
+    "same_thread": 3802,
+    "suppressed": 2483,
+    "unknown": 521
+  },
+  "lane_priority_distribution": {
+    "deterministic:must_run": 2,
+    "exploratory_recall:low": 1299,
+    "exploratory_recall:medium": 274,
+    "precision_event:must_run": 50,
+    "same_actor_product:high": 2,
+    "same_event_recall:high": 24,
+    "same_event_recall:medium": 133,
+    "same_product_different_event:medium": 114,
+    "same_thread:low": 2926,
+    "same_thread:medium": 876,
+    "suppressed:suppress": 2483,
+    "unknown:high": 27,
+    "unknown:low": 134,
+    "unknown:medium": 285,
+    "unknown:must_run": 75
+  },
+  "must_run_count": 127,
+  "priority_distribution": {
+    "high": 53,
+    "low": 4359,
+    "medium": 1682,
+    "must_run": 127,
+    "suppress": 2483
+  },
+  "suppressed_count": 2483
+}

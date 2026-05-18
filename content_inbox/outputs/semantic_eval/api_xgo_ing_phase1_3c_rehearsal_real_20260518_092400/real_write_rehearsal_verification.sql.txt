@@ -1,0 +1,5 @@
+SELECT COUNT(*) FROM item_cards;
+SELECT COUNT(*) FROM item_relations;
+SELECT COUNT(*) FROM event_clusters;
+SELECT COUNT(*) FROM cluster_items;
+SELECT COUNT(*) FROM source_profiles;

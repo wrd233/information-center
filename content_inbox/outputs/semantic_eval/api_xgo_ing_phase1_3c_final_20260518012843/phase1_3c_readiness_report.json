@@ -1,0 +1,56 @@
+{
+  "verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE",
+  "dry_run_gates": {
+    "passed": true,
+    "metrics": {
+      "items": 300,
+      "calls": 173,
+      "tokens": 675294,
+      "tokens_per_item": 2250.98,
+      "item_relation_token_share": 0.421,
+      "event_signature_valid_rate": 0.9813,
+      "accepted_garbage_product_count": 0,
+      "chinese_event_detection_rate": 0.5143,
+      "final_failures": 8,
+      "item_relation_json_failures": 3,
+      "must_run_skip_count": 0,
+      "db_lock_errors": 0,
+      "relations": {}
+    }
+  },
+  "rehearsal_gate": {
+    "passed": false,
+    "reason": "source_profiles changed outside api.xgo.ing scope",
+    "scope_audit": {
+      "real_write_attempted": true,
+      "semantic_write_real_db": true,
+      "backup_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/backups/content_inbox_semantic_phase1_3_20260518_092401.sqlite3",
+      "rehearsal_output_dir": "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_real_20260518_092400",
+      "no_op_rehearsal_output_dir": "outputs/semantic_eval/api_xgo_ing_phase1_3c_rehearsal_20260518_092050",
+      "rows_after_write": {
+        "cluster_items": 7,
+        "event_clusters": 1059,
+        "item_cards": 90,
+        "item_relations": 86,
+        "llm_call_logs": 86,
+        "source_profiles": 469
+      },
+      "deltas_vs_backup": {
+        "item_cards": 90,
+        "item_relations": 86,
+        "event_clusters": 7,
+        "cluster_items": 7,
+        "cluster_relations": 0,
+        "source_profiles": 469,
+        "review_queue": 28,
+        "llm_call_logs": 86
+      },
+      "scope_failure": {
+        "source_profiles_changed_total": 469,
+        "source_profiles_changed_inside_api_xgo": 151,
+        "source_profiles_changed_outside_api_xgo": 318
+      },
+      "rollback_command": "cp /Users/wangrundong/work/infomation-center/content_inbox/data/backups/content_inbox_semantic_phase1_3_20260518_092401.sqlite3 /Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3"
+    }
+  }
+}
