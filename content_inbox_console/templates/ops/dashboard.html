@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - content_inbox_console{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1>Operational Dashboard</h1>
+    <p>Fresh database, source registry, ingest runs, and information consumption status.</p>
+  </div>
+  <a role="button" href="/runs/new">New Run</a>
+</header>
+
+<section class="stats-grid">
+  <article><small>Database</small><h3>{{ environment.database_label or "unknown" }}</h3><code>{{ environment.database_path }}</code></article>
+  <article><small>Sources</small><h2>{{ environment.source_count or 0 }}</h2><span>active {{ source_stats.active or 0 }} / broken {{ source_stats.broken or 0 }}</span></article>
+  <article><small>Items</small><h2>{{ environment.item_count or 0 }}</h2><span>fresh={{ environment.is_fresh_database }}</span></article>
+  <article><small>Runs</small><h2>{{ environment.run_count or 0 }}</h2><span>real-write {{ "enabled" if environment.real_runs_enabled else "disabled" }}</span></article>
+</section>
+
+<section class="grid two">
+  <article>
+    <header><strong>Recent Runs</strong></header>
+    {% if runs %}
+    <table><tbody>{% for run in runs %}<tr><td><a href="/runs/{{ run.run_id }}">{{ run.run_id }}</a></td><td>{{ run.status }}</td><td>{{ run.new_items_count }}</td></tr>{% endfor %}</tbody></table>
+    {% else %}<p class="empty-state">No runs yet. Create a dry-run from the run wizard.</p>{% endif %}
+  </article>
+  <article>
+    <header><strong>Review Alerts</strong></header>
+    {% if reviews %}
+    <table><tbody>{% for review in reviews %}<tr><td>{{ review.review_type }}</td><td>{{ review.target_type }}:{{ review.target_id }}</td></tr>{% endfor %}</tbody></table>
+    {% else %}<p class="empty-state">No pending review items.</p>{% endif %}
+  </article>
+</section>
+
+<section class="grid two">
+  <article>
+    <header><strong>Active Sources</strong></header>
+    {% if sources %}
+    <table><tbody>{% for source in sources %}<tr><td><a href="/sources/{{ source.source_id }}">{{ source.source_name }}</a></td><td>{{ source.status }}</td></tr>{% endfor %}</tbody></table>
+    {% else %}<p class="empty-state">Fresh DB has no sources. Import sources explicitly.</p>{% endif %}
+  </article>
+  <article>
+    <header><strong>Top Events</strong></header>
+    {% if events %}
+    <table><tbody>{% for event in events %}<tr><td><a href="/events/{{ event.event_id }}">{{ event.event_title }}</a></td><td>{{ event.status }}</td></tr>{% endfor %}</tbody></table>
+    {% else %}<p class="empty-state">No events generated yet.</p>{% endif %}
+  </article>
+</section>
+{% endblock %}

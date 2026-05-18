@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-header"><div><h1>Sources</h1><p>Import, inspect, export, and bulk-manage source registry entries.</p></div><a role="button" href="/runs/new">Run Selected</a></header>
+<section class="grid two">
+  <article>
+    <form method="get" action="/sources">
+      <input name="keyword" value="{{ keyword }}" placeholder="Search source name or URL">
+      <select name="status"><option value="">Any status</option>{% for s in ["active","disabled","broken","archived"] %}<option value="{{ s }}" {% if status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+      <button>Search</button>
+    </form>
+  </article>
+  <article>
+    <form action="/sources/import/preview" method="post">
+      <select name="format"><option value="urls">Pasted URLs</option><option value="csv">CSV</option><option value="json">JSON</option><option value="opml">OPML</option></select>
+      <textarea name="content" rows="5" placeholder="feed_url, source_name, category"></textarea>
+      <button>Import Preview</button>
+    </form>
+  </article>
+</section>
+{% if import_preview %}
+<article>
+  <header><strong>Import Preview</strong></header>
+  <p>{{ import_preview.stats }}</p>
+  <form action="/sources/import/commit" method="post"><input type="hidden" name="operation_id" value="{{ import_preview.operation_id }}"><button>Commit Import</button></form>
+  <table><tbody>{% for source in import_preview.sources %}<tr><td>{{ source.status }}</td><td>{{ source.source_name }}</td><td><code>{{ source.feed_url }}</code></td></tr>{% endfor %}</tbody></table>
+</article>
+{% endif %}
+<article>
+  <header><strong>Registry</strong> <span>{{ stats }}</span></header>
+  {% if sources %}
+  <table>
+    <thead><tr><th>ID</th><th>Name</th><th>Status</th><th>Last run</th><th>URL</th></tr></thead>
+    <tbody>{% for source in sources %}<tr><td><a href="/sources/{{ source.source_id }}">{{ source.source_id }}</a></td><td>{{ source.source_name }}</td><td>{{ source.status }}</td><td>{{ source.last_run_id }}</td><td><code>{{ source.feed_url }}</code></td></tr>{% endfor %}</tbody>
+  </table>
+  {% else %}<p class="empty-state">No sources in this fresh DB. Import sources above.</p>{% endif %}
+</article>
+{% endblock %}

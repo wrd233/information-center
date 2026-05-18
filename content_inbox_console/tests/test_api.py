@@ -1,282 +1,113 @@
-"""API tests for content_inbox_console."""
+from __future__ import annotations
 
-from pathlib import Path
+from fastapi.testclient import TestClient
 
-
-class TestHealthAndDashboard:
-    def test_redirect_root_to_dashboard(self, populated_client):
-        response = populated_client.get("/", follow_redirects=False)
-        assert response.status_code == 302
-
-    def test_dashboard_page(self, populated_client):
-        response = populated_client.get("/dashboard")
-        assert response.status_code == 200
-        html = response.text
-        assert "Dashboard" in html
-        assert "Test Source 1" in html
-        assert "2" in html  # total sources
-
-    def test_dashboard_stats_api(self, populated_client):
-        response = populated_client.get("/api/dashboard/stats")
-        assert response.status_code == 200
-        data = response.json()
-        assert data["db_available"] is True
-        assert data["registered_sources"] == 2
-        assert data["total_items"] == 2
-        assert data["db_runs"] == 1
-        assert data["total_clusters"] == 1
+from app.backend_client import BackendClient
+from app.main import create_app
 
 
-class TestItemsAPI:
-    def test_items_page(self, populated_client):
-        response = populated_client.get("/items")
-        assert response.status_code == 200
-        html = response.text
-        assert "Test Article 1" in html
-        assert "Test Article 2" in html
-
-    def test_items_with_filter(self, populated_client):
-        response = populated_client.get("/items?source_id=source_1")
-        assert response.status_code == 200
-        html = response.text
-        assert "Test Article 1" in html
-        assert "Test Article 2" not in html
-
-    def test_items_with_keyword(self, populated_client):
-        response = populated_client.get("/items?keyword=Article 2")
-        assert response.status_code == 200
-        html = response.text
-        assert "Test Article 2" in html
-        assert "Test Article 1" not in html
-
-    def test_items_htmx_rows(self, populated_client):
-        response = populated_client.get("/items/rows", headers={"HX-Request": "true"})
-        assert response.status_code == 200
-        # HTMX rows fragment should contain table rows
-        assert "<tr>" in response.text
-
-    def test_items_pagination(self, populated_client):
-        response = populated_client.get("/items?page_size=1&page=1")
-        assert response.status_code == 200
-        html = response.text
-        assert "Next" in html or "page" in html.lower()
-
-    def test_item_detail(self, populated_client):
-        response = populated_client.get("/items/item_1")
-        assert response.status_code == 200
-        html = response.text
-        assert "Test Article 1" in html
-        assert "source_1" in html
-        assert "suggested_action" in html or "read" in html
-
-    def test_item_not_found(self, populated_client):
-        response = populated_client.get("/items/nonexistent")
-        assert response.status_code == 404
+def fake_response(path: str) -> dict:
+    data = {
+        "/api/environment": {
+            "environment": {
+                "database_label": "fresh_test",
+                "database_path": "/tmp/fresh/content_inbox.db",
+                "database_id": "db_test",
+                "schema_version": "operational_v1",
+                "is_fresh_database": True,
+                "source_count": 1,
+                "item_count": 2,
+                "run_count": 1,
+                "real_runs_enabled": True,
+            },
+            "legacy_database": {"path": "/legacy/content_inbox.sqlite3", "exists": True, "size": 10, "modified_at": "now", "sha256": "abc"},
+        },
+        "/api/environment/health": {"checks": [{"name": "fresh_database", "ok": True, "message": "fresh_test"}]},
+        "/api/sources": {"sources": [{"source_id": "source-a", "source_name": "Source A", "feed_url": "file:///feed.xml", "status": "active"}], "stats": {"total": 1, "active": 1}},
+        "/api/runs": {"runs": [{"run_id": "run_1", "status": "success", "request": {"mode": "dry_run"}, "selected_source_count": 1, "new_items_count": 0, "started_at": "now"}]},
+        "/api/events": {"events": [{"event_id": "event_1", "event_title": "Event A", "status": "needs_review"}]},
+        "/api/review-queue": {"reviews": [{"id": 1, "review_type": "event_candidate", "target_type": "event", "target_id": "event_1"}]},
+        "/api/items": {"items": [{"item_id": "item_1", "title": "Item A", "source_name": "Source A", "published_at": "now", "primary_cluster_id": "cluster_1"}]},
+        "/api/clusters": {"clusters": [{"cluster_id": "cluster_1", "cluster_title": "Cluster A"}]},
+        "/api/entities": {"entities": [{"entity_id": "ent_1", "entity_name": "OpenAI"}]},
+        "/api/relations": {"relations": []},
+        "/api/claims": {"claims": []},
+        "/api/topics": {"topics": []},
+        "/api/timeline": {"timeline": []},
+        "/api/dedupe-groups": {"dedupe_groups": []},
+        "/api/briefings/daily": {"briefings": []},
+        "/api/reports": {"reports": []},
+    }
+    if path.startswith("/api/runs/run_1/summary"):
+        return {"run": {"run_id": "run_1", "status": "success", "selected_source_count": 1, "new_items_count": 0, "duplicate_items_count": 0}, "sources": [], "recent_events": []}
+    if path.startswith("/api/runs/run_1/events"):
+        return {"events": [{"seq": 1, "event_type": "run_completed", "message": "done"}]}
+    if path.startswith("/api/runs/run_1/items"):
+        return {"items": []}
+    if path.startswith("/api/items/item_1"):
+        return {"item": {"item_id": "item_1", "title": "Item A"}, "semantic": [], "entities": []}
+    if path.startswith("/api/sources/source-a"):
+        return {"source": {"source_id": "source-a", "source_name": "Source A", "feed_url": "file:///feed.xml"}, "recent_items": [], "audit": []}
+    return data.get(path, {})
 
 
-class TestSourcesAPI:
-    def test_sources_page(self, populated_client):
-        response = populated_client.get("/sources")
-        assert response.status_code == 200
-        html = response.text
-        assert "Test Source 1" in html
-        assert "Test Source 2" in html
+def patch_backend(monkeypatch):
+    def request(self, method, path, params=None, json=None):
+        if path == "/api/sources/import/preview":
+            return {"ok": True, "data": {"operation_id": "op_1", "stats": {"new": 1}, "sources": [{"source_name": "Source A", "feed_url": "file:///feed.xml", "status": "new"}]}, "error": None, "meta": {}}
+        if path == "/api/runs/preview":
+            return {"ok": True, "data": {"mode": json["mode"], "source_count": 1, "sources": [], "will_write_items": json["mode"] == "real_write"}, "error": None, "meta": {}}
+        return {"ok": True, "data": fake_response(path), "error": None, "meta": {}}
 
-    def test_sources_with_status_filter(self, populated_client):
-        response = populated_client.get("/sources?status=broken")
-        assert response.status_code == 200
-        html = response.text
-        assert "Test Source 2" in html
-        assert "Test Source 1" not in html
-
-    def test_sources_htmx_rows(self, populated_client):
-        response = populated_client.get("/sources/rows")
-        assert response.status_code == 200
-        assert "<tr>" in response.text
-
-    def test_source_detail(self, populated_client):
-        response = populated_client.get("/sources/source_1")
-        assert response.status_code == 200
-        html = response.text
-        assert "Test Source 1" in html
-        assert "https://example.com/feed1.xml" in html
-
-    def test_source_not_found(self, populated_client):
-        response = populated_client.get("/sources/nonexistent")
-        assert response.status_code == 404
+    monkeypatch.setattr(BackendClient, "request", request)
 
 
-class TestRunsAPI:
-    def test_runs_page(self, populated_client):
-        response = populated_client.get("/runs")
-        assert response.status_code == 200
-        html = response.text
-        assert "run_1" in html
+def test_core_console_pages_render(monkeypatch):
+    patch_backend(monkeypatch)
+    client = TestClient(create_app())
 
-    def test_runs_htmx_rows(self, populated_client):
-        response = populated_client.get("/runs/rows")
-        assert response.status_code == 200
-        assert "<tr>" in response.text
-
-    def test_run_detail(self, populated_client):
-        response = populated_client.get("/runs/run_1")
-        assert response.status_code == 200
-        html = response.text
-        assert "run_1" in html
-        assert "Test Source 1" in html
-        assert "Test Source 2" in html
-
-    def test_run_not_found(self, populated_client):
-        response = populated_client.get("/runs/nonexistent")
-        assert response.status_code == 404
-
-
-class TestClustersAPI:
-    def test_clusters_page(self, populated_client):
-        response = populated_client.get("/clusters")
-        assert response.status_code == 200
-        html = response.text
-        assert "Test Cluster" in html
-
-    def test_cluster_detail(self, populated_client):
-        response = populated_client.get("/clusters/cluster_1")
-        assert response.status_code == 200
-        html = response.text
-        assert "Test Cluster" in html
-        assert "AI" in html
-
-    def test_cluster_not_found(self, populated_client):
-        response = populated_client.get("/clusters/nonexistent")
-        assert response.status_code == 404
+    for path in [
+        "/dashboard",
+        "/environment",
+        "/sources",
+        "/runs",
+        "/runs/new",
+        "/items",
+        "/dedupe-groups",
+        "/clusters",
+        "/events",
+        "/entities",
+        "/relations",
+        "/claims",
+        "/topics",
+        "/timeline",
+        "/review-queue",
+        "/briefings",
+        "/reports",
+        "/agent-query",
+        "/settings",
+    ]:
+        response = client.get(path)
+        assert response.status_code == 200, path
 
 
-class TestErrorStates:
-    def test_empty_database(self, client: "TestClient"):
-        """Verify empty database shows empty states, not errors."""
-        from app.dependencies import get_db_connection
+def test_source_import_preview_and_run_preview_render(monkeypatch):
+    patch_backend(monkeypatch)
+    client = TestClient(create_app())
 
-        response = client.get("/dashboard")
-        assert response.status_code == 200
-        html = response.text
-        # Should show empty states
-        assert "No sources" in html or "No runs" in html or "empty-state" in html.lower()
+    source_preview = client.post("/sources/import/preview", data={"format": "urls", "content": "file:///feed.xml, Source A"})
+    run_preview = client.post("/runs/preview", data={"source_ids": "source-a", "mode": "dry_run", "published_from": "", "published_to": "", "max_items_per_source": "2", "max_total_items": "10"})
 
-    def test_empty_items(self, client: "TestClient"):
-        response = client.get("/items")
-        assert response.status_code == 200
-        html = response.text
-        assert "No items" in html or "empty-state" in html.lower() or "Loading" in html
+    assert source_preview.status_code == 200
+    assert "Import Preview" in source_preview.text
+    assert run_preview.status_code == 200
+    assert "Run Preview" in run_preview.text
 
 
-class TestDiagnosticsAPI:
-    def test_diagnostics_endpoint(self, populated_client):
-        response = populated_client.get("/api/diagnostics")
-        assert response.status_code == 200
-        data = response.json()
-        assert "database" in data
-        assert "outputs" in data
-        assert "warnings" in data
-        assert data["database"]["db_exists"] is True
-        assert data["database"]["db_readable"] is True
-        tables = data["database"]["tables"]
-        assert tables["inbox_items"]["count"] == 2
-        assert tables["rss_sources"]["count"] == 2
-        assert tables["rss_ingest_runs"]["count"] == 1
-        assert tables["event_clusters"]["count"] == 1
+def test_detail_pages_render(monkeypatch):
+    patch_backend(monkeypatch)
+    client = TestClient(create_app())
 
-    def test_diagnostics_detects_empty_registry(self, legacy_client):
-        response = legacy_client.get("/api/diagnostics")
-        assert response.status_code == 200
-        data = response.json()
-        tables = data["database"]["tables"]
-        assert tables["inbox_items"]["count"] == 3
-        assert tables["rss_sources"]["count"] == 0
-        warnings = data["warnings"]
-        has_registry_warning = any("rss_sources is empty" in w for w in warnings)
-        assert has_registry_warning
-
-    def test_diagnostics_detects_file_runs(self, legacy_client):
-        response = legacy_client.get("/api/diagnostics")
-        assert response.status_code == 200
-        data = response.json()
-        assert data["outputs"]["outputs_exists"] is True
-        assert data["outputs"]["run_directory_count"] == 1
-        has_file_run_warning = any("outputs/runs contains" in w for w in data["warnings"])
-        assert has_file_run_warning
-
-
-class TestObservedSources:
-    def test_sources_show_observed_when_registry_empty(self, legacy_client):
-        response = legacy_client.get("/sources")
-        assert response.status_code == 200
-        html = response.text
-        assert "No registered sources found" in html or "observed" in html.lower()
-        assert "Blog A" in html
-        assert "Blog B" in html
-
-    def test_observed_source_count(self, legacy_client):
-        response = legacy_client.get("/sources")
-        assert response.status_code == 200
-        html = response.text
-        # Should show 2 observed sources (Blog A has 2 items, Blog B has 1)
-        assert "2" in html
-
-    def test_observed_source_detail(self, legacy_client):
-        response = legacy_client.get("/sources/Blog A")
-        assert response.status_code == 200
-        html = response.text
-        assert "Observed Source" in html or "observed" in html.lower()
-        assert "Blog A" in html
-
-    def test_items_filter_by_observed_source(self, legacy_client):
-        response = legacy_client.get("/items?observed_source=Blog A")
-        assert response.status_code == 200
-        html = response.text
-        assert "Article A" in html
-        assert "Article B" in html
-        assert "Article C" not in html
-
-    def test_dashboard_shows_registered_and_observed(self, legacy_client):
-        response = legacy_client.get("/dashboard")
-        assert response.status_code == 200
-        html = response.text
-        assert "Registered Sources" in html
-        assert "Observed Sources" in html
-        # Registered should be 0, observed should be 2
-        assert "0" in html
-
-    def test_dashboard_shows_warnings(self, legacy_client):
-        response = legacy_client.get("/dashboard")
-        assert response.status_code == 200
-        html = response.text
-        assert "Data Status Warnings" in html or "warning" in html.lower()
-        assert "rss_sources is empty" in html
-
-
-class TestFileRuns:
-    def test_runs_show_file_runs_when_db_empty(self, legacy_client):
-        response = legacy_client.get("/runs")
-        assert response.status_code == 200
-        html = response.text
-        assert "No database run history" in html or "file" in html.lower()
-        assert "rss_run_20260101" in html
-
-    def test_file_run_detail(self, legacy_client):
-        response = legacy_client.get("/runs/rss_run_20260101_120000")
-        assert response.status_code == 200
-        html = response.text
-        assert "File Run" in html or "file-based" in html.lower()
-        assert "rss_run_20260101" in html
-        assert "Run Report" in html or "OPML sources" in html
-
-    def test_dashboard_shows_file_runs_count(self, legacy_client):
-        response = legacy_client.get("/dashboard")
-        assert response.status_code == 200
-        html = response.text
-        assert "File Runs" in html
-
-    def test_path_traversal_rejected(self, legacy_client):
-        response = legacy_client.get("/runs/../../../etc/passwd")
-        assert response.status_code in (404, 200)
-        if response.status_code == 200:
-            assert "not found" in response.text.lower() or "File Run" not in response.text
+    assert client.get("/sources/source-a").status_code == 200
+    assert client.get("/runs/run_1").status_code == 200
+    assert client.get("/items/item_1").status_code == 200

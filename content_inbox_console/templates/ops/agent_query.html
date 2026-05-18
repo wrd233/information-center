@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-header"><div><h1>Agent Query Playground</h1><p>Preview human, markdown, JSON, and compact context packs.</p></div></header>
+<form method="get" action="/agent-query" class="grid"><input name="query" value="{{ query }}" placeholder="What changed in AI today?"><button>Preview</button></form>
+{% if result %}<article><header><strong>Context Pack</strong></header><pre>{{ result | tojson(indent=2) }}</pre></article>{% else %}<p class="empty-state">Enter a query to preview context.</p>{% endif %}
+{% endblock %}

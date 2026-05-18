@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-header"><div><h1>Run Detail</h1><p><code>{{ run_id }}</code></p></div><form method="post" action="/runs/{{ run_id }}/cancel"><button>Cancel</button></form></header>
+<section class="stats-grid">
+  <article><small>Status</small><h2>{{ summary.run.status }}</h2></article>
+  <article><small>Sources</small><h2>{{ summary.run.selected_source_count }}</h2></article>
+  <article><small>New Items</small><h2>{{ summary.run.new_items_count }}</h2></article>
+  <article><small>Duplicates</small><h2>{{ summary.run.duplicate_items_count }}</h2></article>
+</section>
+<section class="grid two">
+  <article><header><strong>Source Progress</strong></header><table><tbody>{% for source in summary.sources %}<tr><td>{{ source.source_name }}</td><td>{{ source.status }}</td><td>{{ source.new_items_count }}</td><td>{{ source.error_code }}</td></tr>{% endfor %}</tbody></table></article>
+  <article hx-get="/runs/{{ run_id }}" hx-trigger="every 2s" hx-swap="none"><header><strong>Event Stream</strong></header><div class="event-stream">{% for event in events %}<p><code>#{{ event.seq }}</code> {{ event.event_type }} {{ event.message }}</p>{% endfor %}</div></article>
+</section>
+<article><header><strong>Items From This Run</strong></header>{% if items %}<table><tbody>{% for item in items %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td>{{ item.source_name }}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="empty-state">No committed items for this run yet. Dry-runs intentionally write no items.</p>{% endif %}</article>
+{% endblock %}

@@ -15,9 +15,17 @@ class Settings:
     def __init__(self) -> None:
         self.host = os.getenv("CONTENT_INBOX_HOST", "127.0.0.1")
         self.port = int(os.getenv("CONTENT_INBOX_PORT", "8787"))
+        default_fresh_db = BASE_DIR / "data" / "environments" / "fresh_default" / "content_inbox.db"
         self.database_path = Path(
-            os.getenv("CONTENT_INBOX_DB", BASE_DIR / "data" / "content_inbox.sqlite3")
+            os.getenv("CONTENT_INBOX_DB_PATH", os.getenv("CONTENT_INBOX_DB", str(default_fresh_db)))
         )
+        self.environment = os.getenv("CONTENT_INBOX_ENVIRONMENT", "fresh")
+        self.enable_real_runs = os.getenv("CONTENT_INBOX_ENABLE_REAL_RUNS", "0") in {
+            "1",
+            "true",
+            "True",
+            "yes",
+        }
         self.request_timeout_seconds = float(os.getenv("CONTENT_INBOX_REQUEST_TIMEOUT", "20"))
         self.max_content_chars = int(os.getenv("CONTENT_INBOX_MAX_CONTENT_CHARS", "8000"))
 

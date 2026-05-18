@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-header"><div><h1>{{ title }}</h1></div></header>
+<article><pre>{{ data | tojson(indent=2) }}</pre></article>
+{% endblock %}

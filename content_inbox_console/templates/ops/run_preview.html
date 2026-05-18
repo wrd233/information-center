@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-header"><div><h1>Run Preview</h1><p>Review impact before starting.</p></div></header>
+<article><pre>{{ preview | tojson(indent=2) }}</pre></article>
+{% if preview %}
+<form action="/runs/start" method="post"><input type="hidden" name="payload_json" value='{{ payload }}'><button>Start {{ preview.mode }}</button></form>
+{% endif %}
+{% endblock %}

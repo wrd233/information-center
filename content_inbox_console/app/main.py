@@ -1,4 +1,4 @@
-"""content_inbox_console -- FastAPI application factory."""
+"""content_inbox_console -- operational console application factory."""
 
 import logging
 from pathlib import Path
@@ -8,8 +8,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from app.config import settings
-from app.repository import ConsoleRepository
-from app.dependencies import verify_db_available
 from app.routes import register_all_routers
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
@@ -29,19 +27,9 @@ def create_app() -> FastAPI:
     templates = Jinja2Templates(directory=str(templates_dir))
     app.state.templates = templates
 
-    repo = ConsoleRepository()
-    app.state.repository = repo
     app.state.settings = settings
-
-    db_available = verify_db_available()
-    app.state.db_available = db_available
-    if not db_available:
-        logger.warning(
-            "Database not available at %s -- pages will show error state until fixed.",
-            settings.database_path,
-        )
-    else:
-        logger.info("Database available at %s", settings.database_path)
+    app.state.db_available = True
+    logger.info("Console API base: %s", settings.api_base)
 
     register_all_routers(app)
     return app

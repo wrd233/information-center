@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-header"><div><h1>Ingest Runs</h1><p>Run history from the new API event store.</p></div><a role="button" href="/runs/new">New Run</a></header>
+{% if runs %}<table><thead><tr><th>Run</th><th>Status</th><th>Mode</th><th>Sources</th><th>New</th><th>Started</th></tr></thead><tbody>{% for run in runs %}<tr><td><a href="/runs/{{ run.run_id }}">{{ run.run_id }}</a></td><td>{{ run.status }}</td><td>{{ run.request.mode }}</td><td>{{ run.selected_source_count }}</td><td>{{ run.new_items_count }}</td><td>{{ run.started_at }}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="empty-state">No runs yet.</p>{% endif %}
+{% endblock %}

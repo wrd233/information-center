@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-header"><div><h1>Run Creation Wizard</h1><p>Confirm environment, select sources, configure time range and limits, preview, then start.</p></div></header>
+<article><strong>Environment:</strong> {{ environment.database_label }} <code>{{ environment.database_path }}</code></article>
+<form action="/runs/preview" method="post">
+  <label>Source IDs (comma-separated)<input name="source_ids" placeholder="source-a,source-b"></label>
+  <small>Active sources: {% for source in sources[:20] %}<code>{{ source.source_id }}</code> {% endfor %}</small>
+  <div class="grid">
+    <label>Mode<select name="mode"><option value="dry_run">dry_run</option><option value="real_write">real_write</option></select></label>
+    <label>Published from<input name="published_from" placeholder="2026-05-01T00:00:00+08:00"></label>
+    <label>Published to<input name="published_to" placeholder="2026-05-18T23:59:59+08:00"></label>
+  </div>
+  <div class="grid">
+    <label>Max items/source<input type="number" name="max_items_per_source" value="20"></label>
+    <label>Max total items<input type="number" name="max_total_items" value="200"></label>
+  </div>
+  <button>Preview Run</button>
+</form>
+{% endblock %}

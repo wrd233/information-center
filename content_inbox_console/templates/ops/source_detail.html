@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-header"><div><h1>{{ data.source.source_name or source_id }}</h1><p><code>{{ data.source.feed_url }}</code></p></div><a role="button" href="/runs/new">Run</a></header>
+<section class="grid two">
+  <article><header><strong>Source</strong></header><pre>{{ data.source | tojson(indent=2) }}</pre></article>
+  <article><header><strong>Audit</strong></header><pre>{{ data.audit | tojson(indent=2) }}</pre></article>
+</section>
+<article><header><strong>Recent Items</strong></header>{% if data.recent_items %}<table><tbody>{% for item in data.recent_items %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td>{{ item.published_at }}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="empty-state">No items yet.</p>{% endif %}</article>
+{% endblock %}

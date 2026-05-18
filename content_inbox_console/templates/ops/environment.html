@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-header"><div><h1>Environment</h1><p>Current database identity and old database safety proof.</p></div><a role="button" href="/dashboard">Refresh</a></header>
+<section class="grid two">
+  <article>
+    <header><strong>Fresh Database</strong></header>
+    <dl>
+      <dt>database_id</dt><dd><code>{{ environment.database_id }}</code></dd>
+      <dt>database_label</dt><dd>{{ environment.database_label }}</dd>
+      <dt>database_path</dt><dd><code>{{ environment.database_path }}</code></dd>
+      <dt>schema_version</dt><dd>{{ environment.schema_version }}</dd>
+      <dt>created_at</dt><dd>{{ environment.created_at }}</dd>
+      <dt>is_fresh_database</dt><dd>{{ environment.is_fresh_database }}</dd>
+      <dt>source/item/run count</dt><dd>{{ environment.source_count }} / {{ environment.item_count }} / {{ environment.run_count }}</dd>
+    </dl>
+  </article>
+  <article>
+    <header><strong>Legacy DB Proof</strong></header>
+    <dl>
+      <dt>path</dt><dd><code>{{ legacy_database.path }}</code></dd>
+      <dt>exists</dt><dd>{{ legacy_database.exists }}</dd>
+      <dt>size</dt><dd>{{ legacy_database.size }}</dd>
+      <dt>modified_at</dt><dd>{{ legacy_database.modified_at }}</dd>
+      <dt>sha256</dt><dd><code class="small-code">{{ legacy_database.sha256 }}</code></dd>
+    </dl>
+  </article>
+</section>
+<article>
+  <header><strong>Health Checks</strong></header>
+  <table><tbody>{% for check in checks %}<tr><td>{{ check.name }}</td><td>{{ "OK" if check.ok else "Needs attention" }}</td><td>{{ check.message }}</td></tr>{% endfor %}</tbody></table>
+</article>
+<article>
+  <form action="/environment/init-fresh" method="post">
+    <label>Initialize another fresh DB <input name="database_label" placeholder="fresh_YYYYMMDD_label"></label>
+    <button type="submit">Init Fresh Database</button>
+  </form>
+</article>
+{% endblock %}

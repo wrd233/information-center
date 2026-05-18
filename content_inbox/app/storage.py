@@ -80,6 +80,8 @@ class InboxStore:
             self.ensure_column(conn, "inbox_items", "semantic_error", "TEXT")
             self.ensure_column(conn, "inbox_items", "semantic_attempts", "INTEGER NOT NULL DEFAULT 0")
             self.ensure_column(conn, "inbox_items", "last_semantic_at", "TEXT")
+            self.ensure_column(conn, "inbox_items", "deleted_at", "TEXT")
+            self.ensure_column(conn, "inbox_items", "rollback_run_id", "TEXT")
             conn.execute(
                 """
                 CREATE TABLE IF NOT EXISTS rss_sources (
@@ -215,6 +217,7 @@ class InboxStore:
             self.ensure_column(conn, "event_clusters", "created_by", "TEXT DEFAULT 'legacy'")
             self.ensure_column(conn, "event_clusters", "confidence", "REAL NOT NULL DEFAULT 0.0")
             self.ensure_column(conn, "event_clusters", "merged_into_cluster_id", "TEXT")
+            self.init_operational_schema(conn)
             self.init_semantic_schema(conn)
             conn.execute("CREATE INDEX IF NOT EXISTS idx_inbox_created_at ON inbox_items(created_at)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_inbox_source_name ON inbox_items(source_name)")
@@ -228,6 +231,307 @@ class InboxStore:
             conn.execute("CREATE INDEX IF NOT EXISTS idx_rss_run_sources_run_id ON rss_ingest_run_sources(run_id)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_clusters_status ON event_clusters(status)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_clusters_last_seen ON event_clusters(last_seen_at)")
+
+    def init_operational_schema(self, conn: sqlite3.Connection) -> None:
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS system_metadata (
+                key TEXT PRIMARY KEY,
+                value TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS ingest_run_events (
+                seq INTEGER PRIMARY KEY AUTOINCREMENT,
+                run_id TEXT NOT NULL,
+                event_type TEXT NOT NULL,
+                source_id TEXT,
+                item_id TEXT,
+                object_type TEXT,
+                object_id TEXT,
+                level TEXT NOT NULL DEFAULT 'info',
+                message TEXT NOT NULL DEFAULT '',
+                payload_json TEXT NOT NULL DEFAULT '{}',
+                created_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS item_run_links (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                run_id TEXT NOT NULL,
+                source_id TEXT,
+                item_id TEXT NOT NULL,
+                status TEXT NOT NULL,
+                operation_id TEXT,
+                created_at TEXT NOT NULL,
+                UNIQUE(run_id, item_id, status)
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS source_operation_audit (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                operation_id TEXT NOT NULL,
+                operation_type TEXT NOT NULL,
+                source_id TEXT,
+                before_json TEXT,
+                after_json TEXT,
+                status TEXT NOT NULL DEFAULT 'committed',
+                created_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS audit_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                operation_id TEXT,
+                run_id TEXT,
+                source_id TEXT,
+                item_id TEXT,
+                object_type TEXT,
+                object_id TEXT,
+                action TEXT NOT NULL,
+                actor TEXT NOT NULL DEFAULT 'system',
+                before_json TEXT,
+                after_json TEXT,
+                message TEXT NOT NULL DEFAULT '',
+                created_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS operation_previews (
+                operation_id TEXT PRIMARY KEY,
+                operation_type TEXT NOT NULL,
+                payload_json TEXT NOT NULL DEFAULT '{}',
+                preview_json TEXT NOT NULL DEFAULT '{}',
+                status TEXT NOT NULL DEFAULT 'previewed',
+                created_at TEXT NOT NULL,
+                committed_at TEXT
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS dedupe_groups (
+                dedupe_group_id TEXT PRIMARY KEY,
+                primary_item_id TEXT,
+                dedupe_method TEXT NOT NULL,
+                confidence REAL NOT NULL DEFAULT 0.0,
+                evidence_json TEXT NOT NULL DEFAULT '{}',
+                review_status TEXT NOT NULL DEFAULT 'pending',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS dedupe_group_items (
+                dedupe_group_id TEXT NOT NULL,
+                item_id TEXT NOT NULL,
+                role TEXT NOT NULL DEFAULT 'member',
+                created_at TEXT NOT NULL,
+                PRIMARY KEY (dedupe_group_id, item_id)
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS semantic_extractions (
+                extraction_id TEXT PRIMARY KEY,
+                item_id TEXT NOT NULL,
+                processor TEXT NOT NULL,
+                confidence TEXT NOT NULL DEFAULT 'low',
+                needs_review INTEGER NOT NULL DEFAULT 1,
+                raw_output_json TEXT NOT NULL DEFAULT '{}',
+                normalized_output_json TEXT NOT NULL DEFAULT '{}',
+                evidence_json TEXT NOT NULL DEFAULT '[]',
+                created_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS events (
+                event_id TEXT PRIMARY KEY,
+                event_title TEXT NOT NULL,
+                event_summary TEXT NOT NULL DEFAULT '',
+                event_type TEXT NOT NULL DEFAULT 'unknown',
+                event_time TEXT,
+                status TEXT NOT NULL DEFAULT 'needs_review',
+                importance INTEGER NOT NULL DEFAULT 1,
+                confidence REAL NOT NULL DEFAULT 0.0,
+                primary_cluster_id TEXT,
+                evidence_json TEXT NOT NULL DEFAULT '{}',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS event_items (
+                event_id TEXT NOT NULL,
+                item_id TEXT NOT NULL,
+                role TEXT NOT NULL DEFAULT 'supporting',
+                created_at TEXT NOT NULL,
+                PRIMARY KEY (event_id, item_id)
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS entities (
+                entity_id TEXT PRIMARY KEY,
+                entity_name TEXT NOT NULL,
+                entity_type TEXT NOT NULL DEFAULT 'keyword',
+                aliases_json TEXT NOT NULL DEFAULT '[]',
+                confidence REAL NOT NULL DEFAULT 0.0,
+                watched INTEGER NOT NULL DEFAULT 0,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                UNIQUE(entity_name, entity_type)
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS item_entities (
+                item_id TEXT NOT NULL,
+                entity_id TEXT NOT NULL,
+                confidence REAL NOT NULL DEFAULT 0.0,
+                evidence_json TEXT NOT NULL DEFAULT '[]',
+                created_at TEXT NOT NULL,
+                PRIMARY KEY (item_id, entity_id)
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS relations (
+                relation_id TEXT PRIMARY KEY,
+                subject_entity_id TEXT,
+                object_entity_id TEXT,
+                relation_type TEXT NOT NULL DEFAULT 'related_to',
+                item_id TEXT,
+                event_id TEXT,
+                confidence REAL NOT NULL DEFAULT 0.0,
+                review_status TEXT NOT NULL DEFAULT 'pending',
+                evidence_json TEXT NOT NULL DEFAULT '{}',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS claims (
+                claim_id TEXT PRIMARY KEY,
+                claim_text TEXT NOT NULL,
+                item_id TEXT,
+                event_id TEXT,
+                entity_id TEXT,
+                confidence REAL NOT NULL DEFAULT 0.0,
+                review_status TEXT NOT NULL DEFAULT 'pending',
+                evidence_json TEXT NOT NULL DEFAULT '{}',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS topics (
+                topic_id TEXT PRIMARY KEY,
+                topic_name TEXT NOT NULL UNIQUE,
+                topic_summary TEXT NOT NULL DEFAULT '',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS topic_items (
+                topic_id TEXT NOT NULL,
+                item_id TEXT NOT NULL,
+                confidence REAL NOT NULL DEFAULT 0.0,
+                created_at TEXT NOT NULL,
+                PRIMARY KEY (topic_id, item_id)
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS topic_events (
+                topic_id TEXT NOT NULL,
+                event_id TEXT NOT NULL,
+                confidence REAL NOT NULL DEFAULT 0.0,
+                created_at TEXT NOT NULL,
+                PRIMARY KEY (topic_id, event_id)
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS saved_views (
+                saved_view_id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                object_type TEXT NOT NULL DEFAULT 'items',
+                filters_json TEXT NOT NULL DEFAULT '{}',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS briefings (
+                briefing_id TEXT PRIMARY KEY,
+                briefing_type TEXT NOT NULL,
+                title TEXT NOT NULL,
+                body_markdown TEXT NOT NULL DEFAULT '',
+                payload_json TEXT NOT NULL DEFAULT '{}',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS reports (
+                report_id TEXT PRIMARY KEY,
+                report_type TEXT NOT NULL,
+                object_type TEXT,
+                object_id TEXT,
+                title TEXT NOT NULL,
+                body_markdown TEXT NOT NULL DEFAULT '',
+                payload_json TEXT NOT NULL DEFAULT '{}',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+        for sql in [
+            "CREATE INDEX IF NOT EXISTS idx_run_events_run_seq ON ingest_run_events(run_id, seq)",
+            "CREATE INDEX IF NOT EXISTS idx_item_run_links_run ON item_run_links(run_id)",
+            "CREATE INDEX IF NOT EXISTS idx_item_run_links_item ON item_run_links(item_id)",
+            "CREATE INDEX IF NOT EXISTS idx_audit_log_action ON audit_log(action)",
+            "CREATE INDEX IF NOT EXISTS idx_events_status ON events(status)",
+            "CREATE INDEX IF NOT EXISTS idx_event_items_item ON event_items(item_id)",
+            "CREATE INDEX IF NOT EXISTS idx_item_entities_entity ON item_entities(entity_id)",
+            "CREATE INDEX IF NOT EXISTS idx_semantic_extractions_item ON semantic_extractions(item_id)",
+        ]:
+            conn.execute(sql)
 
     def init_semantic_schema(self, conn: sqlite3.Connection) -> None:
         conn.execute(

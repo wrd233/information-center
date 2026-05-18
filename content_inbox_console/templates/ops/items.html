@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-header"><div><h1>Information Items</h1><p>Canonical items with run/source/time filters and semantic links.</p></div></header>
+<form method="get" action="/items" class="grid"><input name="run_id" value="{{ run_id }}" placeholder="run_id"><input name="keyword" value="{{ keyword }}" placeholder="keyword"><button>Filter</button></form>
+{% if items %}<table><thead><tr><th>Title</th><th>Source</th><th>Published</th><th>Cluster</th></tr></thead><tbody>{% for item in items %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td>{{ item.source_name }}</td><td>{{ item.published_at }}</td><td><a href="/clusters/{{ item.primary_cluster_id }}">{{ item.primary_cluster_id }}</a></td></tr>{% endfor %}</tbody></table>{% else %}<p class="empty-state">No items found.</p>{% endif %}
+{% endblock %}

@@ -31,10 +31,13 @@ from app.semantic.source_profiles import get_profile as semantic_get_source_prof
 from app.semantic.source_profiles import recompute_source_profiles
 from app.source_backfill import backfill_items
 from app.storage import InboxStore
+from app.ops_api import router as ops_router
 
 
 app = FastAPI(title="content-inbox", version="0.1.0")
 store = InboxStore(settings.database_path)
+app.state.store = store
+app.include_router(ops_router)
 
 
 def get_store() -> InboxStore:

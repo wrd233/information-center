@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-header"><div><h1>{{ data.item.title or item_id }}</h1><p><code>{{ item_id }}</code></p></div></header>
+<section class="grid two"><article><header><strong>Canonical</strong></header><pre>{{ data.item | tojson(indent=2) }}</pre></article><article><header><strong>Semantic</strong></header><pre>{{ data.semantic | tojson(indent=2) }}</pre><header><strong>Entities</strong></header><pre>{{ data.entities | tojson(indent=2) }}</pre></article></section>
+{% endblock %}

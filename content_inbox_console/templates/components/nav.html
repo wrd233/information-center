@@ -1,12 +1,25 @@
 <nav class="container-fluid">
   <ul>
-    <li><strong>Inbox Console</strong></li>
+    <li><strong>content_inbox_console</strong></li>
   </ul>
-  <ul>
-    <li><a href="/dashboard" role="button" class="{% if active_page == 'dashboard' %}outline{% endif %}">Dashboard</a></li>
-    <li><a href="/items" role="button" class="{% if active_page == 'items' %}outline{% endif %}">Items</a></li>
-    <li><a href="/sources" role="button" class="{% if active_page == 'sources' %}outline{% endif %}">Sources</a></li>
-    <li><a href="/runs" role="button" class="{% if active_page == 'runs' %}outline{% endif %}">Runs</a></li>
-    <li><a href="/clusters" role="button" class="{% if active_page == 'clusters' %}outline{% endif %}">Clusters</a></li>
+  <ul class="nav-scroll">
+    <li><a href="/dashboard" class="{% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a></li>
+    <li><a href="/environment" class="{% if active_page == 'environment' %}active{% endif %}">Environment</a></li>
+    <li><a href="/sources" class="{% if active_page == 'sources' %}active{% endif %}">Sources</a></li>
+    <li><a href="/runs" class="{% if active_page == 'runs' %}active{% endif %}">Runs</a></li>
+    <li><a href="/items" class="{% if active_page == 'items' %}active{% endif %}">Information</a></li>
+    <li><a href="/dedupe-groups" class="{% if active_page == 'dedupe' %}active{% endif %}">Dedupe</a></li>
+    <li><a href="/clusters" class="{% if active_page == 'clusters' %}active{% endif %}">Clusters</a></li>
+    <li><a href="/events" class="{% if active_page == 'events' %}active{% endif %}">Events</a></li>
+    <li><a href="/entities" class="{% if active_page == 'entities' %}active{% endif %}">Entities</a></li>
+    <li><a href="/relations" class="{% if active_page == 'relations' %}active{% endif %}">Relations</a></li>
+    <li><a href="/claims" class="{% if active_page == 'claims' %}active{% endif %}">Claims</a></li>
+    <li><a href="/topics" class="{% if active_page == 'topics' %}active{% endif %}">Topics</a></li>
+    <li><a href="/timeline" class="{% if active_page == 'timeline' %}active{% endif %}">Timeline</a></li>
+    <li><a href="/review-queue" class="{% if active_page == 'review' %}active{% endif %}">Review Queue</a></li>
+    <li><a href="/briefings" class="{% if active_page == 'briefings' %}active{% endif %}">Briefings</a></li>
+    <li><a href="/reports" class="{% if active_page == 'reports' %}active{% endif %}">Reports</a></li>
+    <li><a href="/agent-query" class="{% if active_page == 'agent' %}active{% endif %}">Agent Query</a></li>
+    <li><a href="/settings" class="{% if active_page == 'settings' %}active{% endif %}">Settings</a></li>
   </ul>
 </nav>

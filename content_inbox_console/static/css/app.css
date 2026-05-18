@@ -1,5 +1,12 @@
 /* Custom styles for content_inbox_console -- on top of PicoCSS */
 
+:root {
+  --console-accent: #2364aa;
+  --console-warn: #b35c00;
+  --console-danger: #b42318;
+  --console-ok: #287d3c;
+}
+
 /* Navigation active state */
 nav a[role="button"].outline {
   --pico-background-color: var(--pico-primary-background);
@@ -122,6 +129,60 @@ body > nav {
   z-index: 100;
   background: var(--pico-background-color);
   border-bottom: 1px solid var(--pico-muted-border-color);
+}
+
+.nav-scroll {
+  overflow-x: auto;
+  white-space: nowrap;
+  gap: 0.5rem;
+  max-width: 82vw;
+}
+
+.nav-scroll a {
+  padding: 0.35rem 0.55rem;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.nav-scroll a.active {
+  background: var(--console-accent);
+  color: #fff;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.page-header h1 {
+  margin-bottom: 0.25rem;
+}
+
+.grid.two {
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+}
+
+.event-stream {
+  max-height: 420px;
+  overflow: auto;
+  border: 1px solid var(--pico-muted-border-color);
+  padding: 0.75rem;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 560px;
+  overflow: auto;
+}
+
+.object-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 1rem;
 }
 
 /* Pagination */
