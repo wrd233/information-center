@@ -1,5 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-<header class="page-header"><div><h1>{{ title }}</h1><p>Backed by the new content-inbox API and fresh DB.</p></div></header>
-{% if items %}<div class="object-list">{% for item in items %}<article><pre>{{ item | tojson(indent=2) }}</pre></article>{% endfor %}</div>{% else %}<p class="empty-state">No {{ title | lower }} yet.</p>{% endif %}
+<header class="page-header"><div><h1>{{ title }}</h1><p>数据来自当前 Fresh DB 和新的 content-inbox API，不读取 Legacy DB 业务数据。</p></div></header>
+{% if items %}<div class="object-list">{% for item in items %}<article><pre>{{ item | tojson(indent=2) }}</pre></article>{% endfor %}</div>{% else %}<p class="empty-state">暂无 {{ title }} 数据。</p>{% endif %}
 {% endblock %}

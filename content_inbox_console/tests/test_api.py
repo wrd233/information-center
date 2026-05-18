@@ -19,6 +19,8 @@ def fake_response(path: str) -> dict:
                 "item_count": 2,
                 "run_count": 1,
                 "real_runs_enabled": True,
+                "legacy_business_fallback": False,
+                "last_reset_at": None,
             },
             "legacy_database": {"path": "/legacy/content_inbox.sqlite3", "exists": True, "size": 10, "modified_at": "now", "sha256": "abc"},
         },
@@ -39,7 +41,7 @@ def fake_response(path: str) -> dict:
         "/api/reports": {"reports": []},
     }
     if path.startswith("/api/runs/run_1/summary"):
-        return {"run": {"run_id": "run_1", "status": "success", "selected_source_count": 1, "new_items_count": 0, "duplicate_items_count": 0}, "sources": [], "recent_events": []}
+        return {"run": {"run_id": "run_1", "status": "success", "request": {"mode": "dry_run"}, "selected_source_count": 1, "success_source_count": 1, "failure_source_count": 0, "new_items_count": 0, "duplicate_items_count": 0}, "sources": [], "recent_events": [], "pipeline": {"dedupe": "pending", "semantic": "pending"}}
     if path.startswith("/api/runs/run_1/events"):
         return {"events": [{"seq": 1, "event_type": "run_completed", "message": "done"}]}
     if path.startswith("/api/runs/run_1/items"):
@@ -53,10 +55,16 @@ def fake_response(path: str) -> dict:
 
 def patch_backend(monkeypatch):
     def request(self, method, path, params=None, json=None):
+        if path == "/api/environment/reset/preview":
+            return {"ok": True, "data": {"operation_id": "reset_1", "level": json["level"], "database_path": "/tmp/fresh/content_inbox.db", "legacy_db_affected": False, "counts_before": {"inbox_items": 2}}, "error": None, "meta": {}}
+        if path == "/api/sources/check":
+            return {"ok": True, "data": {"valid": True, "parse_ok": True, "duplicate": False, "sample_item_count": 2}, "error": None, "meta": {}}
+        if path == "/api/sources/bulk/preview":
+            return {"ok": True, "data": {"operation_id": "bulk_1", "action": json["action"], "source_count": 1, "legacy_db_affected": False, "default_delete_semantics": "soft_archive", "sources": [{"source_id": "source-a"}]}, "error": None, "meta": {}}
         if path == "/api/sources/import/preview":
             return {"ok": True, "data": {"operation_id": "op_1", "stats": {"new": 1}, "sources": [{"source_name": "Source A", "feed_url": "file:///feed.xml", "status": "new"}]}, "error": None, "meta": {}}
         if path == "/api/runs/preview":
-            return {"ok": True, "data": {"mode": json["mode"], "source_count": 1, "sources": [], "will_write_items": json["mode"] == "real_write"}, "error": None, "meta": {}}
+            return {"ok": True, "data": {"mode": json["mode"], "source_count": 1, "sources": [], "will_write_items": json["mode"] == "real_write", "database": fake_response("/api/environment")["environment"], "risk_level": "low"}, "error": None, "meta": {}}
         return {"ok": True, "data": fake_response(path), "error": None, "meta": {}}
 
     monkeypatch.setattr(BackendClient, "request", request)
@@ -102,6 +110,23 @@ def test_source_import_preview_and_run_preview_render(monkeypatch):
     assert "Import Preview" in source_preview.text
     assert run_preview.status_code == 200
     assert "Run Preview" in run_preview.text
+
+
+def test_reset_source_actions_and_chinese_labels_render(monkeypatch):
+    patch_backend(monkeypatch)
+    client = TestClient(create_app())
+
+    env = client.get("/environment")
+    reset_preview = client.post("/environment/reset/preview", data={"level": "clear_runs_items_keep_sources"})
+    source_check = client.post("/sources/check", data={"feed_url": "file:///feed.xml", "source_name": "Source A", "source_category": "Test"})
+    bulk_preview = client.post("/sources/bulk", data={"source_ids": "source-a", "action": "archive", "preview": "1"})
+
+    assert "环境 / Fresh DB" in env.text
+    assert "数据重置" in env.text
+    assert "Reset Preview" in reset_preview.text
+    assert "新增单个 source" in source_check.text
+    assert "Source 检查结果" in source_check.text
+    assert "Bulk Preview" in bulk_preview.text
 
 
 def test_detail_pages_render(monkeypatch):

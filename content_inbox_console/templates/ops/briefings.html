@@ -1,5 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-<header class="page-header"><div><h1>Briefings</h1><p>Daily and weekly briefings generated from events, clusters, and review alerts.</p></div><form method="post" action="/briefings/daily/generate"><button>Generate Daily</button></form></header>
-{% if briefings %}{% for briefing in briefings %}<article><header><strong>{{ briefing.title }}</strong></header><pre>{{ briefing.body_markdown }}</pre></article>{% endfor %}{% else %}<p class="empty-state">No briefings generated yet.</p>{% endif %}
+<header class="page-header"><div><h1>Briefing 简报</h1><p>从 events、clusters 和 review alerts 生成 Daily / Weekly briefing。</p></div><form method="post" action="/briefings/daily/generate"><button>生成 Daily Briefing</button></form></header>
+{% if briefings %}{% for briefing in briefings %}<article><header><strong>{{ briefing.title }}</strong></header><pre>{{ briefing.body_markdown }}</pre></article>{% endfor %}{% else %}<p class="empty-state">暂无 briefing。请先执行 real-write 或生成 event/review。</p>{% endif %}
 {% endblock %}

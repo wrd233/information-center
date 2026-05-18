@@ -11,6 +11,14 @@
 <body>
   {% include "components/nav.html" %}
   <main class="container-fluid app-shell" id="main-content">
+    <section class="env-strip">
+      <strong>当前环境：Fresh DB</strong>
+      <span>数据库：{{ environment.database_label or "unknown" }}</span>
+      <span>路径：<code>{{ environment.database_path or "" }}</code></span>
+      <span>Sources：{{ environment.source_count or 0 }}</span>
+      <span>Items：{{ environment.item_count or 0 }}</span>
+      <span>Runs：{{ environment.run_count or 0 }}</span>
+    </section>
     {% if error %}
     <article class="error-banner">
       <strong>{{ error }}</strong>

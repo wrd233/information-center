@@ -1,19 +1,78 @@
 {% extends "base.html" %}
+{% block title %}Run 向导 - content_inbox_console{% endblock %}
 {% block content %}
-<header class="page-header"><div><h1>Run Creation Wizard</h1><p>Confirm environment, select sources, configure time range and limits, preview, then start.</p></div></header>
-<article><strong>Environment:</strong> {{ environment.database_label }} <code>{{ environment.database_path }}</code></article>
+<header class="page-header">
+  <div>
+    <h1>Run 向导</h1>
+    <p>确认 Fresh DB、选择 sources、设置 published_at 时间范围和 limits，然后 preview 并启动 dry-run 或 real-write。</p>
+  </div>
+</header>
+
 <form action="/runs/preview" method="post">
-  <label>Source IDs (comma-separated)<input name="source_ids" placeholder="source-a,source-b"></label>
-  <small>Active sources: {% for source in sources[:20] %}<code>{{ source.source_id }}</code> {% endfor %}</small>
-  <div class="grid">
-    <label>Mode<select name="mode"><option value="dry_run">dry_run</option><option value="real_write">real_write</option></select></label>
-    <label>Published from<input name="published_from" placeholder="2026-05-01T00:00:00+08:00"></label>
-    <label>Published to<input name="published_to" placeholder="2026-05-18T23:59:59+08:00"></label>
-  </div>
-  <div class="grid">
-    <label>Max items/source<input type="number" name="max_items_per_source" value="20"></label>
-    <label>Max total items<input type="number" name="max_total_items" value="200"></label>
-  </div>
-  <button>Preview Run</button>
+  <article>
+    <header><strong>Step 1：确认环境</strong></header>
+    <p>当前 Fresh DB：<code>{{ environment.database_path }}</code></p>
+    <p>database_id：<code>{{ environment.database_id }}</code>；source/item/run：{{ environment.source_count }} / {{ environment.item_count }} / {{ environment.run_count }}</p>
+    {% if not environment.real_runs_enabled %}
+      <p class="warning-banner">real-write 当前未启用。请设置 <code>CONTENT_INBOX_ENABLE_REAL_RUNS=1</code> 并重启后端后再执行真实写入。</p>
+    {% endif %}
+  </article>
+
+  <article>
+    <header><strong>Step 2：选择 source 范围</strong></header>
+    <label>范围
+      <select name="scope_type">
+        <option value="selected">手动选择 selected sources</option>
+        <option value="all_active">全部 active sources</option>
+        <option value="failed">失败 sources</option>
+      </select>
+    </label>
+    {% if sources %}
+    <div class="source-select-grid">
+      {% for source in sources %}
+      <label class="source-check">
+        <input type="checkbox" name="source_ids" value="{{ source.source_id }}">
+        <strong>{{ source.source_name }}</strong><br>
+        <small><code>{{ source.source_id }}</code> / {{ source.source_category or "未分类" }}</small>
+      </label>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">没有 active sources。请先到 Source 管理页面新增或导入。</p>
+    {% endif %}
+  </article>
+
+  <article>
+    <header><strong>Step 3：published_at 时间范围</strong></header>
+    <p>时间范围用于过滤 RSS 返回的 items，不保证抓取源站历史归档。</p>
+    <div class="grid">
+      <label>published_from<input name="published_from" placeholder="2026-05-01T00:00:00+08:00"></label>
+      <label>published_to<input name="published_to" placeholder="2026-05-18T23:59:59+08:00"></label>
+    </div>
+  </article>
+
+  <article>
+    <header><strong>Step 4：限制参数 limits</strong></header>
+    <div class="grid">
+      <label>max_sources<input type="number" name="max_sources" value="20"></label>
+      <label>max_items_per_source<input type="number" name="max_items_per_source" value="20"></label>
+      <label>max_total_items<input type="number" name="max_total_items" value="200"></label>
+      <label>source_timeout_seconds<input type="number" name="source_timeout_seconds" value="30"></label>
+      <label>run_timeout_minutes<input type="number" name="run_timeout_minutes" value="30"></label>
+    </div>
+  </article>
+
+  <article>
+    <header><strong>Step 5：选择模式</strong></header>
+    <label>运行模式
+      <select name="mode">
+        <option value="dry_run">dry-run（不写入 items）</option>
+        <option value="real_write" {% if not environment.real_runs_enabled %}disabled{% endif %}>real-write（真实写入当前 Fresh DB）</option>
+      </select>
+    </label>
+    <p>real-write 会向当前 Fresh DB 写入新的 items，并记录 run_id、source_id、item_run_links 和 audit。Legacy DB 不会被修改。</p>
+  </article>
+
+  <button type="submit">Step 6：Preview Run</button>
 </form>
 {% endblock %}

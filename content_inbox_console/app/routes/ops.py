@@ -22,6 +22,9 @@ def render(request: Request, template: str, context: dict[str, Any]) -> HTMLResp
     context.setdefault("api_base", request.app.state.settings.api_base)
     context.setdefault("db_available", True)
     context.setdefault("db_path", "")
+    if "environment" not in context:
+        env_response = client(request).get("/api/environment")
+        context["environment"] = data(env_response, {}).get("environment", {})
     return request.app.state.templates.TemplateResponse(request, template, context)
 
 
@@ -32,10 +35,15 @@ def err(response: dict[str, Any]) -> str | None:
     return f"{error.get('code', 'ERROR')}: {error.get('message', 'Unknown backend error')}"
 
 
+def selected_source_ids(form: dict[str, str]) -> list[str]:
+    raw = form.get("source_ids", "")
+    return [part.strip() for part in raw.replace("\n", ",").split(",") if part.strip()]
+
+
 async def form_fields(request: Request) -> dict[str, str]:
     raw = (await request.body()).decode("utf-8", errors="replace")
     parsed = parse_qs(raw, keep_blank_values=True)
-    return {key: values[-1] if values else "" for key, values in parsed.items()}
+    return {key: ",".join(values) if key == "source_ids" else (values[-1] if values else "") for key, values in parsed.items()}
 
 
 @router.get("/", response_class=HTMLResponse)
@@ -85,11 +93,73 @@ async def environment_init(request: Request):
     return RedirectResponse("/environment", status_code=303)
 
 
+@router.post("/environment/reset/preview", response_class=HTMLResponse)
+async def environment_reset_preview(request: Request):
+    form = await form_fields(request)
+    level = str(form.get("level") or "clear_runs_items_keep_sources")
+    response = client(request).post("/api/environment/reset/preview", {"level": level})
+    env_r = client(request).get("/api/environment")
+    health_r = client(request).get("/api/environment/health")
+    return render(
+        request,
+        "ops/environment.html",
+        {
+            "active_page": "environment",
+            "environment": data(env_r, {}).get("environment", {}),
+            "legacy_database": data(env_r, {}).get("legacy_database", {}),
+            "checks": data(health_r, {}).get("checks", []),
+            "reset_preview": data(response, {}),
+            "error": err(response),
+        },
+    )
+
+
+@router.post("/environment/reset/commit", response_class=HTMLResponse)
+async def environment_reset_commit(request: Request):
+    form = await form_fields(request)
+    level = str(form.get("level") or "")
+    operation_id = str(form.get("operation_id") or "")
+    confirmation = str(form.get("confirmation") or "")
+    client(request).post("/api/environment/reset/commit", {"level": level, "operation_id": operation_id, "confirmation": confirmation})
+    return RedirectResponse("/environment", status_code=303)
+
+
 @router.get("/sources", response_class=HTMLResponse)
 def sources(request: Request, status: str | None = None, keyword: str | None = None):
     api = client(request)
     response = api.get("/api/sources", {"status": status, "keyword": keyword, "limit": 200})
     return render(request, "ops/sources.html", {"active_page": "sources", "sources": data(response, {}).get("sources", []), "stats": data(response, {}).get("stats", {}), "status": status or "", "keyword": keyword or "", "error": err(response)})
+
+
+@router.post("/sources/check", response_class=HTMLResponse)
+async def source_check(request: Request):
+    form = await form_fields(request)
+    payload = {
+        "feed_url": str(form.get("feed_url") or ""),
+        "source_name": str(form.get("source_name") or ""),
+        "source_category": str(form.get("source_category") or ""),
+    }
+    response = client(request).post("/api/sources/check", payload)
+    sources_response = client(request).get("/api/sources", {"limit": 200})
+    return render(request, "ops/sources.html", {"active_page": "sources", "sources": data(sources_response, {}).get("sources", []), "stats": data(sources_response, {}).get("stats", {}), "check_result": data(response, {}), "draft_source": payload, "status": "", "keyword": "", "error": err(response)})
+
+
+@router.post("/sources/add", response_class=HTMLResponse)
+async def source_add(request: Request):
+    form = await form_fields(request)
+    tags = [part.strip() for part in str(form.get("tags") or "").split(",") if part.strip()]
+    payload = {
+        "source_name": str(form.get("source_name") or form.get("title") or ""),
+        "feed_url": str(form.get("feed_url") or ""),
+        "source_category": str(form.get("category") or ""),
+        "status": str(form.get("status") or "active"),
+        "priority": int(form.get("priority") or 3),
+        "tags": tags,
+        "notes": str(form.get("notes") or ""),
+        "config": {"site_url": str(form.get("site_url") or ""), "screen": False},
+    }
+    client(request).post("/api/sources", payload)
+    return RedirectResponse("/sources", status_code=303)
 
 
 @router.post("/sources/import/preview", response_class=HTMLResponse)
@@ -115,6 +185,10 @@ async def sources_bulk(request: Request):
     action = str(form.get("action") or "disable")
     source_ids = str(form.get("source_ids") or "")
     ids = [part.strip() for part in source_ids.split(",") if part.strip()]
+    if form.get("preview") == "1":
+        response = client(request).post("/api/sources/bulk/preview", {"action": action, "source_ids": ids})
+        sources_response = client(request).get("/api/sources", {"limit": 200})
+        return render(request, "ops/sources.html", {"active_page": "sources", "sources": data(sources_response, {}).get("sources", []), "stats": data(sources_response, {}).get("stats", {}), "bulk_preview": data(response, {}), "status": "", "keyword": "", "error": err(response)})
     path = {
         "enable": "/api/sources/bulk-enable",
         "disable": "/api/sources/bulk-disable",
@@ -125,10 +199,66 @@ async def sources_bulk(request: Request):
     return RedirectResponse("/sources", status_code=303)
 
 
+@router.post("/sources/bulk/commit", response_class=HTMLResponse)
+async def sources_bulk_commit(request: Request):
+    form = await form_fields(request)
+    client(request).post("/api/sources/bulk/commit", {"operation_id": str(form.get("operation_id") or "")})
+    return RedirectResponse("/sources", status_code=303)
+
+
+@router.post("/sources/export", response_class=HTMLResponse)
+async def sources_export(request: Request):
+    form = await form_fields(request)
+    fmt = str(form.get("format") or "json")
+    response = client(request).post("/api/sources/export", {"format": fmt})
+    sources_response = client(request).get("/api/sources", {"limit": 200})
+    return render(
+        request,
+        "ops/sources.html",
+        {
+            "active_page": "sources",
+            "sources": data(sources_response, {}).get("sources", []),
+            "stats": data(sources_response, {}).get("stats", {}),
+            "export_result": data(response, {}),
+            "status": "",
+            "keyword": "",
+            "error": err(response),
+        },
+    )
+
+
 @router.get("/sources/{source_id}", response_class=HTMLResponse)
 def source_detail(request: Request, source_id: str):
     response = client(request).get(f"/api/sources/{source_id}")
     return render(request, "ops/source_detail.html", {"active_page": "sources", "source_id": source_id, "data": data(response, {}), "error": err(response)})
+
+
+@router.post("/sources/{source_id}/edit")
+async def source_edit(request: Request, source_id: str):
+    form = await form_fields(request)
+    payload = {
+        "source_name": str(form.get("source_name") or ""),
+        "source_category": str(form.get("source_category") or ""),
+        "feed_url": str(form.get("feed_url") or ""),
+        "status": str(form.get("status") or "active"),
+        "priority": int(form.get("priority") or 3),
+        "notes": str(form.get("notes") or ""),
+        "tags": [part.strip() for part in str(form.get("tags") or "").split(",") if part.strip()],
+    }
+    client(request).patch(f"/api/sources/{source_id}", payload)
+    return RedirectResponse(f"/sources/{source_id}", status_code=303)
+
+
+@router.post("/sources/{source_id}/archive")
+def source_archive(request: Request, source_id: str):
+    client(request).post(f"/api/sources/{source_id}/archive", {})
+    return RedirectResponse("/sources", status_code=303)
+
+
+@router.post("/sources/{source_id}/restore")
+def source_restore(request: Request, source_id: str):
+    client(request).post(f"/api/sources/{source_id}/restore", {})
+    return RedirectResponse(f"/sources/{source_id}", status_code=303)
 
 
 @router.get("/runs", response_class=HTMLResponse)
@@ -145,13 +275,30 @@ def run_wizard(request: Request):
     return render(request, "ops/run_wizard.html", {"active_page": "runs", "environment": env, "sources": sources})
 
 
-def run_form_payload(source_ids: str, mode: str, published_from: str, published_to: str, max_items_per_source: int, max_total_items: int) -> dict[str, Any]:
+def run_form_payload(
+    source_ids: str,
+    scope_type: str,
+    mode: str,
+    published_from: str,
+    published_to: str,
+    max_sources: int,
+    max_items_per_source: int,
+    max_total_items: int,
+    source_timeout_seconds: int,
+    run_timeout_minutes: int,
+) -> dict[str, Any]:
     ids = [part.strip() for part in source_ids.split(",") if part.strip()]
     return {
         "mode": mode,
-        "source_scope": {"type": "selected", "source_ids": ids},
+        "source_scope": {"type": scope_type, "source_ids": ids},
         "time_filter": {"published_from": published_from or None, "published_to": published_to or None, "timezone": "Asia/Shanghai"},
-        "limits": {"max_sources": len(ids) or 100, "max_items_per_source": max_items_per_source, "max_total_items": max_total_items},
+        "limits": {
+            "max_sources": max_sources or len(ids) or 20,
+            "max_items_per_source": max_items_per_source,
+            "max_total_items": max_total_items,
+            "source_timeout_seconds": source_timeout_seconds,
+            "run_timeout_minutes": run_timeout_minutes,
+        },
         "options": {"force_refetch": False, "stop_on_first_existing": False},
     }
 
@@ -160,12 +307,16 @@ def run_form_payload(source_ids: str, mode: str, published_from: str, published_
 async def run_preview(request: Request):
     form = await form_fields(request)
     source_ids = str(form.get("source_ids") or "")
+    scope_type = str(form.get("scope_type") or "selected")
     mode = str(form.get("mode") or "dry_run")
     published_from = str(form.get("published_from") or "")
     published_to = str(form.get("published_to") or "")
+    max_sources = int(form.get("max_sources") or 20)
     max_items_per_source = int(form.get("max_items_per_source") or 20)
     max_total_items = int(form.get("max_total_items") or 200)
-    payload = run_form_payload(source_ids, mode, published_from, published_to, max_items_per_source, max_total_items)
+    source_timeout_seconds = int(form.get("source_timeout_seconds") or 30)
+    run_timeout_minutes = int(form.get("run_timeout_minutes") or 30)
+    payload = run_form_payload(source_ids, scope_type, mode, published_from, published_to, max_sources, max_items_per_source, max_total_items, source_timeout_seconds, run_timeout_minutes)
     response = client(request).post("/api/runs/preview", payload)
     return render(request, "ops/run_preview.html", {"active_page": "runs", "preview": data(response, {}), "payload": json.dumps(payload), "error": err(response)})
 
@@ -189,6 +340,24 @@ def run_detail(request: Request, run_id: str):
     events = api.get(f"/api/runs/{run_id}/events")
     items = api.get(f"/api/runs/{run_id}/items")
     return render(request, "ops/run_detail.html", {"active_page": "runs", "run_id": run_id, "summary": data(summary, {}), "events": data(events, {}).get("events", []), "items": data(items, {}).get("items", []), "error": err(summary)})
+
+
+@router.post("/runs/{run_id}/pipeline/{stage}")
+def run_pipeline_stage(request: Request, run_id: str, stage: str):
+    client(request).post(f"/api/runs/{run_id}/pipeline/{stage}", {})
+    return RedirectResponse(f"/runs/{run_id}", status_code=303)
+
+
+@router.post("/runs/{run_id}/briefing")
+def run_briefing(request: Request, run_id: str):
+    client(request).post(f"/api/runs/{run_id}/briefing", {})
+    return RedirectResponse(f"/runs/{run_id}", status_code=303)
+
+
+@router.post("/runs/{run_id}/report")
+def run_report(request: Request, run_id: str):
+    client(request).post(f"/api/runs/{run_id}/report", {})
+    return RedirectResponse(f"/runs/{run_id}", status_code=303)
 
 
 @router.post("/runs/{run_id}/cancel")

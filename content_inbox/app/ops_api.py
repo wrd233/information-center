@@ -108,7 +108,7 @@ def ensure_environment_metadata(store: InboxStore, *, label: str | None = None, 
             "schema_version": "operational_v1",
             "app_version": "operational-console-v1",
             "environment_kind": settings.environment,
-            "is_fresh_database": "true" if is_fresh else "false",
+            "is_fresh_database": metadata_get(conn, "is_fresh_database") or ("true" if is_fresh else "false"),
             "source_import_origin": metadata_get(conn, "source_import_origin") or "none",
             "last_migration_at": utc_now(),
         }
@@ -124,6 +124,7 @@ def environment_snapshot(store: InboxStore) -> dict[str, Any]:
         source_count = conn.execute("SELECT COUNT(*) AS n FROM rss_sources WHERE deleted_at IS NULL").fetchone()["n"]
         item_count = conn.execute("SELECT COUNT(*) AS n FROM inbox_items WHERE deleted_at IS NULL").fetchone()["n"]
         run_count = conn.execute("SELECT COUNT(*) AS n FROM rss_ingest_runs").fetchone()["n"]
+        last_reset = conn.execute("SELECT * FROM audit_log WHERE action LIKE 'environment_reset%' ORDER BY id DESC LIMIT 1").fetchone()
     return {
         "database_id": meta.get("database_id"),
         "database_label": meta.get("database_label"),
@@ -137,6 +138,78 @@ def environment_snapshot(store: InboxStore) -> dict[str, Any]:
         "item_count": int(item_count or 0),
         "run_count": int(run_count or 0),
         "real_runs_enabled": bool(settings.enable_real_runs),
+        "legacy_business_fallback": False,
+        "last_reset_at": last_reset["created_at"] if last_reset else None,
+    }
+
+
+RESET_TABLES_KEEP_SOURCES = [
+    "reports",
+    "briefings",
+    "review_queue",
+    "topic_events",
+    "topic_items",
+    "topics",
+    "claims",
+    "relations",
+    "item_entities",
+    "entities",
+    "event_items",
+    "events",
+    "semantic_extractions",
+    "dedupe_group_items",
+    "dedupe_groups",
+    "cluster_items",
+    "cluster_cards",
+    "cluster_relations",
+    "source_signals",
+    "source_profiles",
+    "item_relations",
+    "item_cards",
+    "llm_call_logs",
+    "event_clusters",
+    "item_run_links",
+    "ingest_run_events",
+    "rss_ingest_run_sources",
+    "rss_ingest_runs",
+    "inbox_items",
+]
+
+RESET_TABLES_CLEAR_ALL = ["rss_sources", "source_operation_audit", "operation_previews", *RESET_TABLES_KEEP_SOURCES]
+
+
+def table_counts(store: InboxStore, tables: list[str]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    with store.connect() as conn:
+        existing = {row["name"] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()}
+        for table in tables:
+            if table in existing:
+                counts[table] = int(conn.execute(f"SELECT COUNT(*) AS n FROM {table}").fetchone()["n"] or 0)
+    return counts
+
+
+def is_fresh_store(store: InboxStore) -> bool:
+    try:
+        return bool(environment_snapshot(store).get("is_fresh_database"))
+    except Exception:
+        return False
+
+
+def reset_preview_data(store: InboxStore, level: str) -> dict[str, Any]:
+    tables = RESET_TABLES_KEEP_SOURCES if level == "clear_runs_items_keep_sources" else RESET_TABLES_CLEAR_ALL
+    counts = table_counts(store, tables)
+    env = environment_snapshot(store)
+    return {
+        "database_id": env.get("database_id"),
+        "database_path": env.get("database_path"),
+        "database_label": env.get("database_label"),
+        "is_fresh_database": env.get("is_fresh_database"),
+        "level": level,
+        "tables_affected": tables,
+        "counts_before": counts,
+        "legacy_db_affected": False,
+        "recoverability": "soft audit only; cleared rows are not restored automatically",
+        "requires_confirmation": "RESET",
     }
 
 
@@ -256,6 +329,118 @@ def api_environment_report(request: Request) -> dict[str, Any]:
     return ok({"environment": environment_snapshot(store), "legacy_database": file_proof(legacy_db_path()), "generated_at": utc_now()})
 
 
+@router.get("/api/environment/reset-options")
+def api_reset_options(request: Request) -> dict[str, Any]:
+    store = get_ops_store(request)
+    env = environment_snapshot(store)
+    return ok(
+        {
+            "environment": env,
+            "enabled": bool(env.get("is_fresh_database")),
+            "levels": [
+                {
+                    "level": "clear_runs_items_keep_sources",
+                    "label": "清空运行结果，保留 Sources",
+                    "description": "清空 run、item、semantic、cluster、event、review、briefing、report 数据，保留 source registry。",
+                },
+                {
+                    "level": "clear_all_sources_and_content",
+                    "label": "清空 Sources 和所有内容",
+                    "description": "清空 sources、runs、items、semantic、cluster、event、review、briefing、report，保留 schema 和数据库身份。",
+                },
+                {
+                    "level": "create_new_fresh_db",
+                    "label": "新建 Fresh DB 环境",
+                    "description": "创建并切换到新的 data/environments/fresh_YYYYMMDD_HHMMSS/content_inbox.db。",
+                },
+            ],
+        }
+    )
+
+
+@router.post("/api/environment/reset/preview")
+def api_reset_preview(request: Request, payload: dict[str, Any]) -> Any:
+    store = get_ops_store(request)
+    level = payload.get("level") or "clear_runs_items_keep_sources"
+    if level == "create_new_fresh_db":
+        return api_fresh_db_preview(request, payload)
+    if level not in {"clear_runs_items_keep_sources", "clear_all_sources_and_content"}:
+        return fail("INVALID_RESET_LEVEL", "Unknown reset level.")
+    preview = reset_preview_data(store, level)
+    if not preview["is_fresh_database"]:
+        return fail("FRESH_DB_REQUIRED", "当前数据库不是 Fresh DB。为避免误删历史数据，已禁用清空操作。", status_code=409, details=preview)
+    operation_id = f"reset_{uuid.uuid4().hex}"
+    with store.connect() as conn:
+        conn.execute(
+            "INSERT INTO operation_previews(operation_id, operation_type, payload_json, preview_json, created_at) VALUES (?, ?, ?, ?, ?)",
+            (operation_id, "environment_reset", json.dumps(payload, ensure_ascii=False), json.dumps(preview, ensure_ascii=False), utc_now()),
+        )
+    preview["operation_id"] = operation_id
+    return ok(preview)
+
+
+@router.post("/api/environment/reset/commit")
+def api_reset_commit(request: Request, payload: dict[str, Any]) -> Any:
+    store = get_ops_store(request)
+    if not is_fresh_store(store):
+        return fail("FRESH_DB_REQUIRED", "当前数据库不是 Fresh DB。为避免误删历史数据，已禁用清空操作。", status_code=409)
+    if payload.get("confirmation") != "RESET":
+        return fail("UNSAFE_OPERATION_REQUIRES_CONFIRMATION", "请输入 RESET 以确认只清空当前 Fresh DB。")
+    level = payload.get("level") or "clear_runs_items_keep_sources"
+    if level == "create_new_fresh_db":
+        return api_fresh_db_create(request, payload)
+    if level not in {"clear_runs_items_keep_sources", "clear_all_sources_and_content"}:
+        return fail("INVALID_RESET_LEVEL", "Unknown reset level.")
+    tables = RESET_TABLES_KEEP_SOURCES if level == "clear_runs_items_keep_sources" else RESET_TABLES_CLEAR_ALL
+    counts_before = table_counts(store, tables)
+    with store.connect() as conn:
+        for table in tables:
+            conn.execute(f"DELETE FROM {table}")
+        metadata_set(conn, "last_reset_at", utc_now())
+        metadata_set(conn, "last_reset_level", level)
+    counts_after = table_counts(store, tables)
+    operation_id = payload.get("operation_id") or f"reset_{uuid.uuid4().hex}"
+    audit(
+        store,
+        "environment_reset_committed",
+        operation_id=operation_id,
+        before={"counts": counts_before},
+        after={"counts": counts_after, "level": level, "tables": tables, "legacy_db_affected": False},
+        message=f"Reset level {level} committed for current Fresh DB.",
+    )
+    return ok(
+        {
+            "operation_id": operation_id,
+            "database_id": environment_snapshot(store).get("database_id"),
+            "database_path": str(store.database_path),
+            "level": level,
+            "counts_before": counts_before,
+            "counts_after": counts_after,
+            "tables_affected": tables,
+            "legacy_db_affected": False,
+        }
+    )
+
+
+@router.post("/api/environment/fresh-db/preview")
+def api_fresh_db_preview(request: Request, payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    label = (payload or {}).get("database_label") or f"fresh_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    db_path = BASE_DIR / "data" / "environments" / label / "content_inbox.db"
+    return ok({"database_label": label, "database_path": str(db_path), "will_create": not db_path.exists(), "legacy_db_affected": False})
+
+
+@router.post("/api/environment/fresh-db/create")
+def api_fresh_db_create(request: Request, payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    label = (payload or {}).get("database_label") or f"fresh_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    db_path = BASE_DIR / "data" / "environments" / label / "content_inbox.db"
+    new_store = InboxStore(db_path)
+    ensure_environment_metadata(new_store, label=label, is_fresh=True)
+    request.app.state.store = new_store
+    settings.database_path = db_path
+    audit(new_store, "fresh_db_created", message=f"Fresh DB created and selected: {db_path}")
+    return ok({"environment": environment_snapshot(new_store), "legacy_db_affected": False})
+
+
 def parse_source_lines(text: str) -> list[dict[str, Any]]:
     sources = []
     for raw in text.splitlines():
@@ -345,6 +530,25 @@ def api_sources(request: Request, status: str | None = None, keyword: str | None
     return ok({"sources": sources, "stats": stats})
 
 
+@router.post("/api/sources/check")
+def api_source_check(request: Request, payload: dict[str, Any]) -> dict[str, Any]:
+    store = get_ops_store(request)
+    feed_url = str(payload.get("feed_url") or "").strip()
+    if not feed_url:
+        return ok({"valid": False, "error_code": "SOURCE_INVALID_FEED_URL", "message": "feed_url is required."})
+    normalized = normalize_url(feed_url) or feed_url
+    with store.connect() as conn:
+        exists = conn.execute("SELECT source_id FROM rss_sources WHERE normalized_feed_url = ?", (normalized,)).fetchone()
+    result: dict[str, Any] = {"feed_url": feed_url, "normalized_feed_url": normalized, "duplicate": bool(exists), "existing_source_id": exists["source_id"] if exists else None}
+    try:
+        meta, entries = parse_feed(feed_url, source_name=payload.get("source_name"), source_category=payload.get("source_category"), limit=5)
+        result.update({"valid": True, "parse_ok": True, "source_name": meta.get("source_name"), "sample_item_count": len(entries), "latest_published_at": entries[0].published_at if entries else None, "sample_titles": [entry.title for entry in entries[:3]]})
+    except Exception as exc:
+        code, message = classify_exception(exc)
+        result.update({"valid": False, "parse_ok": False, "error_code": code, "message": message})
+    return ok(result)
+
+
 @router.get("/api/sources/{source_id}")
 def api_source_detail(request: Request, source_id: str) -> Any:
     store = get_ops_store(request)
@@ -391,6 +595,22 @@ def api_source_delete(request: Request, source_id: str) -> Any:
     source = store.update_rss_source(source_id, {"status": "archived"})
     audit(store, "source_archived", source_id=source_id, before=before, after=source)
     return ok({"source_id": source_id, "status": "archived"})
+
+
+@router.post("/api/sources/{source_id}/archive")
+def api_source_archive(request: Request, source_id: str) -> Any:
+    return api_source_delete(request, source_id)
+
+
+@router.post("/api/sources/{source_id}/restore")
+def api_source_restore(request: Request, source_id: str) -> Any:
+    store = get_ops_store(request)
+    before = store.get_rss_source(source_id)
+    if not before:
+        return fail("SOURCE_NOT_FOUND", "Source not found.", status_code=404)
+    source = store.update_rss_source(source_id, {"status": "active"})
+    audit(store, "source_restored", source_id=source_id, before=before, after=source)
+    return ok({"source": source})
 
 
 @router.post("/api/sources/import/preview")
@@ -501,6 +721,58 @@ def api_bulk_recheck(request: Request, payload: dict[str, Any]) -> dict[str, Any
     for source_id in payload.get("source_ids") or []:
         audit(store, "source_recheck_requested", operation_id=operation_id, source_id=source_id)
     return ok({"operation_id": operation_id, "requested": payload.get("source_ids") or []})
+
+
+@router.post("/api/sources/bulk/preview")
+def api_source_bulk_preview(request: Request, payload: dict[str, Any]) -> dict[str, Any]:
+    store = get_ops_store(request)
+    action = payload.get("action") or "archive"
+    ids = payload.get("source_ids") or []
+    sources = [source for sid in ids if (source := store.get_rss_source(sid))]
+    preview = {
+        "action": action,
+        "source_count": len(sources),
+        "sources": [{"source_id": s["source_id"], "source_name": s["source_name"], "status": s["status"]} for s in sources],
+        "risk_level": "medium" if action in {"archive", "delete", "disable"} else "low",
+        "default_delete_semantics": "soft_archive",
+        "legacy_db_affected": False,
+        "requires_confirmation": action in {"archive", "delete", "disable", "run"},
+    }
+    operation_id = f"bulk_{uuid.uuid4().hex}"
+    with store.connect() as conn:
+        conn.execute(
+            "INSERT INTO operation_previews(operation_id, operation_type, payload_json, preview_json, created_at) VALUES (?, ?, ?, ?, ?)",
+            (operation_id, "source_bulk", json.dumps(payload, ensure_ascii=False), json.dumps(preview, ensure_ascii=False), utc_now()),
+        )
+    preview["operation_id"] = operation_id
+    return ok(preview)
+
+
+@router.post("/api/sources/bulk/commit")
+def api_source_bulk_commit(request: Request, payload: dict[str, Any]) -> Any:
+    store = get_ops_store(request)
+    operation_id = payload.get("operation_id")
+    if operation_id:
+        with store.connect() as conn:
+            row = conn.execute("SELECT * FROM operation_previews WHERE operation_id = ?", (operation_id,)).fetchone()
+        if not row:
+            return fail("OPERATION_NOT_FOUND", "Bulk preview operation was not found.", status_code=404)
+        preview = json.loads(row["preview_json"])
+        source_ids = [source["source_id"] for source in preview.get("sources", [])]
+        action = preview.get("action", "archive")
+    else:
+        source_ids = payload.get("source_ids") or []
+        action = payload.get("action", "archive")
+        operation_id = f"bulk_{uuid.uuid4().hex}"
+    if action == "enable":
+        return bulk_update_sources(request, {"source_ids": source_ids, "operation_id": operation_id}, "active", "source_enabled")
+    if action == "disable":
+        return bulk_update_sources(request, {"source_ids": source_ids, "operation_id": operation_id}, "disabled", "source_disabled")
+    if action in {"archive", "delete"}:
+        return bulk_update_sources(request, {"source_ids": source_ids, "operation_id": operation_id}, "archived", "source_archived")
+    if action == "export":
+        return api_source_export(request, {"format": payload.get("format", "json")})
+    return fail("INVALID_BULK_ACTION", "Unsupported bulk action.")
 
 
 @router.post("/api/sources/bulk-run")
@@ -747,6 +1019,8 @@ def extract_terms(text: str) -> list[str]:
 
 
 def generate_information_objects(store: InboxStore, run_id: str, item_ids: list[str]) -> None:
+    if not item_ids:
+        return
     now = utc_now()
     with store.connect() as conn:
         rows = conn.execute(
@@ -816,6 +1090,50 @@ def generate_information_objects(store: InboxStore, run_id: str, item_ids: list[
             )
 
 
+def run_dedupe_stage(store: InboxStore, run_id: str, item_ids: list[str]) -> dict[str, Any]:
+    now = utc_now()
+    created = 0
+    with store.connect() as conn:
+        rows = conn.execute(
+            f"SELECT item_id, dedupe_key, url, title FROM inbox_items WHERE item_id IN ({','.join('?' for _ in item_ids)})",
+            item_ids,
+        ).fetchall() if item_ids else []
+        groups: dict[str, list[Any]] = {}
+        for row in rows:
+            key = row["dedupe_key"] or normalize_url(row["url"] or "") or normalized_title(row["title"])
+            groups.setdefault(key, []).append(row)
+        for key, members in groups.items():
+            group_id = "dg_" + stable_hash(key)[:16]
+            primary = members[0]["item_id"]
+            conn.execute(
+                "INSERT OR REPLACE INTO dedupe_groups(dedupe_group_id, primary_item_id, dedupe_method, confidence, evidence_json, review_status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (group_id, primary, "dedupe_key", 0.8 if len(members) > 1 else 0.5, json.dumps({"key": key, "member_count": len(members)}, ensure_ascii=False), "reviewed" if len(members) == 1 else "pending", now, now),
+            )
+            for member in members:
+                conn.execute("INSERT OR IGNORE INTO dedupe_group_items(dedupe_group_id, item_id, role, created_at) VALUES (?, ?, ?, ?)", (group_id, member["item_id"], "primary" if member["item_id"] == primary else "member", now))
+            created += 1
+    return {"dedupe_groups_created_or_updated": created}
+
+
+def item_ids_for_run(store: InboxStore, run_id: str) -> list[str]:
+    with store.connect() as conn:
+        return [row["item_id"] for row in conn.execute("SELECT DISTINCT item_id FROM item_run_links WHERE run_id = ?", (run_id,)).fetchall()]
+
+
+def pipeline_status(store: InboxStore, run_id: str) -> dict[str, str]:
+    with store.connect() as conn:
+        event_types = {row["event_type"] for row in conn.execute("SELECT event_type FROM ingest_run_events WHERE run_id = ?", (run_id,)).fetchall()}
+    return {
+        "dedupe": "completed" if "dedupe_completed" in event_types else "pending",
+        "semantic": "completed" if "semantic_completed" in event_types else "pending",
+        "cluster": "completed" if "cluster_completed" in event_types else ("completed" if "semantic_completed" in event_types else "pending"),
+        "event": "completed" if "event_completed" in event_types else ("completed" if "semantic_completed" in event_types else "pending"),
+        "review_queue": "completed" if "review_queue_generated" in event_types else ("completed" if "semantic_completed" in event_types else "pending"),
+        "briefing": "completed" if "briefing_generated" in event_types else "pending",
+        "report": "completed" if "report_generated" in event_types else "pending",
+    }
+
+
 @router.get("/api/runs")
 def api_runs(request: Request, limit: int = 50, offset: int = 0) -> dict[str, Any]:
     store = get_ops_store(request)
@@ -877,7 +1195,7 @@ def api_run_summary(request: Request, run_id: str) -> Any:
         return fail("RUN_NOT_FOUND", "Run not found.", status_code=404)
     sources = store.list_ingest_run_sources(run_id)
     events = api_run_events(request, run_id, limit=20)["data"]["events"]
-    return ok({"run": run, "sources": sources, "recent_events": events})
+    return ok({"run": run, "sources": sources, "recent_events": events, "pipeline": pipeline_status(store, run_id), "environment": environment_snapshot(store)})
 
 
 @router.get("/api/runs/{run_id}/report")
@@ -889,6 +1207,48 @@ def api_run_report(request: Request, run_id: str) -> Any:
     sources = store.list_ingest_run_sources(run_id)
     body = f"# Run Report {run_id}\n\nStatus: {run['status']}\n\nNew items: {run['new_items_count']}\n\nSources: {len(sources)}\n"
     return ok({"format": "markdown", "content": body, "run": run, "sources": sources})
+
+
+@router.post("/api/runs/{run_id}/pipeline/{stage}")
+def api_run_pipeline_stage(request: Request, run_id: str, stage: str) -> Any:
+    store = get_ops_store(request)
+    if not store.get_ingest_run(run_id):
+        return fail("RUN_NOT_FOUND", "Run not found.", status_code=404)
+    item_ids = item_ids_for_run(store, run_id)
+    if stage == "dedupe":
+        add_event(store, run_id, "dedupe_started", message="Dedupe stage started.")
+        result = run_dedupe_stage(store, run_id, item_ids)
+        add_event(store, run_id, "dedupe_completed", message="Dedupe stage completed.", payload=result)
+    elif stage in {"semantic", "clusters", "events", "review"}:
+        add_event(store, run_id, "semantic_started", message="Semantic/cluster/event stage started.")
+        generate_information_objects(store, run_id, item_ids)
+        add_event(store, run_id, "semantic_completed", message="Semantic extraction completed.")
+        add_event(store, run_id, "cluster_completed", message="Cluster generation completed.")
+        add_event(store, run_id, "event_completed", message="Event generation completed.")
+        add_event(store, run_id, "review_queue_generated", message="Review queue generation completed.")
+        result = {"item_count": len(item_ids)}
+    elif stage == "briefing":
+        briefing = generate_briefing(store, "daily")
+        add_event(store, run_id, "briefing_generated", message="Daily briefing generated.", payload={"briefing_id": briefing["briefing_id"]})
+        result = {"briefing": briefing}
+    elif stage == "report":
+        report = api_report_generate(request, {"report_type": "run", "object_type": "run", "object_id": run_id})["data"]
+        add_event(store, run_id, "report_generated", message="Run report generated.", payload=report)
+        result = report
+    else:
+        return fail("INVALID_PIPELINE_STAGE", "Unsupported pipeline stage.")
+    audit(store, "pipeline_stage_completed", run_id=run_id, object_type="pipeline_stage", object_id=stage, after=result)
+    return ok({"run_id": run_id, "stage": stage, "result": result, "pipeline": pipeline_status(store, run_id)})
+
+
+@router.post("/api/runs/{run_id}/briefing")
+def api_run_briefing(request: Request, run_id: str) -> Any:
+    return api_run_pipeline_stage(request, run_id, "briefing")
+
+
+@router.post("/api/runs/{run_id}/report")
+def api_run_report_generate(request: Request, run_id: str) -> Any:
+    return api_run_pipeline_stage(request, run_id, "report")
 
 
 @router.post("/api/runs/{run_id}/cancel")

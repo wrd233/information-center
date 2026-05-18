@@ -1,48 +1,48 @@
 {% extends "base.html" %}
-{% block title %}Dashboard - content_inbox_console{% endblock %}
+{% block title %}总览 - content_inbox_console{% endblock %}
 {% block content %}
 <header class="page-header">
   <div>
-    <h1>Operational Dashboard</h1>
-    <p>Fresh database, source registry, ingest runs, and information consumption status.</p>
+    <h1>Operational Dashboard / 总览</h1>
+    <p>当前 Fresh DB 的 source、run、item、event、review 状态。不会混入 Legacy DB 业务数据。</p>
   </div>
-  <a role="button" href="/runs/new">New Run</a>
+  <a role="button" href="/runs/new">创建 Run</a>
 </header>
 
 <section class="stats-grid">
-  <article><small>Database</small><h3>{{ environment.database_label or "unknown" }}</h3><code>{{ environment.database_path }}</code></article>
+  <article><small>Fresh DB</small><h3>{{ environment.database_label or "unknown" }}</h3><code>{{ environment.database_path }}</code></article>
   <article><small>Sources</small><h2>{{ environment.source_count or 0 }}</h2><span>active {{ source_stats.active or 0 }} / broken {{ source_stats.broken or 0 }}</span></article>
-  <article><small>Items</small><h2>{{ environment.item_count or 0 }}</h2><span>fresh={{ environment.is_fresh_database }}</span></article>
-  <article><small>Runs</small><h2>{{ environment.run_count or 0 }}</h2><span>real-write {{ "enabled" if environment.real_runs_enabled else "disabled" }}</span></article>
+  <article><small>Items</small><h2>{{ environment.item_count or 0 }}</h2><span>当前 Fresh DB</span></article>
+  <article><small>Runs</small><h2>{{ environment.run_count or 0 }}</h2><span>real-write {{ "已启用" if environment.real_runs_enabled else "未启用" }}</span></article>
 </section>
 
 <section class="grid two">
   <article>
-    <header><strong>Recent Runs</strong></header>
+    <header><strong>最近 Runs</strong></header>
     {% if runs %}
     <table><tbody>{% for run in runs %}<tr><td><a href="/runs/{{ run.run_id }}">{{ run.run_id }}</a></td><td>{{ run.status }}</td><td>{{ run.new_items_count }}</td></tr>{% endfor %}</tbody></table>
-    {% else %}<p class="empty-state">No runs yet. Create a dry-run from the run wizard.</p>{% endif %}
+    {% else %}<p class="empty-state">暂无 runs。请先导入 sources，然后创建 dry-run。</p>{% endif %}
   </article>
   <article>
-    <header><strong>Review Alerts</strong></header>
+    <header><strong>Review Queue 提醒</strong></header>
     {% if reviews %}
     <table><tbody>{% for review in reviews %}<tr><td>{{ review.review_type }}</td><td>{{ review.target_type }}:{{ review.target_id }}</td></tr>{% endfor %}</tbody></table>
-    {% else %}<p class="empty-state">No pending review items.</p>{% endif %}
+    {% else %}<p class="empty-state">暂无待 review 项。</p>{% endif %}
   </article>
 </section>
 
 <section class="grid two">
   <article>
-    <header><strong>Active Sources</strong></header>
+    <header><strong>Sources</strong></header>
     {% if sources %}
     <table><tbody>{% for source in sources %}<tr><td><a href="/sources/{{ source.source_id }}">{{ source.source_name }}</a></td><td>{{ source.status }}</td></tr>{% endfor %}</tbody></table>
-    {% else %}<p class="empty-state">Fresh DB has no sources. Import sources explicitly.</p>{% endif %}
+    {% else %}<p class="empty-state">当前 Fresh DB 没有 sources。请到 Source 管理页面导入。</p>{% endif %}
   </article>
   <article>
-    <header><strong>Top Events</strong></header>
+    <header><strong>Events</strong></header>
     {% if events %}
     <table><tbody>{% for event in events %}<tr><td><a href="/events/{{ event.event_id }}">{{ event.event_title }}</a></td><td>{{ event.status }}</td></tr>{% endfor %}</tbody></table>
-    {% else %}<p class="empty-state">No events generated yet.</p>{% endif %}
+    {% else %}<p class="empty-state">暂无 events。real-write 后可生成 cluster/event。</p>{% endif %}
   </article>
 </section>
 {% endblock %}

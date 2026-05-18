@@ -1,8 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
-<header class="page-header"><div><h1>Run Preview</h1><p>Review impact before starting.</p></div></header>
-<article><pre>{{ preview | tojson(indent=2) }}</pre></article>
+<header class="page-header"><div><h1>Run Preview / 运行预览</h1><p>启动前请确认影响范围。</p></div></header>
 {% if preview %}
-<form action="/runs/start" method="post"><input type="hidden" name="payload_json" value='{{ payload }}'><button>Start {{ preview.mode }}</button></form>
+<section class="grid two">
+  <article>
+    <header><strong>影响范围</strong></header>
+    <dl>
+      <dt>模式</dt><dd><code>{{ preview.mode }}</code></dd>
+      <dt>source 数量</dt><dd>{{ preview.source_count }}</dd>
+      <dt>是否写入数据库</dt><dd>{{ preview.will_write_items }}</dd>
+      <dt>风险等级</dt><dd>{{ preview.risk_level }}</dd>
+      <dt>影响 Legacy DB</dt><dd>否</dd>
+      <dt>可 cancel</dt><dd>是</dd>
+      <dt>rollback</dt><dd>支持 run-linked inserted items 的 soft rollback preview/commit</dd>
+    </dl>
+  </article>
+  <article><header><strong>数据库</strong></header><pre>{{ preview.database | tojson(indent=2) }}</pre></article>
+</section>
+<article><header><strong>Sources</strong></header><pre>{{ preview.sources | tojson(indent=2) }}</pre></article>
+<form action="/runs/start" method="post">
+  <input type="hidden" name="payload_json" value='{{ payload }}'>
+  <button>Step 7：Start Run / 启动 {{ preview.mode }}</button>
+</form>
+{% else %}
+<p class="empty-state">Preview 失败，请返回 Run 向导检查参数。</p>
 {% endif %}
 {% endblock %}

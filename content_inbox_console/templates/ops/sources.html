@@ -1,37 +1,112 @@
 {% extends "base.html" %}
+{% block title %}Source 管理 - content_inbox_console{% endblock %}
 {% block content %}
-<header class="page-header"><div><h1>Sources</h1><p>Import, inspect, export, and bulk-manage source registry entries.</p></div><a role="button" href="/runs/new">Run Selected</a></header>
+<header class="page-header">
+  <div>
+    <h1>Source 管理</h1>
+    <p>新增、导入、编辑、启用、禁用、归档、批量操作和导出 sources。删除默认是软归档，不会物理删除历史 items。</p>
+  </div>
+  <a role="button" href="/runs/new">选择 sources 创建 run</a>
+</header>
+
 <section class="grid two">
   <article>
-    <form method="get" action="/sources">
-      <input name="keyword" value="{{ keyword }}" placeholder="Search source name or URL">
-      <select name="status"><option value="">Any status</option>{% for s in ["active","disabled","broken","archived"] %}<option value="{{ s }}" {% if status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
-      <button>Search</button>
+    <header><strong>新增单个 source</strong></header>
+    <form action="/sources/check" method="post">
+      <label>标题 / title<input name="source_name" value="{{ draft_source.source_name if draft_source else '' }}" placeholder="示例：OpenAI Blog"></label>
+      <label>RSS/Atom URL<input name="feed_url" value="{{ draft_source.feed_url if draft_source else '' }}" placeholder="https://example.com/feed.xml"></label>
+      <label>站点 URL / site_url<input name="site_url" placeholder="https://example.com"></label>
+      <label>分类 / category<input name="source_category" value="{{ draft_source.source_category if draft_source else '' }}" placeholder="AI/产品"></label>
+      <button>检查 source</button>
     </form>
+    {% if check_result %}
+      <details open><summary>Source 检查结果</summary><pre>{{ check_result | tojson(indent=2) }}</pre></details>
+      {% if check_result.valid and not check_result.duplicate %}
+      <form action="/sources/add" method="post">
+        <input type="hidden" name="source_name" value="{{ draft_source.source_name }}">
+        <input type="hidden" name="feed_url" value="{{ draft_source.feed_url }}">
+        <input type="hidden" name="category" value="{{ draft_source.source_category }}">
+        <label>Tags（逗号分隔）<input name="tags"></label>
+        <label>Notes<textarea name="notes" rows="2"></textarea></label>
+        <button>确认新增 source</button>
+      </form>
+      {% endif %}
+    {% endif %}
   </article>
+
   <article>
+    <header><strong>批量导入 sources</strong></header>
     <form action="/sources/import/preview" method="post">
-      <select name="format"><option value="urls">Pasted URLs</option><option value="csv">CSV</option><option value="json">JSON</option><option value="opml">OPML</option></select>
-      <textarea name="content" rows="5" placeholder="feed_url, source_name, category"></textarea>
-      <button>Import Preview</button>
+      <label>格式
+        <select name="format"><option value="urls">每行 URL</option><option value="csv">CSV text</option><option value="json">JSON text</option><option value="opml">OPML text</option></select>
+      </label>
+      <label>导入内容<textarea name="content" rows="7" placeholder="每行：feed_url, source_name, category"></textarea></label>
+      <button>Preview 导入</button>
     </form>
   </article>
 </section>
+
+<article>
+  <header><strong>导出 Sources</strong></header>
+  <form action="/sources/export" method="post" class="grid">
+    <select name="format"><option value="json">JSON</option><option value="csv">CSV</option><option value="opml">OPML</option></select>
+    <button>导出当前 source registry</button>
+  </form>
+  {% if export_result %}
+    <details open><summary>导出结果（{{ export_result.format }}，{{ export_result.count }} 条）</summary><pre>{{ export_result.content }}</pre></details>
+  {% endif %}
+</article>
+
 {% if import_preview %}
 <article>
-  <header><strong>Import Preview</strong></header>
-  <p>{{ import_preview.stats }}</p>
-  <form action="/sources/import/commit" method="post"><input type="hidden" name="operation_id" value="{{ import_preview.operation_id }}"><button>Commit Import</button></form>
-  <table><tbody>{% for source in import_preview.sources %}<tr><td>{{ source.status }}</td><td>{{ source.source_name }}</td><td><code>{{ source.feed_url }}</code></td></tr>{% endfor %}</tbody></table>
+  <header><strong>Source Import Preview / 导入预览</strong></header>
+  <p>总数 {{ import_preview.stats.total }}，新增 {{ import_preview.stats.new }}，已存在 {{ import_preview.stats.exists }}，文件内重复 {{ import_preview.stats.duplicate_in_file }}。</p>
+  <form action="/sources/import/commit" method="post"><input type="hidden" name="operation_id" value="{{ import_preview.operation_id }}"><button>Commit 导入</button></form>
+  <table><thead><tr><th>状态</th><th>名称</th><th>分类</th><th>URL</th></tr></thead><tbody>{% for source in import_preview.sources %}<tr><td>{{ source.status }}</td><td>{{ source.source_name }}</td><td>{{ source.source_category }}</td><td><code>{{ source.feed_url }}</code></td></tr>{% endfor %}</tbody></table>
 </article>
 {% endif %}
+
+{% if bulk_preview %}
+<article class="warning-banner">
+  <header><strong>Bulk Preview / 批量操作预览</strong></header>
+  <p>操作：<code>{{ bulk_preview.action }}</code>，影响 {{ bulk_preview.source_count }} 个 sources。影响 Legacy DB：{{ bulk_preview.legacy_db_affected }}。</p>
+  <p>删除/归档默认语义：{{ bulk_preview.default_delete_semantics }}</p>
+  <form action="/sources/bulk/commit" method="post"><input type="hidden" name="operation_id" value="{{ bulk_preview.operation_id }}"><button>确认执行批量操作</button></form>
+  <pre>{{ bulk_preview.sources | tojson(indent=2) }}</pre>
+</article>
+{% endif %}
+
 <article>
-  <header><strong>Registry</strong> <span>{{ stats }}</span></header>
+  <header><strong>Source 列表</strong> <span>{{ stats }}</span></header>
+  <form method="get" action="/sources" class="grid">
+    <input name="keyword" value="{{ keyword }}" placeholder="搜索 source 名称或 URL">
+    <select name="status"><option value="">任意状态</option>{% for s in ["active","disabled","broken","archived"] %}<option value="{{ s }}" {% if status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+    <button>搜索 / 刷新</button>
+  </form>
+
   {% if sources %}
-  <table>
-    <thead><tr><th>ID</th><th>Name</th><th>Status</th><th>Last run</th><th>URL</th></tr></thead>
-    <tbody>{% for source in sources %}<tr><td><a href="/sources/{{ source.source_id }}">{{ source.source_id }}</a></td><td>{{ source.source_name }}</td><td>{{ source.status }}</td><td>{{ source.last_run_id }}</td><td><code>{{ source.feed_url }}</code></td></tr>{% endfor %}</tbody>
-  </table>
-  {% else %}<p class="empty-state">No sources in this fresh DB. Import sources above.</p>{% endif %}
+  <form action="/sources/bulk" method="post">
+    <div class="table-container">
+      <table>
+        <thead><tr><th>选择</th><th>source_id</th><th>名称</th><th>状态</th><th>最近 run</th><th>URL</th></tr></thead>
+        <tbody>{% for source in sources %}<tr>
+          <td><input type="checkbox" name="source_ids" value="{{ source.source_id }}"></td>
+          <td><a href="/sources/{{ source.source_id }}">{{ source.source_id }}</a></td>
+          <td>{{ source.source_name }}</td>
+          <td>{{ source.status }}</td>
+          <td>{{ source.last_run_id }}</td>
+          <td><code>{{ source.feed_url }}</code></td>
+        </tr>{% endfor %}</tbody>
+      </table>
+    </div>
+    <label>批量操作
+      <select name="action"><option value="enable">启用</option><option value="disable">禁用</option><option value="archive">归档/删除</option><option value="delete">删除/归档</option><option value="export">导出选中</option></select>
+    </label>
+    <button name="preview" value="1">Preview 批量操作</button>
+  </form>
+  <form action="/runs/new" method="get"><button>去 Run 向导选择 sources</button></form>
+  {% else %}
+  <p class="empty-state">当前 Fresh DB 没有 sources。请新增或批量导入。</p>
+  {% endif %}
 </article>
 {% endblock %}

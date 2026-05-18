@@ -172,6 +172,41 @@ body > nav {
   padding: 0.75rem;
 }
 
+.env-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--pico-muted-border-color);
+  border-left: 4px solid var(--console-accent);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--console-accent) 8%, transparent);
+  font-size: 0.9rem;
+}
+
+.danger-zone {
+  border-left: 4px solid var(--console-danger);
+}
+
+.source-select-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.5rem;
+  max-height: 420px;
+  overflow: auto;
+  padding: 0.5rem;
+  border: 1px solid var(--pico-muted-border-color);
+}
+
+.source-check {
+  display: block;
+  padding: 0.5rem;
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: 4px;
+}
+
 pre {
   white-space: pre-wrap;
   word-break: break-word;

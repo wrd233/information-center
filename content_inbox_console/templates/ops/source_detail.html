@@ -1,9 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
-<header class="page-header"><div><h1>{{ data.source.source_name or source_id }}</h1><p><code>{{ data.source.feed_url }}</code></p></div><a role="button" href="/runs/new">Run</a></header>
+<header class="page-header">
+  <div>
+    <h1>Source Detail / {{ data.source.source_name or source_id }}</h1>
+    <p><code>{{ data.source.feed_url }}</code></p>
+  </div>
+  <div>
+    <form method="post" action="/sources/{{ source_id }}/archive"><button>归档/删除</button></form>
+    <form method="post" action="/sources/{{ source_id }}/restore"><button>恢复启用</button></form>
+  </div>
+</header>
 <section class="grid two">
-  <article><header><strong>Source</strong></header><pre>{{ data.source | tojson(indent=2) }}</pre></article>
-  <article><header><strong>Audit</strong></header><pre>{{ data.audit | tojson(indent=2) }}</pre></article>
+  <article>
+    <header><strong>编辑 source</strong></header>
+    <form action="/sources/{{ source_id }}/edit" method="post">
+      <label>名称<input name="source_name" value="{{ data.source.source_name }}"></label>
+      <label>分类<input name="source_category" value="{{ data.source.source_category or '' }}"></label>
+      <label>Feed URL<input name="feed_url" value="{{ data.source.feed_url }}"></label>
+      <label>状态<select name="status">{% for s in ["active","disabled","broken","archived"] %}<option value="{{ s }}" {% if data.source.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></label>
+      <label>优先级<input type="number" name="priority" value="{{ data.source.priority or 3 }}"></label>
+      <label>Tags<input name="tags" value="{{ data.source.tags | join(',') if data.source.tags else '' }}"></label>
+      <label>Notes<textarea name="notes">{{ data.source.notes or '' }}</textarea></label>
+      <button>保存修改</button>
+    </form>
+  </article>
+  <article><header><strong>Source 原始状态</strong></header><pre>{{ data.source | tojson(indent=2) }}</pre></article>
 </section>
-<article><header><strong>Recent Items</strong></header>{% if data.recent_items %}<table><tbody>{% for item in data.recent_items %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td>{{ item.published_at }}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="empty-state">No items yet.</p>{% endif %}</article>
+<section class="grid two">
+  <article><header><strong>最近 Items</strong></header>{% if data.recent_items %}<table><tbody>{% for item in data.recent_items %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td>{{ item.published_at }}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="empty-state">暂无 items。</p>{% endif %}</article>
+  <article><header><strong>Audit Log</strong></header><pre>{{ data.audit | tojson(indent=2) }}</pre></article>
+</section>
 {% endblock %}

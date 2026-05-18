@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<header class="page-header"><div><h1>Reports</h1><p>Generate and export run/source/event/entity/topic reports.</p></div></header>
-<form method="post" action="/reports/generate" class="grid"><select name="report_type"><option value="summary">Summary</option><option value="source_health">Source Health</option><option value="event">Event</option></select><button>Generate</button></form>
-{% if reports %}{% for report in reports %}<article><header><strong>{{ report.title }}</strong></header><pre>{{ report.body_markdown }}</pre></article>{% endfor %}{% else %}<p class="empty-state">No reports yet.</p>{% endif %}
+<header class="page-header"><div><h1>Report 报告</h1><p>生成和导出 run/source/event/entity/topic 相关报告。</p></div></header>
+<form method="post" action="/reports/generate" class="grid"><select name="report_type"><option value="summary">Summary</option><option value="source_health">Source Health</option><option value="event">Event</option></select><button>生成 Report</button></form>
+{% if reports %}{% for report in reports %}<article><header><strong>{{ report.title }}</strong></header><pre>{{ report.body_markdown }}</pre></article>{% endfor %}{% else %}<p class="empty-state">暂无 reports。</p>{% endif %}
 {% endblock %}

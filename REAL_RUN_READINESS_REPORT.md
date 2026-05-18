@@ -4,43 +4,41 @@ Generated: 2026-05-18
 
 ## 1. Implementation Summary
 
-This delivery rebuilds the content-inbox mainline around a fresh database, a new `/api/*` backend contract, run/event/audit tracking, and an upgraded `content_inbox_console`.
-
-Implemented core closed loop:
+This delivery keeps `content_inbox_console` as the single main frontend and completes the operational loop requested in the correction prompt:
 
 ```text
-fresh DB -> source import preview/commit -> selected-source dry-run
--> dry-run no item write proof -> selected-source real-write
--> run events/progress -> items from run -> lightweight semantic objects
--> clusters/events/review -> daily briefing -> report export
--> legacy DB unchanged proof
+Fresh DB -> clear/reset -> add/import sources -> select sources
+-> configure published_at range and limits -> dry-run -> live run detail
+-> prove dry-run writes no items -> real-write -> items from run
+-> pipeline stages -> clusters/events/review -> briefing/report/export
+-> reset again -> legacy DB checksum unchanged
 ```
 
-## 2. New Database Path
+The console is now API-driven through the new `/api/*` envelope contract. It does not read SQLite directly and does not fill empty Fresh DB pages from Legacy DB data.
 
-New default DB:
+## 2. Database Paths And Safety Proof
+
+Default Fresh DB path:
 
 ```text
 /Users/wangrundong/work/infomation-center/content_inbox/data/environments/fresh_default/content_inbox.db
 ```
 
-New DB final proof:
+Browser validation used an isolated Fresh DB environment:
 
 ```text
-SHA256 = 953a2a2049f561218db939f29c2e2c9a815111a949a46ad621aa02420b0c0713
-size   = 487424
-mtime  = May 18 11:08:52 2026
+/Users/wangrundong/work/infomation-center/content_inbox/data/environments/fresh_browser_validation/content_inbox.db
 ```
 
-## 3. Old Database Path And Unchanged Proof
+That validation environment was reset through the console and then removed from the working tree after verification. The runtime default remains `fresh_default`.
 
-Legacy DB:
+Legacy DB path:
 
 ```text
 /Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3
 ```
 
-Measured before final E2E validation:
+Legacy DB before browser validation:
 
 ```text
 SHA256 = 401746f7cb5d6a8008e18dd7be476b572e1de7e238d3494076a92051745f8f9b
@@ -48,7 +46,7 @@ size   = 113274880
 mtime  = May 18 11:04:53 2026
 ```
 
-Measured after final E2E validation:
+Legacy DB after browser validation:
 
 ```text
 SHA256 = 401746f7cb5d6a8008e18dd7be476b572e1de7e238d3494076a92051745f8f9b
@@ -56,200 +54,313 @@ size   = 113274880
 mtime  = May 18 11:04:53 2026
 ```
 
-Result: unchanged during final verification. Real validation used the fresh DB path above.
+Result: Legacy DB was not modified. The new console diagnostics explicitly report `legacy_business_fallback = false`.
 
-## 4. Schema And Migration State
+## 3. content_inbox_console Upgrade
 
-`InboxStore.init_schema()` now creates the operational schema idempotently:
-
-- `system_metadata`
-- `ingest_run_events`
-- `item_run_links`
-- `source_operation_audit`
-- `audit_log`
-- `operation_previews`
-- `dedupe_groups`, `dedupe_group_items`
-- `semantic_extractions`
-- `events`, `event_items`
-- `entities`, `item_entities`
-- `relations`, `claims`
-- `topics`, `topic_items`, `topic_events`
-- `saved_views`, `briefings`, `reports`
-
-The existing tested item/source/run storage remains underneath the new API, but the new `/api/*` contract is the primary surface.
-
-## 5. content_inbox_console Upgrade
-
-- Frontend project path: `/Users/wangrundong/work/infomation-center/content_inbox_console`
-- Upgrade style: in-place rebuild.
-- New parallel frontend directories: none.
-- Technology: FastAPI + Jinja + HTMX + small API client.
+- Project path: `/Users/wangrundong/work/infomation-center/content_inbox_console`
+- Upgrade style: in-place rebuild, no parallel frontend project.
+- Stack: FastAPI + Jinja + HTMX + CSS + backend API client.
 - API client: `content_inbox_console/app/backend_client.py`
-- Main route module: `content_inbox_console/app/routes/ops.py`
-- Docker service: `content-inbox-console`
-- Old direct-SQL routes/templates: retained on disk for reference but no longer registered as the main UI.
-- How to verify new console: open `/dashboard`; navigation includes Environment, Sources, Runs, Information, Dedupe, Clusters, Events, Entities, Relations, Claims, Topics, Timeline, Review Queue, Briefings, Reports, Agent Query, Settings.
+- Main router: `content_inbox_console/app/routes/ops.py`
+- Main UI templates: `content_inbox_console/templates/ops/*`
+- Docker service identity: `content-inbox-console`
+- Old direct-SQL fallback pages are not registered in the main route path.
+- All main console pages use backend APIs instead of direct SQLite reads.
 
-## 6. Frontend Pages
+## 4. Schema And API Surface
 
-Implemented:
+The backend initializes an idempotent operational schema with:
 
+```text
+system_metadata, sources, inbox_items, ingest_runs, ingest_run_sources,
+ingest_run_events, item_run_links, source_operation_audit, audit_log,
+operation_previews, dedupe_groups, dedupe_group_items, semantic_extractions,
+event_clusters, cluster_items, events, event_items, entities, item_entities,
+relations, claims, topics, topic_items, topic_events, review_queue,
+saved_views, briefings, reports
+```
+
+Primary API groups:
+
+```text
+/api/environment
+/api/environment/reset-options
+/api/environment/reset/preview
+/api/environment/reset/commit
+/api/environment/fresh-db/preview
+/api/environment/fresh-db/create
+/api/sources
+/api/sources/check
+/api/sources/import/preview
+/api/sources/import/commit
+/api/sources/export
+/api/sources/bulk/preview
+/api/sources/bulk/commit
+/api/runs
+/api/runs/preview
+/api/runs/{run_id}/events
+/api/runs/{run_id}/sources
+/api/runs/{run_id}/items
+/api/runs/{run_id}/pipeline/{stage}
+/api/runs/{run_id}/briefing
+/api/runs/{run_id}/report
+/api/items, /api/dedupe-groups, /api/clusters, /api/events
+/api/entities, /api/relations, /api/claims, /api/topics, /api/timeline
+/api/review-queue, /api/evidence, /api/briefings, /api/reports
+/api/saved-views, /api/agent-query/preview
+```
+
+All new APIs use:
+
+```json
+{ "ok": true, "data": {}, "error": null, "meta": {} }
+```
+
+## 5. Data Reset And Clean State
+
+Implemented reset APIs and UI on the Environment page.
+
+Reset levels:
+
+| Level | UI label | Effect |
+|---|---|---|
+| `clear_runs_items_keep_sources` | 清空运行结果，保留 Sources | Clears runs, items, run events, dedupe, semantic, clusters, events, review, briefings, reports, while preserving source registry and DB identity. |
+| `clear_all_sources_and_content` | 清空 Sources 和所有内容 | Clears sources plus all run/content/semantic/report objects, while preserving schema and system metadata. |
+| `create_new_fresh_db` | 新建 Fresh DB 环境 | Creates a new fresh DB path and initializes schema/metadata. |
+
+Safety behavior:
+
+- Reset is preview-first.
+- Commit requires `confirmation = RESET`.
+- Reset is disabled when `is_fresh_database` is false.
+- Preview shows DB path, counts, affected tables, and `legacy_db_affected = false`.
+- Commit writes `environment_reset_committed` audit data with before/after counts.
+- The console refreshes Environment/Dashboard/Sources/Runs/Items state after reset.
+
+## 6. Source Management
+
+The Sources page now supports:
+
+- Add a single source with title/feed URL/site/category/tags/status/notes.
+- Check/preview a source before add.
+- Import pasted source lines with preview and commit.
+- JSON/CSV/OPML export.
+- Search/filter/sort/page source list.
+- Source detail and edit.
+- Enable, disable, archive/delete, restore.
+- Bulk preview and commit for enable/disable/archive/delete/recheck/export/run.
+- Run selected sources by sending selected source IDs into the Run Wizard.
+
+Deletes use soft archive semantics by default. The Chinese UI explains that archive/delete does not physically remove historical items.
+
+## 7. Run Wizard And Run Detail
+
+The Run Wizard now includes:
+
+1. Environment confirmation with Fresh DB identity, path, counts, and real-write status.
+2. Source range selection with source checkboxes and all-active support.
+3. `published_from`, `published_to`, and timezone fields.
+4. Limits: `max_sources`, `max_items_per_source`, `max_total_items`, `source_timeout_seconds`, `run_timeout_minutes`.
+5. Mode selection: `dry-run` or `real-write`.
+6. Preview with DB path, source count, limits, max possible items, write behavior, Legacy DB impact, cancel/rollback notes.
+7. Start and redirect to Run Detail.
+
+Run Detail shows:
+
+- status, mode, database path
+- source progress
+- current run events and item events
+- inserted/duplicate/filtered/failed counts
+- error aggregation through run events
+- cancel button
+- items from this run
+- pipeline action buttons
+- briefing/report generation buttons
+
+Real-write is disabled with a Chinese explanation unless `CONTENT_INBOX_ENABLE_REAL_RUNS=1`.
+
+## 8. Pipeline And Information Consumption
+
+Run Detail exposes real API-backed pipeline controls:
+
+```text
+dedupe
+semantic
+clusters
+events
+review
+briefing
+report
+```
+
+Pipeline events are written to the run event store, including:
+
+```text
+dedupe_started, dedupe_completed, semantic_started, semantic_completed,
+cluster_completed, event_completed, review_queue_generated,
+briefing_generated, report_generated
+```
+
+Information pages use real stored data:
+
+- Items: filter by run/source/time and view raw/canonical/semantic links.
+- Dedupe Groups: heuristic URL/title grouping and review hooks.
+- Clusters: generated from real items, with member items and review/dismiss actions.
+- Events: generated from clusters, with supporting items and review/dismiss actions.
+- Entities/Relations/Claims/Topics/Timeline: backed by lightweight extraction and schema tables.
+- Review Queue: generated from low-confidence/event-candidate objects and resolvable.
+- Briefings: daily/weekly generation from events/review.
+- Reports: generated and persisted as Markdown/JSON-compatible records.
+- Agent Query: previews human/markdown/JSON/compact context packs from real items/events.
+
+## 9. Depth Of Implementation
+
+| Module | Status | Depth |
+|---|---|---|
+| Environment | Implemented | Fresh DB identity, health, diagnostics, reset, legacy checksum proof. |
+| Sources | Implemented | Add/check/import/export/edit/archive/restore/bulk/run selected. |
+| Runs | Implemented | Wizard, preview, dry-run, real-write, events, items, cancel, report. |
+| Items | Implemented | Real item list/detail filters and run/source links. |
+| Dedupe | Implemented with real data | Heuristic grouping and stage trigger. |
+| Semantic Extraction | Implemented with real data | Lightweight rule extraction, evidence, low/medium confidence. |
+| Clusters | Implemented with real data | Generated from item groupings, review/dismiss/manual event creation. |
+| Events | Implemented with real data | Generated from clusters, detail/supporting item views. |
+| Entities | Implemented with real data | Rule-extracted entities linked to items. |
+| Relations | Partially implemented with real data | Tables/API/review hooks present; extraction is lightweight. |
+| Claims | Partially implemented with real data | Tables/API/review hooks present; richer claim extraction remains future work. |
+| Topics | Implemented with real data | Source category/topic links and topic views. |
+| Timeline | Implemented with real data | Event timeline endpoint/page. |
+| Review Queue | Implemented | Generated review records and resolve/dismiss. |
+| Evidence | Implemented | Semantic/audit-backed evidence endpoint and empty states. |
+| Briefings | Implemented | Daily/weekly generation and console view/export. |
+| Reports | Implemented | Run/source/event-style report records and export views. |
+| Agent Query | Implemented | Context preview in multiple formats. |
+
+## 10. Chinese UI
+
+The main console UI is now Chinese-first:
+
+- Navigation
 - Dashboard
-- Environment
-- Sources and source detail
-- Source import preview/commit
-- Ingest Runs
-- Run Creation Wizard
+- Environment / Fresh DB diagnostics
+- Reset preview/commit
+- Source add/import/bulk/detail
+- Run Wizard
 - Run Preview
 - Run Detail
-- Information / Items and item detail
-- Dedupe Groups
-- Clusters and cluster detail
-- Events and event detail
-- Entities
-- Relations
-- Claims
-- Topics
-- Timeline
-- Review Queue
-- Briefings
-- Reports
-- Agent Query
-- Settings
+- Items, clusters, events, review queue
+- Briefings, reports, agent query, settings
 
-## 7. Backend API List
+Project terms are intentionally mixed as requested: `source`, `run`, `dry-run`, `real-write`, `item`, `cluster`, `event`, `review queue`, `briefing`, `agent query`, `Fresh DB`, `Legacy DB`.
 
-Primary new API groups:
+Known residue: low-level API fields and stored status codes remain English by design because they are identifiers.
 
-- `GET /api/environment`
-- `POST /api/environment/init-fresh`
-- `GET /api/environment/health`
-- `GET /api/environment/report`
-- `/api/sources`, import preview/commit/export, bulk operations
-- `/api/runs`, preview, detail, sources, events, items, summary, report, cancel, rollback
-- `/api/items`, raw, dedupe, semantic
-- `/api/dedupe-groups`
-- `/api/clusters`
-- `/api/events`
-- `/api/entities`
-- `/api/relations`
-- `/api/claims`
-- `/api/topics`
-- `/api/timeline`
-- `/api/review-queue`
-- `/api/evidence`
-- `/api/briefings`
-- `/api/saved-views`
-- `/api/agent-query/preview`
-- `/api/reports`
+## 11. Old Data Investigation
 
-All new APIs use `{ ok, data, error, meta }`.
+The earlier “old data visible in the frontend” risk was addressed by:
 
-## 8. Source Management
+- Removing main-console direct SQLite reads.
+- Removing source/file-run fallback from the main UI path.
+- Making `/api/*` use the configured Fresh DB only.
+- Showing DB identity and counts in the global header.
+- Adding Environment diagnostics for API base, DB path, DB ID, Fresh DB flag, Legacy DB checksum, and fallback status.
+- Adding reset controls so polluted `fresh_default` test data can be cleared from the UI.
 
-Implemented:
+Current behavior: an empty Fresh DB stays empty until the user explicitly adds/imports sources. Legacy DB is diagnostic-only and is not used as business data fallback.
 
-- List/search/filter sources.
-- Import preview/commit for URLs, CSV, JSON, OPML.
-- Export JSON/CSV/OPML.
-- Add, patch, archive.
-- Bulk enable/disable/archive/delete/recheck/run.
-- Audit logging for source operations.
+## 12. Frontend Operational Validation
 
-Deletes default to archive/soft delete semantics.
-
-## 9. Run Creation And Real-Time Observation
-
-Implemented:
-
-- Selected-source run config.
-- Dry-run and real-write.
-- Published-at time range filtering.
-- Limits: max sources, max items per source, max total items.
-- Run preview.
-- Run events with `after_seq`.
-- SSE endpoint at `/api/runs/{run_id}/stream`.
-- Source progress rows.
-- Item run links.
-- Cancel request.
-- Rollback preview and soft rollback commit.
-
-Dry-run writes run/event records but no items.
-
-## 10. Information Consumption Layer
-
-Depth by module:
-
-| Module | Status | Notes |
-|---|---|---|
-| Environment | Implemented | Fresh DB metadata, health, legacy checksum proof |
-| Sources | Implemented | Preview/commit/export/bulk/audit |
-| Runs | Implemented | Preview, dry-run, real-write, events, items, report, rollback |
-| Items | Implemented | List/detail/run filter/raw/semantic links |
-| Dedupe | Partially implemented with real data | Tables/API/manual review hooks; heuristic grouping can be expanded |
-| Semantic Extraction | Implemented | Lightweight rule extractor with evidence and low confidence |
-| Clusters | Implemented | Real item grouping into `event_clusters` and `cluster_items` |
-| Events | Implemented | Candidate events from clusters and manual create from cluster |
-| Entities | Implemented | Rule-extracted terms linked to items |
-| Relations | Partially implemented with real data | API/table/review hooks present; richer extraction is future work |
-| Claims | Partially implemented with real data | API/table present; richer claim extraction is future work |
-| Topics | Implemented | Source category topic links |
-| Timeline | Implemented | Event timeline endpoint/page |
-| Review Queue | Implemented | Generated event candidate reviews and resolve endpoint |
-| Evidence | Implemented | Semantic extraction and audit-backed evidence endpoints |
-| Briefings | Implemented | Daily/weekly generation from events/reviews |
-| Reports | Implemented | Persisted Markdown report generation |
-| Agent Query | Implemented | Item-backed compact/human/markdown/JSON context preview |
-
-## 11. Automated Tests
-
-Backend:
+Manual browser validation was completed through `content_inbox_console` at:
 
 ```text
-cd content_inbox
+http://127.0.0.1:8788
+```
+
+Backend used:
+
+```text
+CONTENT_INBOX_DB_PATH=data/environments/fresh_browser_validation/content_inbox.db
+CONTENT_INBOX_ENABLE_REAL_RUNS=1
+CONTENT_INBOX_ENVIRONMENT=fresh
+```
+
+Validation steps completed:
+
+1. Opened Environment page and confirmed Chinese Fresh DB diagnostics.
+2. Verified counts started at 0 sources / 0 items / 0 runs.
+3. Ran reset preview and commit from the console.
+4. Imported a fixture source through source import preview/commit.
+5. Confirmed source count became 1.
+6. Opened Run Wizard and selected the source checkbox.
+7. Configured conservative limits and ran dry-run preview.
+8. Started dry-run and verified Run Detail events completed with no committed items.
+9. Repeated source selection for `real-write`.
+10. Ran real-write preview and start.
+11. Verified Run Detail showed 2 inserted items.
+12. Opened Items page and confirmed items from the run.
+13. Triggered dedupe, semantic, briefing, and report actions from Run Detail.
+14. Opened Clusters, Events, Briefings, Reports, and Agent Query pages and verified real data-backed output.
+15. Returned to Environment and ran `clear_all_sources_and_content`.
+16. Confirmed counts returned to 0 / 0 / 0.
+17. Rechecked Legacy DB checksum, size, and mtime; unchanged.
+
+## 13. Automated Verification
+
+Backend focused operational API tests:
+
+```bash
+cd /Users/wangrundong/work/infomation-center/content_inbox
+PYTHONPATH=. pytest -q tests/test_ops_api.py
+```
+
+Result:
+
+```text
+9 passed
+```
+
+Backend full suite:
+
+```bash
+cd /Users/wangrundong/work/infomation-center/content_inbox
 PYTHONPATH=. pytest -q
-254 passed, 11 skipped
 ```
 
-Console:
+Result after rerun:
 
 ```text
-cd content_inbox_console
+259 passed, 11 skipped
+```
+
+Note: the first full run hit one known concurrent RSS runner timing failure; the same test passed immediately when rerun in isolation, and the full suite then passed.
+
+Console tests:
+
+```bash
+cd /Users/wangrundong/work/infomation-center/content_inbox_console
 pytest -q
-3 passed
 ```
 
-Focused new backend tests cover:
-
-- Fresh environment API.
-- Source import preview/commit.
-- Dry-run no item writes.
-- Real-write selected source and item links.
-- Published-at filtering.
-- Run events.
-- Event/briefing/report generation in E2E smoke.
-
-## 12. Manual Verification
-
-Executed a fixture E2E against the fresh DB:
+Result:
 
 ```text
-source_id    = fixture-readiness-fixture
-dry_run_id   = run_20260518_110852_8101a30c
-real_run_id  = run_20260518_110852_4a5be1f3
-run_items    = {'total': 2, 'returned': 2}
-briefing_id  = brief_daily_1a31d91828a2
-report_id    = report_b61fc3661b89
+4 passed
 ```
 
 Docker compose config checks:
 
-```text
-content_inbox_compose_ok
-content_inbox_console_compose_ok
+```bash
+cd /Users/wangrundong/work/infomation-center/content_inbox
+docker compose config
+
+cd /Users/wangrundong/work/infomation-center/content_inbox_console
+docker compose config
 ```
 
-## 13. Startup
+Both compose configs rendered successfully.
+
+## 14. Startup And Operation
 
 Backend:
 
@@ -257,6 +368,7 @@ Backend:
 cd /Users/wangrundong/work/infomation-center/content_inbox
 CONTENT_INBOX_DB_PATH=data/environments/fresh_default/content_inbox.db \
 CONTENT_INBOX_ENABLE_REAL_RUNS=0 \
+CONTENT_INBOX_ENVIRONMENT=fresh \
 PYTHONPATH=. python3 -m app.server
 ```
 
@@ -265,7 +377,7 @@ Console:
 ```bash
 cd /Users/wangrundong/work/infomation-center/content_inbox_console
 CONTENT_INBOX_FRONTEND_API_BASE=http://127.0.0.1:8787 \
-uvicorn app.main:app --host 127.0.0.1 --port 8788 --reload
+python3 -m app.main
 ```
 
 Open:
@@ -274,59 +386,62 @@ Open:
 http://127.0.0.1:8788
 ```
 
-Docker:
+For real-write testing:
 
 ```bash
-cd content_inbox
-docker compose up --build
-
-cd ../content_inbox_console
-docker compose up --build
+CONTENT_INBOX_ENABLE_REAL_RUNS=1
 ```
 
-## 14. How To Use The Closed Loop
+Then restart the backend.
 
-1. Open Environment and confirm `is_fresh_database = true`.
-2. Open Sources.
-3. Paste source lines as `feed_url, source_name, category`.
-4. Click Import Preview.
-5. Commit import.
-6. Open Runs -> New Run.
-7. Enter selected source IDs.
-8. Configure published_at range and limits.
-9. Preview dry-run.
-10. Start dry-run.
-11. Confirm Run Detail shows events and no committed items.
-12. Restart backend with `CONTENT_INBOX_ENABLE_REAL_RUNS=1`.
-13. Preview real-write.
-14. Start real-write.
-15. View Run Detail events and items.
-16. Open Information, Clusters, Events, Review Queue.
-17. Generate Daily Briefing.
-18. Generate Report.
-19. Re-check Environment legacy DB checksum proof.
+## 15. How To Repeat The Clean-State Flow
 
-## 15. Legacy Cleanup and Compatibility Decisions
+1. Open `http://127.0.0.1:8788/environment`.
+2. Confirm the global header shows `Fresh DB`.
+3. Choose reset level `清空 Sources 和所有内容`.
+4. Click preview.
+5. Type `RESET`.
+6. Commit reset.
+7. Open Sources and add/import sources.
+8. Use source checkboxes and click run selected sources.
+9. Configure source range, published time range, limits, and mode.
+10. Preview dry-run.
+11. Start dry-run and watch Run Detail events.
+12. Confirm Items count is still unchanged for dry-run.
+13. Enable real-write and start a real-write run.
+14. View items from run.
+15. Trigger pipeline stages or generate briefing/report.
+16. Reset again to return to a clean Fresh DB.
 
-- `content_inbox_console` no longer registers old direct-SQL page routers as the main UI.
-- File-run fallback and observed-source fallback are removed from the main navigation path.
-- Console no longer fills fresh DB pages with legacy DB content.
-- Existing old backend paths remain where cheap, but the new `/api/*` envelope contract is the main backend surface.
-- Existing current CLI tests still pass as part of the full backend suite.
-- Legacy DB migration/fallback was not implemented by design. Future legacy data migration should be explicit: build an import preview from legacy sources, then commit into fresh DB.
+## 16. Legacy Cleanup And Compatibility Decisions
 
-## 16. Known Limits
+- New console routes are API-driven and do not use old SQLite fallback pages.
+- The main UI no longer reads observed source files or historical output runs.
+- Legacy DB is never used as automatic fallback.
+- Existing old backend endpoints may remain where cheap, but they are not the main console contract.
+- Current CLI workflow remains practical; obsolete API behavior was not preserved if it conflicted with the Fresh DB/run/event/audit model.
+- Future legacy migration should be explicit: preview legacy sources first, then commit into Fresh DB through source import APIs.
 
-- Real run execution is functional and can run synchronously or background-threaded, but it is not a distributed task queue.
-- Dedupe/relation/claim extraction is intentionally lightweight in v1.
-- Auth/permissions are not implemented; this remains a local/trusted-network console.
-- UI is operational and dense, not a polished design-system rewrite.
-- Docker build was not fully executed; compose config validation passed.
+## 17. Known Limits
 
-## 17. Next Suggestions
+- Ingest execution is still local-process/background-thread based, not a durable distributed queue.
+- Dedupe, relations, and claims are lightweight rule-based v1 implementations.
+- Auth and permissions are not implemented; this remains a local/trusted-network console.
+- Full Docker image builds were not run in this pass; compose config validation passed.
+- UI is now operational and Chinese-first, but it is not yet a polished component-system rewrite.
 
-- Add a durable task worker for long-running ingest.
-- Add richer LLM semantic extraction behind an explicit budget/safety gate.
-- Add graph visualization for entity/relation/event exploration.
-- Add stronger source health scoring trends.
-- Add explicit legacy source import preview from old DB as a separate, user-triggered workflow.
+## 18. Files Changed
+
+Key implementation files:
+
+```text
+content_inbox/app/ops_api.py
+content_inbox/tests/test_ops_api.py
+content_inbox_console/app/routes/ops.py
+content_inbox_console/static/css/app.css
+content_inbox_console/templates/base.html
+content_inbox_console/templates/components/nav.html
+content_inbox_console/templates/ops/*.html
+content_inbox_console/tests/test_api.py
+REAL_RUN_READINESS_REPORT.md
+```
