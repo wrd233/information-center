@@ -1,5 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
-<header class="page-header"><div><h1>{{ title }}</h1><p>数据来自当前 Fresh DB 和新的 content-inbox API，不读取 Legacy DB 业务数据。</p></div></header>
-{% if items %}<div class="object-list">{% for item in items %}<article><pre>{{ item | tojson(indent=2) }}</pre></article>{% endfor %}</div>{% else %}<p class="empty-state">暂无 {{ title }} 数据。</p>{% endif %}
+<header class="page-header">
+  <div>
+    <p class="eyebrow">高级调试</p>
+    <h1>{{ title }}</h1>
+    <p>这里展示当前 Fresh DB 的结构化对象。默认先给可读摘要，原始 JSON 放在折叠区。</p>
+  </div>
+</header>
+{% if items %}
+<div class="object-list">
+  {% for item in items %}
+  <article>
+    {% set object_id = item.event_id or item.cluster_id or item.item_id or item.entity_id or item.relation_id or item.claim_id or item.topic_id or item.dedupe_group_id or item.saved_view_id or item.extraction_id or item.id %}
+    {% set object_title = item.event_title or item.cluster_title or item.title or item.entity_name or item.claim_text or item.topic_name or item.name or object_id %}
+    <header>
+      <strong>
+        {% if item.event_id %}<a href="/events/{{ item.event_id }}">{{ object_title }}</a>
+        {% elif item.cluster_id %}<a href="/clusters/{{ item.cluster_id }}">{{ object_title }}</a>
+        {% elif item.item_id %}<a href="/items/{{ item.item_id }}">{{ object_title }}</a>
+        {% else %}{{ object_title }}{% endif %}
+      </strong>
+    </header>
+    <p>{{ item.event_summary or item.cluster_summary or item.topic_summary or item.reason or item.summary or "暂无摘要。" }}</p>
+    <p>
+      {% if item.status %}<mark class="chip">{{ item.status }}</mark>{% endif %}
+      {% if item.confidence %}<mark class="chip">confidence {{ item.confidence }}</mark>{% endif %}
+      {% if object_id %}<code>{{ object_id }}</code>{% endif %}
+    </p>
+    <details>
+      <summary>原始 JSON</summary>
+      <pre>{{ item | tojson(indent=2) }}</pre>
+    </details>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty-state">暂无 {{ title }} 数据。通常需要先完成 real-write 并运行对应 pipeline stage。</p>
+{% endif %}
 {% endblock %}

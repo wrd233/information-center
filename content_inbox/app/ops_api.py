@@ -143,9 +143,13 @@ def environment_snapshot(store: InboxStore) -> dict[str, Any]:
     }
 
 
-RESET_TABLES_KEEP_SOURCES = [
+OUTPUT_TABLES = [
     "reports",
     "briefings",
+    "saved_views",
+]
+
+PIPELINE_OUTPUT_TABLES = [
     "review_queue",
     "topic_events",
     "topic_items",
@@ -168,6 +172,9 @@ RESET_TABLES_KEEP_SOURCES = [
     "item_cards",
     "llm_call_logs",
     "event_clusters",
+]
+
+RUN_RESULT_TABLES = [
     "item_run_links",
     "ingest_run_events",
     "rss_ingest_run_sources",
@@ -175,7 +182,66 @@ RESET_TABLES_KEEP_SOURCES = [
     "inbox_items",
 ]
 
-RESET_TABLES_CLEAR_ALL = ["rss_sources", "source_operation_audit", "operation_previews", *RESET_TABLES_KEEP_SOURCES]
+RESET_TABLES_KEEP_SOURCES = [*OUTPUT_TABLES, *PIPELINE_OUTPUT_TABLES, *RUN_RESULT_TABLES]
+RESET_TABLES_CLEAR_ALL = ["rss_sources", *RESET_TABLES_KEEP_SOURCES]
+RESET_SCOPE_DETAILS = {
+    "clear_runs_items_keep_sources": {
+        "label": "清空运行结果，保留 Sources",
+        "description": "回到“source 已准备好，但还没有 run/item/pipeline 输出”的状态。",
+        "clears": ["runs", "run events", "item_run_links", "inbox_items", "dedupe", "semantic", "clusters/events", "review queue", "briefings/reports"],
+        "keeps": ["source registry", "DB identity", "system metadata", "audit log"],
+        "risk_level": "high",
+        "confirmation": "RESET",
+    },
+    "clear_all_sources_and_content": {
+        "label": "清空 Sources 和所有内容",
+        "description": "回到空 Fresh DB，仅保留 schema、DB identity、system metadata 和 audit。",
+        "clears": ["sources", "runs", "items", "pipeline outputs", "review queue", "briefings/reports"],
+        "keeps": ["DB identity", "system metadata", "audit log"],
+        "risk_level": "critical",
+        "confirmation": "RESET",
+    },
+    "clear_pipeline_outputs_keep_items": {
+        "label": "只清空 pipeline 派生数据，保留原始 items",
+        "description": "用于重新跑 dedupe / semantic / clusters / events / review，不重新抓取 source。",
+        "clears": ["dedupe", "semantic", "clusters/events", "entities/relations/claims/topics/timeline", "review queue", "briefings/reports"],
+        "keeps": ["sources", "runs", "run events", "item_run_links", "inbox_items"],
+        "risk_level": "medium",
+        "confirmation": "RESET",
+    },
+    "clear_outputs_keep_events": {
+        "label": "只清空 briefing/report/agent 输出",
+        "description": "用于重新生成信息消费输出，不影响 events/review/items。",
+        "clears": ["briefings", "reports", "saved views"],
+        "keeps": ["sources", "runs", "items", "clusters/events", "review queue"],
+        "risk_level": "medium",
+        "confirmation": "RESET",
+    },
+    "clear_by_run_id": {
+        "label": "清空指定 run 的结果",
+        "description": "只移除所选 run 的 links/events/source progress；仅删除该 run 独占引入的 items。",
+        "clears": ["selected run", "run events", "run source progress", "exclusive items", "exclusive item pipeline outputs"],
+        "keeps": ["sources", "other runs", "items shared with other runs"],
+        "risk_level": "high",
+        "confirmation": "RESET <run_id>",
+    },
+    "clear_by_source_id": {
+        "label": "清空指定 source 及下游内容",
+        "description": "只移除所选 source 的 items/links/downstream outputs；可选择同时 archive source。",
+        "clears": ["selected source items", "source run links", "exclusive run/source progress", "affected pipeline outputs"],
+        "keeps": ["other sources", "other source items", "DB identity"],
+        "risk_level": "high",
+        "confirmation": "RESET <source_id>",
+    },
+    "create_new_fresh_db": {
+        "label": "新建 Fresh DB 环境",
+        "description": "创建并切换到新的 Fresh DB 文件，不修改 Legacy DB。",
+        "clears": ["当前 UI 选择的工作 DB 会切换"],
+        "keeps": ["Legacy DB", "旧 Fresh DB 文件"],
+        "risk_level": "medium",
+        "confirmation": "RESET",
+    },
+}
 
 
 def table_counts(store: InboxStore, tables: list[str]) -> dict[str, int]:
@@ -188,6 +254,212 @@ def table_counts(store: InboxStore, tables: list[str]) -> dict[str, int]:
     return counts
 
 
+def existing_tables(conn, tables: list[str]) -> list[str]:
+    known = {row["name"] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()}
+    return [table for table in tables if table in known]
+
+
+def delete_all_from_tables(conn, tables: list[str]) -> None:
+    for table in existing_tables(conn, tables):
+        conn.execute(f"DELETE FROM {table}")
+
+
+def qmarks(values: list[Any]) -> str:
+    return ",".join("?" for _ in values)
+
+
+def select_ids(conn, sql: str, params: list[Any] | tuple[Any, ...]) -> list[str]:
+    return [str(row[0]) for row in conn.execute(sql, params).fetchall() if row[0] is not None]
+
+
+def reset_tables_for_level(level: str) -> list[str]:
+    if level == "clear_runs_items_keep_sources":
+        return RESET_TABLES_KEEP_SOURCES
+    if level == "clear_all_sources_and_content":
+        return RESET_TABLES_CLEAR_ALL
+    if level == "clear_pipeline_outputs_keep_items":
+        return [*OUTPUT_TABLES, *PIPELINE_OUTPUT_TABLES]
+    if level == "clear_outputs_keep_events":
+        return OUTPUT_TABLES
+    return []
+
+
+def affected_downstream_ids(conn, item_ids: list[str]) -> dict[str, list[str]]:
+    if not item_ids:
+        return {"cluster_ids": [], "event_ids": [], "dedupe_group_ids": [], "entity_ids": [], "topic_ids": []}
+    marks = qmarks(item_ids)
+    cluster_ids = select_ids(conn, f"SELECT DISTINCT cluster_id FROM cluster_items WHERE item_id IN ({marks})", item_ids)
+    dedupe_group_ids = select_ids(conn, f"SELECT DISTINCT dedupe_group_id FROM dedupe_group_items WHERE item_id IN ({marks})", item_ids)
+    entity_ids = select_ids(conn, f"SELECT DISTINCT entity_id FROM item_entities WHERE item_id IN ({marks})", item_ids)
+    topic_ids = select_ids(conn, f"SELECT DISTINCT topic_id FROM topic_items WHERE item_id IN ({marks})", item_ids)
+    event_ids = select_ids(conn, f"SELECT DISTINCT event_id FROM event_items WHERE item_id IN ({marks})", item_ids)
+    if cluster_ids:
+        event_ids.extend(select_ids(conn, f"SELECT DISTINCT event_id FROM events WHERE primary_cluster_id IN ({qmarks(cluster_ids)})", cluster_ids))
+    return {
+        "cluster_ids": sorted(set(cluster_ids)),
+        "event_ids": sorted(set(event_ids)),
+        "dedupe_group_ids": sorted(set(dedupe_group_ids)),
+        "entity_ids": sorted(set(entity_ids)),
+        "topic_ids": sorted(set(topic_ids)),
+    }
+
+
+def run_reset_analysis(store: InboxStore, run_id: str) -> dict[str, Any]:
+    with store.connect() as conn:
+        run = conn.execute("SELECT run_id, status, started_at, new_items_count, duplicate_items_count FROM rss_ingest_runs WHERE run_id = ?", (run_id,)).fetchone()
+        item_ids = select_ids(conn, "SELECT DISTINCT item_id FROM item_run_links WHERE run_id = ?", (run_id,))
+        exclusive_item_ids = []
+        shared_item_ids = []
+        for item_id in item_ids:
+            other_count = conn.execute("SELECT COUNT(DISTINCT run_id) AS n FROM item_run_links WHERE item_id = ? AND run_id != ?", (item_id, run_id)).fetchone()["n"]
+            if int(other_count or 0) == 0:
+                exclusive_item_ids.append(item_id)
+            else:
+                shared_item_ids.append(item_id)
+        downstream = affected_downstream_ids(conn, exclusive_item_ids)
+        source_rows = conn.execute("SELECT DISTINCT source_id FROM rss_ingest_run_sources WHERE run_id = ?", (run_id,)).fetchall()
+    return {
+        "run": dict(run) if run else None,
+        "run_id": run_id,
+        "item_ids": item_ids,
+        "exclusive_item_ids": exclusive_item_ids,
+        "shared_item_ids": shared_item_ids,
+        "source_ids": [row["source_id"] for row in source_rows if row["source_id"]],
+        **downstream,
+    }
+
+
+def source_reset_analysis(store: InboxStore, source_ids: list[str]) -> dict[str, Any]:
+    source_ids = [sid for sid in source_ids if sid]
+    if not source_ids:
+        return {"source_ids": [], "sources": [], "item_ids": [], "run_ids": [], "exclusive_run_ids": [], "shared_run_ids": [], "archive_sources": False}
+    with store.connect() as conn:
+        marks = qmarks(source_ids)
+        sources = [dict(row) for row in conn.execute(f"SELECT source_id, source_name, status FROM rss_sources WHERE source_id IN ({marks})", source_ids).fetchall()]
+        item_ids = select_ids(conn, f"SELECT DISTINCT item_id FROM inbox_items WHERE source_id IN ({marks}) AND deleted_at IS NULL", source_ids)
+        linked_item_ids = select_ids(conn, f"SELECT DISTINCT item_id FROM item_run_links WHERE source_id IN ({marks})", source_ids)
+        item_ids = sorted(set(item_ids + linked_item_ids))
+        run_ids = select_ids(conn, f"SELECT DISTINCT run_id FROM item_run_links WHERE source_id IN ({marks})", source_ids)
+        run_ids.extend(select_ids(conn, f"SELECT DISTINCT run_id FROM rss_ingest_run_sources WHERE source_id IN ({marks})", source_ids))
+        run_ids = sorted(set(run_ids))
+        exclusive_run_ids = []
+        shared_run_ids = []
+        for run_id in run_ids:
+            other_count = conn.execute(f"SELECT COUNT(DISTINCT source_id) AS n FROM rss_ingest_run_sources WHERE run_id = ? AND source_id NOT IN ({marks})", [run_id, *source_ids]).fetchone()["n"]
+            if int(other_count or 0) == 0:
+                exclusive_run_ids.append(run_id)
+            else:
+                shared_run_ids.append(run_id)
+        downstream = affected_downstream_ids(conn, item_ids)
+    return {
+        "source_ids": source_ids,
+        "sources": sources,
+        "item_ids": item_ids,
+        "run_ids": run_ids,
+        "exclusive_run_ids": exclusive_run_ids,
+        "shared_run_ids": shared_run_ids,
+        **downstream,
+    }
+
+
+def delete_item_downstream(conn, item_ids: list[str], downstream: dict[str, list[str]]) -> None:
+    if item_ids:
+        marks = qmarks(item_ids)
+        for table in ["semantic_extractions", "item_entities", "topic_items", "dedupe_group_items", "cluster_items", "event_items", "item_cards", "source_signals"]:
+            if table in existing_tables(conn, [table]):
+                conn.execute(f"DELETE FROM {table} WHERE item_id IN ({marks})", item_ids)
+        if "item_relations" in existing_tables(conn, ["item_relations"]):
+            conn.execute(f"DELETE FROM item_relations WHERE item_a_id IN ({marks}) OR item_b_id IN ({marks})", [*item_ids, *item_ids])
+        if "llm_call_logs" in existing_tables(conn, ["llm_call_logs"]):
+            conn.execute(f"DELETE FROM llm_call_logs WHERE item_id IN ({marks})", item_ids)
+    cluster_ids = downstream.get("cluster_ids", [])
+    event_ids = downstream.get("event_ids", [])
+    dedupe_group_ids = downstream.get("dedupe_group_ids", [])
+    entity_ids = downstream.get("entity_ids", [])
+    topic_ids = downstream.get("topic_ids", [])
+    if dedupe_group_ids:
+        conn.execute(f"DELETE FROM dedupe_groups WHERE dedupe_group_id IN ({qmarks(dedupe_group_ids)})", dedupe_group_ids)
+    if cluster_ids:
+        marks = qmarks(cluster_ids)
+        for table, column in [("cluster_cards", "cluster_id"), ("cluster_relations", "from_cluster_id"), ("source_signals", "cluster_id")]:
+            if table in existing_tables(conn, [table]):
+                conn.execute(f"DELETE FROM {table} WHERE {column} IN ({marks})", cluster_ids)
+        if "cluster_relations" in existing_tables(conn, ["cluster_relations"]):
+            conn.execute(f"DELETE FROM cluster_relations WHERE to_cluster_id IN ({marks})", cluster_ids)
+        conn.execute(f"DELETE FROM event_clusters WHERE cluster_id IN ({marks})", cluster_ids)
+    if event_ids:
+        marks = qmarks(event_ids)
+        for table, column in [("topic_events", "event_id"), ("relations", "event_id"), ("claims", "event_id"), ("review_queue", "target_id"), ("reports", "object_id")]:
+            if table in existing_tables(conn, [table]):
+                if table == "review_queue":
+                    conn.execute(f"DELETE FROM review_queue WHERE target_type = 'event' AND target_id IN ({marks})", event_ids)
+                else:
+                    conn.execute(f"DELETE FROM {table} WHERE {column} IN ({marks})", event_ids)
+        conn.execute(f"DELETE FROM events WHERE event_id IN ({marks})", event_ids)
+    if entity_ids:
+        conn.execute(f"DELETE FROM entities WHERE entity_id IN ({qmarks(entity_ids)}) AND entity_id NOT IN (SELECT DISTINCT entity_id FROM item_entities)", entity_ids)
+    if topic_ids:
+        conn.execute(f"DELETE FROM topics WHERE topic_id IN ({qmarks(topic_ids)}) AND topic_id NOT IN (SELECT DISTINCT topic_id FROM topic_items)", topic_ids)
+
+
+def clear_source_item_downstream(conn, item_ids: list[str], downstream: dict[str, list[str]]) -> dict[str, Any]:
+    """Remove target-source item links while preserving mixed-source objects as stale."""
+    if not item_ids:
+        return {"stale_cluster_ids": [], "stale_event_ids": [], "deleted_cluster_ids": [], "deleted_event_ids": []}
+    marks = qmarks(item_ids)
+    for table in ["semantic_extractions", "item_entities", "topic_items", "dedupe_group_items", "cluster_items", "event_items", "item_cards", "source_signals"]:
+        if table in existing_tables(conn, [table]):
+            conn.execute(f"DELETE FROM {table} WHERE item_id IN ({marks})", item_ids)
+    if "item_relations" in existing_tables(conn, ["item_relations"]):
+        conn.execute(f"DELETE FROM item_relations WHERE item_a_id IN ({marks}) OR item_b_id IN ({marks})", [*item_ids, *item_ids])
+    if "llm_call_logs" in existing_tables(conn, ["llm_call_logs"]):
+        conn.execute(f"DELETE FROM llm_call_logs WHERE item_id IN ({marks})", item_ids)
+
+    stale_cluster_ids: list[str] = []
+    deleted_cluster_ids: list[str] = []
+    for cluster_id in downstream.get("cluster_ids", []):
+        remaining = conn.execute("SELECT COUNT(*) AS n FROM cluster_items WHERE cluster_id = ?", (cluster_id,)).fetchone()["n"]
+        if int(remaining or 0) == 0:
+            conn.execute("DELETE FROM event_clusters WHERE cluster_id = ?", (cluster_id,))
+            conn.execute("DELETE FROM cluster_cards WHERE cluster_id = ?", (cluster_id,))
+            deleted_cluster_ids.append(cluster_id)
+        else:
+            conn.execute("UPDATE event_clusters SET status = 'stale', updated_at = ? WHERE cluster_id = ?", (utc_now(), cluster_id))
+            stale_cluster_ids.append(cluster_id)
+
+    stale_event_ids: list[str] = []
+    deleted_event_ids: list[str] = []
+    for event_id in downstream.get("event_ids", []):
+        remaining = conn.execute("SELECT COUNT(*) AS n FROM event_items WHERE event_id = ?", (event_id,)).fetchone()["n"]
+        if int(remaining or 0) == 0:
+            conn.execute("DELETE FROM topic_events WHERE event_id = ?", (event_id,))
+            conn.execute("DELETE FROM relations WHERE event_id = ?", (event_id,))
+            conn.execute("DELETE FROM claims WHERE event_id = ?", (event_id,))
+            conn.execute("DELETE FROM review_queue WHERE target_type = 'event' AND target_id = ?", (event_id,))
+            conn.execute("DELETE FROM reports WHERE object_type = 'event' AND object_id = ?", (event_id,))
+            conn.execute("DELETE FROM events WHERE event_id = ?", (event_id,))
+            deleted_event_ids.append(event_id)
+        else:
+            conn.execute("UPDATE events SET status = 'stale', updated_at = ? WHERE event_id = ?", (utc_now(), event_id))
+            stale_event_ids.append(event_id)
+
+    dedupe_group_ids = downstream.get("dedupe_group_ids", [])
+    if dedupe_group_ids:
+        conn.execute(f"DELETE FROM dedupe_groups WHERE dedupe_group_id IN ({qmarks(dedupe_group_ids)}) AND dedupe_group_id NOT IN (SELECT DISTINCT dedupe_group_id FROM dedupe_group_items)", dedupe_group_ids)
+    entity_ids = downstream.get("entity_ids", [])
+    if entity_ids:
+        conn.execute(f"DELETE FROM entities WHERE entity_id IN ({qmarks(entity_ids)}) AND entity_id NOT IN (SELECT DISTINCT entity_id FROM item_entities)", entity_ids)
+    topic_ids = downstream.get("topic_ids", [])
+    if topic_ids:
+        conn.execute(f"DELETE FROM topics WHERE topic_id IN ({qmarks(topic_ids)}) AND topic_id NOT IN (SELECT DISTINCT topic_id FROM topic_items)", topic_ids)
+    return {
+        "stale_cluster_ids": stale_cluster_ids,
+        "stale_event_ids": stale_event_ids,
+        "deleted_cluster_ids": deleted_cluster_ids,
+        "deleted_event_ids": deleted_event_ids,
+    }
+
+
 def is_fresh_store(store: InboxStore) -> bool:
     try:
         return bool(environment_snapshot(store).get("is_fresh_database"))
@@ -196,20 +468,27 @@ def is_fresh_store(store: InboxStore) -> bool:
 
 
 def reset_preview_data(store: InboxStore, level: str) -> dict[str, Any]:
-    tables = RESET_TABLES_KEEP_SOURCES if level == "clear_runs_items_keep_sources" else RESET_TABLES_CLEAR_ALL
+    tables = reset_tables_for_level(level)
     counts = table_counts(store, tables)
     env = environment_snapshot(store)
+    detail = RESET_SCOPE_DETAILS.get(level, {})
     return {
         "database_id": env.get("database_id"),
         "database_path": env.get("database_path"),
         "database_label": env.get("database_label"),
         "is_fresh_database": env.get("is_fresh_database"),
         "level": level,
+        "label": detail.get("label", level),
+        "description": detail.get("description", ""),
+        "clears": detail.get("clears", []),
+        "keeps": detail.get("keeps", []),
+        "risk_level": detail.get("risk_level", "medium"),
         "tables_affected": tables,
         "counts_before": counts,
+        "counts_after_expected": {table: 0 for table in counts},
         "legacy_db_affected": False,
         "recoverability": "soft audit only; cleared rows are not restored automatically",
-        "requires_confirmation": "RESET",
+        "requires_confirmation": detail.get("confirmation", "RESET"),
     }
 
 
@@ -337,23 +616,7 @@ def api_reset_options(request: Request) -> dict[str, Any]:
         {
             "environment": env,
             "enabled": bool(env.get("is_fresh_database")),
-            "levels": [
-                {
-                    "level": "clear_runs_items_keep_sources",
-                    "label": "清空运行结果，保留 Sources",
-                    "description": "清空 run、item、semantic、cluster、event、review、briefing、report 数据，保留 source registry。",
-                },
-                {
-                    "level": "clear_all_sources_and_content",
-                    "label": "清空 Sources 和所有内容",
-                    "description": "清空 sources、runs、items、semantic、cluster、event、review、briefing、report，保留 schema 和数据库身份。",
-                },
-                {
-                    "level": "create_new_fresh_db",
-                    "label": "新建 Fresh DB 环境",
-                    "description": "创建并切换到新的 data/environments/fresh_YYYYMMDD_HHMMSS/content_inbox.db。",
-                },
-            ],
+            "levels": [{"level": level, **details, "legacy_db_affected": False} for level, details in RESET_SCOPE_DETAILS.items()],
         }
     )
 
@@ -364,9 +627,37 @@ def api_reset_preview(request: Request, payload: dict[str, Any]) -> Any:
     level = payload.get("level") or "clear_runs_items_keep_sources"
     if level == "create_new_fresh_db":
         return api_fresh_db_preview(request, payload)
-    if level not in {"clear_runs_items_keep_sources", "clear_all_sources_and_content"}:
+    if level not in RESET_SCOPE_DETAILS:
         return fail("INVALID_RESET_LEVEL", "Unknown reset level.")
-    preview = reset_preview_data(store, level)
+    if level == "clear_by_run_id":
+        run_id = str(payload.get("run_id") or "").strip()
+        if not run_id:
+            return fail("RUN_ID_REQUIRED", "请选择一个 run 后再 preview。")
+        preview = {**reset_preview_data(store, level), "target": run_reset_analysis(store, run_id)}
+        preview["counts_after_expected"] = dict(preview["counts_before"])
+        preview["affected_summary"] = {
+            "runs": 1 if preview["target"]["run"] else 0,
+            "items_deleted": len(preview["target"]["exclusive_item_ids"]),
+            "items_unlinked_only": len(preview["target"]["shared_item_ids"]),
+            "events_or_clusters_touched": len(preview["target"]["event_ids"]) + len(preview["target"]["cluster_ids"]),
+        }
+    elif level == "clear_by_source_id":
+        raw_ids = payload.get("source_ids") or payload.get("source_id") or []
+        source_ids = [raw_ids] if isinstance(raw_ids, str) else list(raw_ids)
+        source_ids = [str(sid).strip() for sid in source_ids if str(sid).strip()]
+        if not source_ids:
+            return fail("SOURCE_ID_REQUIRED", "请选择一个或多个 source 后再 preview。")
+        preview = {**reset_preview_data(store, level), "target": {**source_reset_analysis(store, source_ids), "archive_sources": bool(payload.get("archive_sources"))}}
+        preview["counts_after_expected"] = dict(preview["counts_before"])
+        preview["affected_summary"] = {
+            "sources": len(preview["target"]["sources"]),
+            "items_deleted": len(preview["target"]["item_ids"]),
+            "runs_touched": len(preview["target"]["run_ids"]),
+            "events_or_clusters_touched": len(preview["target"]["event_ids"]) + len(preview["target"]["cluster_ids"]),
+        }
+        preview["safe_strategy"] = "目标 source 的 item 关系会被移除；混合 cluster/event 若仍有其他 item，会标记为 stale 而不是删除。"
+    else:
+        preview = reset_preview_data(store, level)
     if not preview["is_fresh_database"]:
         return fail("FRESH_DB_REQUIRED", "当前数据库不是 Fresh DB。为避免误删历史数据，已禁用清空操作。", status_code=409, details=preview)
     operation_id = f"reset_{uuid.uuid4().hex}"
@@ -384,28 +675,75 @@ def api_reset_commit(request: Request, payload: dict[str, Any]) -> Any:
     store = get_ops_store(request)
     if not is_fresh_store(store):
         return fail("FRESH_DB_REQUIRED", "当前数据库不是 Fresh DB。为避免误删历史数据，已禁用清空操作。", status_code=409)
-    if payload.get("confirmation") != "RESET":
-        return fail("UNSAFE_OPERATION_REQUIRES_CONFIRMATION", "请输入 RESET 以确认只清空当前 Fresh DB。")
     level = payload.get("level") or "clear_runs_items_keep_sources"
     if level == "create_new_fresh_db":
+        if payload.get("confirmation") != "RESET":
+            return fail("UNSAFE_OPERATION_REQUIRES_CONFIRMATION", "请输入 RESET 以确认只切换当前 Fresh DB。")
         return api_fresh_db_create(request, payload)
-    if level not in {"clear_runs_items_keep_sources", "clear_all_sources_and_content"}:
+    if level not in RESET_SCOPE_DETAILS:
         return fail("INVALID_RESET_LEVEL", "Unknown reset level.")
-    tables = RESET_TABLES_KEEP_SOURCES if level == "clear_runs_items_keep_sources" else RESET_TABLES_CLEAR_ALL
-    counts_before = table_counts(store, tables)
+    expected_confirmation = RESET_SCOPE_DETAILS[level].get("confirmation", "RESET")
+    target: dict[str, Any] = {}
+    if level == "clear_by_run_id":
+        run_id = str(payload.get("run_id") or "").strip()
+        if not run_id:
+            return fail("RUN_ID_REQUIRED", "请选择一个 run 后再 commit。")
+        expected_confirmation = f"RESET {run_id}"
+        target = run_reset_analysis(store, run_id)
+    elif level == "clear_by_source_id":
+        raw_ids = payload.get("source_ids") or payload.get("source_id") or []
+        source_ids = [raw_ids] if isinstance(raw_ids, str) else list(raw_ids)
+        source_ids = [str(sid).strip() for sid in source_ids if str(sid).strip()]
+        if not source_ids:
+            return fail("SOURCE_ID_REQUIRED", "请选择一个或多个 source 后再 commit。")
+        expected_confirmation = f"RESET {source_ids[0]}" if len(source_ids) == 1 else "RESET SOURCES"
+        target = source_reset_analysis(store, source_ids)
+        target["archive_sources"] = bool(payload.get("archive_sources"))
+    if payload.get("confirmation") != expected_confirmation:
+        return fail("UNSAFE_OPERATION_REQUIRES_CONFIRMATION", f"请输入 {expected_confirmation} 以确认只清空当前 Fresh DB。")
+    tables = reset_tables_for_level(level)
+    counts_before = table_counts(store, tables) if tables else {}
     with store.connect() as conn:
-        for table in tables:
-            conn.execute(f"DELETE FROM {table}")
+        if level in {"clear_runs_items_keep_sources", "clear_all_sources_and_content", "clear_pipeline_outputs_keep_items", "clear_outputs_keep_events"}:
+            delete_all_from_tables(conn, tables)
+            if level == "clear_pipeline_outputs_keep_items":
+                conn.execute("UPDATE inbox_items SET semantic_status = 'pending', primary_cluster_id = NULL, semantic_error = NULL, last_semantic_at = NULL")
+        elif level == "clear_by_run_id":
+            run_id = target["run_id"]
+            exclusive_item_ids = target["exclusive_item_ids"]
+            shared_item_ids = target["shared_item_ids"]
+            delete_item_downstream(conn, exclusive_item_ids, target)
+            if exclusive_item_ids:
+                conn.execute(f"DELETE FROM inbox_items WHERE item_id IN ({qmarks(exclusive_item_ids)})", exclusive_item_ids)
+            if shared_item_ids:
+                conn.execute(f"DELETE FROM item_run_links WHERE run_id = ? AND item_id IN ({qmarks(shared_item_ids)})", [run_id, *shared_item_ids])
+            conn.execute("DELETE FROM item_run_links WHERE run_id = ?", (run_id,))
+            conn.execute("DELETE FROM ingest_run_events WHERE run_id = ?", (run_id,))
+            conn.execute("DELETE FROM rss_ingest_run_sources WHERE run_id = ?", (run_id,))
+            conn.execute("DELETE FROM rss_ingest_runs WHERE run_id = ?", (run_id,))
+        elif level == "clear_by_source_id":
+            source_ids = target["source_ids"]
+            item_ids = target["item_ids"]
+            target["downstream_cleanup"] = clear_source_item_downstream(conn, item_ids, target)
+            if item_ids:
+                conn.execute(f"DELETE FROM item_run_links WHERE item_id IN ({qmarks(item_ids)})", item_ids)
+                conn.execute(f"DELETE FROM inbox_items WHERE item_id IN ({qmarks(item_ids)})", item_ids)
+            if source_ids:
+                marks = qmarks(source_ids)
+                conn.execute(f"DELETE FROM rss_ingest_run_sources WHERE source_id IN ({marks})", source_ids)
+                conn.execute(f"DELETE FROM ingest_run_events WHERE source_id IN ({marks})", source_ids)
+                if target.get("archive_sources"):
+                    conn.execute(f"UPDATE rss_sources SET status = 'archived', deleted_at = COALESCE(deleted_at, ?), updated_at = ? WHERE source_id IN ({marks})", [utc_now(), utc_now(), *source_ids])
         metadata_set(conn, "last_reset_at", utc_now())
         metadata_set(conn, "last_reset_level", level)
-    counts_after = table_counts(store, tables)
+    counts_after = table_counts(store, tables) if tables else {}
     operation_id = payload.get("operation_id") or f"reset_{uuid.uuid4().hex}"
     audit(
         store,
         "environment_reset_committed",
         operation_id=operation_id,
         before={"counts": counts_before},
-        after={"counts": counts_after, "level": level, "tables": tables, "legacy_db_affected": False},
+        after={"counts": counts_after, "level": level, "tables": tables, "target": target, "legacy_db_affected": False},
         message=f"Reset level {level} committed for current Fresh DB.",
     )
     return ok(
@@ -417,6 +755,7 @@ def api_reset_commit(request: Request, payload: dict[str, Any]) -> Any:
             "counts_before": counts_before,
             "counts_after": counts_after,
             "tables_affected": tables,
+            "target": target,
             "legacy_db_affected": False,
         }
     )

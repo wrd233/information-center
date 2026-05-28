@@ -1,6 +1,39 @@
 {% extends "base.html" %}
 {% block content %}
-<header class="page-header"><div><h1>Agent Query Playground</h1><p>Preview human, markdown, JSON, and compact context packs.</p></div></header>
-<form method="get" action="/agent-query" class="grid"><input name="query" value="{{ query }}" placeholder="What changed in AI today?"><button>Preview</button></form>
-{% if result %}<article><header><strong>Context Pack</strong></header><pre>{{ result | tojson(indent=2) }}</pre></article>{% else %}<p class="empty-state">Enter a query to preview context.</p>{% endif %}
+<header class="page-header">
+  <div>
+    <p class="eyebrow">信息消费</p>
+    <h1>Agent Query</h1>
+    <p>输入问题，预览会喂给 agent 的 context pack。默认先显示人类可读结果，JSON 放在高级区。</p>
+  </div>
+</header>
+<form method="get" action="/agent-query" class="grid">
+  <label>Query <input name="query" value="{{ query }}" placeholder="今天 AI / agent 方向发生了什么？"></label>
+  <label>Context 格式
+    <select name="format">
+      {% for fmt in ["human", "markdown", "compact", "json"] %}<option value="{{ fmt }}" {% if format == fmt %}selected{% endif %}>{{ fmt }}</option>{% endfor %}
+    </select>
+  </label>
+  <button>Preview context</button>
+</form>
+{% if result %}
+<section class="grid two">
+  <article>
+    <header><strong>可复制上下文</strong></header>
+    <pre>{{ result.human if format == "human" else result.markdown }}</pre>
+  </article>
+  <article>
+    <header><strong>使用了哪些 items/events/sources</strong></header>
+    {% if result.context_pack %}
+    <table><tbody>{% for item in result.context_pack %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td>{{ item.published_at }}</td></tr>{% endfor %}</tbody></table>
+    {% else %}<p class="empty-state">没有匹配 item。</p>{% endif %}
+  </article>
+</section>
+<details>
+  <summary>高级：原始 context pack JSON</summary>
+  <pre>{{ result | tojson(indent=2) }}</pre>
+</details>
+{% else %}
+<p class="empty-state">输入 query 后可以预览 context pack。这里不会执行外部 LLM，只是组装上下文。</p>
+{% endif %}
 {% endblock %}

@@ -59,19 +59,49 @@ def dashboard(request: Request):
     runs_r = api.get("/api/runs", {"limit": 8})
     events_r = api.get("/api/events", {"limit": 6})
     reviews_r = api.get("/api/review-queue", {"limit": 6})
+    briefings_r = api.get("/api/briefings/daily")
+    reports_r = api.get("/api/reports")
+    env = data(env_r, {}).get("environment", {})
+    sources = data(sources_r, {}).get("sources", [])
+    runs = data(runs_r, {}).get("runs", [])
+    events = data(events_r, {}).get("events", [])
+    reviews = data(reviews_r, {}).get("reviews", [])
+    next_actions: list[dict[str, str]] = []
+    last_run = runs[0] if runs else None
+    last_mode = ((last_run or {}).get("request") or {}).get("mode")
+    if not env.get("is_fresh_database"):
+        next_actions.append({"label": "先确认环境", "href": "/environment", "text": "当前不是 Fresh DB，危险操作已禁用。"})
+    elif not sources:
+        next_actions.append({"label": "导入 source", "href": "/sources", "text": "当前没有 source，从这里开始准备信息入口。"})
+    elif not runs:
+        next_actions.append({"label": "创建 dry-run", "href": "/runs/new", "text": "已有 source，先 dry-run 验证抓取范围，不写库。"})
+    elif last_mode == "dry_run" and last_run.get("status") in {"success", "completed"}:
+        next_actions.append({"label": "执行 real-write", "href": "/runs/new", "text": "dry-run 已完成，确认后可用相同 source 范围写入。"})
+    elif last_mode == "real_write" and events:
+        next_actions.append({"label": "处理 review queue", "href": "/review-queue", "text": "已有 event/review，建议人工确认候选事件。"})
+    elif last_mode == "real_write":
+        next_actions.append({"label": "执行 pipeline", "href": f"/runs/{last_run['run_id']}", "text": "real-write 完成后继续 dedupe/semantic/events。"})
+    if reviews:
+        next_actions.append({"label": "进入待审核", "href": "/review-queue", "text": f"当前有 {len(reviews)} 条待处理 review。"})
+    if events and not data(briefings_r, {}).get("briefings", []):
+        next_actions.append({"label": "生成 briefing", "href": "/briefings", "text": "已有 event，可以生成每日简报。"})
     return render(
         request,
         "ops/dashboard.html",
         {
             "active_page": "dashboard",
-            "environment": data(env_r, {}).get("environment", {}),
+            "environment": env,
             "legacy_database": data(env_r, {}).get("legacy_database", {}),
-            "sources": data(sources_r, {}).get("sources", []),
+            "sources": sources,
             "source_stats": data(sources_r, {}).get("stats", {}),
-            "runs": data(runs_r, {}).get("runs", []),
-            "events": data(events_r, {}).get("events", []),
-            "reviews": data(reviews_r, {}).get("reviews", []),
-            "error": err(env_r) or err(sources_r) or err(runs_r),
+            "runs": runs,
+            "last_run": last_run,
+            "events": events,
+            "reviews": reviews,
+            "briefings": data(briefings_r, {}).get("briefings", []),
+            "reports": data(reports_r, {}).get("reports", []),
+            "next_actions": next_actions[:4],
+            "error": err(env_r) or err(sources_r) or err(runs_r) or err(briefings_r) or err(reports_r),
         },
     )
 
@@ -82,6 +112,29 @@ def environment(request: Request):
     env_r = api.get("/api/environment")
     health_r = api.get("/api/environment/health")
     return render(request, "ops/environment.html", {"active_page": "environment", "environment": data(env_r, {}).get("environment", {}), "legacy_database": data(env_r, {}).get("legacy_database", {}), "checks": data(health_r, {}).get("checks", []), "error": err(env_r) or err(health_r)})
+
+
+@router.get("/reset", response_class=HTMLResponse)
+def data_reset(request: Request):
+    api = client(request)
+    env_r = api.get("/api/environment")
+    options_r = api.get("/api/environment/reset-options")
+    runs_r = api.get("/api/runs", {"limit": 40})
+    sources_r = api.get("/api/sources", {"limit": 200})
+    return render(
+        request,
+        "ops/data_reset.html",
+        {
+            "active_page": "reset",
+            "environment": data(env_r, {}).get("environment", {}),
+            "legacy_database": data(env_r, {}).get("legacy_database", {}),
+            "reset_options": data(options_r, {}).get("levels", []),
+            "reset_enabled": data(options_r, {}).get("enabled", False),
+            "runs": data(runs_r, {}).get("runs", []),
+            "sources": data(sources_r, {}).get("sources", []),
+            "error": err(env_r) or err(options_r) or err(runs_r) or err(sources_r),
+        },
+    )
 
 
 @router.post("/environment/init-fresh", response_class=HTMLResponse)
@@ -97,20 +150,36 @@ async def environment_init(request: Request):
 async def environment_reset_preview(request: Request):
     form = await form_fields(request)
     level = str(form.get("level") or "clear_runs_items_keep_sources")
-    response = client(request).post("/api/environment/reset/preview", {"level": level})
+    raw_source_ids = str(form.get("source_ids") or "")
+    payload = {
+        "level": level,
+        "run_id": str(form.get("run_id") or ""),
+        "source_ids": [part.strip() for part in raw_source_ids.replace("\n", ",").split(",") if part.strip()],
+        "archive_sources": str(form.get("archive_sources") or "") == "1",
+    }
+    response = client(request).post("/api/environment/reset/preview", payload)
     env_r = client(request).get("/api/environment")
     health_r = client(request).get("/api/environment/health")
+    options_r = client(request).get("/api/environment/reset-options")
+    runs_r = client(request).get("/api/runs", {"limit": 40})
+    sources_r = client(request).get("/api/sources", {"limit": 200})
+    template = "ops/data_reset.html" if request.url.path.startswith("/reset") else "ops/environment.html"
+    context = {
+        "active_page": "reset" if template.endswith("data_reset.html") else "environment",
+        "environment": data(env_r, {}).get("environment", {}),
+        "legacy_database": data(env_r, {}).get("legacy_database", {}),
+        "checks": data(health_r, {}).get("checks", []),
+        "reset_options": data(options_r, {}).get("levels", []),
+        "reset_enabled": data(options_r, {}).get("enabled", False),
+        "runs": data(runs_r, {}).get("runs", []),
+        "sources": data(sources_r, {}).get("sources", []),
+        "reset_preview": data(response, {}),
+        "error": err(response),
+    }
     return render(
         request,
-        "ops/environment.html",
-        {
-            "active_page": "environment",
-            "environment": data(env_r, {}).get("environment", {}),
-            "legacy_database": data(env_r, {}).get("legacy_database", {}),
-            "checks": data(health_r, {}).get("checks", []),
-            "reset_preview": data(response, {}),
-            "error": err(response),
-        },
+        template,
+        context,
     )
 
 
@@ -120,8 +189,29 @@ async def environment_reset_commit(request: Request):
     level = str(form.get("level") or "")
     operation_id = str(form.get("operation_id") or "")
     confirmation = str(form.get("confirmation") or "")
-    client(request).post("/api/environment/reset/commit", {"level": level, "operation_id": operation_id, "confirmation": confirmation})
-    return RedirectResponse("/environment", status_code=303)
+    raw_source_ids = str(form.get("source_ids") or "")
+    payload = {
+        "level": level,
+        "operation_id": operation_id,
+        "confirmation": confirmation,
+        "run_id": str(form.get("run_id") or ""),
+        "source_ids": [part.strip() for part in raw_source_ids.replace("\n", ",").split(",") if part.strip()],
+        "archive_sources": str(form.get("archive_sources") or "") == "1",
+    }
+    response = client(request).post("/api/environment/reset/commit", payload)
+    if not response.get("ok"):
+        return RedirectResponse(f"/reset?error={err(response) or 'reset_failed'}", status_code=303)
+    return RedirectResponse("/reset", status_code=303)
+
+
+@router.post("/reset/preview", response_class=HTMLResponse)
+async def reset_preview(request: Request):
+    return await environment_reset_preview(request)
+
+
+@router.post("/reset/commit", response_class=HTMLResponse)
+async def reset_commit(request: Request):
+    return await environment_reset_commit(request)
 
 
 @router.get("/sources", response_class=HTMLResponse)
@@ -401,6 +491,12 @@ def cluster_detail(request: Request, cluster_id: str):
     return render(request, "ops/object_detail.html", {"active_page": "clusters", "title": "Cluster Detail", "data": data(response, {}), "error": err(response)})
 
 
+@router.post("/clusters/{cluster_id}/create-event")
+def cluster_create_event(request: Request, cluster_id: str):
+    client(request).post(f"/api/clusters/{cluster_id}/create-event", {})
+    return RedirectResponse("/events", status_code=303)
+
+
 @router.get("/events", response_class=HTMLResponse)
 def events(request: Request):
     return simple_page(request, "events", "Events", "/api/events", "events")
@@ -437,14 +533,31 @@ def timeline(request: Request):
     return simple_page(request, "timeline", "Timeline", "/api/timeline", "timeline")
 
 
+@router.get("/evidence", response_class=HTMLResponse)
+def evidence(request: Request):
+    return simple_page(request, "evidence", "Evidence", "/api/evidence", "evidence")
+
+
+@router.get("/saved-views", response_class=HTMLResponse)
+def saved_views(request: Request):
+    return simple_page(request, "saved_views", "Saved Views", "/api/saved-views", "saved_views")
+
+
 @router.get("/review-queue", response_class=HTMLResponse)
-def review_queue(request: Request):
-    return simple_page(request, "review", "Review Queue", "/api/review-queue", "reviews")
+def review_queue(request: Request, status: str = "pending"):
+    response = client(request).get("/api/review-queue", {"status": status})
+    return render(request, "ops/review_queue.html", {"active_page": "review", "status": status, "reviews": data(response, {}).get("reviews", []), "error": err(response)})
 
 
 @router.post("/review-queue/{review_id}/resolve")
 def review_resolve(request: Request, review_id: int):
     client(request).post(f"/api/review-queue/{review_id}/resolve", {"status": "resolved"})
+    return RedirectResponse("/review-queue", status_code=303)
+
+
+@router.post("/review-queue/{review_id}/dismiss")
+def review_dismiss(request: Request, review_id: int):
+    client(request).post(f"/api/review-queue/{review_id}/resolve", {"status": "dismissed"})
     return RedirectResponse("/review-queue", status_code=303)
 
 
@@ -475,14 +588,14 @@ async def report_generate(request: Request):
 
 
 @router.get("/agent-query", response_class=HTMLResponse)
-def agent_query(request: Request, query: str = ""):
+def agent_query(request: Request, query: str = "", format: str = "human"):
     result = {}
     error = None
     if query:
-        response = client(request).post("/api/agent-query/preview", {"query": query, "format": "compact"})
+        response = client(request).post("/api/agent-query/preview", {"query": query, "format": format})
         result = data(response, {})
         error = err(response)
-    return render(request, "ops/agent_query.html", {"active_page": "agent", "query": query, "result": result, "error": error})
+    return render(request, "ops/agent_query.html", {"active_page": "agent", "query": query, "format": format, "result": result, "error": error})
 
 
 @router.get("/settings", response_class=HTMLResponse)

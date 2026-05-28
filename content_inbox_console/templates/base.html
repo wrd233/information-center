@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}content_inbox_console{% endblock %}</title>
+  <title>{% block title %}content_inbox_console 作战台{% endblock %}</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
   <link rel="stylesheet" href="{{ url_for('static', path='css/app.css') }}">
   <script src="https://unpkg.com/htmx.org@2.0.4"></script>
@@ -11,10 +11,12 @@
 <body>
   {% include "components/nav.html" %}
   <main class="container-fluid app-shell" id="main-content">
-    <section class="env-strip">
-      <strong>当前环境：Fresh DB</strong>
+    <section class="env-strip {% if not environment.is_fresh_database %}unsafe{% endif %}">
+      <strong>当前环境：{{ "Fresh DB" if environment.is_fresh_database else "非 Fresh DB，危险操作禁用" }}</strong>
       <span>数据库：{{ environment.database_label or "unknown" }}</span>
       <span>路径：<code>{{ environment.database_path or "" }}</code></span>
+      <span>real-write：{{ "已启用" if environment.real_runs_enabled else "未启用" }}</span>
+      <span>Legacy fallback：{{ "false" if not environment.legacy_business_fallback else "true" }}</span>
       <span>Sources：{{ environment.source_count or 0 }}</span>
       <span>Items：{{ environment.item_count or 0 }}</span>
       <span>Runs：{{ environment.run_count or 0 }}</span>

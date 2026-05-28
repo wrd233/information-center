@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}待审核 - content_inbox_console{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <p class="eyebrow">信息消费</p>
+    <h1>Review Queue / 待审核</h1>
+    <p>这里是人工纠偏入口。当前版本支持 resolve / dismiss；promote cluster to event 可在 cluster detail 中执行。</p>
+  </div>
+  <form method="get" action="/review-queue" class="inline-form">
+    <select name="status">
+      <option value="pending" {% if status == "pending" %}selected{% endif %}>pending</option>
+      <option value="resolved" {% if status == "resolved" %}selected{% endif %}>resolved</option>
+      <option value="dismissed" {% if status == "dismissed" %}selected{% endif %}>dismissed</option>
+    </select>
+    <button>过滤</button>
+  </form>
+</header>
+
+{% if reviews %}
+<div class="object-list">
+  {% for review in reviews %}
+  <article>
+    <header><strong>{{ review.review_type }}</strong> <mark class="chip">{{ review.status }}</mark></header>
+    <p>{{ review.reason or "需要人工确认。" }}</p>
+    <p>目标：<code>{{ review.target_type }}:{{ review.target_id }}</code></p>
+    <div class="button-row">
+      {% if review.target_type == "event" %}<a role="button" class="secondary" href="/events/{{ review.target_id }}">查看 event</a>{% endif %}
+      {% if review.target_type == "cluster" %}<a role="button" class="secondary" href="/clusters/{{ review.target_id }}">查看 cluster</a>{% endif %}
+      <form method="post" action="/review-queue/{{ review.id }}/resolve"><button>Resolve</button></form>
+      <form method="post" action="/review-queue/{{ review.id }}/dismiss"><button class="secondary">Dismiss</button></form>
+    </div>
+    <details>
+      <summary>建议 / 原始 JSON</summary>
+      <pre>{{ review | tojson(indent=2) }}</pre>
+    </details>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty-state">当前没有 {{ status }} review。完成 real-write 并运行 events/review stage 后，这里会出现候选项。</p>
+{% endif %}
+{% endblock %}

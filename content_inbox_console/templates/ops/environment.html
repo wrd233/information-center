@@ -6,7 +6,10 @@
     <h1>环境 / Fresh DB</h1>
     <p>这里确认当前页面只显示当前 Fresh DB 的真实状态。Legacy DB 只用于 checksum 证明，不作为业务数据来源。</p>
   </div>
-  <a role="button" href="/environment">刷新</a>
+  <div>
+    <a role="button" href="/environment">刷新</a>
+    <a role="button" class="secondary" href="/reset">数据清理 / 重新开始</a>
+  </div>
 </header>
 
 {% if environment.item_count or environment.source_count or environment.run_count %}
@@ -55,21 +58,9 @@
 
 <section class="grid two">
   <article class="danger-zone">
-    <header><strong>数据重置：清空当前 Fresh DB</strong></header>
-    {% if not environment.is_fresh_database %}
-      <p class="error-banner">当前数据库不是 Fresh DB。为避免误删历史数据，已禁用清空操作。</p>
-    {% else %}
-      <p>清空操作只影响当前 Fresh DB，不会删除 Legacy DB 文件。所有 reset 都必须先 preview，再输入 <code>RESET</code> 确认。</p>
-      <form action="/environment/reset/preview" method="post">
-        <label>清理级别
-          <select name="level">
-            <option value="clear_runs_items_keep_sources">清空运行结果，保留 Sources</option>
-            <option value="clear_all_sources_and_content">清空 Sources 和所有内容</option>
-          </select>
-        </label>
-        <button type="submit">Preview 清空影响</button>
-      </form>
-    {% endif %}
+    <header><strong>数据清理 / 重新开始</strong></header>
+    <p>reset 已移到独立页面，支持清空 pipeline 输出、清空 briefing/report、按 run 清理、按 source 清理等 scope。每个 scope 都 preview-first，并显示 Legacy DB affected=false。</p>
+    <a role="button" href="/reset">进入数据清理页</a>
   </article>
   <article>
     <header><strong>新建 Fresh DB 环境</strong></header>
@@ -81,24 +72,4 @@
   </article>
 </section>
 
-{% if reset_preview %}
-<article class="danger-zone">
-  <header><strong>Reset Preview / 清空影响预览</strong></header>
-  <p>影响 Legacy DB：{{ reset_preview.legacy_db_affected }}</p>
-  <p>当前 DB：<code>{{ reset_preview.database_path }}</code></p>
-  <p>清理级别：<code>{{ reset_preview.level }}</code></p>
-  <details open>
-    <summary>将清理的表和当前记录数</summary>
-    <pre>{{ reset_preview.counts_before | tojson(indent=2) }}</pre>
-  </details>
-  <form action="/environment/reset/commit" method="post">
-    <input type="hidden" name="operation_id" value="{{ reset_preview.operation_id }}">
-    <input type="hidden" name="level" value="{{ reset_preview.level }}">
-    <label>输入 RESET 确认只清空当前 Fresh DB
-      <input name="confirmation" placeholder="RESET">
-    </label>
-    <button type="submit">确认执行 Reset</button>
-  </form>
-</article>
-{% endif %}
 {% endblock %}

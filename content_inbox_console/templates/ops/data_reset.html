@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}数据清理 / 重新开始 - content_inbox_console{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <p class="eyebrow">维护与重开</p>
+    <h1>数据清理 / 重新开始</h1>
+    <p>所有危险操作都必须先 preview，再按页面给出的确认文本 commit。这里只影响当前 Fresh DB，Legacy DB 永远不作为业务 fallback，也不会被 reset 修改。</p>
+  </div>
+  <a role="button" href="/environment">查看环境证明</a>
+</header>
+
+{% if not reset_enabled %}
+<article class="error-banner">
+  <strong>当前数据库不是 Fresh DB，reset 已禁用。</strong>
+  <p>请先在环境页确认 DB identity。为了避免误删历史数据，非 Fresh DB 不允许执行清理。</p>
+</article>
+{% endif %}
+
+<section class="grid two">
+  <article>
+    <header><strong>当前安全边界</strong></header>
+    <dl>
+      <dt>Fresh DB</dt><dd>{{ environment.is_fresh_database }}</dd>
+      <dt>DB path</dt><dd><code>{{ environment.database_path }}</code></dd>
+      <dt>DB id</dt><dd><code>{{ environment.database_id }}</code></dd>
+      <dt>Legacy affected</dt><dd><strong>false</strong></dd>
+      <dt>当前数量</dt><dd>{{ environment.source_count }} sources / {{ environment.item_count }} items / {{ environment.run_count }} runs</dd>
+    </dl>
+  </article>
+  <article>
+    <header><strong>普通确认规则</strong></header>
+    <p>全局清理输入 <code>RESET</code>。指定 run/source 清理需要输入 <code>RESET &lt;run_id&gt;</code> 或 <code>RESET &lt;source_id&gt;</code>；多个 source 使用 <code>RESET SOURCES</code>。</p>
+    <p>如果 item 被多个 run 共享，按 run 清理只删除 run link，不会删除共享 item。</p>
+  </article>
+</section>
+
+<section class="reset-grid">
+  {% for option in reset_options %}
+  <article class="reset-card {% if option.risk_level == 'critical' %}danger-zone{% endif %}">
+    <header>
+      <strong>{{ option.label }}</strong>
+      <mark class="chip risk-{{ option.risk_level }}">{{ option.risk_level }}</mark>
+    </header>
+    <p>{{ option.description }}</p>
+    <details>
+      <summary>会清空什么 / 会保留什么</summary>
+      <p><strong>清空：</strong>{{ option.clears | join("、") }}</p>
+      <p><strong>保留：</strong>{{ option.keeps | join("、") }}</p>
+      <p>Legacy DB affected: <strong>false</strong></p>
+    </details>
+    <form method="post" action="/reset/preview">
+      <input type="hidden" name="level" value="{{ option.level }}">
+      {% if option.level == "clear_by_run_id" %}
+      <label>选择 run
+        <select name="run_id">
+          {% for run in runs %}<option value="{{ run.run_id }}">{{ run.run_id }} · {{ run.status }} · {{ run.new_items_count }} new</option>{% endfor %}
+        </select>
+      </label>
+      {% elif option.level == "clear_by_source_id" %}
+      <label>选择 source
+        <select name="source_ids">
+          {% for source in sources %}<option value="{{ source.source_id }}">{{ source.source_name }} · {{ source.status }}</option>{% endfor %}
+        </select>
+      </label>
+      <label><input type="checkbox" name="archive_sources" value="1"> commit 时同时 archive source</label>
+      {% endif %}
+      <button type="submit" {% if not reset_enabled %}disabled{% endif %}>Preview 影响</button>
+    </form>
+  </article>
+  {% endfor %}
+</section>
+
+{% if reset_preview %}
+<article class="danger-zone preview-panel">
+  <header>
+    <strong>Reset Preview / 清空影响预览</strong>
+    <mark class="chip risk-{{ reset_preview.risk_level }}">{{ reset_preview.risk_level }}</mark>
+  </header>
+  <p>{{ reset_preview.label }}：{{ reset_preview.description }}</p>
+  <section class="stats-grid">
+    <article><small>Legacy DB affected</small><h2>{{ reset_preview.legacy_db_affected }}</h2></article>
+    <article><small>DB path</small><code>{{ reset_preview.database_path }}</code></article>
+    <article><small>确认文本</small><h3><code>{{ reset_preview.requires_confirmation }}</code></h3></article>
+    <article><small>Tables</small><h2>{{ reset_preview.tables_affected | length }}</h2></article>
+  </section>
+  {% if reset_preview.affected_summary %}
+  <article>
+    <header><strong>影响摘要</strong></header>
+    <pre>{{ reset_preview.affected_summary | tojson(indent=2) }}</pre>
+  </article>
+  {% endif %}
+  <details>
+    <summary>高级详情：affected tables / before counts / target ids</summary>
+    <pre>{{ reset_preview | tojson(indent=2) }}</pre>
+  </details>
+  <form method="post" action="/reset/commit" class="confirm-grid">
+    <input type="hidden" name="operation_id" value="{{ reset_preview.operation_id }}">
+    <input type="hidden" name="level" value="{{ reset_preview.level }}">
+    {% if reset_preview.target.run_id %}<input type="hidden" name="run_id" value="{{ reset_preview.target.run_id }}">{% endif %}
+    {% if reset_preview.target.source_ids %}<input type="hidden" name="source_ids" value="{{ reset_preview.target.source_ids | join(',') }}">{% endif %}
+    {% if reset_preview.target.archive_sources %}<input type="hidden" name="archive_sources" value="1">{% endif %}
+    <label>输入确认文本
+      <input name="confirmation" placeholder="{{ reset_preview.requires_confirmation }}">
+    </label>
+    <button type="submit">Commit reset</button>
+  </form>
+</article>
+{% endif %}
+{% endblock %}

@@ -206,6 +206,18 @@ PYTHONPATH=. python scripts/run_rss_sources_to_content_inbox.py \
   --incremental-mode until_existing
 ```
 
+## Operational Console API
+
+`app.ops_api` 提供给 `content_inbox_console` 使用的统一 envelope API。主前端不直接读 SQLite，也不把 Legacy DB 作为业务 fallback。
+
+关键安全语义：
+
+- `/api/environment` 返回当前 Fresh DB identity/path/counts，以及 Legacy DB checksum/mtime/size 证明。
+- `/api/runs/preview` 和 `/api/runs` 保持 dry-run / real-write 分离；real-write 需要 `CONTENT_INBOX_ENABLE_REAL_RUNS=1`。
+- `/api/environment/reset/preview` 与 `/api/environment/reset/commit` 支持 granular reset scope，且只允许 Fresh DB 执行。
+- reset scope 包括：`clear_runs_items_keep_sources`、`clear_all_sources_and_content`、`clear_pipeline_outputs_keep_items`、`clear_outputs_keep_events`、`clear_by_run_id`、`clear_by_source_id`、`create_new_fresh_db`。
+- 指定 run 清理会保留被其他 run 共享的 items；指定 source 清理会保护其他 source 的 items。
+
 ## RSS 增量同步模式
 
 从 v0.2.0 开始，`/api/rss/analyze` 支持两种同步模式：

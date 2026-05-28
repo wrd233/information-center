@@ -1,48 +1,89 @@
 {% extends "base.html" %}
-{% block title %}总览 - content_inbox_console{% endblock %}
+{% block title %}作战首页 - content_inbox_console{% endblock %}
 {% block content %}
-<header class="page-header">
+<header class="hero-panel">
   <div>
-    <h1>Operational Dashboard / 总览</h1>
-    <p>当前 Fresh DB 的 source、run、item、event、review 状态。不会混入 Legacy DB 业务数据。</p>
+    <p class="eyebrow">作战首页</p>
+    <h1>从 source 到 briefing 的下一步作战台</h1>
+    <p>这里不做 schema 猜谜。你只需要确认环境安全，然后按下一步引导完成 dry-run、real-write、pipeline、review 和输出生成。</p>
   </div>
-  <a role="button" href="/runs/new">创建 Run</a>
+  <div class="hero-actions">
+    <a role="button" href="/sources">准备 / 导入 source</a>
+    <a role="button" class="secondary" href="/runs/new">创建 run</a>
+  </div>
 </header>
 
 <section class="stats-grid">
-  <article><small>Fresh DB</small><h3>{{ environment.database_label or "unknown" }}</h3><code>{{ environment.database_path }}</code></article>
-  <article><small>Sources</small><h2>{{ environment.source_count or 0 }}</h2><span>active {{ source_stats.active or 0 }} / broken {{ source_stats.broken or 0 }}</span></article>
+  <article><small>环境安全</small><h2>{{ "安全" if environment.is_fresh_database and not environment.legacy_business_fallback else "需确认" }}</h2><span>Legacy DB affected: false</span></article>
+  <article><small>Sources</small><h2>{{ environment.source_count or 0 }}</h2><span>active {{ source_stats.active or 0 }}</span></article>
   <article><small>Items</small><h2>{{ environment.item_count or 0 }}</h2><span>当前 Fresh DB</span></article>
   <article><small>Runs</small><h2>{{ environment.run_count or 0 }}</h2><span>real-write {{ "已启用" if environment.real_runs_enabled else "未启用" }}</span></article>
 </section>
 
+{% if not environment.real_runs_enabled %}
+<article class="warning-banner">
+  <strong>real-write 未启用。</strong>
+  <p>前端不能绕过后端 gate。需要在后端环境设置 <code>CONTENT_INBOX_ENABLE_REAL_RUNS=1</code> 并重启，才能执行写库 run。</p>
+</article>
+{% endif %}
+
 <section class="grid two">
-  <article>
-    <header><strong>最近 Runs</strong></header>
-    {% if runs %}
-    <table><tbody>{% for run in runs %}<tr><td><a href="/runs/{{ run.run_id }}">{{ run.run_id }}</a></td><td>{{ run.status }}</td><td>{{ run.new_items_count }}</td></tr>{% endfor %}</tbody></table>
-    {% else %}<p class="empty-state">暂无 runs。请先导入 sources，然后创建 dry-run。</p>{% endif %}
+  <article class="next-actions">
+    <header><strong>下一步建议</strong></header>
+    {% if next_actions %}
+      {% for action in next_actions %}
+      <div class="next-action-card">
+        <div><strong>{{ action.label }}</strong><p>{{ action.text }}</p></div>
+        <a role="button" href="{{ action.href }}">去处理</a>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p class="empty-state">当前没有明显阻塞。可以查看事件中心、生成 briefing，或进入数据清理重新开始。</p>
+    {% endif %}
   </article>
   <article>
-    <header><strong>Review Queue 提醒</strong></header>
-    {% if reviews %}
-    <table><tbody>{% for review in reviews %}<tr><td>{{ review.review_type }}</td><td>{{ review.target_type }}:{{ review.target_id }}</td></tr>{% endfor %}</tbody></table>
-    {% else %}<p class="empty-state">暂无待 review 项。</p>{% endif %}
+    <header><strong>最近 run</strong></header>
+    {% if last_run %}
+    <dl>
+      <dt>run_id</dt><dd><a href="/runs/{{ last_run.run_id }}"><code>{{ last_run.run_id }}</code></a></dd>
+      <dt>状态 / mode</dt><dd>{{ last_run.status }} / {{ last_run.request.mode }}</dd>
+      <dt>inserted / duplicate / failed</dt><dd>{{ last_run.new_items_count }} / {{ last_run.duplicate_items_count }} / {{ last_run.failed_items_count }}</dd>
+      <dt>started_at</dt><dd>{{ last_run.started_at }}</dd>
+    </dl>
+    {% else %}
+    <p class="empty-state">暂无 run。先导入 source，再创建 dry-run。</p>
+    {% endif %}
   </article>
 </section>
 
 <section class="grid two">
   <article>
-    <header><strong>Sources</strong></header>
-    {% if sources %}
-    <table><tbody>{% for source in sources %}<tr><td><a href="/sources/{{ source.source_id }}">{{ source.source_name }}</a></td><td>{{ source.status }}</td></tr>{% endfor %}</tbody></table>
-    {% else %}<p class="empty-state">当前 Fresh DB 没有 sources。请到 Source 管理页面导入。</p>{% endif %}
+    <header><strong>待处理 review queue</strong></header>
+    {% if reviews %}
+    <table><tbody>{% for review in reviews %}<tr><td>{{ review.review_type }}</td><td>{{ review.target_type }}:{{ review.target_id }}</td><td><a href="/review-queue">处理</a></td></tr>{% endfor %}</tbody></table>
+    {% else %}<p class="empty-state">暂无待处理项。pipeline 生成 event 后这里会出现人工确认任务。</p>{% endif %}
   </article>
   <article>
-    <header><strong>Events</strong></header>
+    <header><strong>最近 briefing / report</strong></header>
+    <p>Briefing：{{ briefings[0].title if briefings else "暂无" }}</p>
+    <p>Report：{{ reports[0].title if reports else "暂无" }}</p>
+    <p><a href="/briefings">查看 briefing</a> · <a href="/reports">查看 report</a></p>
+  </article>
+</section>
+
+<section class="grid two">
+  <article>
+    <header><strong>最近 Events</strong></header>
     {% if events %}
-    <table><tbody>{% for event in events %}<tr><td><a href="/events/{{ event.event_id }}">{{ event.event_title }}</a></td><td>{{ event.status }}</td></tr>{% endfor %}</tbody></table>
-    {% else %}<p class="empty-state">暂无 events。real-write 后可生成 cluster/event。</p>{% endif %}
+    <div class="object-list compact">{% for event in events %}<article><strong><a href="/events/{{ event.event_id }}">{{ event.event_title }}</a></strong><p>{{ event.event_summary or "暂无摘要" }}</p><mark class="chip">{{ event.status }}</mark></article>{% endfor %}</div>
+    {% else %}<p class="empty-state">暂无 events。real-write 后运行 pipeline 会生成候选事件。</p>{% endif %}
+  </article>
+  <article>
+    <header><strong>环境提示</strong></header>
+    <p>当前 API base：<code>{{ api_base }}</code></p>
+    <p>Fresh DB：<code>{{ environment.database_path }}</code></p>
+    <p>DB ID：<code>{{ environment.database_id }}</code></p>
+    <p><a href="/reset">需要清空某部分数据重新开始？进入数据清理页</a></p>
   </article>
 </section>
 {% endblock %}

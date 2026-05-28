@@ -1,29 +1,51 @@
 {% extends "base.html" %}
 {% block content %}
+{% set mode = summary.run.request.mode %}
 <header class="page-header">
   <div>
+    <p class="eyebrow">Run 观察</p>
     <h1>Run Detail</h1>
-    <p><code>{{ run_id }}</code></p>
+    <p><code>{{ run_id }}</code> · {{ mode }} · {{ summary.run.status }}</p>
   </div>
-  <div>
-    <form method="post" action="/runs/{{ run_id }}/cancel"><button>Cancel run</button></form>
-    <form method="post" action="/runs/{{ run_id }}/briefing"><button>生成 Daily Briefing</button></form>
-    <form method="post" action="/runs/{{ run_id }}/report"><button>生成 Run Report</button></form>
+  <div class="button-row">
+    <form method="post" action="/runs/{{ run_id }}/cancel"><button class="secondary">Cancel run</button></form>
+    <form method="post" action="/runs/{{ run_id }}/briefing"><button>生成 Briefing</button></form>
+    <form method="post" action="/runs/{{ run_id }}/report"><button>生成 Report</button></form>
+    <a role="button" class="secondary" href="/reset">清除此 run 结果</a>
   </div>
 </header>
 
+{% if mode == "dry_run" %}
+<article class="warning-banner">
+  <strong>dry-run 不写入 items。</strong>
+  <p>如果本页 item count 为 0，这是预期结果，不代表抓取失败。确认 source 和时间范围后，可以回到 Run Wizard 创建 real-write。</p>
+  <a role="button" href="/runs/new">用相同思路创建 real-write</a>
+</article>
+{% else %}
+<article>
+  <strong>real-write 已进入写库路径。</strong>
+  <p>下方 items 是本 run 写入或关联的内容。后续建议运行 pipeline，然后处理 review queue。</p>
+</article>
+{% endif %}
+
 <section class="stats-grid">
-  <article><small>状态</small><h2>{{ summary.run.status }}</h2><span>{{ summary.run.request.mode }}</span></article>
+  <article><small>状态</small><h2>{{ summary.run.status }}</h2><span>{{ mode }}</span></article>
   <article><small>Sources</small><h2>{{ summary.run.selected_source_count }}</h2><span>success {{ summary.run.success_source_count }} / failed {{ summary.run.failure_source_count }}</span></article>
   <article><small>Inserted</small><h2>{{ summary.run.new_items_count }}</h2><span>写入 items</span></article>
-  <article><small>Duplicate</small><h2>{{ summary.run.duplicate_items_count }}</h2><span>重复 items</span></article>
+  <article><small>Duplicate / Failed</small><h2>{{ summary.run.duplicate_items_count }} / {{ summary.run.failed_items_count }}</h2><span>重复 / 失败</span></article>
 </section>
 
 <article>
-  <header><strong>Pipeline 解析处理</strong></header>
-  <table><thead><tr><th>阶段</th><th>状态</th><th>操作</th></tr></thead><tbody>
+  <header><strong>Pipeline 处理闭环</strong></header>
+  <p>每个 stage 会写 run event。当前 semantic/clusters/events/review 是 lightweight v1：足够支撑控制台闭环，但不是完整 LLM pipeline 替代品。</p>
+  <table><thead><tr><th>阶段</th><th>状态</th><th>说明</th><th>操作</th></tr></thead><tbody>
     {% for stage, status in summary.pipeline.items() %}
-    <tr><td>{{ stage }}</td><td>{{ status }}</td><td><form method="post" action="/runs/{{ run_id }}/pipeline/{{ stage }}"><button>运行 {{ stage }}</button></form></td></tr>
+    <tr>
+      <td>{{ stage }}</td>
+      <td><mark class="chip">{{ status }}</mark></td>
+      <td>{% if stage == "dedupe" %}发现重复组{% elif stage == "semantic" %}抽取 entities/claims/evidence{% elif stage == "cluster" %}生成 cluster{% elif stage == "event" %}生成 event{% elif stage == "review_queue" %}生成待审核项{% elif stage == "briefing" %}生成简报{% else %}生成报告{% endif %}</td>
+      <td><form method="post" action="/runs/{{ run_id }}/pipeline/{{ stage }}"><button>运行 {{ stage }}</button></form></td>
+    </tr>
     {% endfor %}
   </tbody></table>
 </article>
@@ -35,10 +57,10 @@
     <table><thead><tr><th>source</th><th>状态</th><th>fetched</th><th>inserted</th><th>duplicate</th><th>failed/error</th></tr></thead><tbody>
       {% for source in summary.sources %}<tr><td>{{ source.source_name }}</td><td>{{ source.status }}</td><td>{{ source.fetched_entries_count }}</td><td>{{ source.new_items_count }}</td><td>{{ source.duplicate_items_count }}</td><td>{{ source.failed_items_count }} {{ source.error_code or "" }}</td></tr>{% endfor %}
     </tbody></table>
-    {% else %}<p class="empty-state">暂无 source progress。</p>{% endif %}
+    {% else %}<p class="empty-state">暂无 source progress。dry-run 仍会记录 source 进度。</p>{% endif %}
   </article>
-  <article hx-get="/runs/{{ run_id }}" hx-trigger="every 2s" hx-swap="none">
-    <header><strong>Run Events / 实时事件</strong></header>
+  <article>
+    <header><strong>Run Events 时间线</strong></header>
     <div class="event-stream">{% for event in events %}<p><code>#{{ event.seq }}</code> <strong>{{ event.event_type }}</strong> {{ event.message }}</p>{% endfor %}</div>
   </article>
 </section>
@@ -47,6 +69,6 @@
   <header><strong>Items from this run</strong></header>
   {% if items %}
   <table><thead><tr><th>标题</th><th>Source</th><th>published_at</th></tr></thead><tbody>{% for item in items %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td>{{ item.source_name }}</td><td>{{ item.published_at }}</td></tr>{% endfor %}</tbody></table>
-  {% else %}<p class="empty-state">没有 committed items。dry-run 按设计不会写入 items。</p>{% endif %}
+  {% else %}<p class="empty-state">没有 committed items。dry-run 按设计不会写入 items；real-write 若为 0，请检查 source fetch / time filter / run events。</p>{% endif %}
 </article>
 {% endblock %}

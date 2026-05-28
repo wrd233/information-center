@@ -1,25 +1,45 @@
-<nav class="container-fluid">
-  <ul>
-    <li><strong>content_inbox_console 控制台</strong></li>
-  </ul>
-  <ul class="nav-scroll">
-    <li><a href="/dashboard" class="{% if active_page == 'dashboard' %}active{% endif %}">总览</a></li>
-    <li><a href="/environment" class="{% if active_page == 'environment' %}active{% endif %}">环境 / Fresh DB</a></li>
-    <li><a href="/sources" class="{% if active_page == 'sources' %}active{% endif %}">Source 管理</a></li>
-    <li><a href="/runs" class="{% if active_page == 'runs' %}active{% endif %}">Run 向导</a></li>
-    <li><a href="/items" class="{% if active_page == 'items' %}active{% endif %}">Item 信息</a></li>
-    <li><a href="/dedupe-groups" class="{% if active_page == 'dedupe' %}active{% endif %}">Dedupe 去重</a></li>
-    <li><a href="/clusters" class="{% if active_page == 'clusters' %}active{% endif %}">Cluster 聚合</a></li>
-    <li><a href="/events" class="{% if active_page == 'events' %}active{% endif %}">Event 事件</a></li>
-    <li><a href="/entities" class="{% if active_page == 'entities' %}active{% endif %}">Entity 实体</a></li>
-    <li><a href="/relations" class="{% if active_page == 'relations' %}active{% endif %}">Relation 关系</a></li>
-    <li><a href="/claims" class="{% if active_page == 'claims' %}active{% endif %}">Claim 断言</a></li>
-    <li><a href="/topics" class="{% if active_page == 'topics' %}active{% endif %}">Topic 主题</a></li>
-    <li><a href="/timeline" class="{% if active_page == 'timeline' %}active{% endif %}">Timeline 时间线</a></li>
-    <li><a href="/review-queue" class="{% if active_page == 'review' %}active{% endif %}">Review Queue</a></li>
-    <li><a href="/briefings" class="{% if active_page == 'briefings' %}active{% endif %}">Briefing 简报</a></li>
-    <li><a href="/reports" class="{% if active_page == 'reports' %}active{% endif %}">Report 报告</a></li>
-    <li><a href="/agent-query" class="{% if active_page == 'agent' %}active{% endif %}">Agent Query</a></li>
-    <li><a href="/settings" class="{% if active_page == 'settings' %}active{% endif %}">设置</a></li>
-  </ul>
+<nav class="container-fluid app-nav" aria-label="主导航">
+  <div class="brand-block">
+    <strong>information-center 作战台</strong>
+    <small>API-driven · Fresh DB only</small>
+  </div>
+  <div class="nav-groups">
+    <section>
+      <span>一、作战首页</span>
+      <a href="/dashboard" class="{% if active_page == 'dashboard' %}active{% endif %}">当前状态</a>
+    </section>
+    <section>
+      <span>二、开始使用</span>
+      <a href="/environment" class="{% if active_page == 'environment' %}active{% endif %}">环境 / Fresh DB</a>
+      <a href="/sources" class="{% if active_page == 'sources' %}active{% endif %}">Source 管理</a>
+      <a href="/runs/new" class="{% if active_page == 'runs' %}active{% endif %}">创建 Run</a>
+      <a href="/runs">Run 观察</a>
+    </section>
+    <section>
+      <span>三、信息消费</span>
+      <a href="/events" class="{% if active_page == 'events' %}active{% endif %}">事件中心</a>
+      <a href="/review-queue" class="{% if active_page == 'review' %}active{% endif %}">待审核</a>
+      <a href="/briefings" class="{% if active_page == 'briefings' %}active{% endif %}">Briefing</a>
+      <a href="/reports" class="{% if active_page == 'reports' %}active{% endif %}">Report</a>
+      <a href="/agent-query" class="{% if active_page == 'agent' %}active{% endif %}">Agent Query</a>
+    </section>
+    <section>
+      <span>四、维护与重开</span>
+      <a href="/reset" class="{% if active_page == 'reset' %}active{% endif %}">数据清理 / 重新开始</a>
+      <a href="/settings" class="{% if active_page == 'settings' %}active{% endif %}">设置</a>
+    </section>
+    <details class="advanced-nav">
+      <summary>五、高级调试</summary>
+      <a href="/items" class="{% if active_page == 'items' %}active{% endif %}">Items</a>
+      <a href="/dedupe-groups" class="{% if active_page == 'dedupe' %}active{% endif %}">Dedupe Groups</a>
+      <a href="/clusters" class="{% if active_page == 'clusters' %}active{% endif %}">Clusters</a>
+      <a href="/entities" class="{% if active_page == 'entities' %}active{% endif %}">Entities</a>
+      <a href="/relations" class="{% if active_page == 'relations' %}active{% endif %}">Relations</a>
+      <a href="/claims" class="{% if active_page == 'claims' %}active{% endif %}">Claims</a>
+      <a href="/topics" class="{% if active_page == 'topics' %}active{% endif %}">Topics</a>
+      <a href="/timeline" class="{% if active_page == 'timeline' %}active{% endif %}">Timeline</a>
+      <a href="/evidence" class="{% if active_page == 'evidence' %}active{% endif %}">Evidence</a>
+      <a href="/saved-views" class="{% if active_page == 'saved_views' %}active{% endif %}">Saved Views</a>
+    </details>
+  </div>
 </nav>

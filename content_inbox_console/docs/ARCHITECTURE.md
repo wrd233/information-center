@@ -1,149 +1,96 @@
-# Architecture: content_inbox_console
+# Architecture: API-driven Operational Console
 
-## Directory Structure
+`content_inbox_console` 是现有 FastAPI + Jinja + HTMX 前端的原地重构版本。当前主路径只有一个数据来源：`CONTENT_INBOX_FRONTEND_API_BASE` 指向的 `content_inbox` 后端 API。
 
-```
+## 当前目录
+
+```text
 content_inbox_console/
-├── app/
-│   ├── __init__.py               # Package marker
-│   ├── main.py                   # FastAPI app factory, lifespan, static files
-│   ├── config.py                 # Environment-based settings
-│   ├── repository.py             # ConsoleRepository — main SQL read queries
-│   ├── dependencies.py           # FastAPI dependency injection
-│   ├── repositories/             # Compatibility layer (v0.2.0+)
-│   │   ├── __init__.py
-│   │   ├── diagnostics.py        # DB introspection, table counts, warnings
-│   │   ├── observed_sources.py   # Derive sources from inbox_items metadata
-│   │   └── file_runs.py          # Scan outputs/runs/ for run reports on disk
-│   └── routes/
-│       ├── __init__.py           # Router registration
-│       ├── dashboard.py          # /dashboard, /api/dashboard/stats
-│       ├── items.py              # /items, /items/rows, /items/{id}
-│       ├── sources.py            # /sources, /sources/rows, /sources/{id}
-│       ├── runs.py               # /runs, /runs/rows, /runs/{id}
-│       ├── clusters.py           # /clusters, /clusters/{id}
-│       └── diagnostics.py        # /api/diagnostics
-├── templates/                    # Jinja2 templates (server-side rendering)
-│   ├── base.html                 # Main layout (PicoCSS + HTMX + nav)
-│   ├── dashboard.html            # Dashboard with registered/observed split
-│   ├── items/                    # Item list, HTMX rows, detail
-│   ├── sources/                  # Source list (with observed fallback), detail
-│   ├── runs/                     # Run list (with file fallback), detail
-│   ├── clusters/                 # Cluster cards, detail
-│   └── components/               # Reusable: nav, badges, pagination, error states
-├── static/css/app.css            # Custom CSS on top of PicoCSS
-├── tests/                        # pytest test suite
-├── Dockerfile                    # python:3.11-slim container
-├── docker-compose.yml            # Volume mounts for DB + outputs
-├── README.md
-└── docs/ARCHITECTURE.md          # This file
+  app/
+    main.py              FastAPI app factory
+    config.py            host/port/API base 配置
+    backend_client.py    统一 envelope API client
+    routes/ops.py        所有 console 页面路由
+  templates/
+    base.html
+    components/nav.html  任务导航 + 高级调试折叠导航
+    ops/*.html           Dashboard、Environment、Sources、Runs、Reset、消费页
+  static/css/app.css     统一低心智负担后台视觉
+  tests/test_api.py      route rendering + API mock 测试
 ```
 
-## Backend Modules
+## 已废弃并清理的旧架构
 
-### config.py — Settings
-Loads configuration from environment variables. The database path can be relative (resolved from repo root) or absolute. The outputs path defaults to `<db_parent>/outputs/runs`.
+历史版本曾包含 direct SQLite viewer：
 
-### repository.py — ConsoleRepository
-All database access for the main tables (inbox_items, rss_sources, rss_ingest_runs, rss_ingest_run_sources, event_clusters). Key design choices:
-- **Per-method connection**: each method receives a `sqlite3.Connection` from the caller.
-- **Column introspection**: `PRAGMA table_info` cached per table. Queries only SELECT columns that exist.
-- **JSON parsing**: screened JSON fields parsed to Python objects. Malformed JSON returns `{}` with logged warning.
-- **Read-only**: connections opened with `PRAGMA query_only = 1`.
-
-### repositories/diagnostics.py — DiagnosticsRepository
-Standalone functions (not class-based) for database introspection:
-- `get_db_diagnostics(path)` — checks if DB file exists/is readable, lists expected tables with counts.
-- `get_outputs_diagnostics(path)` — checks outputs path existence, counts run directories.
-- `compute_warnings(db_diag, outputs_diag)` — cross-references table counts to flag inconsistencies (e.g., "rss_sources empty but inbox_items has data").
-
-### repositories/observed_sources.py — Observed Source Fallback
-Derives source identity from `inbox_items` columns when `rss_sources` is empty. Priority order for source key:
-```
-source_id → source_name → feed_url → url domain
-```
-Functions:
-- `get_source_identity_columns(conn)` — introspects which columns exist.
-- `count_observed_sources(conn)` — distinct source count.
-- `list_observed_sources(conn, keyword, limit, offset)` — paginated observed source list with stats (item_count, latest_item_at, example_title).
-- `list_observed_source_items(conn, key, limit, offset)` — items belonging to an observed source.
-
-### repositories/file_runs.py — File Run Fallback
-Scans `outputs/runs/` for directories matching `rss_run_*`, `*ingest*`, or `live_*` patterns. Functions:
-- `count_file_runs(path)` — count of run directories.
-- `list_file_runs(path, limit, offset)` — returns entries with directory name, mtime, report availability, and parsed metrics from `final_report.md`.
-- `get_file_run_detail(path, run_dir_name)` — single file run detail with full report content.
-
-**Security**: all file access is validated to stay within the configured `outputs_path`. Path traversal attempts (e.g., `../../`) are rejected by `_resolve_safe_path()`.
-
-## Data Flow
-
-```
-Browser
-  │  GET /sources
-  ▼
-FastAPI route (sources.py)
-  │  ├─ Try repo.list_sources() → rss_sources table
-  │  └─ If empty → observed_sources.list_observed_sources() → inbox_items
-  ▼
-Compatibility Repositories
-  │  diagnostics: PRAGMA + COUNT queries
-  │  observed_sources: GROUP BY source_name with introspection
-  │  file_runs: os.scandir + report parsing
-  ▼
-Jinja2 template
-  │  renders registered + observed sources sections
-  │  contextual empty state messages
-  ▼
-Browser (HTML with HTMX)
+```text
+app/repository.py
+app/dependencies.py
+app/repositories/*
+app/routes/dashboard.py/items.py/sources.py/runs.py/clusters.py/diagnostics.py
+templates/items|sources|runs|clusters/*
+templates/dashboard.html
 ```
 
-## Integration Boundary with content_inbox
+这些文件已经删除。不要重新注册 direct-SQL route，不要恢复 observed source fallback 或 file-run fallback。Fresh DB 与 Legacy DB 的业务边界必须由后端 API 显式表达。
 
-### What We Read From
+## API 约定
 
-| Source | How Accessed | Mount |
-|--------|-------------|-------|
-| SQLite database | `sqlite3.connect()` read-only | Docker: `../content_inbox/data:/data:ro` |
-| Run outputs | File system reads (path-safe) | Docker: `../content_inbox/outputs/runs:/outputs/runs:ro` |
+前端只接受统一 envelope：
 
-### What We Do NOT Do
+```json
+{ "ok": true, "data": {}, "error": null, "meta": {} }
+```
 
-- Do NOT import `content_inbox` Python modules.
-- Do NOT call `content_inbox` API endpoints.
-- Do NOT write to the database.
-- Do NOT trigger ingestion or screening.
+错误展示规则：
 
-### Why Direct SQLite + File Access (Not API)
+- 页面顶部显示中文摘要。
+- `error.details` 或原始 JSON 放入折叠区。
+- 不向普通用户裸露 traceback。
 
-1. The console works even when `content_inbox` service is not running.
-2. Direct reads are fast for a local tool.
-3. The content_inbox API doesn't expose all fields (screening_json internals, source registry details).
-4. Schema introspection makes the console resilient to content_inbox evolution.
-5. File system scanning provides fallback when DB tables are empty but artifacts exist.
+## 后端边界
 
-## Compatibility Layer Design (v0.2.0)
+Console 依赖后端这些 API group：
 
-### Problem
-Old ingest paths wrote items to `inbox_items` with `source_name` embedded directly, without populating `rss_sources` or `rss_ingest_runs`. This causes the console to show "Total Sources: 0" despite having thousands of items.
+```text
+/api/environment
+/api/environment/health
+/api/environment/reset-options
+/api/environment/reset/preview
+/api/environment/reset/commit
+/api/sources*
+/api/runs*
+/api/items
+/api/dedupe-groups
+/api/clusters
+/api/events
+/api/entities / relations / claims / topics / timeline
+/api/review-queue
+/api/evidence
+/api/briefings
+/api/reports
+/api/saved-views
+/api/agent-query/preview
+```
 
-### Solution
-Three fallback layers:
-1. **Observed Sources**: when `rss_sources` is empty, derive sources from `inbox_items` metadata columns.
-2. **File Runs**: when `rss_ingest_runs` is empty, scan `outputs/runs/` for run directories with report files.
-3. **Diagnostics**: `/api/diagnostics` endpoint reveals the full picture — which tables exist, their counts, and any inconsistencies.
+## 安全模型
 
-### Why Not Modify content_inbox Core Code
-- Keeps the console independent and deployable without touching the ingest pipeline.
-- Handles historical/legacy data without requiring data migration.
-- Avoids coupling the read-only viewer to the write-path logic.
+- Console 不持有 DB path 写权限，也不打开 SQLite。
+- Fresh DB identity、DB path、Legacy DB proof 都由后端 `/api/environment` 返回。
+- Legacy DB 只出现在 checksum/mtime/size 证明中。
+- reset preview/commit 由后端验证 `is_fresh_database`。
+- real-write 由后端 `CONTENT_INBOX_ENABLE_REAL_RUNS=1` gate 控制。
 
-## Database Schema Dependency
+## UI 架构
 
-| Table | Critical Columns (must exist) | Optional Columns (graceful fallback) |
-|-------|------------------------------|--------------------------------------|
-| `inbox_items` | item_id, title, source_name, created_at | screening_json, clustering_json, source_id, feed_url, embedding_*, latest_* |
-| `rss_sources` | source_id, source_name, feed_url, status | failure_count, consecutive_failure_count, last_*_count, last_duration_ms, tags_json |
-| `rss_ingest_runs` | run_id, status, started_at | duration_ms, *_count columns, error_*, request_json |
-| `rss_ingest_run_sources` | id, run_id, status | source_id, *_count columns, incremental_*, warnings_json |
-| `event_clusters` | cluster_id, cluster_title, item_count | entities_json, embedding_model |
+一级导航从对象导航改为任务导航：
+
+```text
+作战首页
+开始使用：环境 / Source / Run
+信息消费：Events / Review / Briefing / Report / Agent Query
+维护与重开：Reset / Settings
+高级调试：Items / Dedupe / Clusters / Entities / Relations / Claims / Topics / Timeline / Evidence / Saved Views
+```
+
+页面模板复用这些模式：Page Header、Status Strip、Stat Card、Next Action Card、Preview Panel、Danger Zone、Data Table、Raw JSON Collapse、Audit/Event Timeline。

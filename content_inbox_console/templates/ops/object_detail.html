@@ -1,5 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
-<header class="page-header"><div><h1>{{ title }}</h1></div></header>
-<article><pre>{{ data | tojson(indent=2) }}</pre></article>
+<header class="page-header">
+  <div>
+    <p class="eyebrow">详情</p>
+    <h1>{{ title }}</h1>
+    <p>优先展示可读字段；调试所需的完整 API envelope 在下方折叠区。</p>
+  </div>
+</header>
+
+{% set event = data.event %}
+{% set cluster = data.cluster %}
+{% if event %}
+<article>
+  <header><strong>{{ event.event_title }}</strong></header>
+  <p>{{ event.event_summary }}</p>
+  <p><mark class="chip">{{ event.status }}</mark> <mark class="chip">confidence {{ event.confidence }}</mark> <code>{{ event.event_id }}</code></p>
+  <h3>Supporting items</h3>
+  {% if data.items %}
+  <table><tbody>{% for item in data.items %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td>{{ item.published_at }}</td></tr>{% endfor %}</tbody></table>
+  {% else %}<p class="empty-state">暂无 supporting items。</p>{% endif %}
+</article>
+{% elif cluster %}
+<article>
+  <header><strong>{{ cluster.cluster_title }}</strong></header>
+  <p>{{ cluster.cluster_summary }}</p>
+  <p><mark class="chip">{{ cluster.status }}</mark> <mark class="chip">confidence {{ cluster.confidence }}</mark> <code>{{ cluster.cluster_id }}</code></p>
+  <form method="post" action="/clusters/{{ cluster.cluster_id }}/create-event"><button>promote cluster to event</button></form>
+  <h3>Cluster items</h3>
+  {% if data.items %}
+  <table><tbody>{% for item in data.items %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td>{{ item.published_at }}</td></tr>{% endfor %}</tbody></table>
+  {% else %}<p class="empty-state">暂无 cluster items。</p>{% endif %}
+</article>
+{% endif %}
+
+<details>
+  <summary>原始 JSON</summary>
+  <pre>{{ data | tojson(indent=2) }}</pre>
+</details>
 {% endblock %}

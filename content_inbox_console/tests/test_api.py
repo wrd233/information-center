@@ -39,6 +39,18 @@ def fake_response(path: str) -> dict:
         "/api/dedupe-groups": {"dedupe_groups": []},
         "/api/briefings/daily": {"briefings": []},
         "/api/reports": {"reports": []},
+        "/api/evidence": {"evidence": []},
+        "/api/saved-views": {"saved_views": []},
+        "/api/environment/reset-options": {
+            "enabled": True,
+            "levels": [
+                {"level": "clear_runs_items_keep_sources", "label": "清空运行结果，保留 Sources", "description": "保留 sources", "clears": ["runs"], "keeps": ["sources"], "risk_level": "high"},
+                {"level": "clear_pipeline_outputs_keep_items", "label": "只清空 pipeline 派生数据，保留原始 items", "description": "重新跑 pipeline", "clears": ["pipeline"], "keeps": ["items"], "risk_level": "medium"},
+                {"level": "clear_outputs_keep_events", "label": "只清空 briefing/report/agent 输出", "description": "重新生成输出", "clears": ["outputs"], "keeps": ["events"], "risk_level": "medium"},
+                {"level": "clear_by_run_id", "label": "清空指定 run 的结果", "description": "run scoped", "clears": ["run"], "keeps": ["shared items"], "risk_level": "high"},
+                {"level": "clear_by_source_id", "label": "清空指定 source 及下游内容", "description": "source scoped", "clears": ["source items"], "keeps": ["other sources"], "risk_level": "high"},
+            ],
+        },
     }
     if path.startswith("/api/runs/run_1/summary"):
         return {"run": {"run_id": "run_1", "status": "success", "request": {"mode": "dry_run"}, "selected_source_count": 1, "success_source_count": 1, "failure_source_count": 0, "new_items_count": 0, "duplicate_items_count": 0}, "sources": [], "recent_events": [], "pipeline": {"dedupe": "pending", "semantic": "pending"}}
@@ -56,7 +68,7 @@ def fake_response(path: str) -> dict:
 def patch_backend(monkeypatch):
     def request(self, method, path, params=None, json=None):
         if path == "/api/environment/reset/preview":
-            return {"ok": True, "data": {"operation_id": "reset_1", "level": json["level"], "database_path": "/tmp/fresh/content_inbox.db", "legacy_db_affected": False, "counts_before": {"inbox_items": 2}}, "error": None, "meta": {}}
+            return {"ok": True, "data": {"operation_id": "reset_1", "level": json["level"], "label": "清空运行结果，保留 Sources", "description": "test", "database_path": "/tmp/fresh/content_inbox.db", "legacy_db_affected": False, "counts_before": {"inbox_items": 2}, "counts_after_expected": {"inbox_items": 0}, "tables_affected": ["inbox_items"], "requires_confirmation": "RESET", "risk_level": "high", "target": {"run_id": json.get("run_id"), "source_ids": json.get("source_ids") or []}}, "error": None, "meta": {}}
         if path == "/api/sources/check":
             return {"ok": True, "data": {"valid": True, "parse_ok": True, "duplicate": False, "sample_item_count": 2}, "error": None, "meta": {}}
         if path == "/api/sources/bulk/preview":
@@ -93,6 +105,9 @@ def test_core_console_pages_render(monkeypatch):
         "/briefings",
         "/reports",
         "/agent-query",
+        "/reset",
+        "/evidence",
+        "/saved-views",
         "/settings",
     ]:
         response = client.get(path)
@@ -117,13 +132,14 @@ def test_reset_source_actions_and_chinese_labels_render(monkeypatch):
     client = TestClient(create_app())
 
     env = client.get("/environment")
-    reset_preview = client.post("/environment/reset/preview", data={"level": "clear_runs_items_keep_sources"})
+    reset_preview = client.post("/reset/preview", data={"level": "clear_runs_items_keep_sources"})
     source_check = client.post("/sources/check", data={"feed_url": "file:///feed.xml", "source_name": "Source A", "source_category": "Test"})
     bulk_preview = client.post("/sources/bulk", data={"source_ids": "source-a", "action": "archive", "preview": "1"})
 
     assert "环境 / Fresh DB" in env.text
-    assert "数据重置" in env.text
+    assert "数据清理 / 重新开始" in env.text
     assert "Reset Preview" in reset_preview.text
+    assert "Legacy DB affected" in reset_preview.text
     assert "新增单个 source" in source_check.text
     assert "Source 检查结果" in source_check.text
     assert "Bulk Preview" in bulk_preview.text
