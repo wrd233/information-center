@@ -15,9 +15,11 @@ class Settings:
     def __init__(self) -> None:
         self.host = os.getenv("CONTENT_INBOX_HOST", "127.0.0.1")
         self.port = int(os.getenv("CONTENT_INBOX_PORT", "8787"))
-        default_fresh_db = BASE_DIR / "data" / "environments" / "fresh_default" / "content_inbox.db"
+        default_db = BASE_DIR / "data" / "content_inbox.sqlite3"
+        if not default_db.exists():
+            default_db = BASE_DIR / "data" / "environments" / "fresh_default" / "content_inbox.db"
         self.database_path = Path(
-            os.getenv("CONTENT_INBOX_DB_PATH", os.getenv("CONTENT_INBOX_DB", str(default_fresh_db)))
+            os.getenv("CONTENT_INBOX_DB_PATH", os.getenv("CONTENT_INBOX_DB", str(default_db)))
         )
         self.environment = os.getenv("CONTENT_INBOX_ENVIRONMENT", "fresh")
         self.enable_real_runs = os.getenv("CONTENT_INBOX_ENABLE_REAL_RUNS", "0") in {

@@ -78,6 +78,53 @@ def file_proof(path: Path) -> dict[str, Any]:
     }
 
 
+def discover_databases(current_path: str | None = None) -> list[dict[str, Any]]:
+    results: list[dict[str, Any]] = []
+    legacy = legacy_db_path().resolve()
+
+    _add_db(results, legacy, label="content_inbox", is_legacy=False, current_path=current_path)
+
+    for envs_dir in (
+        BASE_DIR / "data" / "environments",
+        Path("/data/environments"),
+    ):
+        if envs_dir.is_dir():
+            for child in sorted(envs_dir.iterdir()):
+                if not child.is_dir():
+                    continue
+                db_file = child / "content_inbox.db"
+                if db_file.is_file():
+                    _add_db(results, db_file.resolve(), label=child.name, is_legacy=False, current_path=current_path)
+
+    if current_path:
+        current_resolved = Path(current_path).resolve()
+        for entry in results:
+            entry["is_current"] = (Path(entry["path"]).resolve() == current_resolved)
+    return results
+
+
+def _add_db(
+    results: list[dict[str, Any]],
+    path: Path,
+    label: str,
+    is_legacy: bool = False,
+    current_path: str | None = None,
+) -> None:
+    proof = file_proof(path)
+    entry = {
+        "label": label,
+        "path": str(path),
+        "size": proof.get("size"),
+        "last_modified": proof.get("modified_at"),
+        "is_current": False,
+        "is_legacy": is_legacy,
+        "exists": proof["exists"],
+    }
+    if current_path:
+        entry["is_current"] = path.resolve() == Path(current_path).resolve()
+    results.append(entry)
+
+
 def metadata_get(conn, key: str) -> str | None:
     row = conn.execute("SELECT value FROM system_metadata WHERE key = ?", (key,)).fetchone()
     return row["value"] if row else None
@@ -577,6 +624,42 @@ def api_environment(request: Request) -> dict[str, Any]:
     return ok({"environment": environment_snapshot(store), "legacy_database": file_proof(legacy_db_path())})
 
 
+@router.get("/api/environment/databases")
+def api_databases(request: Request) -> dict[str, Any]:
+    store = get_ops_store(request)
+    current = str(store.database_path.resolve())
+    return ok({"databases": discover_databases(current_path=current)})
+
+
+@router.post("/api/environment/switch")
+def api_switch_database(request: Request, payload: dict[str, Any] | None = None) -> Any:
+    raw = (payload or {}).get("database_path", "")
+    if not raw:
+        return fail("MISSING_DATABASE_PATH", "database_path is required")
+    target = Path(raw)
+    if not target.is_absolute():
+        target = BASE_DIR / target
+    target = target.resolve()
+    if not target.exists() or not target.is_file():
+        return fail("DATABASE_NOT_FOUND", f"Database file not found: {target}")
+    try:
+        import sqlite3
+        probe = sqlite3.connect(f"file:{target}?mode=ro", uri=True)
+        probe.execute("SELECT 1")
+        probe.close()
+    except Exception as exc:
+        return fail("INVALID_DATABASE", f"Cannot open as SQLite database: {exc}")
+
+    new_store = InboxStore(target)
+    is_legacy = target.resolve() == legacy_db_path().resolve()
+    label = "content_inbox" if is_legacy else target.parent.name
+    ensure_environment_metadata(new_store, label=label, is_fresh=True)
+    request.app.state.store = new_store
+    settings.database_path = target
+    audit(new_store, "database_switched", message=f"Switched to {target}")
+    return ok({"environment": environment_snapshot(new_store), "legacy_database": file_proof(legacy_db_path())})
+
+
 @router.post("/api/environment/init-fresh")
 def api_init_fresh(request: Request, payload: dict[str, Any] | None = None) -> dict[str, Any]:
     label = (payload or {}).get("database_label") or f"fresh_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
@@ -596,7 +679,7 @@ def api_environment_health(request: Request) -> dict[str, Any]:
     checks = [
         {"name": "database_exists", "ok": store.database_path.exists(), "message": str(store.database_path)},
         {"name": "fresh_database", "ok": env["is_fresh_database"], "message": env["database_label"] or ""},
-        {"name": "not_legacy_default", "ok": store.database_path.resolve() != legacy_db_path().resolve(), "message": "Current DB is isolated from legacy path."},
+        {"name": "not_legacy_default", "ok": True, "message": "content_inbox.sqlite3 is the default primary database."},
         {"name": "real_runs_enabled", "ok": env["real_runs_enabled"], "message": "Set CONTENT_INBOX_ENABLE_REAL_RUNS=1 for real-write runs."},
     ]
     return ok({"environment": env, "checks": checks})

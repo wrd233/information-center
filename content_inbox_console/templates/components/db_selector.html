@@ -1,0 +1,13 @@
+{% if databases %}
+<form class="db-selector" method="post" action="/environment/switch">
+  <label for="db-select" class="db-selector-label">数据库</label>
+  <select id="db-select" name="database_path" class="db-select"
+          onchange="this.form.submit()">
+    {% for db in databases %}
+    <option value="{{ db.path }}" {% if db.is_current %}selected{% endif %}>
+      {{ db.label }}{% if db.is_legacy %} (Legacy){% endif %}{% if not db.exists %} [缺失]{% endif %}
+    </option>
+    {% endfor %}
+  </select>
+</form>
+{% endif %}

@@ -12,18 +12,19 @@
   {% include "components/nav.html" %}
   <main class="container-fluid app-shell" id="main-content">
     <section class="env-strip {% if not environment.is_fresh_database %}unsafe{% endif %}">
-      <strong>当前环境：{{ "Fresh DB" if environment.is_fresh_database else "非 Fresh DB，危险操作禁用" }}</strong>
-      <span>数据库：{{ environment.database_label or "unknown" }}</span>
-      <span>路径：<code>{{ environment.database_path or "" }}</code></span>
-      <span>real-write：{{ "已启用" if environment.real_runs_enabled else "未启用" }}</span>
-      <span>Legacy fallback：{{ "false" if not environment.legacy_business_fallback else "true" }}</span>
-      <span>Sources：{{ environment.source_count or 0 }}</span>
-      <span>Items：{{ environment.item_count or 0 }}</span>
-      <span>Runs：{{ environment.run_count or 0 }}</span>
+      {% include "components/db_selector.html" %}
+      <div class="env-strip-meta">
+        <span class="env-badge {% if environment.real_runs_enabled %}env-ok{% else %}env-warn{% endif %}">
+          real-write: {{ "ON" if environment.real_runs_enabled else "OFF" }}
+        </span>
+        <span class="env-count">Sources: {{ environment.source_count or 0 }}</span>
+        <span class="env-count">Items: {{ environment.item_count or 0 }}</span>
+        <span class="env-count">Runs: {{ environment.run_count or 0 }}</span>
+      </div>
     </section>
-    {% if error %}
+    {% if error or error_reason %}
     <article class="error-banner">
-      <strong>{{ error }}</strong>
+      <strong>{{ error or error_reason }}</strong>
       <p>Backend API: <code>{{ api_base }}</code></p>
     </article>
     {% endif %}

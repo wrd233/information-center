@@ -20,11 +20,14 @@ def client(request: Request) -> BackendClient:
 def render(request: Request, template: str, context: dict[str, Any]) -> HTMLResponse:
     context.setdefault("request", request)
     context.setdefault("api_base", request.app.state.settings.api_base)
-    context.setdefault("db_available", True)
-    context.setdefault("db_path", "")
     if "environment" not in context:
         env_response = client(request).get("/api/environment")
         context["environment"] = data(env_response, {}).get("environment", {})
+    if "databases" not in context:
+        dbs_response = client(request).get("/api/environment/databases")
+        context["databases"] = data(dbs_response, {}).get("databases", [])
+    if "error_reason" not in context:
+        context["error_reason"] = request.query_params.get("error", "")
     return request.app.state.templates.TemplateResponse(request, template, context)
 
 
@@ -135,6 +138,18 @@ def data_reset(request: Request):
             "error": err(env_r) or err(options_r) or err(runs_r) or err(sources_r),
         },
     )
+
+
+@router.post("/environment/switch", response_class=HTMLResponse)
+async def environment_switch(request: Request):
+    form = await form_fields(request)
+    database_path = str(form.get("database_path") or "")
+    response = client(request).post("/api/environment/switch", {"database_path": database_path})
+    if not response.get("ok"):
+        error_msg = err(response) or "switch_failed"
+        return RedirectResponse(f"/?error={error_msg}", status_code=303)
+    referer = request.headers.get("Referer", "/dashboard")
+    return RedirectResponse(referer, status_code=303)
 
 
 @router.post("/environment/init-fresh", response_class=HTMLResponse)

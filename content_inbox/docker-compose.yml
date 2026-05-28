@@ -8,7 +8,6 @@ services:
     environment:
       CONTENT_INBOX_HOST: 0.0.0.0
       CONTENT_INBOX_PORT: 8787
-      CONTENT_INBOX_DB_PATH: /data/environments/fresh_default/content_inbox.db
       CONTENT_INBOX_ENVIRONMENT: fresh
       CONTENT_INBOX_ENABLE_REAL_RUNS: "0"
     extra_hosts:
@@ -16,4 +15,4 @@ services:
     ports:
       - "8787:8787"
     volumes:
-      - ./data:/data
+      - ./data:/app/data
