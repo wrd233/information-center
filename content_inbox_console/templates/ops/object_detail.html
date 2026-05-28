@@ -16,11 +16,12 @@
 {% set cluster = data.cluster %}
 
 {% if event %}
+{% set status_cn = {'active': '活跃', 'needs_review': '待审核', 'resolved': '已确认', 'dismissed': '已忽略', 'merged': '已合并'}.get(event.status, event.status) %}
 <section class="card">
   <div class="card-header">
     <strong>{{ event.event_title }}</strong>
     <div class="flex gap-sm">
-      {% if event.status %}<span class="status-badge {{ 'success' if event.status == 'active' else 'muted' }}">{{ event.status }}</span>{% endif %}
+      {% if event.status %}<span class="status-badge {{ 'warning' if event.status == 'needs_review' else 'success' if event.status == 'active' else 'muted' }}">{{ status_cn }}</span>{% endif %}
       {% if event.confidence is not none %}<span class="tag">置信度 {{ event.confidence }}</span>{% endif %}
     </div>
   </div>
@@ -49,7 +50,7 @@
   <div class="card-header">
     <strong>{{ cluster.cluster_title }}</strong>
     <div class="flex gap-sm">
-      {% if cluster.status %}<span class="status-badge muted">{{ cluster.status }}</span>{% endif %}
+      {% if cluster.status %}<span class="status-badge muted">{{ {'active': '活跃', 'stale': '过期', 'merged': '已合并'}.get(cluster.status, cluster.status) }}</span>{% endif %}
       {% if cluster.confidence is not none %}<span class="tag">置信度 {{ cluster.confidence }}</span>{% endif %}
     </div>
   </div>

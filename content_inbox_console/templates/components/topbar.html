@@ -7,19 +7,19 @@
   <div class="topbar-right">
     <div class="flex items-center gap-sm">
       {% if environment.is_fresh_database %}
-      <span class="status-badge success text-xs">Fresh DB</span>
+      <span class="status-badge success text-xs">当前工作区</span>
       {% else %}
-      <span class="status-badge warning text-xs">Legacy</span>
+      <span class="status-badge warning text-xs">历史库</span>
       {% endif %}
       {% if environment.real_runs_enabled %}
-      <span class="status-badge success text-xs">real-write ON</span>
+      <span class="status-badge success text-xs">写入已开启</span>
       {% else %}
-      <span class="status-badge muted text-xs">real-write OFF</span>
+      <span class="status-badge muted text-xs">写入已关闭</span>
       {% endif %}
       <span class="text-xs text-muted">
-        Sources {{ environment.source_count or 0 }} ·
-        Items {{ environment.item_count or 0 }} ·
-        Runs {{ environment.run_count or 0 }}
+        信息源 {{ environment.source_count or 0 }} ·
+        条目 {{ environment.item_count or 0 }} ·
+        任务 {{ environment.run_count or 0 }}
       </span>
     </div>
     {% include "components/db_selector.html" %}

@@ -7,7 +7,7 @@
 <header class="page-header">
   <div>
     <h1>待审核（Review Queue）</h1>
-    <p>人工判断工作台。流水线生成的候选事件和聚合线索需要在此确认、忽略或调整。</p>
+    <p>人工判断工作台。流水线生成的候选事件和聚合线索需要在此确认或忽略。</p>
   </div>
   <form method="get" action="/review-queue" class="form-inline" style="margin:0;">
     <select name="status" style="max-width:140px;">
@@ -22,21 +22,30 @@
 {% if reviews %}
 <div class="card-grid">
   {% for review in reviews %}
+  {% set type_cn = {'event_candidate': '候选事件审核', 'cluster_review': '聚合线索审核', 'dedupe_review': '去重审核', 'entity_review': '实体审核', 'relation_review': '关系审核', 'claim_review': '断言审核'}.get(review.review_type, review.review_type) %}
+  {% set status_cn = {'pending': '待处理', 'resolved': '已处理', 'dismissed': '已忽略'}.get(review.status, review.status) %}
+  {% set status_cls = {'pending': 'warning', 'resolved': 'success', 'dismissed': 'muted'}.get(review.status, 'muted') %}
   <div class="card">
     <div class="card-header">
-      <strong>{{ review.review_type }}</strong>
-      <span class="status-badge {{ 'warning' if review.status == 'pending' else 'success' if review.status == 'resolved' else 'muted' }}">{{ review.status }}</span>
+      <strong>{{ type_cn }}</strong>
+      <span class="status-badge {{ status_cls }}">{{ status_cn }}</span>
     </div>
     <div class="card-body">
-      <p class="text-sm text-muted">{{ review.reason or '需要人工确认。' }}</p>
-      <div class="flex items-center gap-sm" style="margin-top:0.35rem;">
-        <span class="text-xs text-muted">目标：</span>
-        <code class="text-xs">{{ review.target_type }}:{{ review.target_id }}</code>
+      <p class="text-sm">{{ review.reason or '需要人工确认此候选事件是否有效。' }}</p>
+      <div class="flex items-center gap-sm" style="margin-top:0.5rem;">
+        <span class="text-xs text-muted">关联对象：</span>
+        {% if review.target_type == 'event' %}
+        <a href="/events/{{ review.target_id }}" class="btn btn-ghost btn-sm">查看事件</a>
+        <code class="text-xs text-muted">{{ review.target_id[:16] }}…</code>
+        {% elif review.target_type == 'cluster' %}
+        <a href="/clusters/{{ review.target_id }}" class="btn btn-ghost btn-sm">查看聚合线索</a>
+        <code class="text-xs text-muted">{{ review.target_id[:16] }}…</code>
+        {% else %}
+        <code class="text-xs text-muted">{{ review.target_type }}: {{ review.target_id }}</code>
+        {% endif %}
       </div>
     </div>
     <div class="card-footer">
-      {% if review.target_type == 'event' %}<a href="/events/{{ review.target_id }}" class="btn btn-ghost btn-sm">查看事件</a>{% endif %}
-      {% if review.target_type == 'cluster' %}<a href="/clusters/{{ review.target_id }}" class="btn btn-ghost btn-sm">查看聚合</a>{% endif %}
       <form method="post" action="/review-queue/{{ review.id }}/resolve" style="margin:0;"><button class="btn btn-primary btn-sm">确认</button></form>
       <form method="post" action="/review-queue/{{ review.id }}/dismiss" style="margin:0;"><button class="btn btn-secondary btn-sm">忽略</button></form>
     </div>

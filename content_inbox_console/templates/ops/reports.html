@@ -15,13 +15,14 @@
   <div class="card-header"><strong>生成新报告</strong></div>
   <div class="card-body">
     <form method="post" action="/reports/generate" class="form-inline">
-      <div class="form-group" style="flex:1; min-width:160px;">
+      <div class="form-group" style="flex:1; min-width:180px;">
         <label class="form-label text-xs">报告类型</label>
         <select name="report_type">
-          <option value="summary">总体摘要（Summary）</option>
-          <option value="source_health">信息源健康度（Source Health）</option>
-          <option value="event">事件报告（Event）</option>
+          <option value="summary">总体摘要</option>
+          <option value="source_health">信息源健康度</option>
+          <option value="event">事件报告</option>
         </select>
+        <span class="form-help">总体摘要汇总系统状态，信息源健康度分析各源可用性，事件报告详述特定事件</span>
       </div>
       <button type="submit" class="btn btn-primary">生成报告</button>
     </form>
@@ -33,12 +34,23 @@
   {% for report in reports %}
   <div class="card">
     <div class="card-header">
-      <strong>{{ report.title }}</strong>
-      <span class="text-xs text-muted">{{ report.created_at }}</span>
+      <strong>{{ report.title or '报告' }}</strong>
+      <span class="tag">{{ {'summary': '总体摘要', 'source_health': '信息源健康度', 'event': '事件报告', 'run': '运行报告'}.get(report.report_type, report.report_type or '') }}</span>
     </div>
     <div class="card-body">
-      <pre style="max-height:320px; overflow:auto; font-size:0.82rem; line-height:1.55;">{{ report.body_markdown }}</pre>
+      {% if report.body_markdown %}
+      <div style="max-height:240px; overflow:auto; font-size:0.82rem; line-height:1.6; white-space:pre-wrap;">{{ report.body_markdown[:500] }}{% if report.body_markdown|length > 500 %}…{% endif %}</div>
+      {% else %}
+      <p class="text-sm text-muted">报告内容为空</p>
+      {% endif %}
+      <div class="text-xs text-muted" style="margin-top:0.5rem;">
+        生成时间：{{ report.created_at or '' }}
+      </div>
     </div>
+    <details class="debug-panel">
+      <summary>完整内容</summary>
+      <pre>{{ report.body_markdown or '' }}</pre>
+    </details>
   </div>
   {% endfor %}
 </div>

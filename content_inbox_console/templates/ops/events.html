@@ -14,19 +14,28 @@
 {% if items %}
 <div class="card-grid">
   {% for event in items %}
+  {% set status_cn = {'active': '活跃', 'needs_review': '待审核', 'resolved': '已确认', 'dismissed': '已忽略', 'merged': '已合并'}.get(event.status, event.status or '未知') %}
+  {% set type_cn = {'unknown': '', 'tech': '科技', 'product': '产品', 'business': '商业', 'ai': 'AI'}.get(event.event_type, '') %}
   <div class="card">
     <div class="card-header">
       <strong>
         <a href="/events/{{ event.event_id }}">{{ event.event_title or event.event_id[:16] }}</a>
       </strong>
-      {% if event.status %}<span class="status-badge {{ 'success' if event.status == 'active' else 'muted' }}">{{ event.status }}</span>{% endif %}
+      <span class="status-badge {{ 'warning' if event.status == 'needs_review' else 'success' if event.status == 'active' else 'muted' }}">{{ status_cn }}</span>
     </div>
     <div class="card-body">
-      <p class="text-sm text-muted">{{ event.event_summary or '暂无摘要' }}</p>
+      {% set summary = event.event_summary or '' %}
+      {% if summary.startswith('Candidate event from cluster ') %}
+      <p class="text-sm text-muted">由聚合线索自动生成的候选事件</p>
+      {% elif summary %}
+      <p class="text-sm text-muted">{{ summary[:120] }}{% if summary|length > 120 %}…{% endif %}</p>
+      {% else %}
+      <p class="text-sm text-muted">暂无摘要</p>
+      {% endif %}
       <div class="flex items-center gap-sm" style="margin-top:0.5rem;">
-        {% if event.confidence is not none %}<span class="tag">置信度 {{ event.confidence }}</span>{% endif %}
-        {% if event.event_type %}<span class="tag">{{ event.event_type }}</span>{% endif %}
-        <code class="text-xs text-muted">{{ event.event_id[:16] }}…</code>
+        {% if event.confidence is not none %}<span class="tag">置信度 {{ (event.confidence * 100) | int }}%</span>{% endif %}
+        {% if type_cn %}<span class="tag">{{ type_cn }}</span>{% endif %}
+        <code class="text-xs text-muted">{{ event.event_id[:12] }}…</code>
       </div>
     </div>
     <div class="card-footer">
