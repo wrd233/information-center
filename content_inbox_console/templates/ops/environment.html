@@ -1,75 +1,102 @@
 {% extends "base.html" %}
-{% block title %}环境 / Fresh DB - content_inbox_console{% endblock %}
+{% block title %}环境 - 信息中心作战台{% endblock %}
+{% block page_title %}环境管理{% endblock %}
+
 {% block content %}
+
 <header class="page-header">
   <div>
-    <h1>环境 / Fresh DB</h1>
-    <p>这里确认当前页面只显示当前 Fresh DB 的真实状态。Legacy DB 只用于 checksum 证明，不作为业务数据来源。</p>
+    <h1>环境与数据库</h1>
+    <p>确认当前工作数据库（Fresh DB）的身份和状态。Legacy DB 仅用于校验证明，不作为业务数据来源。</p>
   </div>
-  <div>
-    <a role="button" href="/environment">刷新</a>
-    <a role="button" class="secondary" href="/reset">数据清理 / 重新开始</a>
+  <div class="header-actions">
+    <a href="/environment" class="btn btn-ghost btn-sm">刷新</a>
+    <a href="/reset" class="btn btn-secondary btn-sm">数据清理</a>
   </div>
 </header>
 
 {% if environment.item_count or environment.source_count or environment.run_count %}
-<article class="warning-banner">
-  <strong>当前 Fresh DB 不是空库。</strong>
-  <p>包含 {{ environment.source_count }} sources、{{ environment.item_count }} items、{{ environment.run_count }} runs。可以使用下方“数据重置”回到干净状态。</p>
-</article>
+<div class="alert alert-warning">
+  <strong>当前工作区不是空库</strong>
+  <p>包含 {{ environment.source_count }} 个信息源、{{ environment.item_count }} 条信息、{{ environment.run_count }} 个任务。可使用数据清理页面重置。</p>
+</div>
 {% endif %}
 
-<section class="grid two">
-  <article>
-    <header><strong>当前 Fresh DB</strong></header>
-    <dl>
-      <dt>database_id</dt><dd><code>{{ environment.database_id }}</code></dd>
-      <dt>database_label</dt><dd>{{ environment.database_label }}</dd>
-      <dt>database_path</dt><dd><code>{{ environment.database_path }}</code></dd>
-      <dt>schema_version</dt><dd>{{ environment.schema_version }}</dd>
-      <dt>environment_kind</dt><dd>{{ environment.environment_kind }}</dd>
-      <dt>is_fresh_database</dt><dd>{{ environment.is_fresh_database }}</dd>
-      <dt>source / item / run</dt><dd>{{ environment.source_count }} / {{ environment.item_count }} / {{ environment.run_count }}</dd>
-      <dt>real-write</dt><dd>{{ "已启用" if environment.real_runs_enabled else "未启用：设置 CONTENT_INBOX_ENABLE_REAL_RUNS=1 后重启后端" }}</dd>
-      <dt>legacy fallback</dt><dd>{{ "否" if not environment.legacy_business_fallback else "是，需排查" }}</dd>
-      <dt>最近 reset</dt><dd>{{ environment.last_reset_at or "暂无" }}</dd>
-    </dl>
-  </article>
-  <article>
-    <header><strong>Legacy DB 只读证明</strong></header>
-    <p>Legacy DB 不会被当前 console 页面作为业务数据读取，也不会被 reset 操作影响。</p>
-    <dl>
-      <dt>path</dt><dd><code>{{ legacy_database.path }}</code></dd>
-      <dt>exists</dt><dd>{{ legacy_database.exists }}</dd>
-      <dt>size</dt><dd>{{ legacy_database.size }}</dd>
-      <dt>modified_at</dt><dd>{{ legacy_database.modified_at }}</dd>
-      <dt>sha256</dt><dd><code class="small-code">{{ legacy_database.sha256 }}</code></dd>
-    </dl>
-  </article>
+<div class="content-grid">
+  <section class="card">
+    <div class="card-header"><strong>当前工作数据库（Fresh DB）</strong></div>
+    <div class="card-body">
+      <div class="summary-list">
+        <dt>数据库 ID</dt><dd><code class="text-xs">{{ environment.database_id }}</code></dd>
+        <dt>数据库标签</dt><dd>{{ environment.database_label }}</dd>
+        <dt>数据库路径</dt><dd><code class="text-xs break-all">{{ environment.database_path }}</code></dd>
+        <dt>Schema 版本</dt><dd>{{ environment.schema_version }}</dd>
+        <dt>环境类型</dt><dd>{{ environment.environment_kind }}</dd>
+        <dt>是否工作区</dt><dd>{{ '是' if environment.is_fresh_database else '否' }}</dd>
+        <dt>数量统计</dt><dd>{{ environment.source_count }} 信息源 / {{ environment.item_count }} 条目 / {{ environment.run_count }} 任务</dd>
+        <dt>写入模式</dt><dd>{{ '已启用' if environment.real_runs_enabled else '未启用（需设 CONTENT_INBOX_ENABLE_REAL_RUNS=1）' }}</dd>
+        <dt>Legacy 回退</dt><dd>{{ '否' if not environment.legacy_business_fallback else '是，需排查' }}</dd>
+        <dt>最近重置</dt><dd>{{ environment.last_reset_at or '暂无' }}</dd>
+      </div>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-header"><strong>历史数据库（Legacy DB）— 只读校验</strong></div>
+    <div class="card-body">
+      <p class="text-sm text-muted">Legacy DB 不会被当前控制台页面作为业务数据读取，也不会被任何重置操作影响。</p>
+      <div class="summary-list" style="margin-top:0.5rem;">
+        <dt>路径</dt><dd><code class="text-xs break-all">{{ legacy_database.path }}</code></dd>
+        <dt>是否存在</dt><dd>{{ legacy_database.exists }}</dd>
+        <dt>大小</dt><dd>{{ legacy_database.size }}</dd>
+        <dt>修改时间</dt><dd>{{ legacy_database.modified_at }}</dd>
+        <dt>SHA256</dt><dd><code class="text-xs break-all">{{ legacy_database.sha256 }}</code></dd>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="card">
+  <div class="card-header"><strong>健康检查</strong></div>
+  <div class="card-body">
+    {% if checks %}
+    <table class="data-table">
+      <thead><tr><th>检查项</th><th>状态</th><th>说明</th></tr></thead>
+      <tbody>
+      {% for check in checks %}
+      <tr>
+        <td class="text-sm">{{ check.name }}</td>
+        <td>{% if check.ok %}<span class="status-badge success">通过</span>{% else %}<span class="status-badge warning">需处理</span>{% endif %}</td>
+        <td class="text-xs text-muted">{{ check.message }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="text-xs text-muted">暂无健康检查数据。</p>
+    {% endif %}
+  </div>
 </section>
 
-<article>
-  <header><strong>健康检查</strong></header>
-  <table>
-    <thead><tr><th>检查项</th><th>状态</th><th>说明</th></tr></thead>
-    <tbody>{% for check in checks %}<tr><td>{{ check.name }}</td><td>{{ "通过" if check.ok else "需要处理" }}</td><td>{{ check.message }}</td></tr>{% endfor %}</tbody>
-  </table>
-</article>
-
-<section class="grid two">
-  <article class="danger-zone">
-    <header><strong>数据清理 / 重新开始</strong></header>
-    <p>reset 已移到独立页面，支持清空 pipeline 输出、清空 briefing/report、按 run 清理、按 source 清理等 scope。每个 scope 都 preview-first，并显示 Legacy DB affected=false。</p>
-    <a role="button" href="/reset">进入数据清理页</a>
-  </article>
-  <article>
-    <header><strong>新建 Fresh DB 环境</strong></header>
-    <p>创建一个全新的 Fresh DB 并切换当前后端运行环境。适合完全重新开始试验。</p>
-    <form action="/environment/init-fresh" method="post">
-      <label>新环境名称 <input name="database_label" placeholder="fresh_YYYYMMDD_HHMMSS"></label>
-      <button type="submit">新建并切换 Fresh DB</button>
-    </form>
-  </article>
-</section>
+<div class="content-grid">
+  <section class="card risk-high">
+    <div class="card-header"><strong>数据清理</strong></div>
+    <div class="card-body">
+      <p class="text-sm text-muted">支持清空流水线输出、简报/报告、按任务清理、按信息源清理等多种范围。每个操作都 Preview 优先，Legacy DB 不受影响。</p>
+      <a href="/reset" class="btn btn-danger btn-sm">进入数据清理页</a>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-header"><strong>新建工作区</strong></div>
+    <div class="card-body">
+      <p class="text-sm text-muted">创建全新的 Fresh DB 并切换当前后端运行环境。适合完全隔离的测试场景。</p>
+      <form action="/environment/init-fresh" method="post" class="form-inline">
+        <div class="form-group" style="flex:1; min-width:200px;">
+          <input name="database_label" placeholder="新环境名称，如 fresh_20260528">
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">新建并切换</button>
+      </form>
+    </div>
+  </section>
+</div>
 
 {% endblock %}

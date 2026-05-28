@@ -1,5 +1,44 @@
 {% extends "base.html" %}
+{% block title %}简报 - 信息中心作战台{% endblock %}
+{% block page_title %}简报{% endblock %}
+
 {% block content %}
-<header class="page-header"><div><h1>Briefing 简报</h1><p>从 events、clusters 和 review alerts 生成 Daily / Weekly briefing。</p></div><form method="post" action="/briefings/daily/generate"><button>生成 Daily Briefing</button></form></header>
-{% if briefings %}{% for briefing in briefings %}<article><header><strong>{{ briefing.title }}</strong></header><pre>{{ briefing.body_markdown }}</pre></article>{% endfor %}{% else %}<p class="empty-state">暂无 briefing。请先执行 real-write 或生成 event/review。</p>{% endif %}
+
+<header class="page-header">
+  <div>
+    <h1>简报（Briefing）</h1>
+    <p>基于事件和待审核项自动生成的每日/每周简报。</p>
+  </div>
+  <form method="post" action="/briefings/daily/generate" style="margin:0;">
+    <button class="btn btn-primary">生成每日简报</button>
+  </form>
+</header>
+
+{% if briefings %}
+<div class="card-grid">
+  {% for briefing in briefings %}
+  <div class="card">
+    <div class="card-header">
+      <strong>{{ briefing.title }}</strong>
+      <span class="text-xs text-muted">{{ briefing.created_at }}</span>
+    </div>
+    <div class="card-body">
+      <pre style="max-height:320px; overflow:auto; font-size:0.82rem; line-height:1.55;">{{ briefing.body_markdown }}</pre>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-state-icon">📋</div>
+  <h3>暂无简报</h3>
+  <p>简报需要已有事件数据才能生成。请先执行写入任务 → 运行流水线 → 生成简报。</p>
+  <div style="margin-top:1rem;">
+    <a href="/runs/new" class="btn btn-primary btn-sm">创建抓取任务</a>
+    <span class="text-muted text-xs" style="margin:0 0.5rem;">或</span>
+    <a href="/events" class="btn btn-secondary btn-sm">查看事件</a>
+  </div>
+</div>
+{% endif %}
+
 {% endblock %}

@@ -1,28 +1,124 @@
 {% extends "base.html" %}
+{% block title %}任务预览 - 信息中心作战台{% endblock %}
+{% block page_title %}任务预览{% endblock %}
+
 {% block content %}
-<header class="page-header"><div><h1>Run Preview / 运行预览</h1><p>启动前请确认影响范围。</p></div></header>
+
+<header class="page-header">
+  <div>
+    <h1>任务预览 — 发车前确认</h1>
+    <p>启动前请仔细确认影响范围。确认无误后点击"启动任务"。</p>
+  </div>
+</header>
+
 {% if preview %}
-<section class="grid two">
-  <article>
-    <header><strong>影响范围</strong></header>
-    <dl>
-      <dt>模式</dt><dd><code>{{ preview.mode }}</code></dd>
-      <dt>source 数量</dt><dd>{{ preview.source_count }}</dd>
-      <dt>是否写入数据库</dt><dd>{{ preview.will_write_items }}</dd>
-      <dt>风险等级</dt><dd>{{ preview.risk_level }}</dd>
-      <dt>影响 Legacy DB</dt><dd>否</dd>
-      <dt>可 cancel</dt><dd>是</dd>
-      <dt>rollback</dt><dd>支持 run-linked inserted items 的 soft rollback preview/commit</dd>
-    </dl>
-  </article>
-  <article><header><strong>数据库</strong></header><pre>{{ preview.database | tojson(indent=2) }}</pre></article>
+{# ── Overview Cards ── #}
+<div class="stats-grid">
+  <div class="metric-card">
+    <span class="metric-label">运行模式</span>
+    <span class="metric-value">{{ "预演模式" if preview.mode == 'dry_run' else "写入模式" }}</span>
+    <span class="metric-sub">{{ "不写入数据库" if preview.mode == 'dry_run' else "将写入当前工作数据库" }}</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">信息源数量</span>
+    <span class="metric-value">{{ preview.source_count }}</span>
+    <span class="metric-sub">将被抓取的信息源</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">风险等级</span>
+    <span class="metric-value {{ 'text-ok' if preview.risk_level == 'low' else 'text-danger' }}">{{ preview.risk_level }}</span>
+    <span class="metric-sub">Legacy DB 不受影响</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">可取消 / 可回滚</span>
+    <span class="metric-value text-ok">是</span>
+    <span class="metric-sub">支持 run-linked 软回滚</span>
+  </div>
+</div>
+
+{# ── Details ── #}
+<div class="content-grid">
+  <section class="card">
+    <div class="card-header"><strong>影响范围</strong></div>
+    <div class="card-body">
+      <div class="summary-list">
+        <dt>运行模式</dt><dd><code>{{ preview.mode }}</code></dd>
+        <dt>是否写入数据库</dt><dd><strong>{{ preview.will_write_items }}</strong></dd>
+        <dt>需要确认</dt><dd>{{ preview.requires_confirmation }}</dd>
+        {% if preview.time_filter %}
+        <dt>时间范围</dt><dd>{{ preview.time_filter.published_from or '不限' }} ~ {{ preview.time_filter.published_to or '不限' }}</dd>
+        {% endif %}
+        {% if preview.limits %}
+        <dt>限制</dt><dd>max_sources={{ preview.limits.max_sources }}, max_items_per_source={{ preview.limits.max_items_per_source }}, max_total={{ preview.limits.max_total_items }}</dd>
+        {% endif %}
+        <dt>Legacy DB 影响</dt><dd class="text-ok">否</dd>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><strong>数据库信息</strong></div>
+    <div class="card-body">
+      <div class="summary-list">
+        <dt>数据库路径</dt><dd><code class="text-xs break-all">{{ preview.database.database_path or '-' }}</code></dd>
+        <dt>数据库 ID</dt><dd><code class="text-xs">{{ preview.database.database_id or '-' }}</code></dd>
+        <dt>是否 Fresh DB</dt><dd>{{ preview.database.is_fresh_database }}</dd>
+      </div>
+    </div>
+  </section>
+</div>
+
+{# ── Sources List ── #}
+<section class="card">
+  <div class="card-header"><strong>信息源列表（{{ preview.source_count }} 个）</strong></div>
+  <div class="card-body">
+    {% if preview.sources %}
+    <div class="table-container" style="max-height:400px;">
+      <table class="data-table">
+        <thead><tr><th>名称</th><th>分类</th><th>URL</th></tr></thead>
+        <tbody>
+        {% for source in preview.sources %}
+        <tr>
+          <td class="text-sm">{{ source.source_name or source.source_id }}</td>
+          <td class="text-xs text-muted">{{ source.source_category or '-' }}</td>
+          <td><code class="text-xs">{{ source.feed_url }}</code></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+  </div>
 </section>
-<article><header><strong>Sources</strong></header><pre>{{ preview.sources | tojson(indent=2) }}</pre></article>
-<form action="/runs/start" method="post">
-  <input type="hidden" name="payload_json" value='{{ payload }}'>
-  <button>Step 7：Start Run / 启动 {{ preview.mode }}</button>
-</form>
-{% else %}
-<p class="empty-state">Preview 失败，请返回 Run 向导检查参数。</p>
+
+{# ── real-write warning ── #}
+{% if preview.mode == 'real_write' and not environment.real_runs_enabled %}
+<div class="alert alert-error">
+  <strong>无法启动：写入模式未启用</strong>
+  <p>当前后端 <code>CONTENT_INBOX_ENABLE_REAL_RUNS=0</code>，不能执行写入任务。请改用预演模式（dry-run），或在后端确认后开启写入开关。</p>
+  <a href="/runs/new" class="btn btn-secondary btn-sm" style="margin-top:0.5rem;">返回修改模式</a>
+</div>
 {% endif %}
+
+{# ── Action Buttons ── #}
+<div class="flex items-center gap-md justify-center" style="padding: var(--space-xl) 0;">
+  <a href="/runs/new" class="btn btn-secondary">返回修改</a>
+  <form action="/runs/start" method="post" style="margin:0;">
+    <input type="hidden" name="payload_json" value='{{ payload }}'>
+    <button type="submit" class="btn btn-primary btn-lg"
+      {% if preview.mode == 'real_write' and not environment.real_runs_enabled %}disabled{% endif %}>
+      确认启动 — {{ "预演模式" if preview.mode == 'dry_run' else "写入模式" }}
+    </button>
+  </form>
+</div>
+
+{% else %}
+<div class="empty-state">
+  <div class="empty-state-icon">⚠</div>
+  <h3>预览失败</h3>
+  <p>无法获取任务预览结果。请返回任务创建向导检查参数设置是否正确。</p>
+  <a href="/runs/new" class="btn btn-primary">返回创建任务</a>
+</div>
+{% endif %}
+
 {% endblock %}

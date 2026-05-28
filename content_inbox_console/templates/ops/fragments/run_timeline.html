@@ -1,0 +1,31 @@
+{# HTMX fragment: Run event timeline #}
+{% set status = summary.run.status if summary else 'unknown' %}
+
+<div id="run-timeline-fragment"
+  {% if status in ('running', 'pending', 'started') %}
+  hx-get="/runs/{{ run_id }}/fragment/timeline" hx-trigger="every 5s" hx-swap="outerHTML"
+  {% endif %}>
+
+  <div class="card-header" style="padding:0; margin-bottom:0.5rem;">
+    <strong>事件时间线</strong>
+    {% if status in ('running', 'pending', 'started') %}
+    <span class="text-xs text-muted">自动刷新中…</span>
+    {% endif %}
+  </div>
+
+  {% if events %}
+  <div class="event-timeline">
+    {% for event in events %}
+    <div class="event-item">
+      <span class="event-seq">#{{ event.seq }}</span>
+      <div class="event-body">
+        <span class="event-type">{{ event.event_type }}</span>
+        <span class="event-message">{{ event.message }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-xs text-muted">暂无事件记录。</p>
+  {% endif %}
+</div>

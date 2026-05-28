@@ -1,112 +1,299 @@
 {% extends "base.html" %}
-{% block title %}Source 管理 - content_inbox_console{% endblock %}
+{% block title %}信息源管理 - 信息中心作战台{% endblock %}
+{% block page_title %}信息源管理{% endblock %}
+
 {% block content %}
+
 <header class="page-header">
   <div>
-    <h1>Source 管理</h1>
-    <p>新增、导入、编辑、启用、禁用、归档、批量操作和导出 sources。删除默认是软归档，不会物理删除历史 items。</p>
+    <h1>信息源（Source）管理</h1>
+    <p>新增、导入、编辑、启用、禁用、归档和导出信息源。删除默认为软归档，不会物理删除历史信息。</p>
   </div>
-  <a role="button" href="/runs/new">选择 sources 创建 run</a>
+  <div class="header-actions">
+    <a href="/runs/new" class="btn btn-primary">选择信息源创建任务</a>
+  </div>
 </header>
 
-<section class="grid two">
-  <article>
-    <header><strong>新增单个 source</strong></header>
-    <form action="/sources/check" method="post">
-      <label>标题 / title<input name="source_name" value="{{ draft_source.source_name if draft_source else '' }}" placeholder="示例：OpenAI Blog"></label>
-      <label>RSS/Atom URL<input name="feed_url" value="{{ draft_source.feed_url if draft_source else '' }}" placeholder="https://example.com/feed.xml"></label>
-      <label>站点 URL / site_url<input name="site_url" placeholder="https://example.com"></label>
-      <label>分类 / category<input name="source_category" value="{{ draft_source.source_category if draft_source else '' }}" placeholder="AI/产品"></label>
-      <button>检查 source</button>
-    </form>
-    {% if check_result %}
-      <details open><summary>Source 检查结果</summary><pre>{{ check_result | tojson(indent=2) }}</pre></details>
-      {% if check_result.valid and not check_result.duplicate %}
-      <form action="/sources/add" method="post">
-        <input type="hidden" name="source_name" value="{{ draft_source.source_name }}">
-        <input type="hidden" name="feed_url" value="{{ draft_source.feed_url }}">
-        <input type="hidden" name="category" value="{{ draft_source.source_category }}">
-        <label>Tags（逗号分隔）<input name="tags"></label>
-        <label>Notes<textarea name="notes" rows="2"></textarea></label>
-        <button>确认新增 source</button>
+{# ── Top Stats ── #}
+<div class="stats-grid">
+  <div class="metric-card">
+    <span class="metric-label">信息源总数</span>
+    <span class="metric-value">{{ sources|length if sources else 0 }}</span>
+    <span class="metric-sub">{{ stats }}</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">活跃</span>
+    <span class="metric-value text-ok">{{ stats.active or 0 }}</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">禁用/归档</span>
+    <span class="metric-value text-muted">{{ (stats.disabled or 0) + (stats.archived or 0) }}</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">异常</span>
+    <span class="metric-value text-danger">{{ stats.broken or 0 }}</span>
+  </div>
+</div>
+
+{# ── Quick Start Cards ── #}
+<div class="card-grid">
+  <section class="card">
+    <div class="card-header"><strong>批量导入信息源</strong></div>
+    <div class="card-body">
+      <p class="text-sm text-muted">支持每行 URL、CSV、JSON 或 OPML 格式批量导入。</p>
+      <form action="/sources/import/preview" method="post">
+        <div class="form-group">
+          <label class="form-label">导入格式</label>
+          <select name="format">
+            <option value="urls">每行 URL（可附带名称和分类）</option>
+            <option value="csv">CSV 文本</option>
+            <option value="json">JSON 文本</option>
+            <option value="opml">OPML 文本</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">导入内容</label>
+          <textarea name="content" rows="5" placeholder="每行格式：feed_url, source_name, category"></textarea>
+          <span class="form-help">每行一个 RSS/Atom URL，可附带名称和分类（逗号分隔）</span>
+        </div>
+        <button type="submit" class="btn btn-primary">预览导入</button>
       </form>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><strong>新增单个信息源</strong></div>
+    <div class="card-body">
+      <form action="/sources/check" method="post">
+        <div class="form-group">
+          <label class="form-label">RSS/Atom 地址 <span class="text-danger">*</span></label>
+          <input name="feed_url" value="{{ draft_source.feed_url if draft_source else '' }}" placeholder="https://example.com/feed.xml" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">名称</label>
+          <input name="source_name" value="{{ draft_source.source_name if draft_source else '' }}" placeholder="示例：OpenAI Blog">
+        </div>
+        <div class="form-group">
+          <label class="form-label">分类</label>
+          <input name="source_category" value="{{ draft_source.source_category if draft_source else '' }}" placeholder="AI / 产品 / 科技">
+        </div>
+        <button type="submit" class="btn btn-secondary">检查信息源</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><strong>导出信息源</strong></div>
+    <div class="card-body">
+      <p class="text-sm text-muted">导出当前信息源注册表为 JSON、CSV 或 OPML 格式。</p>
+      <form action="/sources/export" method="post" class="form-inline">
+        <div class="form-group" style="flex:1; min-width:120px;">
+          <select name="format">
+            <option value="json">JSON 格式</option>
+            <option value="csv">CSV 格式</option>
+            <option value="opml">OPML 格式</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-secondary">导出</button>
+      </form>
+      {% if export_result %}
+      <details class="debug-panel" style="margin-top:0.75rem;" open>
+        <summary>导出结果（{{ export_result.format }}，{{ export_result.count }} 条）</summary>
+        <pre>{{ export_result.content }}</pre>
+      </details>
       {% endif %}
+    </div>
+  </section>
+</div>
+
+{# ── Check Result ── #}
+{% if check_result %}
+<div class="card {{ 'risk-low' if check_result.valid and not check_result.duplicate else 'risk-high' }}">
+  <div class="card-header">
+    <strong>信息源检查结果</strong>
+    {% if check_result.valid and not check_result.duplicate %}
+    <span class="status-badge success">可用</span>
+    {% elif check_result.duplicate %}
+    <span class="status-badge warning">重复</span>
+    {% else %}
+    <span class="status-badge danger">无效</span>
     {% endif %}
-  </article>
-
-  <article>
-    <header><strong>批量导入 sources</strong></header>
-    <form action="/sources/import/preview" method="post">
-      <label>格式
-        <select name="format"><option value="urls">每行 URL</option><option value="csv">CSV text</option><option value="json">JSON text</option><option value="opml">OPML text</option></select>
-      </label>
-      <label>导入内容<textarea name="content" rows="7" placeholder="每行：feed_url, source_name, category"></textarea></label>
-      <button>Preview 导入</button>
+  </div>
+  <div class="card-body">
+    <div class="summary-list">
+      <dt>有效性</dt><dd>{{ '有效' if check_result.valid else '无效' }}</dd>
+      <dt>解析</dt><dd>{{ '成功' if check_result.parse_ok else '失败' }}</dd>
+      <dt>是否重复</dt><dd>{{ '是' if check_result.duplicate else '否' }}</dd>
+      {% if check_result.sample_item_count %}<dt>样本条目</dt><dd>{{ check_result.sample_item_count }}</dd>{% endif %}
+      {% if check_result.sample_titles %}<dt>样本标题</dt><dd>{{ check_result.sample_titles[:5] | join('、') }}</dd>{% endif %}
+    </div>
+    {% if check_result.valid and not check_result.duplicate %}
+    <form action="/sources/add" method="post" style="margin-top:0.75rem;">
+      <input type="hidden" name="source_name" value="{{ draft_source.source_name }}">
+      <input type="hidden" name="feed_url" value="{{ draft_source.feed_url }}">
+      <input type="hidden" name="category" value="{{ draft_source.source_category }}">
+      <div class="form-grid" style="margin-bottom:0.5rem;">
+        <div class="form-group">
+          <label class="form-label">标签（可选，逗号分隔）</label>
+          <input name="tags" placeholder="ai, tech">
+        </div>
+        <div class="form-group">
+          <label class="form-label">备注（可选）</label>
+          <input name="notes" placeholder="备注说明">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">确认新增信息源</button>
     </form>
-  </article>
-</section>
+    {% endif %}
+  </div>
+  <details class="debug-panel">
+    <summary>详细检查结果（JSON）</summary>
+    <pre>{{ check_result | tojson(indent=2) }}</pre>
+  </details>
+</div>
+{% endif %}
 
-<article>
-  <header><strong>导出 Sources</strong></header>
-  <form action="/sources/export" method="post" class="grid">
-    <select name="format"><option value="json">JSON</option><option value="csv">CSV</option><option value="opml">OPML</option></select>
-    <button>导出当前 source registry</button>
-  </form>
-  {% if export_result %}
-    <details open><summary>导出结果（{{ export_result.format }}，{{ export_result.count }} 条）</summary><pre>{{ export_result.content }}</pre></details>
-  {% endif %}
-</article>
-
+{# ── Import Preview ── #}
 {% if import_preview %}
-<article>
-  <header><strong>Source Import Preview / 导入预览</strong></header>
-  <p>总数 {{ import_preview.stats.total }}，新增 {{ import_preview.stats.new }}，已存在 {{ import_preview.stats.exists }}，文件内重复 {{ import_preview.stats.duplicate_in_file }}。</p>
-  <form action="/sources/import/commit" method="post"><input type="hidden" name="operation_id" value="{{ import_preview.operation_id }}"><button>Commit 导入</button></form>
-  <table><thead><tr><th>状态</th><th>名称</th><th>分类</th><th>URL</th></tr></thead><tbody>{% for source in import_preview.sources %}<tr><td>{{ source.status }}</td><td>{{ source.source_name }}</td><td>{{ source.source_category }}</td><td><code>{{ source.feed_url }}</code></td></tr>{% endfor %}</tbody></table>
-</article>
-{% endif %}
-
-{% if bulk_preview %}
-<article class="warning-banner">
-  <header><strong>Bulk Preview / 批量操作预览</strong></header>
-  <p>操作：<code>{{ bulk_preview.action }}</code>，影响 {{ bulk_preview.source_count }} 个 sources。影响 Legacy DB：{{ bulk_preview.legacy_db_affected }}。</p>
-  <p>删除/归档默认语义：{{ bulk_preview.default_delete_semantics }}</p>
-  <form action="/sources/bulk/commit" method="post"><input type="hidden" name="operation_id" value="{{ bulk_preview.operation_id }}"><button>确认执行批量操作</button></form>
-  <pre>{{ bulk_preview.sources | tojson(indent=2) }}</pre>
-</article>
-{% endif %}
-
-<article>
-  <header><strong>Source 列表</strong> <span>{{ stats }}</span></header>
-  <form method="get" action="/sources" class="grid">
-    <input name="keyword" value="{{ keyword }}" placeholder="搜索 source 名称或 URL">
-    <select name="status"><option value="">任意状态</option>{% for s in ["active","disabled","broken","archived"] %}<option value="{{ s }}" {% if status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
-    <button>搜索 / 刷新</button>
-  </form>
-
-  {% if sources %}
-  <form action="/sources/bulk" method="post">
+<div class="card risk-low">
+  <div class="card-header">
+    <strong>导入预览</strong>
+    <span class="text-sm text-muted">总数 {{ import_preview.stats.total }} · 新增 {{ import_preview.stats.new }} · 已存在 {{ import_preview.stats.exists }} · 文件内重复 {{ import_preview.stats.duplicate_in_file }}</span>
+  </div>
+  <div class="card-body">
     <div class="table-container">
-      <table>
-        <thead><tr><th>选择</th><th>source_id</th><th>名称</th><th>状态</th><th>最近 run</th><th>URL</th></tr></thead>
-        <tbody>{% for source in sources %}<tr>
-          <td><input type="checkbox" name="source_ids" value="{{ source.source_id }}"></td>
-          <td><a href="/sources/{{ source.source_id }}">{{ source.source_id }}</a></td>
+      <table class="data-table">
+        <thead><tr><th>状态</th><th>名称</th><th>分类</th><th>URL</th></tr></thead>
+        <tbody>
+        {% for source in import_preview.sources %}
+        <tr>
+          <td>
+            {% if source.status == 'new' %}<span class="status-badge success">新增</span>
+            {% elif source.status == 'exists' %}<span class="status-badge muted">已存在</span>
+            {% else %}<span class="status-badge warning">{{ source.status }}</span>
+            {% endif %}
+          </td>
           <td>{{ source.source_name }}</td>
-          <td>{{ source.status }}</td>
-          <td>{{ source.last_run_id }}</td>
-          <td><code>{{ source.feed_url }}</code></td>
-        </tr>{% endfor %}</tbody>
+          <td class="text-xs text-muted">{{ source.source_category or '-' }}</td>
+          <td><code class="text-xs">{{ source.feed_url }}</code></td>
+        </tr>
+        {% endfor %}
+        </tbody>
       </table>
     </div>
-    <label>批量操作
-      <select name="action"><option value="enable">启用</option><option value="disable">禁用</option><option value="archive">归档/删除</option><option value="delete">删除/归档</option><option value="export">导出选中</option></select>
-    </label>
-    <button name="preview" value="1">Preview 批量操作</button>
-  </form>
-  <form action="/runs/new" method="get"><button>去 Run 向导选择 sources</button></form>
-  {% else %}
-  <p class="empty-state">当前 Fresh DB 没有 sources。请新增或批量导入。</p>
-  {% endif %}
-</article>
+    <form action="/sources/import/commit" method="post" style="margin-top:0.75rem;">
+      <input type="hidden" name="operation_id" value="{{ import_preview.operation_id }}">
+      <button type="submit" class="btn btn-primary">确认导入</button>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{# ── Bulk Preview ── #}
+{% if bulk_preview %}
+<div class="card risk-high">
+  <div class="card-header">
+    <strong>批量操作预览</strong>
+    <span class="status-badge warning">{{ bulk_preview.action }}</span>
+  </div>
+  <div class="card-body">
+    <p class="text-sm">操作 <code>{{ bulk_preview.action }}</code> 将影响 <strong>{{ bulk_preview.source_count }}</strong> 个信息源。Legacy DB 受影响：<strong>{{ bulk_preview.legacy_db_affected }}</strong>。</p>
+    <p class="text-xs text-muted">{{ bulk_preview.default_delete_semantics }}</p>
+    <form action="/sources/bulk/commit" method="post" style="margin-top:0.5rem;">
+      <input type="hidden" name="operation_id" value="{{ bulk_preview.operation_id }}">
+      <button type="submit" class="btn btn-danger">确认执行批量操作</button>
+    </form>
+    <details class="debug-panel" style="margin-top:0.5rem;">
+      <summary>详细影响列表</summary>
+      <pre>{{ bulk_preview.sources | tojson(indent=2) }}</pre>
+    </details>
+  </div>
+</div>
+{% endif %}
+
+{# ── Source List ── #}
+<section class="card">
+  <div class="card-header">
+    <strong>信息源列表</strong>
+    <span class="text-xs text-muted">{{ stats }}</span>
+  </div>
+  <div class="card-body">
+    <form method="get" action="/sources" class="form-inline" style="margin-bottom:0.75rem;">
+      <div class="form-group" style="flex:2; min-width:200px;">
+        <input name="keyword" value="{{ keyword }}" placeholder="搜索名称或 URL">
+      </div>
+      <div class="form-group" style="flex:1; min-width:120px;">
+        <select name="status">
+          <option value="">全部状态</option>
+          {% for s in ["active","disabled","broken","archived"] %}
+          <option value="{{ s }}" {% if status == s %}selected{% endif %}>{{ s }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-secondary btn-sm">搜索</button>
+    </form>
+
+    {% if sources %}
+    <form action="/sources/bulk" method="post">
+      <div class="table-container">
+        <table class="data-table">
+          <thead><tr>
+            <th style="width:30px;">选</th>
+            <th>名称</th>
+            <th>状态</th>
+            <th>分类</th>
+            <th>最近抓取</th>
+            <th>失败次数</th>
+            <th>操作</th>
+          </tr></thead>
+          <tbody>
+          {% for source in sources %}
+          <tr>
+            <td><input type="checkbox" name="source_ids" value="{{ source.source_id }}"></td>
+            <td>
+              <a href="/sources/{{ source.source_id }}" class="font-semibold text-sm">{{ source.source_name }}</a>
+              <div><code class="text-xs text-muted">{{ source.source_id }}</code></div>
+            </td>
+            <td>
+              {% if source.status == 'active' %}<span class="status-badge success">活跃</span>
+              {% elif source.status == 'disabled' %}<span class="status-badge muted">禁用</span>
+              {% elif source.status == 'broken' %}<span class="status-badge danger">异常</span>
+              {% elif source.status == 'archived' %}<span class="status-badge muted">归档</span>
+              {% else %}<span class="status-badge muted">{{ source.status }}</span>
+              {% endif %}
+            </td>
+            <td class="text-xs text-muted">{{ source.source_category or '-' }}</td>
+            <td class="text-xs text-muted">{{ source.last_run_id or '-' }}</td>
+            <td class="text-xs">{{ source.consecutive_failures or 0 }}</td>
+            <td>
+              <div class="table-actions">
+                <a href="/sources/{{ source.source_id }}" class="btn btn-ghost btn-sm">查看</a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="flex items-center gap-sm" style="margin-top:0.5rem;">
+        <select name="action" style="max-width:160px;">
+          <option value="enable">批量启用</option>
+          <option value="disable">批量禁用</option>
+          <option value="archive">批量归档</option>
+          <option value="delete">批量删除（软归档）</option>
+          <option value="export">导出选中</option>
+        </select>
+        <button name="preview" value="1" class="btn btn-secondary btn-sm">预览批量操作</button>
+      </div>
+    </form>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-state-icon">⊞</div>
+      <h3>当前工作区没有信息源</h3>
+      <p>通过左侧卡片批量导入 OPML，或手动新增单个 RSS 地址开始使用。</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
 {% endblock %}

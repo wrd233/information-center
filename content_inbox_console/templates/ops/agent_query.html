@@ -1,39 +1,93 @@
 {% extends "base.html" %}
+{% block title %}智能查询 - 信息中心作战台{% endblock %}
+{% block page_title %}智能查询{% endblock %}
+
 {% block content %}
+
 <header class="page-header">
   <div>
-    <p class="eyebrow">信息消费</p>
-    <h1>Agent Query</h1>
-    <p>输入问题，预览会喂给 agent 的 context pack。默认先显示人类可读结果，JSON 放在高级区。</p>
+    <h1>智能查询（Agent Query）</h1>
+    <p>输入自然语言问题，预览将提供给 AI Agent 的上下文内容。不执行外部 LLM 调用，仅组装相关信息。</p>
   </div>
 </header>
-<form method="get" action="/agent-query" class="grid">
-  <label>Query <input name="query" value="{{ query }}" placeholder="今天 AI / agent 方向发生了什么？"></label>
-  <label>Context 格式
-    <select name="format">
-      {% for fmt in ["human", "markdown", "compact", "json"] %}<option value="{{ fmt }}" {% if format == fmt %}selected{% endif %}>{{ fmt }}</option>{% endfor %}
-    </select>
-  </label>
-  <button>Preview context</button>
-</form>
-{% if result %}
-<section class="grid two">
-  <article>
-    <header><strong>可复制上下文</strong></header>
-    <pre>{{ result.human if format == "human" else result.markdown }}</pre>
-  </article>
-  <article>
-    <header><strong>使用了哪些 items/events/sources</strong></header>
-    {% if result.context_pack %}
-    <table><tbody>{% for item in result.context_pack %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td>{{ item.published_at }}</td></tr>{% endfor %}</tbody></table>
-    {% else %}<p class="empty-state">没有匹配 item。</p>{% endif %}
-  </article>
+
+{# ── Example Queries ── #}
+<div class="card">
+  <div class="card-header"><strong>示例问题</strong></div>
+  <div class="card-body">
+    <div class="example-queries">
+      <span class="example-query" onclick="document.querySelector('input[name=query]').value=this.textContent">今天有哪些重要事件？</span>
+      <span class="example-query" onclick="document.querySelector('input[name=query]').value=this.textContent">最近一周有什么新内容？</span>
+      <span class="example-query" onclick="document.querySelector('input[name=query]').value=this.textContent">哪些事件还需要审核？</span>
+      <span class="example-query" onclick="document.querySelector('input[name=query]').value=this.textContent">帮我总结最近一次抓取任务的结果</span>
+      <span class="example-query" onclick="document.querySelector('input[name=query]').value=this.textContent">AI 领域有哪些动态？</span>
+    </div>
+  </div>
+</div>
+
+{# ── Query Form ── #}
+<section class="card">
+  <div class="card-body">
+    <form method="get" action="/agent-query">
+      <div class="form-group">
+        <label class="form-label">查询内容</label>
+        <input name="query" value="{{ query }}" placeholder="输入问题，例如：最近一周 AI 领域发生了什么？" style="font-size:1rem;">
+      </div>
+      <div class="form-inline" style="margin-top:0.5rem;">
+        <div class="form-group" style="flex:0 0 160px; min-width:120px;">
+          <label class="form-label text-xs">输出格式</label>
+          <select name="format">
+            <option value="human" {% if format == 'human' %}selected{% endif %}>易读摘要</option>
+            <option value="markdown" {% if format == 'markdown' %}selected{% endif %}>Markdown</option>
+            <option value="compact" {% if format == 'compact' %}selected{% endif %}>紧凑格式</option>
+            <option value="json" {% if format == 'json' %}selected{% endif %}>JSON</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">查询预览</button>
+      </div>
+    </form>
+  </div>
 </section>
-<details>
-  <summary>高级：原始 context pack JSON</summary>
+
+{# ── Results ── #}
+{% if result %}
+<div class="content-grid">
+  <section class="card">
+    <div class="card-header"><strong>查询结果</strong></div>
+    <div class="card-body">
+      <pre style="max-height:500px; overflow:auto; font-size:0.85rem; line-height:1.6;">{{ result.human if format == 'human' else result.markdown }}</pre>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-header"><strong>涉及的条目</strong></div>
+    <div class="card-body">
+      {% if result.context_pack %}
+      <div class="table-container" style="max-height:400px;">
+        <table class="data-table">
+          <thead><tr><th>标题</th><th>发布时间</th></tr></thead>
+          <tbody>
+          {% for item in result.context_pack %}
+          <tr><td><a href="/items/{{ item.item_id }}" class="text-sm">{{ item.title }}</a></td><td class="text-xs text-muted">{{ item.published_at }}</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-xs text-muted">没有匹配的条目。</p>
+      {% endif %}
+    </div>
+  </section>
+</div>
+<details class="debug-panel">
+  <summary>原始 Context Pack（JSON）</summary>
   <pre>{{ result | tojson(indent=2) }}</pre>
 </details>
 {% else %}
-<p class="empty-state">输入 query 后可以预览 context pack。这里不会执行外部 LLM，只是组装上下文。</p>
+<div class="empty-state">
+  <div class="empty-state-icon">⚡</div>
+  <h3>输入查询开始</h3>
+  <p>在上方输入自然语言问题并选择输出格式，预览将展示对应的上下文内容。</p>
+</div>
 {% endif %}
+
 {% endblock %}

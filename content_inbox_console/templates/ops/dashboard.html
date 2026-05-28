@@ -1,89 +1,234 @@
 {% extends "base.html" %}
-{% block title %}作战首页 - content_inbox_console{% endblock %}
+{% block title %}作战首页 - 信息中心作战台{% endblock %}
+{% block page_title %}作战首页{% endblock %}
+
 {% block content %}
-<header class="hero-panel">
+
+{# ── Hero Section ── #}
+<section class="hero-panel">
   <div>
-    <p class="eyebrow">作战首页</p>
-    <h1>从 source 到 briefing 的下一步作战台</h1>
-    <p>这里不做 schema 猜谜。你只需要确认环境安全，然后按下一步引导完成 dry-run、real-write、pipeline、review 和输出生成。</p>
+    <h1>信息中心作战台</h1>
+    <p>从信息源到简报的完整工作流。确认环境安全，按下一步引导完成预演、写入、处理和输出。</p>
   </div>
   <div class="hero-actions">
-    <a role="button" href="/sources">准备 / 导入 source</a>
-    <a role="button" class="secondary" href="/runs/new">创建 run</a>
+    <a href="/sources" class="btn btn-primary">准备信息源</a>
+    <a href="/runs/new" class="btn btn-secondary">创建抓取任务</a>
+    <a href="/events" class="btn btn-ghost">查看事件</a>
   </div>
-</header>
-
-<section class="stats-grid">
-  <article><small>环境安全</small><h2>{{ "安全" if environment.is_fresh_database and not environment.legacy_business_fallback else "需确认" }}</h2><span>Legacy DB affected: false</span></article>
-  <article><small>Sources</small><h2>{{ environment.source_count or 0 }}</h2><span>active {{ source_stats.active or 0 }}</span></article>
-  <article><small>Items</small><h2>{{ environment.item_count or 0 }}</h2><span>当前 Fresh DB</span></article>
-  <article><small>Runs</small><h2>{{ environment.run_count or 0 }}</h2><span>real-write {{ "已启用" if environment.real_runs_enabled else "未启用" }}</span></article>
 </section>
 
+{# ── System Status ── #}
+<section class="stats-grid">
+  <div class="metric-card">
+    <span class="metric-label">环境状态</span>
+    <span class="metric-value">{{ "安全" if environment.is_fresh_database and not environment.legacy_business_fallback else "⚠ 需确认" }}</span>
+    <span class="metric-sub">
+      {% if environment.is_fresh_database %}当前工作区 · Legacy DB 不受影响{% else %}非 Fresh DB · 危险操作已禁用{% endif %}
+    </span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">信息源（Source）</span>
+    <span class="metric-value">{{ environment.source_count or 0 }}</span>
+    <span class="metric-sub">活跃 {{ source_stats.active or 0 }} 个</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">原始信息（Item）</span>
+    <span class="metric-value">{{ environment.item_count or 0 }}</span>
+    <span class="metric-sub">当前数据库中的信息条目</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">抓取任务（Run）</span>
+    <span class="metric-value">{{ environment.run_count or 0 }}</span>
+    <span class="metric-sub">写入模式: {{ "已启用" if environment.real_runs_enabled else "未启用" }}</span>
+  </div>
+</section>
+
+{# ── real-write Warning ── #}
 {% if not environment.real_runs_enabled %}
-<article class="warning-banner">
-  <strong>real-write 未启用。</strong>
-  <p>前端不能绕过后端 gate。需要在后端环境设置 <code>CONTENT_INBOX_ENABLE_REAL_RUNS=1</code> 并重启，才能执行写库 run。</p>
-</article>
+<div class="alert alert-warning">
+  <strong>写入模式（real-write）未启用</strong>
+  <p>前端无法绕过后端安全 gate。需要在后端设置 <code>CONTENT_INBOX_ENABLE_REAL_RUNS=1</code> 并重启服务，才能执行写入任务。当前请使用预演模式（dry-run）验证抓取范围。</p>
+</div>
 {% endif %}
 
-<section class="grid two">
-  <article class="next-actions">
-    <header><strong>下一步建议</strong></header>
-    {% if next_actions %}
-      {% for action in next_actions %}
-      <div class="next-action-card">
-        <div><strong>{{ action.label }}</strong><p>{{ action.text }}</p></div>
-        <a role="button" href="{{ action.href }}">去处理</a>
+{# ── Next Actions ── #}
+{% if next_actions %}
+<section class="card">
+  <div class="card-header">
+    <strong>下一步建议</strong>
+    <span class="text-xs text-muted">根据当前系统状态自动推荐</span>
+  </div>
+  <div class="card-body">
+    {% for action in next_actions %}
+    <div class="action-card">
+      <div class="action-card-body">
+        <strong>{{ action.label }}</strong>
+        <p>{{ action.text }}</p>
       </div>
-      {% endfor %}
-    {% else %}
-      <p class="empty-state">当前没有明显阻塞。可以查看事件中心、生成 briefing，或进入数据清理重新开始。</p>
-    {% endif %}
-  </article>
-  <article>
-    <header><strong>最近 run</strong></header>
-    {% if last_run %}
-    <dl>
-      <dt>run_id</dt><dd><a href="/runs/{{ last_run.run_id }}"><code>{{ last_run.run_id }}</code></a></dd>
-      <dt>状态 / mode</dt><dd>{{ last_run.status }} / {{ last_run.request.mode }}</dd>
-      <dt>inserted / duplicate / failed</dt><dd>{{ last_run.new_items_count }} / {{ last_run.duplicate_items_count }} / {{ last_run.failed_items_count }}</dd>
-      <dt>started_at</dt><dd>{{ last_run.started_at }}</dd>
-    </dl>
-    {% else %}
-    <p class="empty-state">暂无 run。先导入 source，再创建 dry-run。</p>
-    {% endif %}
-  </article>
+      <a href="{{ action.href }}" class="btn btn-primary btn-sm">去处理</a>
+    </div>
+    {% endfor %}
+  </div>
 </section>
+{% else %}
+<div class="empty-state">
+  <div class="empty-state-icon">✓</div>
+  <h3>一切就绪</h3>
+  <p>当前没有明显阻塞项。可以查看事件、生成简报，或进入数据清理重新开始。</p>
+  <a href="/events" class="btn btn-primary">查看事件</a>
+</div>
+{% endif %}
 
-<section class="grid two">
-  <article>
-    <header><strong>待处理 review queue</strong></header>
-    {% if reviews %}
-    <table><tbody>{% for review in reviews %}<tr><td>{{ review.review_type }}</td><td>{{ review.target_type }}:{{ review.target_id }}</td><td><a href="/review-queue">处理</a></td></tr>{% endfor %}</tbody></table>
-    {% else %}<p class="empty-state">暂无待处理项。pipeline 生成 event 后这里会出现人工确认任务。</p>{% endif %}
-  </article>
-  <article>
-    <header><strong>最近 briefing / report</strong></header>
-    <p>Briefing：{{ briefings[0].title if briefings else "暂无" }}</p>
-    <p>Report：{{ reports[0].title if reports else "暂无" }}</p>
-    <p><a href="/briefings">查看 briefing</a> · <a href="/reports">查看 report</a></p>
-  </article>
-</section>
+{# ── Quick Actions ── #}
+<div class="quick-actions">
+  <span class="text-xs text-muted font-semibold">快捷操作：</span>
+  <a href="/sources" class="btn btn-ghost btn-sm">准备信息源</a>
+  <a href="/runs/new" class="btn btn-ghost btn-sm">创建抓取任务</a>
+  <a href="/events" class="btn btn-ghost btn-sm">查看事件</a>
+  <a href="/reset" class="btn btn-ghost btn-sm">数据清理</a>
+</div>
 
-<section class="grid two">
-  <article>
-    <header><strong>最近 Events</strong></header>
-    {% if events %}
-    <div class="object-list compact">{% for event in events %}<article><strong><a href="/events/{{ event.event_id }}">{{ event.event_title }}</a></strong><p>{{ event.event_summary or "暂无摘要" }}</p><mark class="chip">{{ event.status }}</mark></article>{% endfor %}</div>
-    {% else %}<p class="empty-state">暂无 events。real-write 后运行 pipeline 会生成候选事件。</p>{% endif %}
-  </article>
-  <article>
-    <header><strong>环境提示</strong></header>
-    <p>当前 API base：<code>{{ api_base }}</code></p>
-    <p>Fresh DB：<code>{{ environment.database_path }}</code></p>
-    <p>DB ID：<code>{{ environment.database_id }}</code></p>
-    <p><a href="/reset">需要清空某部分数据重新开始？进入数据清理页</a></p>
-  </article>
-</section>
+{# ── Recent Runs + Events ── #}
+<div class="content-grid">
+  <section class="card">
+    <div class="card-header">
+      <strong>最近任务</strong>
+      <a href="/runs" class="text-xs">查看全部 →</a>
+    </div>
+    <div class="card-body">
+      {% if runs %}
+      <table class="data-table">
+        <thead><tr><th>任务 ID</th><th>状态</th><th>模式</th><th>写入</th><th>时间</th><th></th></tr></thead>
+        <tbody>
+        {% for run in runs[:8] %}
+        <tr>
+          <td><a href="/runs/{{ run.run_id }}" class="text-mono text-xs">{{ run.run_id[:12] }}…</a></td>
+          <td>
+            {% if run.status == 'success' or run.status == 'completed' %}
+            <span class="status-badge success">完成</span>
+            {% elif run.status == 'running' %}
+            <span class="status-badge info">运行中</span>
+            {% elif run.status == 'failed' %}
+            <span class="status-badge danger">失败</span>
+            {% elif run.status == 'cancelled' %}
+            <span class="status-badge muted">已取消</span>
+            {% else %}
+            <span class="status-badge muted">{{ run.status }}</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if run.request.mode == 'dry_run' %}
+            <span class="tag">预演</span>
+            {% else %}
+            <span class="tag" style="background:rgba(197,106,44,0.12);color:var(--console-accent-2);">写入</span>
+            {% endif %}
+          </td>
+          <td class="text-xs">{{ run.new_items_count or 0 }}</td>
+          <td class="text-xs text-muted">{{ run.started_at or '-' }}</td>
+          <td><a href="/runs/{{ run.run_id }}" class="btn btn-ghost btn-sm">详情</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="empty-state">
+        <h3>暂无任务</h3>
+        <p>先导入信息源，再创建预演任务（dry-run）验证抓取范围。</p>
+        <a href="/runs/new" class="btn btn-primary btn-sm">创建第一个任务</a>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header">
+      <strong>最近事件与待审核</strong>
+      <div class="flex gap-sm">
+        <a href="/events" class="text-xs">事件 →</a>
+        <a href="/review-queue" class="text-xs">待审核 →</a>
+      </div>
+    </div>
+    <div class="card-body">
+      {% if events %}
+      <div class="object-list compact">
+        {% for event in events[:4] %}
+        <div class="card" style="margin-bottom:0.35rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+            <div>
+              <a href="/events/{{ event.event_id }}" class="font-semibold text-sm">{{ event.event_title or event.event_id[:12] }}</a>
+              <p class="text-xs text-muted" style="margin:0;">{{ event.event_summary or '暂无摘要' }}</p>
+            </div>
+            <span class="status-badge {{ 'success' if event.status == 'active' else 'muted' }}">{{ event.status or 'unknown' }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-xs text-muted">暂无事件。写入任务后运行流水线可生成候选事件。</p>
+      {% endif %}
+
+      {% if reviews %}
+      <div style="margin-top:0.75rem;">
+        <span class="text-xs font-semibold">待审核项（{{ reviews|length }}）</span>
+        <table class="data-table" style="margin-top:0.25rem;">
+          <tbody>
+          {% for review in reviews[:3] %}
+          <tr>
+            <td class="text-xs">{{ review.review_type }}</td>
+            <td class="text-xs text-muted">{{ review.target_type }}:{{ review.target_id[:12] if review.target_id else '-' }}</td>
+            <td><a href="/review-queue" class="btn btn-ghost btn-sm">处理</a></td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+
+      {% if not events and not reviews %}
+      <div class="empty-state" style="padding:1.5rem;">
+        <p class="text-xs text-muted">暂无事件和待审核项。运行流水线后这里会出现内容。</p>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+{# ── Outputs + Environment ── #}
+<div class="content-grid">
+  <section class="card">
+    <div class="card-header">
+      <strong>最近输出</strong>
+    </div>
+    <div class="card-body">
+      <div class="summary-list">
+        <dt>简报</dt>
+        <dd>{{ briefings[0].title if briefings else '暂无' }}{% if briefings %} <a href="/briefings" class="text-xs">查看 →</a>{% endif %}</dd>
+        <dt>报告</dt>
+        <dd>{{ reports[0].title if reports else '暂无' }}{% if reports %} <a href="/reports" class="text-xs">查看 →</a>{% endif %}</dd>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header">
+      <strong>环境提示</strong>
+    </div>
+    <div class="card-body">
+      <div class="summary-list">
+        <dt>API 地址</dt>
+        <dd><code class="text-xs">{{ api_base }}</code></dd>
+        <dt>数据库</dt>
+        <dd><code class="text-xs break-all">{{ environment.database_path or '-' }}</code></dd>
+        <dt>数据库 ID</dt>
+        <dd><code class="text-xs">{{ environment.database_id or '-' }}</code></dd>
+      </div>
+      <div style="margin-top:0.75rem;">
+        <a href="/environment" class="text-xs">环境管理 →</a>
+        <span class="text-xs text-muted" style="margin-left:0.75rem;">·</span>
+        <a href="/reset" class="text-xs" style="margin-left:0.75rem;">数据清理 →</a>
+      </div>
+    </div>
+  </section>
+</div>
+
 {% endblock %}

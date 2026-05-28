@@ -1,6 +1,53 @@
 {% extends "base.html" %}
+{% block title %}报告 - 信息中心作战台{% endblock %}
+{% block page_title %}报告{% endblock %}
+
 {% block content %}
-<header class="page-header"><div><h1>Report 报告</h1><p>生成和导出 run/source/event/entity/topic 相关报告。</p></div></header>
-<form method="post" action="/reports/generate" class="grid"><select name="report_type"><option value="summary">Summary</option><option value="source_health">Source Health</option><option value="event">Event</option></select><button>生成 Report</button></form>
-{% if reports %}{% for report in reports %}<article><header><strong>{{ report.title }}</strong></header><pre>{{ report.body_markdown }}</pre></article>{% endfor %}{% else %}<p class="empty-state">暂无 reports。</p>{% endif %}
+
+<header class="page-header">
+  <div>
+    <h1>报告（Report）</h1>
+    <p>生成和查看信息源健康度、事件摘要和运行总结报告。</p>
+  </div>
+</header>
+
+<section class="card">
+  <div class="card-header"><strong>生成新报告</strong></div>
+  <div class="card-body">
+    <form method="post" action="/reports/generate" class="form-inline">
+      <div class="form-group" style="flex:1; min-width:160px;">
+        <label class="form-label text-xs">报告类型</label>
+        <select name="report_type">
+          <option value="summary">总体摘要（Summary）</option>
+          <option value="source_health">信息源健康度（Source Health）</option>
+          <option value="event">事件报告（Event）</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">生成报告</button>
+    </form>
+  </div>
+</section>
+
+{% if reports %}
+<div class="card-grid">
+  {% for report in reports %}
+  <div class="card">
+    <div class="card-header">
+      <strong>{{ report.title }}</strong>
+      <span class="text-xs text-muted">{{ report.created_at }}</span>
+    </div>
+    <div class="card-body">
+      <pre style="max-height:320px; overflow:auto; font-size:0.82rem; line-height:1.55;">{{ report.body_markdown }}</pre>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-state-icon">📄</div>
+  <h3>暂无报告</h3>
+  <p>报告需要已有事件或运行数据才能生成。请先执行任务并运行流水线。</p>
+</div>
+{% endif %}
+
 {% endblock %}

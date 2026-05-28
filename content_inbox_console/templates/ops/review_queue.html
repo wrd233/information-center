@@ -1,43 +1,58 @@
 {% extends "base.html" %}
-{% block title %}待审核 - content_inbox_console{% endblock %}
+{% block title %}待审核 - 信息中心作战台{% endblock %}
+{% block page_title %}待审核{% endblock %}
+
 {% block content %}
+
 <header class="page-header">
   <div>
-    <p class="eyebrow">信息消费</p>
-    <h1>Review Queue / 待审核</h1>
-    <p>这里是人工纠偏入口。当前版本支持 resolve / dismiss；promote cluster to event 可在 cluster detail 中执行。</p>
+    <h1>待审核（Review Queue）</h1>
+    <p>人工判断工作台。流水线生成的候选事件和聚合线索需要在此确认、忽略或调整。</p>
   </div>
-  <form method="get" action="/review-queue" class="inline-form">
-    <select name="status">
-      <option value="pending" {% if status == "pending" %}selected{% endif %}>pending</option>
-      <option value="resolved" {% if status == "resolved" %}selected{% endif %}>resolved</option>
-      <option value="dismissed" {% if status == "dismissed" %}selected{% endif %}>dismissed</option>
+  <form method="get" action="/review-queue" class="form-inline" style="margin:0;">
+    <select name="status" style="max-width:140px;">
+      <option value="pending" {% if status == "pending" %}selected{% endif %}>待处理</option>
+      <option value="resolved" {% if status == "resolved" %}selected{% endif %}>已处理</option>
+      <option value="dismissed" {% if status == "dismissed" %}selected{% endif %}>已忽略</option>
     </select>
-    <button>过滤</button>
+    <button class="btn btn-secondary btn-sm">筛选</button>
   </form>
 </header>
 
 {% if reviews %}
-<div class="object-list">
+<div class="card-grid">
   {% for review in reviews %}
-  <article>
-    <header><strong>{{ review.review_type }}</strong> <mark class="chip">{{ review.status }}</mark></header>
-    <p>{{ review.reason or "需要人工确认。" }}</p>
-    <p>目标：<code>{{ review.target_type }}:{{ review.target_id }}</code></p>
-    <div class="button-row">
-      {% if review.target_type == "event" %}<a role="button" class="secondary" href="/events/{{ review.target_id }}">查看 event</a>{% endif %}
-      {% if review.target_type == "cluster" %}<a role="button" class="secondary" href="/clusters/{{ review.target_id }}">查看 cluster</a>{% endif %}
-      <form method="post" action="/review-queue/{{ review.id }}/resolve"><button>Resolve</button></form>
-      <form method="post" action="/review-queue/{{ review.id }}/dismiss"><button class="secondary">Dismiss</button></form>
+  <div class="card">
+    <div class="card-header">
+      <strong>{{ review.review_type }}</strong>
+      <span class="status-badge {{ 'warning' if review.status == 'pending' else 'success' if review.status == 'resolved' else 'muted' }}">{{ review.status }}</span>
     </div>
-    <details>
-      <summary>建议 / 原始 JSON</summary>
+    <div class="card-body">
+      <p class="text-sm text-muted">{{ review.reason or '需要人工确认。' }}</p>
+      <div class="flex items-center gap-sm" style="margin-top:0.35rem;">
+        <span class="text-xs text-muted">目标：</span>
+        <code class="text-xs">{{ review.target_type }}:{{ review.target_id }}</code>
+      </div>
+    </div>
+    <div class="card-footer">
+      {% if review.target_type == 'event' %}<a href="/events/{{ review.target_id }}" class="btn btn-ghost btn-sm">查看事件</a>{% endif %}
+      {% if review.target_type == 'cluster' %}<a href="/clusters/{{ review.target_id }}" class="btn btn-ghost btn-sm">查看聚合</a>{% endif %}
+      <form method="post" action="/review-queue/{{ review.id }}/resolve" style="margin:0;"><button class="btn btn-primary btn-sm">确认</button></form>
+      <form method="post" action="/review-queue/{{ review.id }}/dismiss" style="margin:0;"><button class="btn btn-secondary btn-sm">忽略</button></form>
+    </div>
+    <details class="debug-panel">
+      <summary>原始数据</summary>
       <pre>{{ review | tojson(indent=2) }}</pre>
     </details>
-  </article>
+  </div>
   {% endfor %}
 </div>
 {% else %}
-<p class="empty-state">当前没有 {{ status }} review。完成 real-write 并运行 events/review stage 后，这里会出现候选项。</p>
+<div class="empty-state">
+  <div class="empty-state-icon">✓</div>
+  <h3>{{ '没有待处理项' if status == 'pending' else '没有匹配的审核项' }}</h3>
+  <p>完成写入任务并运行事件/审核阶段后，这里会出现需要人工确认的候选项。</p>
+</div>
 {% endif %}
+
 {% endblock %}

@@ -1,33 +1,101 @@
 {% extends "base.html" %}
+{% block title %}信息源详情 - 信息中心作战台{% endblock %}
+{% block page_title %}信息源详情{% endblock %}
+
 {% block content %}
+
 <header class="page-header">
   <div>
-    <h1>Source Detail / {{ data.source.source_name or source_id }}</h1>
-    <p><code>{{ data.source.feed_url }}</code></p>
+    <h1>{{ data.source.source_name if data.source and data.source.source_name else source_id }}</h1>
+    <p><code class="text-sm">{{ data.source.feed_url if data.source else '' }}</code></p>
   </div>
-  <div>
-    <form method="post" action="/sources/{{ source_id }}/archive"><button>归档/删除</button></form>
-    <form method="post" action="/sources/{{ source_id }}/restore"><button>恢复启用</button></form>
+  <div class="header-actions">
+    <form method="post" action="/sources/{{ source_id }}/archive" style="margin:0;">
+      <button class="btn btn-danger btn-sm">归档</button>
+    </form>
+    <form method="post" action="/sources/{{ source_id }}/restore" style="margin:0;">
+      <button class="btn btn-secondary btn-sm">恢复启用</button>
+    </form>
   </div>
 </header>
-<section class="grid two">
-  <article>
-    <header><strong>编辑 source</strong></header>
-    <form action="/sources/{{ source_id }}/edit" method="post">
-      <label>名称<input name="source_name" value="{{ data.source.source_name }}"></label>
-      <label>分类<input name="source_category" value="{{ data.source.source_category or '' }}"></label>
-      <label>Feed URL<input name="feed_url" value="{{ data.source.feed_url }}"></label>
-      <label>状态<select name="status">{% for s in ["active","disabled","broken","archived"] %}<option value="{{ s }}" {% if data.source.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></label>
-      <label>优先级<input type="number" name="priority" value="{{ data.source.priority or 3 }}"></label>
-      <label>Tags<input name="tags" value="{{ data.source.tags | join(',') if data.source.tags else '' }}"></label>
-      <label>Notes<textarea name="notes">{{ data.source.notes or '' }}</textarea></label>
-      <button>保存修改</button>
-    </form>
-  </article>
-  <article><header><strong>Source 原始状态</strong></header><pre>{{ data.source | tojson(indent=2) }}</pre></article>
-</section>
-<section class="grid two">
-  <article><header><strong>最近 Items</strong></header>{% if data.recent_items %}<table><tbody>{% for item in data.recent_items %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td>{{ item.published_at }}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="empty-state">暂无 items。</p>{% endif %}</article>
-  <article><header><strong>Audit Log</strong></header><pre>{{ data.audit | tojson(indent=2) }}</pre></article>
-</section>
+
+<div class="content-grid">
+  <section class="card">
+    <div class="card-header"><strong>编辑信息源</strong></div>
+    <div class="card-body">
+      <form action="/sources/{{ source_id }}/edit" method="post">
+        <div class="form-group">
+          <label class="form-label">名称</label>
+          <input name="source_name" value="{{ data.source.source_name if data.source else '' }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">分类</label>
+          <input name="source_category" value="{{ data.source.source_category if data.source else '' }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Feed URL</label>
+          <input name="feed_url" value="{{ data.source.feed_url if data.source else '' }}">
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">状态</label>
+            <select name="status">
+              {% for s in ["active","disabled","broken","archived"] %}
+              <option value="{{ s }}" {% if data.source and data.source.status == s %}selected{% endif %}>{{ s }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">优先级</label>
+            <input type="number" name="priority" value="{{ data.source.priority if data.source else 3 }}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">标签（逗号分隔）</label>
+          <input name="tags" value="{{ data.source.tags | join(',') if data.source and data.source.tags else '' }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">备注</label>
+          <textarea name="notes" rows="2">{{ data.source.notes if data.source else '' }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">保存修改</button>
+      </form>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-header"><strong>信息源原始数据</strong></div>
+    <div class="card-body">
+      <pre style="max-height:320px;">{{ data.source | tojson(indent=2) }}</pre>
+    </div>
+  </section>
+</div>
+
+<div class="content-grid">
+  <section class="card">
+    <div class="card-header"><strong>最近条目</strong></div>
+    <div class="card-body">
+      {% if data.recent_items %}
+      <div class="table-container" style="max-height:300px;">
+        <table class="data-table">
+          <thead><tr><th>标题</th><th>发布时间</th></tr></thead>
+          <tbody>
+          {% for item in data.recent_items %}
+          <tr><td><a href="/items/{{ item.item_id }}" class="text-sm">{{ item.title }}</a></td><td class="text-xs text-muted">{{ item.published_at }}</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-xs text-muted">暂无条目。</p>
+      {% endif %}
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-header"><strong>审计日志</strong></div>
+    <div class="card-body">
+      <pre style="max-height:300px;">{{ data.audit | tojson(indent=2) }}</pre>
+    </div>
+  </section>
+</div>
+
 {% endblock %}

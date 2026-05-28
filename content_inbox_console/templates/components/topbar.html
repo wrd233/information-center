@@ -1,0 +1,27 @@
+<header class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-title">
+      {% block page_title %}作战首页{% endblock %}
+    </span>
+  </div>
+  <div class="topbar-right">
+    <div class="flex items-center gap-sm">
+      {% if environment.is_fresh_database %}
+      <span class="status-badge success text-xs">Fresh DB</span>
+      {% else %}
+      <span class="status-badge warning text-xs">Legacy</span>
+      {% endif %}
+      {% if environment.real_runs_enabled %}
+      <span class="status-badge success text-xs">real-write ON</span>
+      {% else %}
+      <span class="status-badge muted text-xs">real-write OFF</span>
+      {% endif %}
+      <span class="text-xs text-muted">
+        Sources {{ environment.source_count or 0 }} ·
+        Items {{ environment.item_count or 0 }} ·
+        Runs {{ environment.run_count or 0 }}
+      </span>
+    </div>
+    {% include "components/db_selector.html" %}
+  </div>
+</header>

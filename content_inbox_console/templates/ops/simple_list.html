@@ -1,40 +1,53 @@
 {% extends "base.html" %}
+{% block title %}{{ title }} - 信息中心作战台{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
 {% block content %}
+
 <header class="page-header">
   <div>
-    <p class="eyebrow">高级调试</p>
     <h1>{{ title }}</h1>
-    <p>这里展示当前 Fresh DB 的结构化对象。默认先给可读摘要，原始 JSON 放在折叠区。</p>
+    <p class="text-sm text-muted">高级调试视图。这里是后台数据对象的原始列表，普通使用流程不需要访问此页面。</p>
   </div>
+  <a href="/dashboard" class="btn btn-ghost btn-sm">← 返回作战首页</a>
 </header>
+
 {% if items %}
-<div class="object-list">
+<div class="card-grid">
   {% for item in items %}
-  <article>
-    {% set object_id = item.event_id or item.cluster_id or item.item_id or item.entity_id or item.relation_id or item.claim_id or item.topic_id or item.dedupe_group_id or item.saved_view_id or item.extraction_id or item.id %}
-    {% set object_title = item.event_title or item.cluster_title or item.title or item.entity_name or item.claim_text or item.topic_name or item.name or object_id %}
-    <header>
+  {% set object_id = item.event_id or item.cluster_id or item.item_id or item.entity_id or item.relation_id or item.claim_id or item.topic_id or item.dedupe_group_id or item.saved_view_id or item.extraction_id or item.id %}
+  {% set object_title = item.event_title or item.cluster_title or item.title or item.entity_name or item.claim_text or item.topic_name or item.name or object_id %}
+  <div class="card">
+    <div class="card-header">
       <strong>
         {% if item.event_id %}<a href="/events/{{ item.event_id }}">{{ object_title }}</a>
         {% elif item.cluster_id %}<a href="/clusters/{{ item.cluster_id }}">{{ object_title }}</a>
         {% elif item.item_id %}<a href="/items/{{ item.item_id }}">{{ object_title }}</a>
         {% else %}{{ object_title }}{% endif %}
       </strong>
-    </header>
-    <p>{{ item.event_summary or item.cluster_summary or item.topic_summary or item.reason or item.summary or "暂无摘要。" }}</p>
-    <p>
-      {% if item.status %}<mark class="chip">{{ item.status }}</mark>{% endif %}
-      {% if item.confidence %}<mark class="chip">confidence {{ item.confidence }}</mark>{% endif %}
-      {% if object_id %}<code>{{ object_id }}</code>{% endif %}
-    </p>
-    <details>
+    </div>
+    <div class="card-body">
+      <p class="text-sm text-muted">{{ item.event_summary or item.cluster_summary or item.topic_summary or item.reason or item.summary or '暂无摘要。' }}</p>
+      <div class="flex items-center gap-sm" style="margin-top:0.35rem;">
+        {% if item.status %}<span class="status-badge muted">{{ item.status }}</span>{% endif %}
+        {% if item.confidence is not none %}<span class="tag">置信度 {{ item.confidence }}</span>{% endif %}
+        {% if object_id %}<code class="text-xs text-muted">{{ object_id }}</code>{% endif %}
+      </div>
+    </div>
+    <details class="debug-panel">
       <summary>原始 JSON</summary>
       <pre>{{ item | tojson(indent=2) }}</pre>
     </details>
-  </article>
+  </div>
   {% endfor %}
 </div>
 {% else %}
-<p class="empty-state">暂无 {{ title }} 数据。通常需要先完成 real-write 并运行对应 pipeline stage。</p>
+<div class="empty-state">
+  <div class="empty-state-icon">∅</div>
+  <h3>暂无 {{ title }} 数据</h3>
+  <p>通常需要先完成写入任务（real-write）并运行对应流水线阶段，数据才会出现在这里。</p>
+  <a href="/dashboard" class="btn btn-primary btn-sm">返回作战首页</a>
+</div>
 {% endif %}
+
 {% endblock %}

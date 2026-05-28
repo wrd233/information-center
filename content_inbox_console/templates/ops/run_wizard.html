@@ -1,78 +1,140 @@
 {% extends "base.html" %}
-{% block title %}Run 向导 - content_inbox_console{% endblock %}
+{% block title %}创建抓取任务 - 信息中心作战台{% endblock %}
+{% block page_title %}创建抓取任务{% endblock %}
+
 {% block content %}
+
 <header class="page-header">
   <div>
-    <h1>Run 向导</h1>
-    <p>确认 Fresh DB、选择 sources、设置 published_at 时间范围和 limits，然后 preview 并启动 dry-run 或 real-write。</p>
+    <h1>创建抓取任务（Run）</h1>
+    <p>按步骤确认环境、选择信息源、设置时间范围和规模限制，然后预览并启动任务。</p>
   </div>
 </header>
 
 <form action="/runs/preview" method="post">
-  <article>
-    <header><strong>Step 1：确认环境</strong></header>
-    <p>当前 Fresh DB：<code>{{ environment.database_path }}</code></p>
-    <p>database_id：<code>{{ environment.database_id }}</code>；source/item/run：{{ environment.source_count }} / {{ environment.item_count }} / {{ environment.run_count }}</p>
-    {% if not environment.real_runs_enabled %}
-      <p class="warning-banner">real-write 当前未启用。请设置 <code>CONTENT_INBOX_ENABLE_REAL_RUNS=1</code> 并重启后端后再执行真实写入。</p>
-    {% endif %}
-  </article>
 
-  <article>
-    <header><strong>Step 2：选择 source 范围</strong></header>
-    <label>范围
-      <select name="scope_type">
-        <option value="selected">手动选择 selected sources</option>
-        <option value="all_active">全部 active sources</option>
-        <option value="failed">失败 sources</option>
-      </select>
-    </label>
-    {% if sources %}
-    <div class="source-select-grid">
-      {% for source in sources %}
-      <label class="source-check">
-        <input type="checkbox" name="source_ids" value="{{ source.source_id }}">
-        <strong>{{ source.source_name }}</strong><br>
-        <small><code>{{ source.source_id }}</code> / {{ source.source_category or "未分类" }}</small>
-      </label>
-      {% endfor %}
+  {# ── Step 1: Mode Selection ── #}
+  <section class="card">
+    <div class="card-header"><strong>第 1 步：选择模式</strong></div>
+    <div class="card-body">
+      <div class="mode-cards">
+        <label class="mode-card selected" id="mode-dry">
+          <input type="radio" name="mode" value="dry_run" checked style="display:none;">
+          <h3>预演模式（dry-run）</h3>
+          <p>不写入数据库。用于验证信息源可用性、抓取范围和时间过滤是否合理。建议始终先执行预演。</p>
+          <span class="mode-recommended">推荐首次使用</span>
+        </label>
+        <label class="mode-card {% if not environment.real_runs_enabled %}risk-high{% endif %}" id="mode-real">
+          <input type="radio" name="mode" value="real_write" {% if not environment.real_runs_enabled %}disabled{% endif %} style="display:none;">
+          <h3>写入模式（real-write）</h3>
+          <p>将抓取的信息写入当前工作数据库。只有预演确认无误后才应使用。需要后端启用写入开关。</p>
+          {% if not environment.real_runs_enabled %}
+          <span class="status-badge warning">后端写入未启用</span>
+          {% else %}
+          <span class="status-badge success">可用</span>
+          {% endif %}
+        </label>
+      </div>
+      {% if not environment.real_runs_enabled %}
+      <div class="alert alert-warning" style="margin-bottom:0;">
+        <strong>写入模式（real-write）当前未启用</strong>
+        <p>需要在后端设置 <code>CONTENT_INBOX_ENABLE_REAL_RUNS=1</code> 并重启服务。请先使用预演模式。</p>
+      </div>
+      {% endif %}
     </div>
-    {% else %}
-    <p class="empty-state">没有 active sources。请先到 Source 管理页面新增或导入。</p>
-    {% endif %}
-  </article>
+  </section>
 
-  <article>
-    <header><strong>Step 3：published_at 时间范围</strong></header>
-    <p>时间范围用于过滤 RSS 返回的 items，不保证抓取源站历史归档。</p>
-    <div class="grid">
-      <label>published_from<input name="published_from" placeholder="2026-05-01T00:00:00+08:00"></label>
-      <label>published_to<input name="published_to" placeholder="2026-05-18T23:59:59+08:00"></label>
+  {# ── Step 2: Source Selection ── #}
+  <section class="card">
+    <div class="card-header"><strong>第 2 步：选择信息源范围</strong></div>
+    <div class="card-body">
+      <div class="form-group">
+        <label class="form-label">范围类型</label>
+        <select name="scope_type">
+          <option value="all_active">全部活跃信息源</option>
+          <option value="selected">手动选择</option>
+          <option value="failed">失败信息源（重试）</option>
+        </select>
+      </div>
+      {% if sources %}
+      <div class="form-group">
+        <label class="form-label">手动选择信息源（选择"手动选择"时生效）</label>
+        <div class="source-select-grid">
+          {% for source in sources %}
+          <label class="form-check">
+            <input type="checkbox" name="source_ids" value="{{ source.source_id }}">
+            <div>
+              <strong class="text-sm">{{ source.source_name }}</strong>
+              <div class="text-xs text-muted">{{ source.source_category or '未分类' }} · {{ source.status }}</div>
+            </div>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+      {% else %}
+      <div class="empty-state" style="margin-top:0.5rem;">
+        <p>没有活跃信息源。请先到信息源管理页面新增或导入。</p>
+        <a href="/sources" class="btn btn-primary btn-sm">去准备信息源</a>
+      </div>
+      {% endif %}
     </div>
-  </article>
+  </section>
 
-  <article>
-    <header><strong>Step 4：限制参数 limits</strong></header>
-    <div class="grid">
-      <label>max_sources<input type="number" name="max_sources" value="20"></label>
-      <label>max_items_per_source<input type="number" name="max_items_per_source" value="20"></label>
-      <label>max_total_items<input type="number" name="max_total_items" value="200"></label>
-      <label>source_timeout_seconds<input type="number" name="source_timeout_seconds" value="30"></label>
-      <label>run_timeout_minutes<input type="number" name="run_timeout_minutes" value="30"></label>
+  {# ── Step 3: Time Range ── #}
+  <section class="card">
+    <div class="card-header"><strong>第 3 步：选择时间范围</strong></div>
+    <div class="card-body">
+      <p class="text-sm text-muted">设置发布时间的过滤范围。时间范围仅过滤 RSS 返回的条目，不保证能抓取到源站历史归档。</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">起始时间（published_from）</label>
+          <input name="published_from" placeholder="2026-05-01T00:00:00+08:00">
+          <span class="form-help">留空表示不限制起始时间</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">结束时间（published_to）</label>
+          <input name="published_to" placeholder="2026-05-28T23:59:59+08:00">
+          <span class="form-help">留空表示不限制结束时间</span>
+        </div>
+      </div>
     </div>
-  </article>
+  </section>
 
-  <article>
-    <header><strong>Step 5：选择模式</strong></header>
-    <label>运行模式
-      <select name="mode">
-        <option value="dry_run">dry-run（不写入 items）</option>
-        <option value="real_write" {% if not environment.real_runs_enabled %}disabled{% endif %}>real-write（真实写入当前 Fresh DB）</option>
-      </select>
-    </label>
-    <p>real-write 会向当前 Fresh DB 写入新的 items，并记录 run_id、source_id、item_run_links 和 audit。Legacy DB 不会被修改。</p>
-  </article>
+  {# ── Step 4: Limits ── #}
+  <section class="card">
+    <div class="card-header"><strong>第 4 步：限制规模</strong></div>
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">最大信息源数</label>
+          <input type="number" name="max_sources" value="20" min="1" max="500">
+          <span class="form-help">限制抓取的信息源数量</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">每源最大条目数</label>
+          <input type="number" name="max_items_per_source" value="20" min="1" max="500">
+          <span class="form-help">每个信息源最多抓取的条目数</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">最大总条目数</label>
+          <input type="number" name="max_total_items" value="200" min="1" max="10000">
+          <span class="form-help">本次任务总计最多写入条目数</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">源超时时间（秒）</label>
+          <input type="number" name="source_timeout_seconds" value="30" min="5" max="300">
+          <span class="form-help">单个信息源抓取超时时间</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <button type="submit">Step 6：Preview Run</button>
+  {# ── Step 5: Preview ── #}
+  <div style="text-align:center; padding: var(--space-xl) 0;">
+    <p class="text-muted text-sm" style="margin-bottom:0.75rem;">确认以上设置无误后，预览本次任务的影响范围</p>
+    <button type="submit" class="btn btn-primary btn-lg">预览任务</button>
+  </div>
+
 </form>
+
 {% endblock %}

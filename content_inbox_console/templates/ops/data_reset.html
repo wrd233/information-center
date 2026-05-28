@@ -1,110 +1,157 @@
 {% extends "base.html" %}
-{% block title %}数据清理 / 重新开始 - content_inbox_console{% endblock %}
+{% block title %}数据清理 - 信息中心作战台{% endblock %}
+{% block page_title %}数据清理{% endblock %}
+
 {% block content %}
+
 <header class="page-header">
   <div>
-    <p class="eyebrow">维护与重开</p>
-    <h1>数据清理 / 重新开始</h1>
-    <p>所有危险操作都必须先 preview，再按页面给出的确认文本 commit。这里只影响当前 Fresh DB，Legacy DB 永远不作为业务 fallback，也不会被 reset 修改。</p>
+    <h1>数据清理</h1>
+    <p>所有危险操作必须先预览（Preview），再按页面提示输入确认文本后提交（Commit）。只影响当前工作数据库，历史数据库（Legacy DB）不会被修改。</p>
   </div>
-  <a role="button" href="/environment">查看环境证明</a>
+  <a href="/environment" class="btn btn-secondary btn-sm">查看环境详情</a>
 </header>
 
+{# ── Safety Gate ── #}
 {% if not reset_enabled %}
-<article class="error-banner">
-  <strong>当前数据库不是 Fresh DB，reset 已禁用。</strong>
-  <p>请先在环境页确认 DB identity。为了避免误删历史数据，非 Fresh DB 不允许执行清理。</p>
-</article>
+<div class="alert alert-error">
+  <strong>数据清理已禁用 — 当前数据库不是工作区（Fresh DB）</strong>
+  <p>为了避免误删历史数据，非 Fresh DB 不允许执行清理操作。请先在环境页确认数据库身份。</p>
+  <a href="/environment" class="btn btn-secondary btn-sm" style="margin-top:0.35rem;">去环境页确认</a>
+</div>
 {% endif %}
 
-<section class="grid two">
-  <article>
-    <header><strong>当前安全边界</strong></header>
-    <dl>
-      <dt>Fresh DB</dt><dd>{{ environment.is_fresh_database }}</dd>
-      <dt>DB path</dt><dd><code>{{ environment.database_path }}</code></dd>
-      <dt>DB id</dt><dd><code>{{ environment.database_id }}</code></dd>
-      <dt>Legacy affected</dt><dd><strong>false</strong></dd>
-      <dt>当前数量</dt><dd>{{ environment.source_count }} sources / {{ environment.item_count }} items / {{ environment.run_count }} runs</dd>
-    </dl>
-  </article>
-  <article>
-    <header><strong>普通确认规则</strong></header>
-    <p>全局清理输入 <code>RESET</code>。指定 run/source 清理需要输入 <code>RESET &lt;run_id&gt;</code> 或 <code>RESET &lt;source_id&gt;</code>；多个 source 使用 <code>RESET SOURCES</code>。</p>
-    <p>如果 item 被多个 run 共享，按 run 清理只删除 run link，不会删除共享 item。</p>
-  </article>
-</section>
-
-<section class="reset-grid">
-  {% for option in reset_options %}
-  <article class="reset-card {% if option.risk_level == 'critical' %}danger-zone{% endif %}">
-    <header>
-      <strong>{{ option.label }}</strong>
-      <mark class="chip risk-{{ option.risk_level }}">{{ option.risk_level }}</mark>
-    </header>
-    <p>{{ option.description }}</p>
-    <details>
-      <summary>会清空什么 / 会保留什么</summary>
-      <p><strong>清空：</strong>{{ option.clears | join("、") }}</p>
-      <p><strong>保留：</strong>{{ option.keeps | join("、") }}</p>
-      <p>Legacy DB affected: <strong>false</strong></p>
-    </details>
-    <form method="post" action="/reset/preview">
-      <input type="hidden" name="level" value="{{ option.level }}">
-      {% if option.level == "clear_by_run_id" %}
-      <label>选择 run
-        <select name="run_id">
-          {% for run in runs %}<option value="{{ run.run_id }}">{{ run.run_id }} · {{ run.status }} · {{ run.new_items_count }} new</option>{% endfor %}
-        </select>
-      </label>
-      {% elif option.level == "clear_by_source_id" %}
-      <label>选择 source
-        <select name="source_ids">
-          {% for source in sources %}<option value="{{ source.source_id }}">{{ source.source_name }} · {{ source.status }}</option>{% endfor %}
-        </select>
-      </label>
-      <label><input type="checkbox" name="archive_sources" value="1"> commit 时同时 archive source</label>
-      {% endif %}
-      <button type="submit" {% if not reset_enabled %}disabled{% endif %}>Preview 影响</button>
-    </form>
-  </article>
-  {% endfor %}
-</section>
-
-{% if reset_preview %}
-<article class="danger-zone preview-panel">
-  <header>
-    <strong>Reset Preview / 清空影响预览</strong>
-    <mark class="chip risk-{{ reset_preview.risk_level }}">{{ reset_preview.risk_level }}</mark>
-  </header>
-  <p>{{ reset_preview.label }}：{{ reset_preview.description }}</p>
-  <section class="stats-grid">
-    <article><small>Legacy DB affected</small><h2>{{ reset_preview.legacy_db_affected }}</h2></article>
-    <article><small>DB path</small><code>{{ reset_preview.database_path }}</code></article>
-    <article><small>确认文本</small><h3><code>{{ reset_preview.requires_confirmation }}</code></h3></article>
-    <article><small>Tables</small><h2>{{ reset_preview.tables_affected | length }}</h2></article>
+{# ── Safety Boundary ── #}
+<div class="content-grid">
+  <section class="card">
+    <div class="card-header"><strong>当前安全边界</strong></div>
+    <div class="card-body">
+      <div class="summary-list">
+        <dt>是否工作区</dt><dd>{{ '是' if environment.is_fresh_database else '否' }}</dd>
+        <dt>数据库路径</dt><dd><code class="text-xs break-all">{{ environment.database_path }}</code></dd>
+        <dt>数据库 ID</dt><dd><code class="text-xs">{{ environment.database_id }}</code></dd>
+        <dt>Legacy DB 受影响</dt><dd class="text-ok"><strong>否</strong></dd>
+        <dt>当前数量</dt><dd>{{ environment.source_count }} 信息源 / {{ environment.item_count }} 条目 / {{ environment.run_count }} 任务</dd>
+      </div>
+    </div>
   </section>
-  {% if reset_preview.affected_summary %}
-  <article>
-    <header><strong>影响摘要</strong></header>
-    <pre>{{ reset_preview.affected_summary | tojson(indent=2) }}</pre>
-  </article>
-  {% endif %}
-  <details>
-    <summary>高级详情：affected tables / before counts / target ids</summary>
-    <pre>{{ reset_preview | tojson(indent=2) }}</pre>
-  </details>
-  <form method="post" action="/reset/commit" class="confirm-grid">
-    <input type="hidden" name="operation_id" value="{{ reset_preview.operation_id }}">
-    <input type="hidden" name="level" value="{{ reset_preview.level }}">
-    {% if reset_preview.target.run_id %}<input type="hidden" name="run_id" value="{{ reset_preview.target.run_id }}">{% endif %}
-    {% if reset_preview.target.source_ids %}<input type="hidden" name="source_ids" value="{{ reset_preview.target.source_ids | join(',') }}">{% endif %}
-    {% if reset_preview.target.archive_sources %}<input type="hidden" name="archive_sources" value="1">{% endif %}
-    <label>输入确认文本
-      <input name="confirmation" placeholder="{{ reset_preview.requires_confirmation }}">
-    </label>
-    <button type="submit">Commit reset</button>
-  </form>
-</article>
+  <section class="card">
+    <div class="card-header"><strong>确认规则</strong></div>
+    <div class="card-body">
+      <p class="text-sm text-muted">全局清理需输入 <code>RESET</code>。指定任务的清理需输入 <code>RESET &lt;run_id&gt;</code>。指定信息源的清理需输入 <code>RESET &lt;source_id&gt;</code>。多个信息源使用 <code>RESET SOURCES</code>。</p>
+      <p class="text-xs text-muted">如果条目被多个任务共享，按任务清理只删除任务关联（run link），不会删除共享条目。</p>
+    </div>
+  </section>
+</div>
+
+{# ── Reset Options ── #}
+<section>
+  <div class="section-header"><h2>清理选项</h2></div>
+  <div class="card-grid">
+    {% for option in reset_options %}
+    <div class="card {% if option.risk_level == 'critical' %}risk-critical{% elif option.risk_level == 'high' %}risk-high{% elif option.risk_level == 'medium' %}risk-medium{% else %}risk-low{% endif %}">
+      <div class="card-header">
+        <strong>{{ option.label }}</strong>
+        <span class="status-badge {{ 'danger' if option.risk_level == 'critical' else 'warning' if option.risk_level == 'high' else 'info' if option.risk_level == 'medium' else 'muted' }}">{{ option.risk_level }}</span>
+      </div>
+      <div class="card-body">
+        <p class="text-sm text-muted">{{ option.description }}</p>
+        <details style="margin:0.5rem 0;">
+          <summary class="text-xs">影响范围</summary>
+          <p class="text-xs" style="margin-top:0.25rem;"><strong>会清空：</strong>{{ option.clears | join('、') }}</p>
+          <p class="text-xs"><strong>会保留：</strong>{{ option.keeps | join('、') }}</p>
+          <p class="text-xs text-ok">Legacy DB 受影响：<strong>否</strong></p>
+        </details>
+        <form method="post" action="/reset/preview" style="margin-top:0.5rem;">
+          <input type="hidden" name="level" value="{{ option.level }}">
+          {% if option.level == 'clear_by_run_id' %}
+          <div class="form-group">
+            <label class="form-label text-xs">选择任务</label>
+            <select name="run_id" class="text-xs">
+              {% for run in runs %}<option value="{{ run.run_id }}">{{ run.run_id[:20] }}… · {{ run.status }} · {{ run.new_items_count }} 条</option>{% endfor %}
+            </select>
+          </div>
+          {% elif option.level == 'clear_by_source_id' %}
+          <div class="form-group">
+            <label class="form-label text-xs">选择信息源（可多选，逗号分隔 ID）</label>
+            <select name="source_ids" class="text-xs">
+              {% for source in sources %}<option value="{{ source.source_id }}">{{ source.source_name }} · {{ source.status }}</option>{% endfor %}
+            </select>
+            <span class="form-help">也可手动输入 source_id，逗号分隔多个</span>
+          </div>
+          <div class="form-group">
+            <label class="form-check text-xs">
+              <input type="checkbox" name="archive_sources" value="1"> 提交时同时归档信息源
+            </label>
+          </div>
+          {% endif %}
+          <button type="submit" class="btn btn-secondary btn-sm" {% if not reset_enabled %}disabled{% endif %}>预览影响</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{# ── Reset Preview ── #}
+{% if reset_preview %}
+<div class="card risk-high" style="margin-top:var(--space-xl);">
+  <div class="card-header">
+    <strong>清理预览</strong>
+    <span class="status-badge {{ 'danger' if reset_preview.risk_level == 'critical' else 'warning' }}">{{ reset_preview.risk_level }}</span>
+  </div>
+  <div class="card-body">
+    <p class="text-sm"><strong>{{ reset_preview.label }}</strong>：{{ reset_preview.description }}</p>
+
+    <div class="stats-grid" style="margin:0.75rem 0;">
+      <div class="metric-card">
+        <span class="metric-label">Legacy DB 受影响</span>
+        <span class="metric-value text-ok">{{ reset_preview.legacy_db_affected }}</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">数据库路径</span>
+        <span class="metric-value text-sm"><code>{{ reset_preview.database_path }}</code></span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">需要的确认文本</span>
+        <span class="metric-value text-sm"><code>{{ reset_preview.requires_confirmation }}</code></span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">受影响的表</span>
+        <span class="metric-value">{{ reset_preview.tables_affected | length if reset_preview.tables_affected else 0 }}</span>
+      </div>
+    </div>
+
+    {% if reset_preview.affected_summary %}
+    <details style="margin:0.5rem 0;">
+      <summary class="text-sm">影响摘要</summary>
+      <pre style="margin-top:0.35rem;">{{ reset_preview.affected_summary | tojson(indent=2) }}</pre>
+    </details>
+    {% endif %}
+
+    <details class="debug-panel">
+      <summary>高级详情（完整预览数据）</summary>
+      <pre>{{ reset_preview | tojson(indent=2) }}</pre>
+    </details>
+
+    {# ── Confirmation Form ── #}
+    <div class="confirm-section">
+      <form method="post" action="/reset/commit">
+        <input type="hidden" name="operation_id" value="{{ reset_preview.operation_id }}">
+        <input type="hidden" name="level" value="{{ reset_preview.level }}">
+        {% if reset_preview.target.run_id %}<input type="hidden" name="run_id" value="{{ reset_preview.target.run_id }}">{% endif %}
+        {% if reset_preview.target.source_ids %}<input type="hidden" name="source_ids" value="{{ reset_preview.target.source_ids | join(',') }}">{% endif %}
+        {% if reset_preview.target.archive_sources %}<input type="hidden" name="archive_sources" value="1">{% endif %}
+        <div class="form-group">
+          <label class="form-label">输入确认文本以执行清理</label>
+          <input name="confirmation" placeholder="{{ reset_preview.requires_confirmation }}" required
+                 style="max-width:400px; font-family:var(--font-mono);">
+        </div>
+        <button type="submit" class="btn btn-danger">确认执行清理</button>
+      </form>
+    </div>
+  </div>
+</div>
 {% endif %}
+
 {% endblock %}

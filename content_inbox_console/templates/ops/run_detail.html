@@ -1,74 +1,294 @@
 {% extends "base.html" %}
+{% block title %}任务详情 - 信息中心作战台{% endblock %}
+{% block page_title %}任务驾驶舱{% endblock %}
+
 {% block content %}
-{% set mode = summary.run.request.mode %}
+{% set mode = summary.run.request.mode if summary.run and summary.run.request else 'unknown' %}
+{% set status = summary.run.status if summary.run else 'unknown' %}
+
+{# ── Status Header ── #}
 <header class="page-header">
   <div>
-    <p class="eyebrow">Run 观察</p>
-    <h1>Run Detail</h1>
-    <p><code>{{ run_id }}</code> · {{ mode }} · {{ summary.run.status }}</p>
+    <h1>任务驾驶舱</h1>
+    <p>
+      <code class="text-sm">{{ run_id }}</code>
+      <span class="text-muted" style="margin:0 0.4rem;">·</span>
+      {% if status == 'success' or status == 'completed' %}
+      <span class="status-badge success">完成</span>
+      {% elif status == 'running' %}
+      <span class="status-badge info">运行中</span>
+      {% elif status == 'pending' or status == 'started' %}
+      <span class="status-badge info">进行中</span>
+      {% elif status == 'failed' %}
+      <span class="status-badge danger">失败</span>
+      {% elif status == 'cancelled' %}
+      <span class="status-badge muted">已取消</span>
+      {% else %}
+      <span class="status-badge muted">{{ status }}</span>
+      {% endif %}
+      <span class="text-muted" style="margin:0 0.4rem;">·</span>
+      {% if mode == 'dry_run' %}<span class="tag">预演模式</span>
+      {% else %}<span class="tag" style="background:rgba(197,106,44,0.12);color:var(--console-accent-2);">写入模式</span>
+      {% endif %}
+    </p>
   </div>
-  <div class="button-row">
-    <form method="post" action="/runs/{{ run_id }}/cancel"><button class="secondary">Cancel run</button></form>
-    <form method="post" action="/runs/{{ run_id }}/briefing"><button>生成 Briefing</button></form>
-    <form method="post" action="/runs/{{ run_id }}/report"><button>生成 Report</button></form>
-    <a role="button" class="secondary" href="/reset">清除此 run 结果</a>
+  <div class="header-actions">
+    {% if status in ('running', 'pending', 'started') %}
+    <form method="post" action="/runs/{{ run_id }}/cancel" style="margin:0;">
+      <button class="btn btn-danger btn-sm">取消任务</button>
+    </form>
+    {% endif %}
+    <form method="post" action="/runs/{{ run_id }}/briefing" style="margin:0;">
+      <button class="btn btn-secondary btn-sm">生成简报</button>
+    </form>
+    <form method="post" action="/runs/{{ run_id }}/report" style="margin:0;">
+      <button class="btn btn-secondary btn-sm">生成报告</button>
+    </form>
+    <a href="/reset" class="btn btn-ghost btn-sm">清理此任务</a>
   </div>
 </header>
 
-{% if mode == "dry_run" %}
-<article class="warning-banner">
-  <strong>dry-run 不写入 items。</strong>
-  <p>如果本页 item count 为 0，这是预期结果，不代表抓取失败。确认 source 和时间范围后，可以回到 Run Wizard 创建 real-write。</p>
-  <a role="button" href="/runs/new">用相同思路创建 real-write</a>
-</article>
+{# ── Mode Banner ── #}
+{% if mode == 'dry_run' %}
+<div class="alert alert-info">
+  <strong>预演模式（dry-run）— 不写入数据</strong>
+  <p>本条目的写入计数为 0 是预期行为，不代表抓取失败。确认信息源和时间范围后，可创建写入模式任务（real-write）。</p>
+  <a href="/runs/new" class="btn btn-primary btn-sm" style="margin-top:0.35rem;">创建写入模式任务</a>
+</div>
 {% else %}
-<article>
-  <strong>real-write 已进入写库路径。</strong>
-  <p>下方 items 是本 run 写入或关联的内容。后续建议运行 pipeline，然后处理 review queue。</p>
-</article>
+<div class="alert alert-success">
+  <strong>写入模式（real-write）— 已进入写库路径</strong>
+  <p>下方条目是本次任务写入的内容。建议继续运行信息处理流程，然后处理待审核项。</p>
+</div>
 {% endif %}
 
-<section class="stats-grid">
-  <article><small>状态</small><h2>{{ summary.run.status }}</h2><span>{{ mode }}</span></article>
-  <article><small>Sources</small><h2>{{ summary.run.selected_source_count }}</h2><span>success {{ summary.run.success_source_count }} / failed {{ summary.run.failure_source_count }}</span></article>
-  <article><small>Inserted</small><h2>{{ summary.run.new_items_count }}</h2><span>写入 items</span></article>
-  <article><small>Duplicate / Failed</small><h2>{{ summary.run.duplicate_items_count }} / {{ summary.run.failed_items_count }}</h2><span>重复 / 失败</span></article>
+{# ── Key Metrics ── #}
+<div class="stats-grid">
+  <div class="metric-card">
+    <span class="metric-label">信息源</span>
+    <span class="metric-value">{{ summary.run.selected_source_count if summary.run else 0 }}</span>
+    <span class="metric-sub">成功 {{ summary.run.success_source_count if summary.run else 0 }} / 失败 {{ summary.run.failure_source_count if summary.run else 0 }}</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">写入条目</span>
+    <span class="metric-value">{{ summary.run.new_items_count if summary.run else 0 }}</span>
+    <span class="metric-sub">新增信息条目</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">重复 / 失败</span>
+    <span class="metric-value">{{ summary.run.duplicate_items_count if summary.run else 0 }} / {{ summary.run.failed_items_count if summary.run else 0 }}</span>
+    <span class="metric-sub">重复条目 / 抓取失败</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">耗时</span>
+    <span class="metric-value">{{ (summary.run.duration_ms / 1000) | round(1) if summary.run and summary.run.duration_ms else '-' }}s</span>
+    <span class="metric-sub">开始: {{ summary.run.started_at if summary.run else '-' }}</span>
+  </div>
+</div>
+
+{# ── Next Steps ── #}
+{% if mode == 'dry_run' and status in ('success', 'completed') %}
+<div class="card risk-low">
+  <div class="card-header"><strong>下一步建议</strong></div>
+  <div class="card-body">
+    <div class="action-card">
+      <div class="action-card-body">
+        <strong>预演完成 — 创建写入模式任务</strong>
+        <p>预演结果符合预期后，使用相同的信息源范围和时间设置创建 real-write 写入任务。</p>
+      </div>
+      <a href="/runs/new" class="btn btn-primary btn-sm">创建写入任务</a>
+    </div>
+  </div>
+</div>
+{% elif mode == 'real_write' and status in ('success', 'completed') %}
+<div class="card risk-low">
+  <div class="card-header"><strong>下一步建议</strong></div>
+  <div class="card-body">
+    {% set pipeline = summary.pipeline or {} %}
+    {% if not pipeline.get('event') or pipeline.get('event') != 'completed' %}
+    <div class="action-card">
+      <div class="action-card-body">
+        <strong>运行信息处理流程</strong>
+        <p>将原始信息去重、语义提取、聚合为事件。从下方流水线区域执行各阶段。</p>
+      </div>
+    </div>
+    {% endif %}
+    {% if pipeline.get('event') == 'completed' %}
+    <div class="action-card">
+      <div class="action-card-body">
+        <strong>处理待审核项</strong>
+        <p>流水线已生成候选事件和待审核项，建议人工确认。</p>
+      </div>
+      <a href="/review-queue" class="btn btn-primary btn-sm">去待审核</a>
+    </div>
+    {% endif %}
+    <div class="action-card">
+      <div class="action-card-body">
+        <strong>生成简报或报告</strong>
+        <p>事件处理完毕后，可以生成每日简报或详细报告。</p>
+      </div>
+      <div class="flex gap-sm">
+        <form method="post" action="/runs/{{ run_id }}/briefing" style="margin:0;"><button class="btn btn-secondary btn-sm">生成简报</button></form>
+        <form method="post" action="/runs/{{ run_id }}/report" style="margin:0;"><button class="btn btn-secondary btn-sm">生成报告</button></form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{# ── Pipeline Stepper ── #}
+{% if summary.pipeline %}
+<section class="card">
+  <div class="card-header"><strong>信息处理流程</strong></div>
+  <div class="card-body">
+    <div class="pipeline-stepper">
+      {% set stages = [
+        ('dedupe', '去重'),
+        ('semantic', '语义'),
+        ('cluster', '聚合'),
+        ('event', '事件'),
+        ('review_queue', '审核'),
+        ('briefing', '简报'),
+        ('report', '报告')
+      ] %}
+      {% for stage_key, stage_label in stages %}
+      {% set stage_status = summary.pipeline.get(stage_key, 'pending') %}
+      <span class="pipeline-step {{ 'completed' if stage_status == 'completed' else 'active' if stage_status == 'running' else 'pending' }}">
+        {{ stage_label }}
+      </span>
+      {% if not loop.last %}<span class="pipeline-arrow">→</span>{% endif %}
+      {% endfor %}
+    </div>
+    <table class="data-table" style="margin-top:0.5rem;">
+      <thead><tr><th>阶段</th><th>状态</th><th>说明</th><th>操作</th></tr></thead>
+      <tbody>
+      {% for stage_key, stage_label in stages %}
+      {% set stage_status = summary.pipeline.get(stage_key, 'pending') %}
+      <tr>
+        <td class="font-semibold text-sm">{{ stage_label }}</td>
+        <td>
+          {% if stage_status == 'completed' %}<span class="status-badge success">完成</span>
+          {% elif stage_status == 'running' %}<span class="status-badge info">运行中</span>
+          {% else %}<span class="status-badge muted">待处理</span>
+          {% endif %}
+        </td>
+        <td class="text-xs text-muted">
+          {% if stage_key == 'dedupe' %}发现重复组，合并重复条目
+          {% elif stage_key == 'semantic' %}抽取实体、声明、证据
+          {% elif stage_key == 'cluster' %}生成聚合线索
+          {% elif stage_key == 'event' %}生成候选事件
+          {% elif stage_key == 'review_queue' %}生成待审核项
+          {% elif stage_key == 'briefing' %}生成每日简报
+          {% else %}生成详细报告{% endif %}
+        </td>
+        <td>
+          <form method="post" action="/runs/{{ run_id }}/pipeline/{{ stage_key }}" style="margin:0;">
+            <button class="btn btn-ghost btn-sm">运行</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+{# ── Source Progress + Event Timeline ── #}
+<div class="content-grid">
+  <section class="card">
+    <div class="card-header"><strong>信息源进度</strong></div>
+    <div class="card-body">
+      {% if summary.sources %}
+      <div class="table-container" style="max-height:400px;">
+        <table class="data-table">
+          <thead><tr><th>信息源</th><th>状态</th><th>抓取</th><th>写入</th><th>重复</th><th>失败</th></tr></thead>
+          <tbody>
+          {% for source in summary.sources %}
+          <tr>
+            <td class="text-sm">{{ source.source_name }}</td>
+            <td>
+              {% if source.status == 'success' or source.status == 'completed' %}
+              <span class="status-badge success">成功</span>
+              {% elif source.status == 'failed' %}
+              <span class="status-badge danger">失败</span>
+              {% elif source.status == 'running' %}
+              <span class="status-badge info">运行中</span>
+              {% else %}
+              <span class="status-badge muted">{{ source.status }}</span>
+              {% endif %}
+            </td>
+            <td class="text-xs">{{ source.fetched_entries_count }}</td>
+            <td class="text-xs">{{ source.new_items_count }}</td>
+            <td class="text-xs">{{ source.duplicate_items_count }}</td>
+            <td class="text-xs">{{ source.failed_items_count }}{% if source.error_code %} <span class="text-danger">{{ source.error_code }}</span>{% endif %}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-xs text-muted">暂无信息源进度数据。</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header"><strong>事件时间线</strong></div>
+    <div class="card-body">
+      {% if events %}
+      <div class="event-timeline">
+        {% for event in events %}
+        <div class="event-item">
+          <span class="event-seq">#{{ event.seq }}</span>
+          <div class="event-body">
+            <span class="event-type">{{ event.event_type }}</span>
+            <span class="event-message">{{ event.message }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-xs text-muted">暂无事件记录。</p>
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+{# ── Items ── #}
+<section class="card">
+  <div class="card-header">
+    <strong>本次任务写入的条目</strong>
+    <a href="/items?run_id={{ run_id }}" class="text-xs">查看全部 →</a>
+  </div>
+  <div class="card-body">
+    {% if items %}
+    <div class="table-container" style="max-height:360px;">
+      <table class="data-table">
+        <thead><tr><th>标题</th><th>信息源</th><th>发布时间</th></tr></thead>
+        <tbody>
+        {% for item in items %}
+        <tr>
+          <td><a href="/items/{{ item.item_id }}" class="text-sm">{{ item.title }}</a></td>
+          <td class="text-xs text-muted">{{ item.source_name }}</td>
+          <td class="text-xs text-muted">{{ item.published_at }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state" style="padding:1rem;">
+      <p class="text-xs text-muted">没有条目。预演模式按设计不写入条目；写入模式为 0 时请检查信息源抓取、时间过滤和运行事件。</p>
+    </div>
+    {% endif %}
+  </div>
 </section>
 
-<article>
-  <header><strong>Pipeline 处理闭环</strong></header>
-  <p>每个 stage 会写 run event。当前 semantic/clusters/events/review 是 lightweight v1：足够支撑控制台闭环，但不是完整 LLM pipeline 替代品。</p>
-  <table><thead><tr><th>阶段</th><th>状态</th><th>说明</th><th>操作</th></tr></thead><tbody>
-    {% for stage, status in summary.pipeline.items() %}
-    <tr>
-      <td>{{ stage }}</td>
-      <td><mark class="chip">{{ status }}</mark></td>
-      <td>{% if stage == "dedupe" %}发现重复组{% elif stage == "semantic" %}抽取 entities/claims/evidence{% elif stage == "cluster" %}生成 cluster{% elif stage == "event" %}生成 event{% elif stage == "review_queue" %}生成待审核项{% elif stage == "briefing" %}生成简报{% else %}生成报告{% endif %}</td>
-      <td><form method="post" action="/runs/{{ run_id }}/pipeline/{{ stage }}"><button>运行 {{ stage }}</button></form></td>
-    </tr>
-    {% endfor %}
-  </tbody></table>
-</article>
+{# ── Raw JSON Debug ── #}
+<details class="debug-panel">
+  <summary>高级：完整 Run 数据（JSON）</summary>
+  <pre>{{ summary | tojson(indent=2) }}</pre>
+</details>
 
-<section class="grid two">
-  <article>
-    <header><strong>Source Progress</strong></header>
-    {% if summary.sources %}
-    <table><thead><tr><th>source</th><th>状态</th><th>fetched</th><th>inserted</th><th>duplicate</th><th>failed/error</th></tr></thead><tbody>
-      {% for source in summary.sources %}<tr><td>{{ source.source_name }}</td><td>{{ source.status }}</td><td>{{ source.fetched_entries_count }}</td><td>{{ source.new_items_count }}</td><td>{{ source.duplicate_items_count }}</td><td>{{ source.failed_items_count }} {{ source.error_code or "" }}</td></tr>{% endfor %}
-    </tbody></table>
-    {% else %}<p class="empty-state">暂无 source progress。dry-run 仍会记录 source 进度。</p>{% endif %}
-  </article>
-  <article>
-    <header><strong>Run Events 时间线</strong></header>
-    <div class="event-stream">{% for event in events %}<p><code>#{{ event.seq }}</code> <strong>{{ event.event_type }}</strong> {{ event.message }}</p>{% endfor %}</div>
-  </article>
-</section>
-
-<article>
-  <header><strong>Items from this run</strong></header>
-  {% if items %}
-  <table><thead><tr><th>标题</th><th>Source</th><th>published_at</th></tr></thead><tbody>{% for item in items %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td>{{ item.source_name }}</td><td>{{ item.published_at }}</td></tr>{% endfor %}</tbody></table>
-  {% else %}<p class="empty-state">没有 committed items。dry-run 按设计不会写入 items；real-write 若为 0，请检查 source fetch / time filter / run events。</p>{% endif %}
-</article>
 {% endblock %}

@@ -3,30 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}content_inbox_console 作战台{% endblock %}</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', path='css/app.css') }}">
+  <title>{% block title %}信息中心作战台{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='css/tokens.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/reset.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/components.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/utilities.css') }}">
   <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
-<body>
-  {% include "components/nav.html" %}
-  <main class="container-fluid app-shell" id="main-content">
-    <section class="env-strip {% if not environment.is_fresh_database %}unsafe{% endif %}">
-      {% include "components/db_selector.html" %}
-      <div class="env-strip-meta">
-        <span class="env-badge {% if environment.real_runs_enabled %}env-ok{% else %}env-warn{% endif %}">
-          real-write: {{ "ON" if environment.real_runs_enabled else "OFF" }}
-        </span>
-        <span class="env-count">Sources: {{ environment.source_count or 0 }}</span>
-        <span class="env-count">Items: {{ environment.item_count or 0 }}</span>
-        <span class="env-count">Runs: {{ environment.run_count or 0 }}</span>
-      </div>
-    </section>
+<body class="app-shell">
+  {% include "components/sidebar.html" %}
+  {% include "components/topbar.html" %}
+  <main class="app-main" id="main-content">
     {% if error or error_reason %}
-    <article class="error-banner">
+    <div class="alert alert-error" role="alert">
       <strong>{{ error or error_reason }}</strong>
-      <p>Backend API: <code>{{ api_base }}</code></p>
-    </article>
+      <span class="alert-meta">Backend API: <code>{{ api_base }}</code></span>
+    </div>
     {% endif %}
     {% block content %}{% endblock %}
   </main>

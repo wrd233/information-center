@@ -1,5 +1,26 @@
 {% extends "base.html" %}
+{% block title %}设置 - 信息中心作战台{% endblock %}
+{% block page_title %}设置{% endblock %}
+
 {% block content %}
-<header class="page-header"><div><h1>Settings</h1><p>Console runtime settings.</p></div></header>
-<article><dl><dt>Backend API</dt><dd><code>{{ api_base }}</code></dd><dt>Frontend</dt><dd>content_inbox_console</dd></dl></article>
+
+<header class="page-header">
+  <div>
+    <h1>控制台设置</h1>
+    <p class="text-sm text-muted">当前控制台运行时的配置信息（只读）。</p>
+  </div>
+</header>
+
+<section class="card">
+  <div class="card-header"><strong>运行时配置</strong></div>
+  <div class="card-body">
+    <div class="summary-list">
+      <dt>后端 API 地址</dt><dd><code>{{ api_base }}</code></dd>
+      <dt>前端应用</dt><dd>content_inbox_console</dd>
+      <dt>写入模式</dt><dd>{{ '已启用' if environment.real_runs_enabled else '未启用' }}</dd>
+      <dt>当前数据库</dt><dd><code class="text-xs">{{ environment.database_path or '-' }}</code></dd>
+    </div>
+  </div>
+</section>
+
 {% endblock %}

@@ -1,5 +1,33 @@
 {% extends "base.html" %}
+{% block title %}条目详情 - 信息中心作战台{% endblock %}
+{% block page_title %}条目详情{% endblock %}
+
 {% block content %}
-<header class="page-header"><div><h1>{{ data.item.title or item_id }}</h1><p><code>{{ item_id }}</code></p></div></header>
-<section class="grid two"><article><header><strong>Canonical</strong></header><pre>{{ data.item | tojson(indent=2) }}</pre></article><article><header><strong>Semantic</strong></header><pre>{{ data.semantic | tojson(indent=2) }}</pre><header><strong>Entities</strong></header><pre>{{ data.entities | tojson(indent=2) }}</pre></article></section>
+
+<header class="page-header">
+  <div>
+    <h1>{{ data.item.title if data.item and data.item.title else item_id }}</h1>
+    <p><code class="text-sm">{{ item_id }}</code></p>
+  </div>
+  <a href="/items" class="btn btn-ghost btn-sm">← 返回条目列表</a>
+</header>
+
+<div class="content-grid">
+  <section class="card">
+    <div class="card-header"><strong>基本信息</strong></div>
+    <div class="card-body">
+      <pre style="max-height:400px;">{{ data.item | tojson(indent=2) }}</pre>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-header"><strong>语义提取</strong></div>
+    <div class="card-body">
+      <h4 style="margin-bottom:0.5rem;">语义数据</h4>
+      <pre style="max-height:240px;">{{ data.semantic | tojson(indent=2) }}</pre>
+      <h4 style="margin:0.75rem 0 0.5rem;">实体</h4>
+      <pre style="max-height:240px;">{{ data.entities | tojson(indent=2) }}</pre>
+    </div>
+  </section>
+</div>
+
 {% endblock %}

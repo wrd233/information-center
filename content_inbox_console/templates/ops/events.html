@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}事件 - 信息中心作战台{% endblock %}
+{% block page_title %}事件{% endblock %}
+
+{% block content %}
+
+<header class="page-header">
+  <div>
+    <h1>事件（Event）</h1>
+    <p>从信息流中聚合提取的结构化事件。每个事件关联多条原始信息，可进一步生成简报和报告。</p>
+  </div>
+</header>
+
+{% if items %}
+<div class="card-grid">
+  {% for event in items %}
+  <div class="card">
+    <div class="card-header">
+      <strong>
+        <a href="/events/{{ event.event_id }}">{{ event.event_title or event.event_id[:16] }}</a>
+      </strong>
+      {% if event.status %}<span class="status-badge {{ 'success' if event.status == 'active' else 'muted' }}">{{ event.status }}</span>{% endif %}
+    </div>
+    <div class="card-body">
+      <p class="text-sm text-muted">{{ event.event_summary or '暂无摘要' }}</p>
+      <div class="flex items-center gap-sm" style="margin-top:0.5rem;">
+        {% if event.confidence is not none %}<span class="tag">置信度 {{ event.confidence }}</span>{% endif %}
+        {% if event.event_type %}<span class="tag">{{ event.event_type }}</span>{% endif %}
+        <code class="text-xs text-muted">{{ event.event_id[:16] }}…</code>
+      </div>
+    </div>
+    <div class="card-footer">
+      <a href="/events/{{ event.event_id }}" class="btn btn-ghost btn-sm">查看详情</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-state-icon">◆</div>
+  <h3>暂无事件</h3>
+  <p>需要先执行写入模式任务（real-write），然后运行信息处理流程（流水线）来生成候选事件。</p>
+  <div style="margin-top:1rem;">
+    <a href="/runs/new" class="btn btn-primary btn-sm">创建抓取任务</a>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

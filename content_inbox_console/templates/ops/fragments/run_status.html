@@ -1,0 +1,70 @@
+{# HTMX fragment: Run status + pipeline stepper #}
+{% set mode = summary.run.request.mode if summary.run and summary.run.request else 'unknown' %}
+{% set status = summary.run.status if summary.run else 'unknown' %}
+
+<div id="run-status-fragment"
+  {% if status in ('running', 'pending', 'started') %}
+  hx-get="/runs/{{ run_id }}/fragment/status" hx-trigger="every 5s" hx-swap="outerHTML"
+  {% endif %}>
+
+  {# Key Metrics #}
+  <div class="stats-grid">
+    <div class="metric-card">
+      <span class="metric-label">信息源</span>
+      <span class="metric-value">{{ summary.run.selected_source_count if summary.run else 0 }}</span>
+      <span class="metric-sub">成功 {{ summary.run.success_source_count if summary.run else 0 }} / 失败 {{ summary.run.failure_source_count if summary.run else 0 }}</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-label">写入条目</span>
+      <span class="metric-value">{{ summary.run.new_items_count if summary.run else 0 }}</span>
+      <span class="metric-sub">新增信息条目</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-label">重复 / 失败</span>
+      <span class="metric-value">{{ summary.run.duplicate_items_count if summary.run else 0 }} / {{ summary.run.failed_items_count if summary.run else 0 }}</span>
+      <span class="metric-sub">重复条目 / 抓取失败</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-label">耗时</span>
+      <span class="metric-value">{{ (summary.run.duration_ms / 1000) | round(1) if summary.run and summary.run.duration_ms else '-' }}s</span>
+      <span class="metric-sub">
+        {% if status in ('running', 'pending', 'started') %}
+        <span class="status-badge info">运行中</span>
+        {% elif status == 'success' or status == 'completed' %}
+        <span class="status-badge success">完成</span>
+        {% elif status == 'failed' %}
+        <span class="status-badge danger">失败</span>
+        {% else %}
+        <span class="status-badge muted">{{ status }}</span>
+        {% endif %}
+      </span>
+    </div>
+  </div>
+
+  {# Pipeline Stepper #}
+  {% if summary.pipeline %}
+  <div class="card" style="margin-bottom:0;">
+    <div class="card-header"><strong>信息处理流程</strong></div>
+    <div class="card-body">
+      <div class="pipeline-stepper">
+        {% set stages = [
+          ('dedupe', '去重'),
+          ('semantic', '语义'),
+          ('cluster', '聚合'),
+          ('event', '事件'),
+          ('review_queue', '审核'),
+          ('briefing', '简报'),
+          ('report', '报告')
+        ] %}
+        {% for stage_key, stage_label in stages %}
+        {% set stage_status = summary.pipeline.get(stage_key, 'pending') %}
+        <span class="pipeline-step {{ 'completed' if stage_status == 'completed' else 'active' if stage_status == 'running' else 'pending' }}">
+          {{ stage_label }}
+        </span>
+        {% if not loop.last %}<span class="pipeline-arrow">→</span>{% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>

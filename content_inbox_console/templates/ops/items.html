@@ -1,6 +1,53 @@
 {% extends "base.html" %}
+{% block title %}原始信息 - 信息中心作战台{% endblock %}
+{% block page_title %}原始信息{% endblock %}
+
 {% block content %}
-<header class="page-header"><div><h1>Item 信息列表</h1><p>按 run、source、时间和关键词查看当前 Fresh DB 中的 canonical items。</p></div></header>
-<form method="get" action="/items" class="grid"><input name="run_id" value="{{ run_id }}" placeholder="run_id"><input name="keyword" value="{{ keyword }}" placeholder="关键词"><button>筛选</button></form>
-{% if items %}<table><thead><tr><th>标题</th><th>Source</th><th>发布时间</th><th>Cluster</th></tr></thead><tbody>{% for item in items %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td>{{ item.source_name }}</td><td>{{ item.published_at }}</td><td><a href="/clusters/{{ item.primary_cluster_id }}">{{ item.primary_cluster_id }}</a></td></tr>{% endfor %}</tbody></table>{% else %}<p class="empty-state">没有匹配的 items。dry-run 不会写入 items。</p>{% endif %}
+
+<header class="page-header">
+  <div>
+    <h1>原始信息列表</h1>
+    <p class="text-sm text-muted">高级调试视图。按任务、信息源、时间和关键词查看当前工作数据库中的原始信息条目。</p>
+  </div>
+  <a href="/dashboard" class="btn btn-ghost btn-sm">← 返回作战首页</a>
+</header>
+
+<section class="card">
+  <div class="card-body">
+    <form method="get" action="/items" class="form-inline">
+      <div class="form-group" style="flex:2; min-width:180px;">
+        <input name="run_id" value="{{ run_id }}" placeholder="按 Run ID 筛选">
+      </div>
+      <div class="form-group" style="flex:2; min-width:160px;">
+        <input name="keyword" value="{{ keyword }}" placeholder="关键词搜索">
+      </div>
+      <button type="submit" class="btn btn-secondary btn-sm">筛选</button>
+    </form>
+  </div>
+</section>
+
+{% if items %}
+<div class="table-container">
+  <table class="data-table">
+    <thead><tr><th>标题</th><th>信息源</th><th>发布时间</th><th>聚合线索</th></tr></thead>
+    <tbody>
+    {% for item in items %}
+    <tr>
+      <td><a href="/items/{{ item.item_id }}" class="text-sm">{{ item.title }}</a></td>
+      <td class="text-xs text-muted">{{ item.source_name }}</td>
+      <td class="text-xs text-muted">{{ item.published_at }}</td>
+      <td><a href="/clusters/{{ item.primary_cluster_id }}"><code class="text-xs">{{ item.primary_cluster_id[:12] if item.primary_cluster_id else '-' }}</code></a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-state-icon">∅</div>
+  <h3>没有匹配的条目</h3>
+  <p>预演模式（dry-run）不会写入条目。如需查看数据，请先执行写入模式任务（real-write）。</p>
+</div>
+{% endif %}
+
 {% endblock %}

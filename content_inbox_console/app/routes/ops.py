@@ -514,7 +514,8 @@ def cluster_create_event(request: Request, cluster_id: str):
 
 @router.get("/events", response_class=HTMLResponse)
 def events(request: Request):
-    return simple_page(request, "events", "Events", "/api/events", "events")
+    response = client(request).get("/api/events")
+    return render(request, "ops/events.html", {"active_page": "events", "items": data(response, {}).get("events", []), "error": err(response)})
 
 
 @router.get("/events/{event_id}", response_class=HTMLResponse)
@@ -616,3 +617,34 @@ def agent_query(request: Request, query: str = "", format: str = "human"):
 @router.get("/settings", response_class=HTMLResponse)
 def settings_page(request: Request):
     return render(request, "ops/settings.html", {"active_page": "settings"})
+
+
+# ── HTMX Fragment Routes ──
+
+@router.get("/runs/{run_id}/fragment/status", response_class=HTMLResponse)
+def run_status_fragment(request: Request, run_id: str):
+    api = client(request)
+    summary = api.get(f"/api/runs/{run_id}/summary")
+    return render(request, "ops/fragments/run_status.html", {
+        "run_id": run_id,
+        "summary": data(summary, {}),
+    })
+
+
+@router.get("/runs/{run_id}/fragment/timeline", response_class=HTMLResponse)
+def run_timeline_fragment(request: Request, run_id: str):
+    api = client(request)
+    events_r = api.get(f"/api/runs/{run_id}/events")
+    return render(request, "ops/fragments/run_timeline.html", {
+        "run_id": run_id,
+        "events": data(events_r, {}).get("events", []),
+    })
+
+
+@router.get("/dashboard/fragment/recent", response_class=HTMLResponse)
+def dashboard_runs_fragment(request: Request):
+    api = client(request)
+    runs_r = api.get("/api/runs", {"limit": 8})
+    return render(request, "ops/fragments/dashboard_recent.html", {
+        "runs": data(runs_r, {}).get("runs", []),
+    })

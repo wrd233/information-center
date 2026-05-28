@@ -1,0 +1,48 @@
+{# HTMX fragment: Dashboard recent runs #}
+<div id="dashboard-recent-fragment"
+  hx-get="/dashboard/fragment/recent" hx-trigger="every 10s" hx-swap="outerHTML">
+
+  <div class="card-header">
+    <strong>最近任务</strong>
+    <a href="/runs" class="text-xs">查看全部 →</a>
+  </div>
+  <div class="card-body">
+    {% if runs %}
+    <table class="data-table">
+      <thead><tr><th>任务 ID</th><th>状态</th><th>模式</th><th>写入</th><th>时间</th><th></th></tr></thead>
+      <tbody>
+      {% for run in runs[:8] %}
+      <tr>
+        <td><a href="/runs/{{ run.run_id }}" class="text-mono text-xs">{{ run.run_id[:12] }}…</a></td>
+        <td>
+          {% if run.status == 'success' or run.status == 'completed' %}
+          <span class="status-badge success">完成</span>
+          {% elif run.status == 'running' %}
+          <span class="status-badge info">运行中</span>
+          {% elif run.status == 'failed' %}
+          <span class="status-badge danger">失败</span>
+          {% else %}
+          <span class="status-badge muted">{{ run.status }}</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if run.request.mode == 'dry_run' %}
+          <span class="tag">预演</span>
+          {% else %}
+          <span class="tag" style="background:rgba(197,106,44,0.12);color:var(--console-accent-2);">写入</span>
+          {% endif %}
+        </td>
+        <td class="text-xs">{{ run.new_items_count or 0 }}</td>
+        <td class="text-xs text-muted">{{ run.started_at or '-' }}</td>
+        <td><a href="/runs/{{ run.run_id }}" class="btn btn-ghost btn-sm">详情</a></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state" style="padding:1rem;">
+      <p class="text-xs text-muted">暂无任务。先导入信息源，再创建预演任务（dry-run）验证抓取范围。</p>
+    </div>
+    {% endif %}
+  </div>
+</div>

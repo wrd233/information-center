@@ -1,0 +1,89 @@
+<aside class="sidebar" aria-label="主导航">
+  <div class="sidebar-brand">
+    <strong>信息中心</strong>
+    <small>作战台</small>
+  </div>
+
+  <div class="sidebar-env">
+    {% if environment.is_fresh_database %}
+    <span class="status-badge success">当前工作区</span>
+    {% else %}
+    <span class="status-badge warning">历史数据库</span>
+    {% endif %}
+    {% if environment.real_runs_enabled %}
+    <span class="status-badge success">写入开启</span>
+    {% else %}
+    <span class="status-badge muted">写入关闭</span>
+    {% endif %}
+    <span class="sidebar-env-label text-xs text-muted truncate" title="{{ environment.database_path or '' }}">
+      {{ environment.database_label or 'DB' }}
+    </span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="sidebar-section">
+      <a href="/dashboard" class="sidebar-link {% if active_page == 'dashboard' %}active{% endif %}">
+        <span class="nav-icon">⌂</span> 作战首页
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <span class="sidebar-section-title">开始使用</span>
+      <a href="/sources" class="sidebar-link {% if active_page == 'sources' %}active{% endif %}">
+        <span class="nav-icon">⊞</span> 信息源
+      </a>
+      <a href="/runs/new" class="sidebar-link {% if active_page == 'runs' %}active{% endif %}">
+        <span class="nav-icon">▶</span> 创建任务
+      </a>
+      <a href="/runs" class="sidebar-link {% if active_page == 'runs' %}active{% endif %}">
+        <span class="nav-icon">☰</span> 任务历史
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <span class="sidebar-section-title">信息消费</span>
+      <a href="/events" class="sidebar-link {% if active_page == 'events' %}active{% endif %}">
+        <span class="nav-icon">◆</span> 事件
+      </a>
+      <a href="/review-queue" class="sidebar-link {% if active_page == 'review' %}active{% endif %}">
+        <span class="nav-icon">✓</span> 待审核
+      </a>
+      <a href="/briefings" class="sidebar-link {% if active_page == 'briefings' %}active{% endif %}">
+        <span class="nav-icon">📋</span> 简报
+      </a>
+      <a href="/reports" class="sidebar-link {% if active_page == 'reports' %}active{% endif %}">
+        <span class="nav-icon">📄</span> 报告
+      </a>
+      <a href="/agent-query" class="sidebar-link {% if active_page == 'agent' %}active{% endif %}">
+        <span class="nav-icon">⚡</span> 智能查询
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <span class="sidebar-section-title">维护</span>
+      <a href="/reset" class="sidebar-link {% if active_page == 'reset' %}active{% endif %}">
+        <span class="nav-icon">↺</span> 数据清理
+      </a>
+      <a href="/environment" class="sidebar-link {% if active_page == 'environment' %}active{% endif %}">
+        <span class="nav-icon">⚙</span> 环境
+      </a>
+      <a href="/settings" class="sidebar-link {% if active_page == 'settings' %}active{% endif %}">
+        <span class="nav-icon">…</span> 设置
+      </a>
+    </div>
+
+    <details class="sidebar-advanced" {% if active_page in ('items','dedupe','clusters','entities','relations','claims','topics','timeline','evidence','saved_views','information') %}open{% endif %}>
+      <summary>高级调试</summary>
+      <a href="/items" class="sidebar-link {% if active_page == 'items' %}active{% endif %}">原始信息</a>
+      <a href="/dedupe-groups" class="sidebar-link {% if active_page == 'dedupe' %}active{% endif %}">去重组</a>
+      <a href="/clusters" class="sidebar-link {% if active_page == 'clusters' %}active{% endif %}">聚合线索</a>
+      <a href="/entities" class="sidebar-link {% if active_page == 'entities' %}active{% endif %}">实体</a>
+      <a href="/relations" class="sidebar-link {% if active_page == 'relations' %}active{% endif %}">关系</a>
+      <a href="/claims" class="sidebar-link {% if active_page == 'claims' %}active{% endif %}">断言</a>
+      <a href="/topics" class="sidebar-link {% if active_page == 'topics' %}active{% endif %}">主题</a>
+      <a href="/timeline" class="sidebar-link {% if active_page == 'timeline' %}active{% endif %}">时间线</a>
+      <a href="/evidence" class="sidebar-link {% if active_page == 'evidence' %}active{% endif %}">证据</a>
+      <a href="/saved-views" class="sidebar-link {% if active_page == 'saved_views' %}active{% endif %}">视图</a>
+    </details>
+  </nav>
+</aside>
