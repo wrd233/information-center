@@ -18,14 +18,15 @@
     <div class="card-header"><strong>第 1 步：选择模式</strong></div>
     <div class="card-body">
       <div class="mode-cards">
-        <label class="mode-card selected" id="mode-dry">
-          <input type="radio" name="mode" value="dry_run" checked style="display:none;">
+        <label class="mode-card selected" id="mode-dry" onclick="selectMode('dry_run', this)">
+          <input type="radio" name="mode" value="dry_run" checked>
           <h3>预演模式（dry-run）</h3>
           <p>不写入数据库。用于验证信息源可用性、抓取范围和时间过滤是否合理。建议始终先执行预演。</p>
           <span class="mode-recommended">推荐首次使用</span>
         </label>
-        <label class="mode-card {% if not environment.real_runs_enabled %}risk-high{% endif %}" id="mode-real">
-          <input type="radio" name="mode" value="real_write" {% if not environment.real_runs_enabled %}disabled{% endif %} style="display:none;">
+        <label class="mode-card {% if not environment.real_runs_enabled %}risk-high{% endif %}" id="mode-real"
+              {% if environment.real_runs_enabled %}onclick="selectMode('real_write', this)"{% endif %}>
+          <input type="radio" name="mode" value="real_write" {% if not environment.real_runs_enabled %}disabled{% endif %}>
           <h3>写入模式（real-write）</h3>
           <p>将抓取的信息写入当前工作数据库。只有预演确认无误后才应使用。需要后端启用写入开关。</p>
           {% if not environment.real_runs_enabled %}
@@ -85,18 +86,26 @@
     <div class="card-header"><strong>第 3 步：选择时间范围</strong></div>
     <div class="card-body">
       <p class="text-sm text-muted">设置发布时间的过滤范围。时间范围仅过滤 RSS 返回的条目，不保证能抓取到源站历史归档。</p>
+      <div class="flex flex-wrap gap-sm" style="margin-bottom:0.75rem;">
+        <button type="button" class="btn btn-ghost btn-sm" onclick="setTimePreset(24)">最近 24 小时</button>
+        <button type="button" class="btn btn-ghost btn-sm" onclick="setTimePreset(168)">最近 7 天</button>
+        <button type="button" class="btn btn-ghost btn-sm" onclick="setTimePreset(720)">最近 30 天</button>
+        <button type="button" class="btn btn-ghost btn-sm" onclick="clearTimeRange()">不限制</button>
+      </div>
       <div class="form-grid">
         <div class="form-group">
-          <label class="form-label">起始时间（published_from）</label>
-          <input name="published_from" placeholder="2026-05-01T00:00:00+08:00">
+          <label class="form-label">起始时间</label>
+          <input type="datetime-local" id="published_from_picker" name="published_from_picker">
           <span class="form-help">留空表示不限制起始时间</span>
         </div>
         <div class="form-group">
-          <label class="form-label">结束时间（published_to）</label>
-          <input name="published_to" placeholder="2026-05-28T23:59:59+08:00">
+          <label class="form-label">结束时间</label>
+          <input type="datetime-local" id="published_to_picker" name="published_to_picker">
           <span class="form-help">留空表示不限制结束时间</span>
         </div>
       </div>
+      <input type="hidden" name="published_from" id="published_from">
+      <input type="hidden" name="published_to" id="published_to">
     </div>
   </section>
 
@@ -136,5 +145,48 @@
   </div>
 
 </form>
+
+<script>
+function selectMode(mode, el) {
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input[type=radio]').checked = true;
+}
+
+function toISO(d) {
+  return d.getFullYear() + '-' +
+    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+    String(d.getDate()).padStart(2, '0') + 'T' +
+    String(d.getHours()).padStart(2, '0') + ':' +
+    String(d.getMinutes()).padStart(2, '0') + ':00+08:00';
+}
+
+function setTimePreset(hours) {
+  var now = new Date();
+  var from = new Date(now.getTime() - hours * 3600000);
+  document.getElementById('published_from_picker').value = from.toISOString().slice(0, 16);
+  document.getElementById('published_to_picker').value = now.toISOString().slice(0, 16);
+  document.getElementById('published_from').value = toISO(from);
+  document.getElementById('published_to').value = toISO(now);
+}
+
+function clearTimeRange() {
+  document.getElementById('published_from_picker').value = '';
+  document.getElementById('published_to_picker').value = '';
+  document.getElementById('published_from').value = '';
+  document.getElementById('published_to').value = '';
+}
+
+document.querySelector('form').addEventListener('submit', function() {
+  var fp = document.getElementById('published_from_picker').value;
+  var tp = document.getElementById('published_to_picker').value;
+  if (fp && !document.getElementById('published_from').value) {
+    document.getElementById('published_from').value = fp + ':00+08:00';
+  }
+  if (tp && !document.getElementById('published_to').value) {
+    document.getElementById('published_to').value = tp + ':00+08:00';
+  }
+});
+</script>
 
 {% endblock %}

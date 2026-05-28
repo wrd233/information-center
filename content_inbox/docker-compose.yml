@@ -9,7 +9,7 @@ services:
       CONTENT_INBOX_HOST: 0.0.0.0
       CONTENT_INBOX_PORT: 8787
       CONTENT_INBOX_ENVIRONMENT: fresh
-      CONTENT_INBOX_ENABLE_REAL_RUNS: "0"
+      CONTENT_INBOX_ENABLE_REAL_RUNS: "1"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
