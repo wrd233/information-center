@@ -52,7 +52,7 @@ def test_same_title_different_published_dates_do_not_merge() -> None:
     assert first != second
 
 
-def test_http_https_are_not_canonicalized_by_default() -> None:
+def test_http_https_are_canonicalized_for_safe_url_dedupe() -> None:
     http_key = key(
         ContentAnalyzeRequest(
             title="URL",
@@ -70,7 +70,7 @@ def test_http_https_are_not_canonicalized_by_default() -> None:
         )
     )
 
-    assert http_key != https_key
+    assert http_key == https_key
     assert "#frag" not in http_key
     assert "utm_source" not in http_key
 

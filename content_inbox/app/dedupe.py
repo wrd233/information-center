@@ -4,7 +4,7 @@ from datetime import datetime
 from urllib.parse import urlparse, urlunparse
 
 from app.models import NormalizedContent
-from app.utils import stable_hash
+from app.utils import normalize_url, stable_hash
 
 
 def is_http_url(value: str | None) -> bool:
@@ -15,12 +15,13 @@ def is_http_url(value: str | None) -> bool:
 
 
 def canonicalize_url_for_dedupe(url: str, *, canonicalize_http_https: bool = False) -> str:
+    normalized = normalize_url(url) or url
     if not canonicalize_http_https:
-        return url
-    parsed = urlparse(url)
+        return normalized
+    parsed = urlparse(normalized)
     if parsed.scheme in {"http", "https"}:
         return urlunparse(parsed._replace(scheme="https"))
-    return url
+    return normalized
 
 
 def source_key(content: NormalizedContent) -> str:

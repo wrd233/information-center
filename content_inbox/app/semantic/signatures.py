@@ -155,6 +155,28 @@ for canonical_action, aliases in (ALIAS_REGISTRY.get("actions") or {}).items():
         EVENT_ACTION_ALIASES[str(alias).lower()] = str(canonical_action)
 
 
+def alias_hits_for_text(text: str) -> list[dict[str, str]]:
+    lowered = (text or "").lower()
+    hits: list[dict[str, str]] = []
+    for canonical_actor, aliases in (ALIAS_REGISTRY.get("actors") or {}).items():
+        for alias in aliases or []:
+            alias_text = str(alias)
+            if alias_text.lower() in lowered:
+                hits.append({"type": "actor", "alias": alias_text, "canonical": str(canonical_actor)})
+    for canonical_product, config in (ALIAS_REGISTRY.get("products") or {}).items():
+        product_config = config if isinstance(config, dict) else {}
+        for alias in product_config.get("aliases") or []:
+            alias_text = str(alias)
+            if alias_text.lower() in lowered:
+                hits.append({"type": "product", "alias": alias_text, "canonical": str(canonical_product)})
+    for canonical_action, aliases in (ALIAS_REGISTRY.get("actions") or {}).items():
+        for alias in aliases or []:
+            alias_text = str(alias)
+            if alias_text.lower() in lowered:
+                hits.append({"type": "action", "alias": alias_text, "canonical": str(canonical_action)})
+    return hits
+
+
 AI_ENTITY_RE = re.compile(
     r"\b(?:OpenAI|ChatGPT|Codex|GPT[-\w.]*|Anthropic|Claude|Google|Gemini|DeepMind|xAI|Grok|DeepSeek|Qwen[\w.-]*|Alibaba|Cursor|Windsurf|Cognition|Devin|LangChain|LlamaIndex|LlamaCloud|Perplexity|Hugging\s+Face|NVIDIA|Replit|Runway|Pika|Redis|Weaviate|Kimi|Manus|Mem0|Meta|Microsoft|GitHub|arXiv|Cohere|Aleph\s+Alpha|Notion|Oracle|ElevenLabs|Monica|Skywork|Firecrawl|Fireworks|Mistral|MiniMax|Hailuo|Browser\s+Use|BrowserUse|Lovable|Vercel|Bun|YC|Y\s+Combinator|NASA)\b",
     re.IGNORECASE,
@@ -195,6 +217,7 @@ class EventSignature:
     concreteness_score: float = 0.0
     is_concrete: bool = False
     invalid_reasons: list[str] = field(default_factory=list)
+    alias_hits: list[dict[str, str]] = field(default_factory=list)
 
     def model_dump(self) -> dict[str, Any]:
         return asdict(self)
@@ -741,6 +764,7 @@ def extract_event_signature(item: dict[str, Any], card: dict[str, Any] | None = 
         concreteness_score=round(score, 3),
         is_concrete=is_concrete,
         invalid_reasons=invalid,
+        alias_hits=alias_hits_for_text(text),
     )
 
 

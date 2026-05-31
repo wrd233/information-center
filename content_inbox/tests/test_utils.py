@@ -48,7 +48,12 @@ class TestNormalizeUrl:
 
     def test_lowercases_scheme_and_host(self):
         assert normalize_url("HTTP://EXAMPLE.COM/Path") == normalize_url(
-            "http://example.com/Path"
+            "https://example.com/Path"
+        )
+
+    def test_collapses_http_https_and_www(self):
+        assert normalize_url("http://www.example.com/path") == normalize_url(
+            "https://example.com/path"
         )
 
     def test_removes_trailing_slash(self):
@@ -74,3 +79,8 @@ class TestNormalizeUrl:
         url = normalize_url("http://example.com/a?source=twitter&id=1")
         assert "source" not in url
         assert "id=1" in url
+
+    def test_preserves_content_identity_query_params(self):
+        assert normalize_url("https://example.com/a?id=1") != normalize_url(
+            "https://example.com/a?id=2"
+        )

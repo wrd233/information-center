@@ -84,6 +84,7 @@ def test_configured_alias_registry_normalizes_actor_product_action() -> None:
     assert sig.product_or_model == "GPT-5.5"
     assert sig.action == "availability"
     assert sig.signature_key == "openai|gpt55|availability|2026-05-17"
+    assert {"type": "product", "alias": "GPT 5.5", "canonical": "GPT-5.5"} in sig.alias_hits
 
 
 def test_phase1_3b_invalid_products_are_not_accepted() -> None:

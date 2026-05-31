@@ -1498,6 +1498,7 @@ def classify_item_eventness(row: dict[str, Any], signature: EventSignature | Non
 
 def _source_variants_from_raw(*values: Any) -> dict[str, list[str]]:
     urls: list[str] = []
+    canonical_urls: list[str] = []
     guids: list[str] = []
     source_ids: list[str] = []
     for value in values:
@@ -1507,12 +1508,16 @@ def _source_variants_from_raw(*values: Any) -> dict[str, list[str]]:
         for key in ("url", "link"):
             if raw.get(key):
                 urls.append(str(raw[key]))
+                normalized = normalize_url(str(raw[key]))
+                if normalized:
+                    canonical_urls.append(normalized)
         if raw.get("guid"):
             guids.append(str(raw["guid"]))
         if raw.get("source_id"):
             source_ids.append(str(raw["source_id"]))
     return {
         "url_variants": sorted(set(urls))[:10],
+        "canonical_url_variants": sorted(set(canonical_urls))[:10],
         "guid_variants": sorted(set(guids))[:10],
         "source_ids": sorted(set(source_ids))[:10],
     }
@@ -1613,6 +1618,9 @@ def generate_information_objects(store: InboxStore, run_id: str, item_ids: list[
         "eventness": {},
         "signature": {"event_signature": 0, "thread_signature": 0, "content_signature": 0, "reject": 0, "invalid": 0},
         "candidates_by_priority": {},
+        "candidates_by_lane": {},
+        "disqualifiers_by_reason": {},
+        "alias_hit_count": 0,
         "auto_merged": 0,
         "review_required": 0,
         "rejected_non_event": 0,
@@ -1635,6 +1643,7 @@ def generate_information_objects(store: InboxStore, run_id: str, item_ids: list[
             stats["signature"][signature.semantic_level] = stats["signature"].get(signature.semantic_level, 0) + 1
             if signature.invalid_reasons:
                 stats["signature"]["invalid"] += 1
+            stats["alias_hit_count"] += len(signature.alias_hits)
             _insert_semantic_extraction(conn, item, now, eventness, signature)
             enriched.append({"item": item, "signature": signature, "eventness": eventness})
             if eventness["decision"] != "event":
@@ -1676,6 +1685,9 @@ def generate_information_objects(store: InboxStore, run_id: str, item_ids: list[
                 right = right_entry["item"]
                 assessment = assess_candidate(left, right)
                 stats["candidates_by_priority"][assessment.candidate_priority] = stats["candidates_by_priority"].get(assessment.candidate_priority, 0) + 1
+                stats["candidates_by_lane"][assessment.lane] = stats["candidates_by_lane"].get(assessment.lane, 0) + 1
+                for disqualifier in assessment.disqualifiers:
+                    stats["disqualifiers_by_reason"][disqualifier] = stats["disqualifiers_by_reason"].get(disqualifier, 0) + 1
                 relation_type, same_event, same_topic, review_required, reason = _relation_from_candidate(left, right, assessment)
                 status = "auto_merge" if same_event and relation_type in {"same_event_repeat", "same_event_new_info", "near_duplicate", "item_duplicate"} else ("review" if review_required else "rejected")
                 conn.execute(
@@ -1872,6 +1884,7 @@ def run_dedupe_stage(store: InboxStore, run_id: str, item_ids: list[str]) -> dic
                 "last_seen_at": max(member["last_seen_at"] or now for member in members),
                 "latest_seen_summaries": [member["latest_seen_summary"] for member in members if member["latest_seen_summary"]][:5],
                 "url_variants": sorted(variants.get("url_variants", set()))[:10],
+                "canonical_url_variants": sorted(variants.get("canonical_url_variants", set()))[:10],
                 "guid_variants": sorted(variants.get("guid_variants", set()))[:10],
                 "source_ids": sorted(variants.get("source_ids", set()))[:10],
             }

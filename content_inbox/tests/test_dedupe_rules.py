@@ -55,7 +55,29 @@ def test_same_url_dedupes_and_marks_seen_without_overwriting_created_at(tmp_path
 def test_url_normalization_boundaries_are_stable() -> None:
     assert normalize_url("HTTPS://Example.COM/a/?utm_source=x&b=2#section") == "https://example.com/a?b=2"
     assert normalize_url("https://example.com/a?b=2&a=1") == "https://example.com/a?a=1&b=2"
-    assert normalize_url("http://example.com/a") != normalize_url("https://example.com/a")
+    assert normalize_url("http://www.example.com/a") == normalize_url("https://example.com/a")
+
+
+def test_url_business_query_params_do_not_over_merge(tmp_path: Path) -> None:
+    store = InboxStore(tmp_path / "inbox.sqlite3")
+
+    first = process(store, url="https://example.com/article?id=1", title="Article")
+    second = process(store, url="https://example.com/article?id=2", title="Article")
+
+    assert first.is_duplicate is False
+    assert second.is_duplicate is False
+    assert second.item_id != first.item_id
+
+
+def test_http_https_tracking_fragment_and_trailing_slash_dedupe(tmp_path: Path) -> None:
+    store = InboxStore(tmp_path / "inbox.sqlite3")
+
+    first = process(store, url="http://www.example.com/post/?utm_source=a&fbclid=b#frag", title="Original")
+    second = process(store, url="https://example.com/post", title="Updated")
+
+    assert first.is_duplicate is False
+    assert second.is_duplicate is True
+    assert second.item_id == first.item_id
 
 
 def test_guid_dedupes_within_same_source_when_url_missing(tmp_path: Path) -> None:

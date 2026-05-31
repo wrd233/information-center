@@ -614,6 +614,27 @@ def test_phase1_2f_event_signature_pair_beats_generic_same_product() -> None:
     assert weak.candidate_priority != "must_run"
 
 
+def test_phase2_alias_signature_lane_is_explainable() -> None:
+    left = {
+        "item_id": "alias-a",
+        "title": "OpenAI makes GPT 5.5 now available to coding teams",
+        "summary": "Availability update for GPT 5.5.",
+        "published_at": "2026-05-17T00:00:00+00:00",
+    }
+    right = {
+        "item_id": "alias-b",
+        "title": "OpenAI expands GPT-5.5 availability for coding teams",
+        "summary": "The GPT-5.5 rollout is available now.",
+        "published_at": "2026-05-17T01:00:00+00:00",
+    }
+
+    assessment = assess_candidate(left, right)
+
+    assert assessment.candidate_priority == "must_run"
+    assert assessment.lane == "exact_signature_alias"
+    assert "alias_normalized_signature_match" in assessment.same_event_evidence
+
+
 def test_phase1_3_relation_policy_same_product_and_thread() -> None:
     assessment = assess_candidate(
         {"item_id": "a", "title": "Manus Recommended Connectors launches", "summary": "Manus ships recommended connectors."},

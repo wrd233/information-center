@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import re
 import tempfile
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from itertools import combinations
 from pathlib import Path
@@ -642,6 +642,7 @@ def run_evaluation() -> dict[str, Any]:
     event_items = fetch_table(store, "event_items")
     review_queue = fetch_table(store, "review_queue")
     semantic_extractions = fetch_table(store, "semantic_extractions")
+    event_candidate_pairs = fetch_table(store, "event_candidate_pairs")
 
     event_item_case_ids = {stored_case_by_item.get(row["item_id"]) for row in event_items}
     event_item_case_ids.discard(None)
@@ -656,12 +657,15 @@ def run_evaluation() -> dict[str, Any]:
     )
 
     extracted_by_case: dict[str, set[str]] = defaultdict(set)
+    alias_hit_count = 0
     for row in semantic_extractions:
         case_id = stored_case_by_item.get(row["item_id"])
         if not case_id:
             continue
         normalized = json.loads(row["normalized_output_json"] or "{}")
         extracted_by_case[case_id].update(str(value).lower() for value in normalized.get("entities", []))
+        signature = normalized.get("signature") or {}
+        alias_hit_count += len(signature.get("alias_hits") or [])
     expected_entity_total = 0
     matched_entity_total = 0
     for item in items:
@@ -701,6 +705,7 @@ def run_evaluation() -> dict[str, Any]:
         },
         "event_clustering": {
             **event_cluster_metrics,
+            "auto_merge_precision": event_cluster_metrics["precision"],
             "clusters": len(cluster_members_by_cluster),
             "multi_item_event_rate": multi_item_event_rate,
             "false_positive_pairs": false_positive_pairs[:20],
@@ -716,6 +721,24 @@ def run_evaluation() -> dict[str, Any]:
             "entity_recall": entity_recall,
             "matched_entities": matched_entity_total,
             "expected_entities": expected_entity_total,
+        },
+        "candidate_diagnostics": {
+            "total_candidates": len(event_candidate_pairs),
+            "by_priority": dict(Counter(row["candidate_priority"] for row in event_candidate_pairs)),
+            "by_lane": dict(Counter(row["lane"] for row in event_candidate_pairs)),
+            "by_status": dict(Counter(row["status"] for row in event_candidate_pairs)),
+            "medium_review_rate": (
+                sum(1 for row in event_candidate_pairs if row["candidate_priority"] == "medium" and row["status"] == "review")
+                / max(1, sum(1 for row in event_candidate_pairs if row["candidate_priority"] == "medium"))
+            ),
+            "disqualifiers": dict(
+                Counter(
+                    disqualifier
+                    for row in event_candidate_pairs
+                    for disqualifier in json.loads(row["disqualifiers_json"] or "[]")
+                )
+            ),
+            "alias_hit_count": alias_hit_count,
         },
         "outputs": {
             "daily_briefing": briefing_score,
@@ -760,6 +783,9 @@ def render_report(metrics: dict[str, Any]) -> str:
         "",
         f"- 处理时去重 F1: {pct(metrics['process_dedupe']['f1'])}，召回 {pct(metrics['process_dedupe']['recall'])}。",
         f"- 事件聚合 F1: {pct(metrics['event_clustering']['f1'])}，召回 {pct(metrics['event_clustering']['recall'])}。",
+        f"- 自动合并 precision: {pct(metrics['event_clustering']['auto_merge_precision'])}。",
+        f"- medium review rate: {pct(metrics['candidate_diagnostics']['medium_review_rate'])}。",
+        f"- alias hit count: {metrics['candidate_diagnostics']['alias_hit_count']}。",
         f"- 事件类型识别率: {pct(metrics['event_extraction']['event_type_known_rate'])}。",
         f"- 事件摘要具体率: {pct(metrics['event_extraction']['event_summary_specific_rate'])}。",
         f"- 实体召回: {pct(metrics['event_extraction']['entity_recall'])}。",
@@ -807,6 +833,15 @@ def render_report(metrics: dict[str, Any]) -> str:
         f"- 多条目 cluster 比率: {pct(metrics['event_clustering']['multi_item_event_rate'])}",
         f"- 误合并 pair 样例: `{metrics['event_clustering']['false_positive_pairs']}`",
         f"- 漏合并 pair 样例: `{metrics['event_clustering']['false_negative_pairs']}`",
+        "",
+        "### Candidate 诊断",
+        "",
+        f"- candidate counts by priority: `{metrics['candidate_diagnostics']['by_priority']}`",
+        f"- candidate counts by lane: `{metrics['candidate_diagnostics']['by_lane']}`",
+        f"- candidate counts by status: `{metrics['candidate_diagnostics']['by_status']}`",
+        f"- disqualifier counts: `{metrics['candidate_diagnostics']['disqualifiers']}`",
+        f"- medium review rate: {pct(metrics['candidate_diagnostics']['medium_review_rate'])}",
+        f"- alias hit count: {metrics['candidate_diagnostics']['alias_hit_count']}",
         "",
         "### 事件提取",
         "",

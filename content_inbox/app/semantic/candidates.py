@@ -439,6 +439,7 @@ def event_signature(item: dict[str, Any], card: dict[str, Any] | None = None) ->
         "concreteness_score": signature.concreteness_score,
         "is_concrete": signature.is_concrete,
         "invalid_reasons": signature.invalid_reasons,
+        "alias_hits": signature.alias_hits,
         "source_type": signature.source_type,
         "object": signature.object,
     }
@@ -654,6 +655,9 @@ def assess_candidate(
         lane = "suppressed"
         priority = "suppress"
         suppression_reason = "suppressed_generic_entity"
+    elif signature_match and (left_sig_obj.alias_hits or right_sig_obj.alias_hits):
+        lane = "exact_signature_alias"
+        priority = "must_run"
     elif (
         left_sig_obj.semantic_level == "event_signature"
         and right_sig_obj.semantic_level == "event_signature"
@@ -710,6 +714,8 @@ def assess_candidate(
         same_event_evidence.append(f"shared_weighted_entities:{', '.join(weighted[:5])}")
     if signature_match:
         same_event_evidence.append(f"event_signature_match:{left_sig_obj.signature_key}")
+        if left_sig_obj.alias_hits or right_sig_obj.alias_hits:
+            same_event_evidence.append("alias_normalized_signature_match")
     elif concrete_event_match:
         same_event_evidence.append("same_actor_product_action_72h")
     if event_left & event_right:
