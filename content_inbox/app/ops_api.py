@@ -1496,19 +1496,19 @@ def generate_information_objects(store: InboxStore, run_id: str, item_ids: list[
                     INSERT OR IGNORE INTO cluster_items(cluster_id, item_id, primary_relation, same_event, same_topic, confidence, reason, evidence_json, decision_source, schema_version, input_fingerprint, created_at, updated_at)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
-                    (cluster_id, member["item_id"], "same_topic" if len(members) == 1 else "same_event", 1 if len(members) > 1 else 0, 1, 0.55, "lightweight normalized title grouping", json.dumps([{"title": member["title"]}], ensure_ascii=False), "lightweight_rule", "operational_v1", stable_hash(cluster_id + member["item_id"]), now, now),
+                    (cluster_id, member["item_id"], "same_topic" if len(members) == 1 else "same_event", 1 if len(members) > 1 else 0, 1, 0.55, "轻量级标题规范化分组", json.dumps([{"title": member["title"]}], ensure_ascii=False), "lightweight_rule", "operational_v1", stable_hash(cluster_id + member["item_id"]), now, now),
                 )
                 conn.execute("UPDATE inbox_items SET primary_cluster_id = ? WHERE item_id = ?", (cluster_id, member["item_id"]))
             event_id = "event_" + stable_hash(cluster_id)[:16]
             conn.execute(
                 "INSERT OR IGNORE INTO events(event_id, event_title, event_summary, event_type, status, importance, confidence, primary_cluster_id, evidence_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (event_id, first["title"], f"Candidate event from cluster {cluster_id}.", "unknown", "needs_review", min(5, max(1, len(members))), 0.5 if len(members) > 1 else 0.3, cluster_id, json.dumps({"cluster_id": cluster_id, "method": "lightweight_rule"}, ensure_ascii=False), now, now),
+                (event_id, first["title"], f"由聚合线索 {cluster_id} 自动生成的候选事件。", "unknown", "needs_review", min(5, max(1, len(members))), 0.5 if len(members) > 1 else 0.3, cluster_id, json.dumps({"cluster_id": cluster_id, "method": "lightweight_rule"}, ensure_ascii=False), now, now),
             )
             for member in members:
                 conn.execute("INSERT OR IGNORE INTO event_items(event_id, item_id, role, created_at) VALUES (?, ?, ?, ?)", (event_id, member["item_id"], "supporting", now))
             conn.execute(
                 "INSERT INTO review_queue(review_type, target_type, target_id, status, suggestion_json, reason, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                ("event_candidate", "event", event_id, "pending", json.dumps({"action": "review_event"}, ensure_ascii=False), "Lightweight event candidate needs human review.", now, now),
+                ("event_candidate", "event", event_id, "pending", json.dumps({"action": "review_event"}, ensure_ascii=False), "轻量级规则自动生成的候选事件，需要人工确认。", now, now),
             )
 
 
@@ -1627,7 +1627,7 @@ def api_run_report(request: Request, run_id: str) -> Any:
     if not run:
         return fail("RUN_NOT_FOUND", "Run not found.", status_code=404)
     sources = store.list_ingest_run_sources(run_id)
-    body = f"# Run Report {run_id}\n\nStatus: {run['status']}\n\nNew items: {run['new_items_count']}\n\nSources: {len(sources)}\n"
+    body = f"# 运行报告 {run_id}\n\n状态: {run['status']}\n\n新增条目: {run['new_items_count']}\n\n信息源数量: {len(sources)}\n"
     return ok({"format": "markdown", "content": body, "run": run, "sources": sources})
 
 
