@@ -1,5 +1,7 @@
 # Phase 2 去重与事件聚合实施记录
 
+Status: historical implementation note. Use `event_aggregation_operational_v3.md` for current checkpoint policy and active targets.
+
 生成日期: 2026-06-01
 
 ## 目标

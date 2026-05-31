@@ -1900,6 +1900,10 @@ def run_dedupe_stage(store: InboxStore, run_id: str, item_ids: list[str]) -> dic
     return {"dedupe_groups_created_or_updated": created, "seen_count_gt_1_items": seen_multiple, "dedupe_explanation_count": explained_duplicates, "dedupe_explanation_coverage": round(coverage, 4)}
 
 
+from app.semantic.operational_pipeline import generate_information_objects as generate_information_objects  # noqa: E402,F811
+from app.semantic.operational_pipeline import run_dedupe_stage as run_dedupe_stage  # noqa: E402,F811
+
+
 def item_ids_for_run(store: InboxStore, run_id: str) -> list[str]:
     with store.connect() as conn:
         return [row["item_id"] for row in conn.execute("SELECT DISTINCT item_id FROM item_run_links WHERE run_id = ?", (run_id,)).fetchall()]
@@ -1990,7 +1994,36 @@ def api_run_report(request: Request, run_id: str) -> Any:
     if not run:
         return fail("RUN_NOT_FOUND", "Run not found.", status_code=404)
     sources = store.list_ingest_run_sources(run_id)
-    body = f"# 运行报告 {run_id}\n\n状态: {run['status']}\n\n新增条目: {run['new_items_count']}\n\n信息源数量: {len(sources)}\n"
+    with store.connect() as conn:
+        trusted_events = [
+            dict(r)
+            for r in conn.execute(
+                """
+                SELECT event_id, event_title, event_type, status, confidence, importance, primary_cluster_id
+                FROM events
+                WHERE status = 'ready' OR confidence >= 0.9
+                ORDER BY importance DESC, COALESCE(event_time, created_at) DESC
+                LIMIT 10
+                """
+            ).fetchall()
+        ]
+        pending_reviews = int(conn.execute("SELECT COUNT(*) AS n FROM review_queue WHERE status = 'pending'").fetchone()["n"] or 0)
+    event_lines = "\n".join(
+        f"- {event['event_title']}：{event['event_type']}，置信度 {float(event['confidence'] or 0):.2f}"
+        for event in trusted_events
+    ) or "- 暂无可信事件"
+    body = (
+        f"# 运行报告 {run_id}\n\n"
+        f"状态: {run['status']}\n\n"
+        f"新增条目: {run['new_items_count']}\n\n"
+        f"信息源数量: {len(sources)}\n\n"
+        "## 可信事件\n"
+        f"{event_lines}\n\n"
+        "## 质量概览\n"
+        f"- 可信事件数: {len(trusted_events)}\n"
+        f"- 待审核项: {pending_reviews}\n"
+        "- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n"
+    )
     return ok({"format": "markdown", "content": body, "run": run, "sources": sources})
 
 
@@ -2345,11 +2378,24 @@ def api_evidence(request: Request, object_type: str, object_id: str) -> dict[str
 def generate_briefing(store: InboxStore, briefing_type: str) -> dict[str, Any]:
     now = utc_now()
     with store.connect() as conn:
-        events = [dict(r) for r in conn.execute("SELECT * FROM events ORDER BY created_at DESC LIMIT 10").fetchall()]
+        events = [
+            dict(r)
+            for r in conn.execute(
+                """
+                SELECT *
+                FROM events
+                WHERE status = 'ready' OR confidence >= 0.9
+                ORDER BY importance DESC, COALESCE(event_time, created_at) DESC
+                LIMIT 10
+                """
+            ).fetchall()
+        ]
         reviews = [dict(r) for r in conn.execute("SELECT * FROM review_queue WHERE status = 'pending' ORDER BY created_at DESC LIMIT 10").fetchall()]
         type_cn = "每日" if briefing_type == "daily" else "每周"
         title = f"{type_cn}简报 {now[:10]}"
-        body = "# " + title + "\n\n## 事件\n" + "\n".join(f"- {e['event_title']}（{e['status']}）" for e in events) + "\n\n## 待审核\n" + "\n".join(f"- {r['review_type']} {r['target_type']}:{r['target_id']}" for r in reviews)
+        event_lines = "\n".join(f"- {e['event_title']}（可信事件，置信度 {float(e['confidence'] or 0):.2f}）" for e in events) or "- 暂无可信事件"
+        review_lines = "\n".join(f"- {r['review_type']} {r['target_type']}:{r['target_id']}" for r in reviews) or "- 暂无待审核项"
+        body = "# " + title + "\n\n## 可信事件\n" + event_lines + "\n\n## 待审核\n" + review_lines
         briefing_id = f"brief_{briefing_type}_{stable_hash(now)[:12]}"
         conn.execute("INSERT OR REPLACE INTO briefings(briefing_id, briefing_type, title, body_markdown, payload_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)", (briefing_id, briefing_type, title, body, json.dumps({"events": events, "reviews": reviews}, ensure_ascii=False), now, now))
         row = conn.execute("SELECT * FROM briefings WHERE briefing_id = ?", (briefing_id,)).fetchone()
@@ -2434,7 +2480,37 @@ def api_report_generate(request: Request, payload: dict[str, Any]) -> dict[str, 
     report_type = payload.get("report_type", "summary")
     type_cn = {"summary": "总体摘要", "source_health": "信息源健康度", "event": "事件报告", "run": "运行报告"}.get(report_type, report_type)
     title = f"{type_cn}"
-    body = f"# {title}\n\n生成时间: {now}\n\n关联对象: {payload.get('object_type', 'environment')} {payload.get('object_id', '')}\n"
+    with store.connect() as conn:
+        trusted_events = [
+            dict(r)
+            for r in conn.execute(
+                """
+                SELECT event_id, event_title, event_type, status, confidence, importance, event_time, primary_cluster_id
+                FROM events
+                WHERE status = 'ready' OR confidence >= 0.9
+                ORDER BY importance DESC, COALESCE(event_time, created_at) DESC
+                LIMIT 10
+                """
+            ).fetchall()
+        ]
+        pending_reviews = int(conn.execute("SELECT COUNT(*) AS n FROM review_queue WHERE status = 'pending'").fetchone()["n"] or 0)
+        event_total = int(conn.execute("SELECT COUNT(*) AS n FROM events").fetchone()["n"] or 0)
+    event_lines = "\n".join(
+        f"- {event['event_title']}：{event['event_type']}，置信度 {float(event['confidence'] or 0):.2f}，cluster {event['primary_cluster_id'] or 'none'}"
+        for event in trusted_events
+    ) or "- 暂无可信事件"
+    body = (
+        f"# {title}\n\n"
+        f"生成时间: {now}\n\n"
+        f"关联对象: {payload.get('object_type', 'environment')} {payload.get('object_id', '')}\n\n"
+        "## 可信事件\n"
+        f"{event_lines}\n\n"
+        "## 质量概览\n"
+        f"- 可信事件数: {len(trusted_events)}\n"
+        f"- 全部事件数: {event_total}\n"
+        f"- 待审核项: {pending_reviews}\n"
+        "- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n"
+    )
     with store.connect() as conn:
         conn.execute("INSERT OR REPLACE INTO reports(report_id, report_type, object_type, object_id, title, body_markdown, payload_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (report_id, report_type, payload.get("object_type"), payload.get("object_id"), title, body, json.dumps(payload, ensure_ascii=False), now, now))
     return ok({"report_id": report_id, "title": title, "content": body})

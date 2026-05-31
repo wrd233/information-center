@@ -1,6 +1,6 @@
 # 作战台信息质量评估报告
 
-生成时间: 2026-05-31T16:59:28.799783+00:00
+生成时间: 2026-05-31T17:38:35.599212+00:00
 
 ## 结论
 
@@ -13,12 +13,15 @@
 - 自动合并 precision: 100.0%。
 - medium review rate: 100.0%。
 - alias hit count: 17。
+- review apply sample: ok。
+- source scoring profiles/signals: 23/82。
+- operational DeepSeek relation calls: 0。
 - 事件类型识别率: 100.0%。
 - 事件摘要具体率: 100.0%。
 - 实体召回: 97.0%。
-- 每日简报质量分: 77.8%。
-- 运行报告质量分: 66.7%。
-- Run endpoint 报告质量分: 55.6%。
+- 每日简报质量分: 88.9%。
+- 运行报告质量分: 100.0%。
+- Run endpoint 报告质量分: 88.9%。
 
 ## 指标标准
 
@@ -63,12 +66,19 @@
 
 ### Candidate 诊断
 
-- candidate counts by priority: `{'high': 1, 'must_run': 1, 'low': 7, 'medium': 1}`
-- candidate counts by lane: `{'same_event_recall': 2, 'exact_signature_alias': 1, 'exploratory_recall': 4, 'same_thread': 3}`
-- candidate counts by status: `{'auto_merge': 2, 'review': 8}`
+- candidate counts by priority: `{'low': 7, 'high': 1, 'medium': 1, 'must_run': 1}`
+- candidate counts by lane: `{'same_thread': 3, 'exploratory_recall': 4, 'same_event_recall': 2, 'exact_signature_alias': 1}`
+- candidate counts by status: `{'review': 8, 'auto_merge': 2}`
 - disqualifier counts: `{}`
 - medium review rate: 100.0%
 - alias hit count: 17
+
+### Review Apply 与 Source Scoring
+
+- review apply sample: `{'attempted': True, 'review_id': 78, 'ok': True, 'apply_result': {'applied': True, 'action': 'event_relation_approved', 'event_id': 'event_52285f514277588f', 'cluster_id': 'cluster_9292e895fe7b3e7f', 'item_ids': ['item_996ec456324e4e64ad7ad30bb594f244', 'item_a18982e2336544fd8dcb9765eebd8c1a']}}`
+- source scoring dimension totals: `{'discovery_value': 4.0, 'fact_value': 4.0, 'incremental_value': 2.0, 'interpretation_value': 0.0, 'duplicate_noise': 3.0, 'non_event_noise': 77.0, 'review_acceptance': 2.0}`
+- source scoring example profile: `{'source_id': 'site_a', 'discovery_value_avg': 2.0, 'fact_value_avg': 2.0, 'incremental_value_avg': 0.0, 'interpretation_value_avg': 0.0, 'duplicate_noise_rate': 0.0, 'non_event_noise_rate': 0.0, 'review_acceptance': 1.0, 'llm_yield_score': 3.0, 'priority_suggestion': 'new_source_under_evaluation'}`
+- operational DeepSeek relation stats: `{'operational_relation_calls': 0, 'live_ok_calls': 0, 'failed_or_skipped_calls': 0, 'total_tokens': 0}`
 
 ### 事件提取
 
@@ -81,32 +91,32 @@
 
 ### 简报和报告
 
-- 每日简报质量分: 77.8%，检查项: `{'has_h1': True, 'has_section': True, 'has_list': True, 'has_required_terms': True, 'has_actionable_counts': True, 'has_object_context': False, 'scaffold_localized': True, 'status_labels_localized': False, 'not_too_thin': True}`
-- 每周简报质量分: 77.8%，检查项: `{'has_h1': True, 'has_section': True, 'has_list': True, 'has_required_terms': True, 'has_actionable_counts': True, 'has_object_context': False, 'scaffold_localized': True, 'status_labels_localized': False, 'not_too_thin': True}`
-- 运行报告质量分: 66.7%，检查项: `{'has_h1': True, 'has_section': False, 'has_list': False, 'has_required_terms': True, 'has_actionable_counts': True, 'has_object_context': True, 'scaffold_localized': True, 'status_labels_localized': True, 'not_too_thin': False}`
-- Run endpoint 报告质量分: 55.6%，检查项: `{'has_h1': True, 'has_section': False, 'has_list': False, 'has_required_terms': True, 'has_actionable_counts': True, 'has_object_context': False, 'scaffold_localized': True, 'status_labels_localized': True, 'not_too_thin': False}`
+- 每日简报质量分: 88.9%，检查项: `{'has_h1': True, 'has_section': True, 'has_list': True, 'has_required_terms': True, 'has_actionable_counts': True, 'has_object_context': False, 'scaffold_localized': True, 'status_labels_localized': True, 'not_too_thin': True}`
+- 每周简报质量分: 88.9%，检查项: `{'has_h1': True, 'has_section': True, 'has_list': True, 'has_required_terms': True, 'has_actionable_counts': True, 'has_object_context': False, 'scaffold_localized': True, 'status_labels_localized': True, 'not_too_thin': True}`
+- 运行报告质量分: 100.0%，检查项: `{'has_h1': True, 'has_section': True, 'has_list': True, 'has_required_terms': True, 'has_actionable_counts': True, 'has_object_context': True, 'scaffold_localized': True, 'status_labels_localized': True, 'not_too_thin': True}`
+- Run endpoint 报告质量分: 88.9%，检查项: `{'has_h1': True, 'has_section': True, 'has_list': True, 'has_required_terms': True, 'has_actionable_counts': True, 'has_object_context': False, 'scaffold_localized': True, 'status_labels_localized': True, 'not_too_thin': True}`
 
 每日简报预览:
 
 ```markdown
 # 每日简报 2026-05-31
 
-## 事件
-- OpenAI release GPT-5.5（ready）
-- DeepSeek release DeepSeek V4（needs_review）
-- OpenAI integration major API（needs_review）
+## 可信事件
+- OpenAI release GPT-5.5（可信事件，置信度 0.98）
+- OpenAI integration major API（可信事件，置信度 0.98）
+- DeepSeek release DeepSeek V4（可信事件，置信度 0.98）
 
 ## 待审核
-- eventness_review item:item_051ea6a9ab1a40aa9eda8dc9271747df
-- eventness_review item:item_0b2b815d05d54f8aa50084ce6e46723b
-- eventness_review item:item_0e4918b290504b8aadcf70c3f140d2fd
-- eventness_review item:item_153e2e3942e64e78945cc7fb27feab03
-- eventness_review item:item_159ff9b809664262bd85db65e93eaa8c
-- eventness_review item:item_171e5de929784b139f282e9023b9e9a8
-- eventness_review item:item_1de570cc23f848e1878dfc074e867301
-- eventness_review item:item_21b8542767b84bca98b36bf758ac6c49
-- eventness_review item:item_27602b937f4146fc85e49f11e9d2d715
-- eventness_review item:item_2a1ff1533da44d25bb486d1d3dd1d20c
+- eventness_review item:item_0a9dba87db3b488e8123359db5f514e6
+- eventness_review item:item_0c402fb56c974d0ead662722f53f9f98
+- eventness_review item:item_13fab38298994b4db3633331515d48c2
+- eventness_review item:item_1c8862d2c12e489bbdb59d74f55eadc6
+- eventness_review item:item_20501b28f57e4433a9d5d95255943557
+- eventness_review item:item_232eac2e48214401b94da047f4edad46
+- eventness_review item:item_24d2c0e194a74172987eda0633d28654
+- eventness_review item:item_2b38e0b8b7a042609a7c22394e7a26d7
+- eventness_review item:item_2bde36798e3848b3b2f49d333c55d688
+- eventness_review item:item_2ed9d293e592462f833c5edd4cfdb133
 ```
 
 运行报告预览:
@@ -114,16 +124,27 @@
 ```markdown
 # 运行报告
 
-生成时间: 2026-05-31T16:59:28.793970+00:00
+生成时间: 2026-05-31T17:38:35.583600+00:00
 
-关联对象: run run_quality_eval_5aa8c88a57
+关联对象: run run_quality_eval_e1912f6c70
+
+## 可信事件
+- OpenAI release GPT-5.5：release，置信度 0.98，cluster cluster_1be3f3059f449572
+- OpenAI integration major API：integration，置信度 0.98，cluster cluster_9292e895fe7b3e7f
+- DeepSeek release DeepSeek V4：release，置信度 0.98，cluster cluster_ee6e44e0884d81fd
+
+## 质量概览
+- 可信事件数: 3
+- 全部事件数: 3
+- 待审核项: 87
+- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。
 
 ```
 
 Run endpoint 报告预览:
 
 ```markdown
-# 运行报告 run_quality_eval_5aa8c88a57
+# 运行报告 run_quality_eval_e1912f6c70
 
 状态: success
 
@@ -131,25 +152,35 @@ Run endpoint 报告预览:
 
 信息源数量: 0
 
+## 可信事件
+- OpenAI release GPT-5.5：release，置信度 0.98
+- OpenAI integration major API：integration，置信度 0.98
+- DeepSeek release DeepSeek V4：release，置信度 0.98
+
+## 质量概览
+- 可信事件数: 3
+- 待审核项: 87
+- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。
+
 ```
 
 ## 问题追踪
 
-1. 当前事件聚合以规范化标题完全一致为核心，导致跨媒体改写标题的同一事件大量漏合。
-2. 泛标题和日报标题会被完全标题规则误合并，且非事件内容也会生成候选事件。
-3. 事件对象字段偏占位：`event_type=unknown`、摘要为模板句，无法支撑高质量简报。
+1. operational v3 已不使用规范化标题作为事件主键，但当前 rule-only 自动合并仍偏保守，跨语言、政策表述改写、融资改写等 false negative 仍多。
+2. 泛标题和日报类内容已被 eventness gate 挡住；后续风险主要是 review/LLM 放宽时误把同主题不同事件升为 same-event。
+3. 事件对象已具备类型、摘要和证据，但同一事件的新增事实仍主要等待 LLM/review apply 补足。
 4. 去重阶段在写入后重复已折叠的情况下几乎只产生单成员 group，不能解释重复来源和 seen_count。
-5. 实体抽取偏英文大写 token，对中文别名、政策名、产品名覆盖不足。
-6. 报告生成仍是占位实现，缺少来源、阶段、错误、事件、审核、质量风险等关键内容。
+5. 实体抽取和 alias registry 对中文别名、政策名、产品名仍需从 false negative 样例继续扩充。
+6. Run endpoint 报告仍较薄；通用 report 生成已切到可信事件输入并通过质量门。
 
 ## 建议修复顺序
 
 1. 先把评估脚本固化为回归命令，并把上述阈值作为非阻断质量门。
-2. 事件聚合从完全标题改为 title token/entity/signature 多特征：实体重叠、动作词、时间窗、source diversity、digest/generic-title 降权。
-3. 非事件过滤：digest/newsletter/roundup/navigation 类条目默认不生成 event，只进入 item 或 topic。
-4. 事件摘要和类型用规则版 schema 起步：融资、发布、政策、合作、财报、安全、市场；摘要至少包含主体、动作、对象。
+2. 保持当前 high-confidence auto-merge precision，把 medium/high-uncertain 的召回增量交给 schema-bound LLM 与 review apply。
+3. 继续扩充 digest/newsletter/roundup/navigation hard negatives，并监控 hard-negative LLM 调用数保持 0。
+4. 从 false negative 样例补 alias/signature/action 规则，优先覆盖跨语言产品发布、政策 guidance、融资 round 改写。
 5. 去重报告需要从 `seen_count`、latest_raw、item_run_links 展示重复来源，而不是期待多个同 dedupe_key item 同时存在。
-6. 简报/报告生成改为基于事件状态、重要性、证据、待审核项和来源健康度的结构化模板。
+6. Run endpoint 报告已切到可信事件输入；下一步补充 source scoring 明细和风险解释段落。
 
 ## 原始指标 JSON
 
@@ -161,7 +192,7 @@ Run endpoint 报告预览:
     "gold_duplicate_pairs": 4,
     "gold_same_event_pairs": 11,
     "gold_non_event_items": 5,
-    "temp_db": "/var/folders/f_/12__g2851hv407x2tv3xbx580000gn/T/content_inbox_quality_eval_5u76nglp/quality_eval.db"
+    "temp_db": "/var/folders/f_/12__g2851hv407x2tv3xbx580000gn/T/content_inbox_quality_eval_5v1v7gnd/quality_eval.db"
   },
   "process_dedupe": {
     "tp": 4,
@@ -237,28 +268,75 @@ Run endpoint 报告预览:
   "candidate_diagnostics": {
     "total_candidates": 10,
     "by_priority": {
-      "high": 1,
-      "must_run": 1,
       "low": 7,
-      "medium": 1
+      "high": 1,
+      "medium": 1,
+      "must_run": 1
     },
     "by_lane": {
-      "same_event_recall": 2,
-      "exact_signature_alias": 1,
+      "same_thread": 3,
       "exploratory_recall": 4,
-      "same_thread": 3
+      "same_event_recall": 2,
+      "exact_signature_alias": 1
     },
     "by_status": {
-      "auto_merge": 2,
-      "review": 8
+      "review": 8,
+      "auto_merge": 2
     },
     "medium_review_rate": 1.0,
     "disqualifiers": {},
     "alias_hit_count": 17
   },
+  "review_apply": {
+    "attempted": true,
+    "review_id": 78,
+    "ok": true,
+    "apply_result": {
+      "applied": true,
+      "action": "event_relation_approved",
+      "event_id": "event_52285f514277588f",
+      "cluster_id": "cluster_9292e895fe7b3e7f",
+      "item_ids": [
+        "item_996ec456324e4e64ad7ad30bb594f244",
+        "item_a18982e2336544fd8dcb9765eebd8c1a"
+      ]
+    }
+  },
+  "source_scoring": {
+    "recompute_ok": true,
+    "profile_count": 23,
+    "signal_count": 82,
+    "example_profile": {
+      "source_id": "site_a",
+      "discovery_value_avg": 2.0,
+      "fact_value_avg": 2.0,
+      "incremental_value_avg": 0.0,
+      "interpretation_value_avg": 0.0,
+      "duplicate_noise_rate": 0.0,
+      "non_event_noise_rate": 0.0,
+      "review_acceptance": 1.0,
+      "llm_yield_score": 3.0,
+      "priority_suggestion": "new_source_under_evaluation"
+    },
+    "dimension_totals": {
+      "discovery_value": 4.0,
+      "fact_value": 4.0,
+      "incremental_value": 2.0,
+      "interpretation_value": 0.0,
+      "duplicate_noise": 3.0,
+      "non_event_noise": 77.0,
+      "review_acceptance": 2.0
+    }
+  },
+  "deepseek": {
+    "operational_relation_calls": 0,
+    "live_ok_calls": 0,
+    "failed_or_skipped_calls": 0,
+    "total_tokens": 0
+  },
   "outputs": {
     "daily_briefing": {
-      "score": 0.7777777777777778,
+      "score": 0.8888888888888888,
       "checks": {
         "has_h1": true,
         "has_section": true,
@@ -267,12 +345,12 @@ Run endpoint 报告预览:
         "has_actionable_counts": true,
         "has_object_context": false,
         "scaffold_localized": true,
-        "status_labels_localized": false,
+        "status_labels_localized": true,
         "not_too_thin": true
       }
     },
     "weekly_briefing": {
-      "score": 0.7777777777777778,
+      "score": 0.8888888888888888,
       "checks": {
         "has_h1": true,
         "has_section": true,
@@ -281,41 +359,41 @@ Run endpoint 报告预览:
         "has_actionable_counts": true,
         "has_object_context": false,
         "scaffold_localized": true,
-        "status_labels_localized": false,
+        "status_labels_localized": true,
         "not_too_thin": true
       }
     },
     "run_report": {
-      "score": 0.6666666666666666,
+      "score": 1.0,
       "checks": {
         "has_h1": true,
-        "has_section": false,
-        "has_list": false,
+        "has_section": true,
+        "has_list": true,
         "has_required_terms": true,
         "has_actionable_counts": true,
         "has_object_context": true,
         "scaffold_localized": true,
         "status_labels_localized": true,
-        "not_too_thin": false
+        "not_too_thin": true
       }
     },
     "run_endpoint_report": {
-      "score": 0.5555555555555556,
+      "score": 0.8888888888888888,
       "checks": {
         "has_h1": true,
-        "has_section": false,
-        "has_list": false,
+        "has_section": true,
+        "has_list": true,
         "has_required_terms": true,
         "has_actionable_counts": true,
         "has_object_context": false,
         "scaffold_localized": true,
         "status_labels_localized": true,
-        "not_too_thin": false
+        "not_too_thin": true
       }
     },
-    "daily_briefing_preview": "# 每日简报 2026-05-31\n\n## 事件\n- OpenAI release GPT-5.5（ready）\n- DeepSeek release DeepSeek V4（needs_review）\n- OpenAI integration major API（needs_review）\n\n## 待审核\n- eventness_review item:item_051ea6a9ab1a40aa9eda8dc9271747df\n- eventness_review item:item_0b2b815d05d54f8aa50084ce6e46723b\n- eventness_review item:item_0e4918b290504b8aadcf70c3f140d2fd\n- eventness_review item:item_153e2e3942e64e78945cc7fb27feab03\n- eventness_review item:item_159ff9b809664262bd85db65e93eaa8c\n- eventness_review item:item_171e5de929784b139f282e9023b9e9a8\n- eventness_review item:item_1de570cc23f848e1878dfc074e867301\n- eventness_review item:item_21b8542767b84bca98b36bf758ac6c49\n- eventness_review item:item_27602b937f4146fc85e49f11e9d2d715\n- eventness_review item:item_2a1ff1533da44d25bb486d1d3dd1d20c",
-    "run_report_preview": "# 运行报告\n\n生成时间: 2026-05-31T16:59:28.793970+00:00\n\n关联对象: run run_quality_eval_5aa8c88a57\n",
-    "run_endpoint_report_preview": "# 运行报告 run_quality_eval_5aa8c88a57\n\n状态: success\n\n新增条目: 0\n\n信息源数量: 0\n"
+    "daily_briefing_preview": "# 每日简报 2026-05-31\n\n## 可信事件\n- OpenAI release GPT-5.5（可信事件，置信度 0.98）\n- OpenAI integration major API（可信事件，置信度 0.98）\n- DeepSeek release DeepSeek V4（可信事件，置信度 0.98）\n\n## 待审核\n- eventness_review item:item_0a9dba87db3b488e8123359db5f514e6\n- eventness_review item:item_0c402fb56c974d0ead662722f53f9f98\n- eventness_review item:item_13fab38298994b4db3633331515d48c2\n- eventness_review item:item_1c8862d2c12e489bbdb59d74f55eadc6\n- eventness_review item:item_20501b28f57e4433a9d5d95255943557\n- eventness_review item:item_232eac2e48214401b94da047f4edad46\n- eventness_review item:item_24d2c0e194a74172987eda0633d28654\n- eventness_review item:item_2b38e0b8b7a042609a7c22394e7a26d7\n- eventness_review item:item_2bde36798e3848b3b2f49d333c55d688\n- eventness_review item:item_2ed9d293e592462f833c5edd4cfdb133",
+    "run_report_preview": "# 运行报告\n\n生成时间: 2026-05-31T17:38:35.583600+00:00\n\n关联对象: run run_quality_eval_e1912f6c70\n\n## 可信事件\n- OpenAI release GPT-5.5：release，置信度 0.98，cluster cluster_1be3f3059f449572\n- OpenAI integration major API：integration，置信度 0.98，cluster cluster_9292e895fe7b3e7f\n- DeepSeek release DeepSeek V4：release，置信度 0.98，cluster cluster_ee6e44e0884d81fd\n\n## 质量概览\n- 可信事件数: 3\n- 全部事件数: 3\n- 待审核项: 87\n- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n",
+    "run_endpoint_report_preview": "# 运行报告 run_quality_eval_e1912f6c70\n\n状态: success\n\n新增条目: 0\n\n信息源数量: 0\n\n## 可信事件\n- OpenAI release GPT-5.5：release，置信度 0.98\n- OpenAI integration major API：integration，置信度 0.98\n- DeepSeek release DeepSeek V4：release，置信度 0.98\n\n## 质量概览\n- 可信事件数: 3\n- 待审核项: 87\n- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n"
   },
   "threshold_results": {
     "process_dedupe_pair_f1": true,
@@ -324,8 +402,8 @@ Run endpoint 报告预览:
     "event_type_known_rate": true,
     "event_summary_specific_rate": true,
     "entity_recall": true,
-    "briefing_quality_score": false,
-    "report_quality_score": false
+    "briefing_quality_score": true,
+    "report_quality_score": true
   }
 }
 ```

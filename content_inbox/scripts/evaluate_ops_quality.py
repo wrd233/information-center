@@ -20,6 +20,8 @@ from app.ops_api import (
     run_dedupe_stage,
 )
 from app.processor import process_content_thread_safe
+from app.semantic.review import decide_review
+from app.semantic.source_profiles import recompute_source_profiles
 from app.storage import InboxStore
 from app.utils import stable_hash, utc_now
 
@@ -643,6 +645,11 @@ def run_evaluation() -> dict[str, Any]:
     review_queue = fetch_table(store, "review_queue")
     semantic_extractions = fetch_table(store, "semantic_extractions")
     event_candidate_pairs = fetch_table(store, "event_candidate_pairs")
+    review_apply_result = run_review_apply_sample(store, review_queue)
+    source_profile_result = recompute_source_profiles(store)
+    source_profiles = fetch_table(store, "source_profiles")
+    source_signals = fetch_table(store, "source_signals")
+    llm_call_logs = fetch_table(store, "llm_call_logs")
 
     event_item_case_ids = {stored_case_by_item.get(row["item_id"]) for row in event_items}
     event_item_case_ids.discard(None)
@@ -740,6 +747,20 @@ def run_evaluation() -> dict[str, Any]:
             ),
             "alias_hit_count": alias_hit_count,
         },
+        "review_apply": review_apply_result,
+        "source_scoring": {
+            "recompute_ok": bool(source_profile_result.get("ok")),
+            "profile_count": len(source_profiles),
+            "signal_count": len(source_signals),
+            "example_profile": source_scoring_example(source_profiles),
+            "dimension_totals": source_signal_dimension_totals(source_signals),
+        },
+        "deepseek": {
+            "operational_relation_calls": sum(1 for row in llm_call_logs if row.get("task_type") == "operational_relation"),
+            "live_ok_calls": sum(1 for row in llm_call_logs if row.get("task_type") == "operational_relation" and row.get("status") == "ok"),
+            "failed_or_skipped_calls": sum(1 for row in llm_call_logs if row.get("task_type") == "operational_relation" and row.get("status") in {"failed", "skipped"}),
+            "total_tokens": sum(int(row.get("total_tokens") or 0) for row in llm_call_logs if row.get("task_type") == "operational_relation"),
+        },
         "outputs": {
             "daily_briefing": briefing_score,
             "weekly_briefing": weekly_briefing_score,
@@ -761,6 +782,51 @@ def run_evaluation() -> dict[str, Any]:
         "report_quality_score": report_score["score"] >= THRESHOLDS["report_quality_score"],
     }
     return metrics
+
+
+def run_review_apply_sample(store: InboxStore, reviews: list[dict[str, Any]]) -> dict[str, Any]:
+    relation_review = next((row for row in reviews if row["status"] == "pending" and row["review_type"] == "event_relation_review"), None)
+    if not relation_review:
+        return {"attempted": False, "reason": "no pending event_relation_review"}
+    decided = decide_review(store, int(relation_review["id"]), "approved", reviewer="quality_eval", note="synthetic review apply sample")
+    return {
+        "attempted": True,
+        "review_id": relation_review["id"],
+        "ok": bool(decided.get("ok")),
+        "apply_result": decided.get("apply_result"),
+    }
+
+
+def source_signal_dimension_totals(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    dimensions = [
+        "discovery_value",
+        "fact_value",
+        "incremental_value",
+        "interpretation_value",
+        "duplicate_noise",
+        "non_event_noise",
+        "review_acceptance",
+    ]
+    return {name: sum(float(row.get(name) or 0) for row in rows) for name in dimensions}
+
+
+def source_scoring_example(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    if not rows:
+        return {}
+    dimensions = [
+        "discovery_value_avg",
+        "fact_value_avg",
+        "incremental_value_avg",
+        "interpretation_value_avg",
+        "duplicate_noise_rate",
+        "non_event_noise_rate",
+        "review_acceptance",
+        "llm_yield_score",
+        "priority_suggestion",
+    ]
+    scored = sorted(rows, key=lambda row: (row.get("llm_yield_score") or 0, row.get("review_acceptance") or 0), reverse=True)
+    row = scored[0]
+    return {"source_id": row.get("source_id"), **{name: row.get(name) for name in dimensions}}
 
 
 def pct(value: float) -> str:
@@ -786,6 +852,9 @@ def render_report(metrics: dict[str, Any]) -> str:
         f"- 自动合并 precision: {pct(metrics['event_clustering']['auto_merge_precision'])}。",
         f"- medium review rate: {pct(metrics['candidate_diagnostics']['medium_review_rate'])}。",
         f"- alias hit count: {metrics['candidate_diagnostics']['alias_hit_count']}。",
+        f"- review apply sample: {'ok' if metrics['review_apply'].get('ok') else metrics['review_apply'].get('reason', 'not ok')}。",
+        f"- source scoring profiles/signals: {metrics['source_scoring']['profile_count']}/{metrics['source_scoring']['signal_count']}。",
+        f"- operational DeepSeek relation calls: {metrics['deepseek']['operational_relation_calls']}。",
         f"- 事件类型识别率: {pct(metrics['event_extraction']['event_type_known_rate'])}。",
         f"- 事件摘要具体率: {pct(metrics['event_extraction']['event_summary_specific_rate'])}。",
         f"- 实体召回: {pct(metrics['event_extraction']['entity_recall'])}。",
@@ -843,6 +912,13 @@ def render_report(metrics: dict[str, Any]) -> str:
         f"- medium review rate: {pct(metrics['candidate_diagnostics']['medium_review_rate'])}",
         f"- alias hit count: {metrics['candidate_diagnostics']['alias_hit_count']}",
         "",
+        "### Review Apply 与 Source Scoring",
+        "",
+        f"- review apply sample: `{metrics['review_apply']}`",
+        f"- source scoring dimension totals: `{metrics['source_scoring']['dimension_totals']}`",
+        f"- source scoring example profile: `{metrics['source_scoring']['example_profile']}`",
+        f"- operational DeepSeek relation stats: `{metrics['deepseek']}`",
+        "",
         "### 事件提取",
         "",
         f"- events: {metrics['event_extraction']['events']}",
@@ -879,21 +955,21 @@ def render_report(metrics: dict[str, Any]) -> str:
         "",
         "## 问题追踪",
         "",
-        "1. 当前事件聚合以规范化标题完全一致为核心，导致跨媒体改写标题的同一事件大量漏合。",
-        "2. 泛标题和日报标题会被完全标题规则误合并，且非事件内容也会生成候选事件。",
-        "3. 事件对象字段偏占位：`event_type=unknown`、摘要为模板句，无法支撑高质量简报。",
+        "1. operational v3 已不使用规范化标题作为事件主键，但当前 rule-only 自动合并仍偏保守，跨语言、政策表述改写、融资改写等 false negative 仍多。",
+        "2. 泛标题和日报类内容已被 eventness gate 挡住；后续风险主要是 review/LLM 放宽时误把同主题不同事件升为 same-event。",
+        "3. 事件对象已具备类型、摘要和证据，但同一事件的新增事实仍主要等待 LLM/review apply 补足。",
         "4. 去重阶段在写入后重复已折叠的情况下几乎只产生单成员 group，不能解释重复来源和 seen_count。",
-        "5. 实体抽取偏英文大写 token，对中文别名、政策名、产品名覆盖不足。",
-        "6. 报告生成仍是占位实现，缺少来源、阶段、错误、事件、审核、质量风险等关键内容。",
+        "5. 实体抽取和 alias registry 对中文别名、政策名、产品名仍需从 false negative 样例继续扩充。",
+        "6. Run endpoint 报告仍较薄；通用 report 生成已切到可信事件输入并通过质量门。",
         "",
         "## 建议修复顺序",
         "",
         "1. 先把评估脚本固化为回归命令，并把上述阈值作为非阻断质量门。",
-        "2. 事件聚合从完全标题改为 title token/entity/signature 多特征：实体重叠、动作词、时间窗、source diversity、digest/generic-title 降权。",
-        "3. 非事件过滤：digest/newsletter/roundup/navigation 类条目默认不生成 event，只进入 item 或 topic。",
-        "4. 事件摘要和类型用规则版 schema 起步：融资、发布、政策、合作、财报、安全、市场；摘要至少包含主体、动作、对象。",
+        "2. 保持当前 high-confidence auto-merge precision，把 medium/high-uncertain 的召回增量交给 schema-bound LLM 与 review apply。",
+        "3. 继续扩充 digest/newsletter/roundup/navigation hard negatives，并监控 hard-negative LLM 调用数保持 0。",
+        "4. 从 false negative 样例补 alias/signature/action 规则，优先覆盖跨语言产品发布、政策 guidance、融资 round 改写。",
         "5. 去重报告需要从 `seen_count`、latest_raw、item_run_links 展示重复来源，而不是期待多个同 dedupe_key item 同时存在。",
-        "6. 简报/报告生成改为基于事件状态、重要性、证据、待审核项和来源健康度的结构化模板。",
+        "6. Run endpoint 报告已切到可信事件输入；下一步补充 source scoring 明细和风险解释段落。",
         "",
         "## 原始指标 JSON",
         "",

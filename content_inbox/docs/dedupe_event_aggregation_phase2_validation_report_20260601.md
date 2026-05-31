@@ -1,5 +1,7 @@
 # Phase 2 去重与事件聚合验证报告
 
+Status: historical validation baseline. Use `event_aggregation_operational_v3.md` for current checkpoint policy and active targets.
+
 生成日期: 2026-06-01
 
 ## 验证命令

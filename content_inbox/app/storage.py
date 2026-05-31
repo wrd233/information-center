@@ -370,13 +370,36 @@ class InboxStore:
                 candidate_score REAL NOT NULL,
                 candidate_priority TEXT NOT NULL,
                 lane TEXT NOT NULL,
+                relation_type TEXT,
+                decision_source TEXT NOT NULL DEFAULT 'rule',
+                confidence REAL NOT NULL DEFAULT 0.0,
+                reason_code TEXT,
                 features_json TEXT NOT NULL DEFAULT '{}',
+                positive_features_json TEXT NOT NULL DEFAULT '[]',
+                negative_features_json TEXT NOT NULL DEFAULT '[]',
                 disqualifiers_json TEXT NOT NULL DEFAULT '[]',
+                llm_call_id INTEGER,
+                schema_version TEXT NOT NULL DEFAULT 'operational_v2',
+                created_by TEXT NOT NULL DEFAULT 'system',
+                input_fingerprint TEXT,
                 status TEXT NOT NULL DEFAULT 'generated',
                 created_at TEXT NOT NULL
             )
             """
         )
+        for column_name, column_type in [
+            ("relation_type", "TEXT"),
+            ("decision_source", "TEXT NOT NULL DEFAULT 'rule'"),
+            ("confidence", "REAL NOT NULL DEFAULT 0.0"),
+            ("reason_code", "TEXT"),
+            ("positive_features_json", "TEXT NOT NULL DEFAULT '[]'"),
+            ("negative_features_json", "TEXT NOT NULL DEFAULT '[]'"),
+            ("llm_call_id", "INTEGER"),
+            ("schema_version", "TEXT NOT NULL DEFAULT 'operational_v2'"),
+            ("created_by", "TEXT NOT NULL DEFAULT 'system'"),
+            ("input_fingerprint", "TEXT"),
+        ]:
+            self.ensure_column(conn, "event_candidate_pairs", column_name, column_type)
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS events (
@@ -709,11 +732,17 @@ class InboxStore:
                 source_id TEXT NOT NULL,
                 item_id TEXT NOT NULL,
                 cluster_id TEXT,
+                discovery_value INTEGER NOT NULL DEFAULT 0,
+                fact_value INTEGER NOT NULL DEFAULT 0,
                 originality_delta INTEGER NOT NULL DEFAULT 0,
                 duplicate_signal INTEGER NOT NULL DEFAULT 0,
                 near_duplicate_signal INTEGER NOT NULL DEFAULT 0,
                 new_event_signal INTEGER NOT NULL DEFAULT 0,
                 incremental_value INTEGER NOT NULL DEFAULT 0,
+                interpretation_value INTEGER NOT NULL DEFAULT 0,
+                duplicate_noise INTEGER NOT NULL DEFAULT 0,
+                non_event_noise INTEGER NOT NULL DEFAULT 0,
+                review_acceptance INTEGER NOT NULL DEFAULT 0,
                 report_value INTEGER NOT NULL DEFAULT 0,
                 source_role TEXT NOT NULL DEFAULT 'unknown',
                 llm_call_id INTEGER,
@@ -723,6 +752,15 @@ class InboxStore:
             )
             """
         )
+        for column_name, column_type in [
+            ("discovery_value", "INTEGER NOT NULL DEFAULT 0"),
+            ("fact_value", "INTEGER NOT NULL DEFAULT 0"),
+            ("interpretation_value", "INTEGER NOT NULL DEFAULT 0"),
+            ("duplicate_noise", "INTEGER NOT NULL DEFAULT 0"),
+            ("non_event_noise", "INTEGER NOT NULL DEFAULT 0"),
+            ("review_acceptance", "INTEGER NOT NULL DEFAULT 0"),
+        ]:
+            self.ensure_column(conn, "source_signals", column_name, column_type)
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS source_profiles (
@@ -732,7 +770,13 @@ class InboxStore:
                 duplicate_rate REAL NOT NULL DEFAULT 0.0,
                 near_duplicate_rate REAL NOT NULL DEFAULT 0.0,
                 new_event_rate REAL NOT NULL DEFAULT 0.0,
+                discovery_value_avg REAL NOT NULL DEFAULT 0.0,
+                fact_value_avg REAL NOT NULL DEFAULT 0.0,
                 incremental_value_avg REAL NOT NULL DEFAULT 0.0,
+                interpretation_value_avg REAL NOT NULL DEFAULT 0.0,
+                duplicate_noise_rate REAL NOT NULL DEFAULT 0.0,
+                non_event_noise_rate REAL NOT NULL DEFAULT 0.0,
+                review_acceptance REAL NOT NULL DEFAULT 0.0,
                 report_value_avg REAL NOT NULL DEFAULT 0.0,
                 source_material_rate REAL NOT NULL DEFAULT 0.0,
                 source_item_rate REAL NOT NULL DEFAULT 0.0,
@@ -749,6 +793,15 @@ class InboxStore:
             """
         )
         self.ensure_column(conn, "source_profiles", "source_material_rate", "REAL NOT NULL DEFAULT 0.0")
+        for column_name, column_type in [
+            ("discovery_value_avg", "REAL NOT NULL DEFAULT 0.0"),
+            ("fact_value_avg", "REAL NOT NULL DEFAULT 0.0"),
+            ("interpretation_value_avg", "REAL NOT NULL DEFAULT 0.0"),
+            ("duplicate_noise_rate", "REAL NOT NULL DEFAULT 0.0"),
+            ("non_event_noise_rate", "REAL NOT NULL DEFAULT 0.0"),
+            ("review_acceptance", "REAL NOT NULL DEFAULT 0.0"),
+        ]:
+            self.ensure_column(conn, "source_profiles", column_name, column_type)
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS llm_call_logs (
@@ -795,10 +848,16 @@ class InboxStore:
                 updated_at TEXT NOT NULL,
                 reviewed_at TEXT,
                 reviewer TEXT,
-                review_note TEXT
+                review_note TEXT,
+                applied_at TEXT,
+                applied_action TEXT,
+                apply_result_json TEXT
             )
             """
         )
+        self.ensure_column(conn, "review_queue", "applied_at", "TEXT")
+        self.ensure_column(conn, "review_queue", "applied_action", "TEXT")
+        self.ensure_column(conn, "review_queue", "apply_result_json", "TEXT")
         indexes = [
             "CREATE INDEX IF NOT EXISTS idx_item_cards_item ON item_cards(item_id)",
             "CREATE INDEX IF NOT EXISTS idx_item_cards_fingerprint ON item_cards(input_fingerprint)",

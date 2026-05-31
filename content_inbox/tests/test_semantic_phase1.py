@@ -12,15 +12,17 @@ from app.models import NormalizedContent, ScreeningResult
 from app.semantic.cards import generate_item_cards
 from app.semantic.card_policy import fallback_classification
 from app.semantic.candidates import assess_candidate, hotspot_key_candidates, normalize_relation_label, relation_pair_key
+from app.semantic.candidates import CandidateAssessment
 from app.semantic.cluster_policy import cluster_decision_attach_eligible
 from app.semantic.clusters import process_item_clusters, show_cluster, update_cluster_statuses
 from app.semantic.clusters import candidate_clusters
 from app.semantic.evaluate import run_evaluation
 from app.semantic.evidence import export_evidence
 from app.semantic.live_smoke import run_live_smoke
+from app.semantic.operational_pipeline import adjudicate_candidate_with_llm
 from app.semantic.relations import process_item_relations
 from app.semantic.review import decide_review, list_reviews
-from app.semantic.schemas import cluster_relation_action, item_relation_should_fold
+from app.semantic.schemas import ItemRelationDecision, ItemRelationOutput, cluster_relation_action, item_relation_should_fold
 from app.semantic.signatures import extract_event_signature
 from app.semantic.source_profiles import get_profile, recompute_source_profiles
 from app.storage import InboxStore
@@ -58,8 +60,43 @@ def test_semantic_migration_idempotent(tmp_path: Path) -> None:
     with store.connect() as conn:
         tables = {row["name"] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
         columns = {row["name"] for row in conn.execute("PRAGMA table_info(inbox_items)")}
+        candidate_columns = {row["name"] for row in conn.execute("PRAGMA table_info(event_candidate_pairs)")}
+        review_columns = {row["name"] for row in conn.execute("PRAGMA table_info(review_queue)")}
+        signal_columns = {row["name"] for row in conn.execute("PRAGMA table_info(source_signals)")}
+        profile_columns = {row["name"] for row in conn.execute("PRAGMA table_info(source_profiles)")}
     assert {"item_cards", "item_relations", "cluster_items", "cluster_cards", "source_profiles", "llm_call_logs", "review_queue"} <= tables
     assert {"semantic_status", "primary_cluster_id", "semantic_attempts", "last_semantic_at"} <= columns
+    assert {
+        "relation_type",
+        "decision_source",
+        "confidence",
+        "reason_code",
+        "positive_features_json",
+        "negative_features_json",
+        "llm_call_id",
+        "schema_version",
+        "created_by",
+        "input_fingerprint",
+    } <= candidate_columns
+    assert {"applied_at", "applied_action", "apply_result_json"} <= review_columns
+    assert {
+        "discovery_value",
+        "fact_value",
+        "incremental_value",
+        "interpretation_value",
+        "duplicate_noise",
+        "non_event_noise",
+        "review_acceptance",
+    } <= signal_columns
+    assert {
+        "discovery_value_avg",
+        "fact_value_avg",
+        "incremental_value_avg",
+        "interpretation_value_avg",
+        "duplicate_noise_rate",
+        "non_event_noise_rate",
+        "review_acceptance",
+    } <= profile_columns
 
 
 def test_relation_action_mapping() -> None:
@@ -125,6 +162,104 @@ def test_phase1_3_fallback_classification() -> None:
     assert fallback_classification(source="heuristic", reason="live token budget reached") == "fallback_due_to_budget_skip"
 
 
+class FakeOperationalRelationClient:
+    def __init__(self, output: ItemRelationOutput | None = None) -> None:
+        self.output = output
+        self.model = "fake-deepseek"
+        self.calls = 0
+
+    def call_json(self, **kwargs):
+        self.calls += 1
+        return self.output, 123 if self.output else 124, "ok" if self.output else "parse error"
+
+
+def test_operational_llm_relation_recommends_review_without_auto_merge(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    left = {"item_id": "left", "title": "OpenAI launches GPT-5.5", "summary": "OpenAI launched GPT-5.5.", "source_id": "a"}
+    right = {"item_id": "right", "title": "OpenAI rolls out GPT 5.5", "summary": "The rollout adds new details.", "source_id": "b"}
+    assessment = CandidateAssessment(candidate_score=3.5, candidate_priority="medium", lane="same_event_recall")
+    output = ItemRelationOutput(
+        new_item_id="left",
+        relations=[
+            ItemRelationDecision(
+                candidate_item_id="right",
+                primary_relation="related_with_new_info",
+                confidence=0.91,
+                reason="same launch with new details",
+                same_event_evidence=["same_actor_product_action_72h"],
+                new_information=["enterprise controls"],
+            )
+        ],
+    )
+    result = adjudicate_candidate_with_llm(store, run_id="run-test", left=left, right=right, assessment=assessment, live=True, client=FakeOperationalRelationClient(output))
+    assert result["status"] == "llm_review_recommended"
+    assert result["decision_source"] == "llm"
+    assert result["llm_call_id"] == 123
+    assert result["should_auto_merge"] is False
+
+
+def test_operational_llm_relation_parse_failure_review_only(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    assessment = CandidateAssessment(candidate_score=3.0, candidate_priority="medium", lane="same_event_recall")
+    result = adjudicate_candidate_with_llm(
+        store,
+        run_id="run-test",
+        left={"item_id": "left", "title": "A", "summary": ""},
+        right={"item_id": "right", "title": "B", "summary": ""},
+        assessment=assessment,
+        live=True,
+        client=FakeOperationalRelationClient(None),
+    )
+    assert result["status"] == "llm_failed_review_required"
+    assert result["llm_call_id"] == 124
+    assert result["should_auto_merge"] is False
+
+
+def test_operational_llm_relation_hard_negative_skips_call(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    assessment = CandidateAssessment(
+        candidate_score=0.2,
+        candidate_priority="suppress",
+        lane="suppressed",
+        disqualifiers=["generic_only_overlap"],
+        candidate_suppression_reason="suppressed_generic_only",
+    )
+    client = FakeOperationalRelationClient(None)
+    result = adjudicate_candidate_with_llm(
+        store,
+        run_id="run-test",
+        left={"item_id": "left", "title": "AI Daily Briefing", "summary": ""},
+        right={"item_id": "right", "title": "AI Daily Briefing", "summary": ""},
+        assessment=assessment,
+        live=True,
+        client=client,
+    )
+    assert result["status"] == "skipped_hard_negative"
+    assert result["llm_call_id"] is None
+    assert result["should_auto_merge"] is False
+    assert client.calls == 0
+
+
+def test_operational_llm_relation_live_disabled_logs_skip(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("CONTENT_INBOX_LLM_ENABLE_LIVE", raising=False)
+    store = make_store(tmp_path)
+    assessment = CandidateAssessment(candidate_score=3.0, candidate_priority="medium", lane="same_event_recall")
+    result = adjudicate_candidate_with_llm(
+        store,
+        run_id="run-test",
+        left={"item_id": "left", "title": "OpenAI launches GPT-5.5", "summary": "", "source_id": "a"},
+        right={"item_id": "right", "title": "OpenAI rolls out GPT 5.5", "summary": "", "source_id": "b"},
+        assessment=assessment,
+        live=True,
+    )
+    assert result["status"] == "llm_failed_review_required"
+    assert result["should_auto_merge"] is False
+    with store.connect() as conn:
+        log = conn.execute("SELECT * FROM llm_call_logs WHERE task_type = 'operational_relation'").fetchone()
+    assert log is not None
+    assert log["status"] == "skipped"
+
+
 def test_item_card_generation_heuristic_and_llm_log_skip(tmp_path: Path) -> None:
     store = make_store(tmp_path)
     item_id = seed_item(store, "OpenAI releases GPT-5.5", url="https://example.com/a")
@@ -183,6 +318,54 @@ def test_source_profile_review_approve(tmp_path: Path) -> None:
     if reviews:
         decided = decide_review(store, reviews[0]["id"], "approved")
         assert decided["ok"] is True
+
+
+def test_review_apply_event_relation_updates_event_and_source_scores(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    left = seed_item(store, "OpenAI launches GPT-5.5 for coding agents", source_id="source-left", url="https://example.com/left")
+    right = seed_item(store, "OpenAI rolls out GPT 5.5 for software agents", source_id="source-right", url="https://example.com/right")
+    with store.connect() as conn:
+        cur = conn.execute(
+            """
+            INSERT INTO review_queue(review_type, target_type, target_id, status, suggestion_json, reason, created_at, updated_at)
+            VALUES ('event_relation_review', 'item_pair', ?, 'pending', ?, 'test relation review', 'now', 'now')
+            """,
+            (f"{left}:{right}", json.dumps({"relation_type": "same_event_new_info", "new_facts": ["enterprise controls"]})),
+        )
+        review_id = cur.lastrowid
+    decided = decide_review(store, review_id, "approved", reviewer="test")
+    assert decided["ok"] is True
+    assert decided["apply_result"]["action"] == "event_relation_approved"
+    recompute_source_profiles(store)
+    with store.connect() as conn:
+        event_items = conn.execute("SELECT COUNT(*) AS n FROM event_items").fetchone()["n"]
+        updated_review = conn.execute("SELECT * FROM review_queue WHERE id = ?", (review_id,)).fetchone()
+    right_profile = get_profile(store, "source-right")
+    assert event_items == 2
+    assert updated_review["applied_action"] == "event_relation_approved"
+    assert right_profile["incremental_value_avg"] > 0
+    assert right_profile["review_acceptance"] > 0
+
+
+def test_review_apply_eventness_reject_updates_non_event_noise(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    item_id = seed_item(store, "AI Daily Briefing: OpenAI and Nvidia updates", source_id="digest-source", url="https://example.com/digest")
+    with store.connect() as conn:
+        cur = conn.execute(
+            """
+            INSERT INTO review_queue(review_type, target_type, target_id, status, suggestion_json, reason, created_at, updated_at)
+            VALUES ('eventness_review', 'item', ?, 'pending', '{}', 'test eventness review', 'now', 'now')
+            """,
+            (item_id,),
+        )
+        review_id = cur.lastrowid
+    decided = decide_review(store, review_id, "rejected", reviewer="test")
+    assert decided["ok"] is True
+    assert decided["apply_result"]["action"] == "eventness_rejected"
+    recompute_source_profiles(store)
+    profile = get_profile(store, "digest-source")
+    assert profile["non_event_noise_rate"] == 1.0
+    assert profile["review_acceptance"] < 0
 
 
 def test_cluster_lifecycle_update(tmp_path: Path) -> None:

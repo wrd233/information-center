@@ -1,5 +1,7 @@
 # Semantic Live DeepSeek Testing
 
+Status: canonical current reference for optional, auditable DeepSeek usage.
+
 Live semantic tests are disabled by default.
 
 Requirements:
@@ -37,6 +39,8 @@ Safety boundaries:
 - Default live smoke DB is temporary.
 - Real DB writes require both `--db-path` and `--write-real-db`.
 - `llm_call_logs` records model, prompt/schema version, input fingerprint, latency, status, token usage, cache token fields when present, raw output, parsed JSON, and errors.
+- Operational relation adjudication is optional and default-off. It only runs after candidate gating, never receives hard negatives, and never directly auto-merges medium/uncertain candidates.
+- Parse failures or live-disabled skips are recorded as review-only outcomes.
 
 Pytest live marker:
 

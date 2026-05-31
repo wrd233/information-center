@@ -1,5 +1,7 @@
 # 事件去重与聚合深度诊断
 
+Status: historical diagnosis. It is useful context, but it predates operational v2/v3 guardrails.
+
 生成时间: 2026-05-31T12:17:36.341213+00:00
 
 ## 第一性原理定义

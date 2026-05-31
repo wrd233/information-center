@@ -50,6 +50,12 @@ def recompute_source_profiles(store: InboxStore) -> dict[str, Any]:
                 SELECT AVG(incremental_value) AS inc_avg, AVG(report_value) AS report_avg,
                        AVG(CASE WHEN source_role = 'source_material' THEN 1.0 ELSE 0.0 END) AS source_material_rate,
                        AVG(CASE WHEN new_event_signal = 1 THEN 1.0 ELSE 0.0 END) AS new_event_rate,
+                       AVG(discovery_value) AS discovery_avg,
+                       AVG(fact_value) AS fact_avg,
+                       AVG(interpretation_value) AS interpretation_avg,
+                       AVG(CASE WHEN duplicate_noise > 0 OR duplicate_signal = 1 OR near_duplicate_signal = 1 THEN 1.0 ELSE 0.0 END) AS duplicate_noise_rate,
+                       AVG(CASE WHEN non_event_noise > 0 THEN 1.0 ELSE 0.0 END) AS non_event_noise_rate,
+                       AVG(review_acceptance) AS review_acceptance,
                        SUM(CASE WHEN incremental_value >= 4 OR report_value >= 4 THEN 1 ELSE 0 END) AS high_value
                 FROM source_signals
                 WHERE source_id = ?
@@ -84,8 +90,29 @@ def recompute_source_profiles(store: InboxStore) -> dict[str, Any]:
             new_event_rate = float(signals["new_event_rate"] or 0.0)
             inc_avg = float(signals["inc_avg"] or 0.0)
             report_avg = float(signals["report_avg"] or 0.0)
+            discovery_avg = float(signals["discovery_avg"] or 0.0)
+            fact_avg = float(signals["fact_avg"] or 0.0)
+            interpretation_avg = float(signals["interpretation_avg"] or 0.0)
+            duplicate_noise_rate = float(signals["duplicate_noise_rate"] or 0.0)
+            non_event_noise_rate = float(signals["non_event_noise_rate"] or 0.0)
+            review_acceptance = float(signals["review_acceptance"] or 0.0)
             high_value = int(signals["high_value"] or 0)
-            yield_score = round((inc_avg + report_avg + source_material_rate * 5.0 + new_event_rate * 5.0) / 4.0, 3)
+            yield_score = round(
+                (
+                    discovery_avg
+                    + fact_avg
+                    + inc_avg
+                    + interpretation_avg
+                    + report_avg
+                    + source_material_rate * 5.0
+                    + new_event_rate * 5.0
+                    + max(review_acceptance, 0.0)
+                    - duplicate_noise_rate * 2.0
+                    - non_event_noise_rate * 2.0
+                )
+                / 6.0,
+                3,
+            )
             llm_processed = counts.get("related_with_new_info", 0) + high_value
             suggestion = suggest_priority(duplicate_rate, near_duplicate_rate, yield_score, high_value, total_items, llm_processed)
             old = conn.execute("SELECT * FROM source_profiles WHERE source_id = ?", (source_id,)).fetchone()
@@ -98,12 +125,14 @@ def recompute_source_profiles(store: InboxStore) -> dict[str, Any]:
                 """
                 INSERT OR REPLACE INTO source_profiles (
                     source_id, total_items, llm_processed_items, duplicate_rate, near_duplicate_rate,
-                    new_event_rate, incremental_value_avg, report_value_avg, source_item_rate,
+                    new_event_rate, discovery_value_avg, fact_value_avg, incremental_value_avg,
+                    interpretation_value_avg, duplicate_noise_rate, non_event_noise_rate, review_acceptance,
+                    report_value_avg, source_item_rate,
                     source_material_rate, representative_item_rate, llm_total_tokens, llm_high_value_outputs,
                     llm_yield_score, llm_priority, priority_suggestion, review_status,
                     created_at, updated_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, COALESCE((SELECT created_at FROM source_profiles WHERE source_id = ?), ?), ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, COALESCE((SELECT created_at FROM source_profiles WHERE source_id = ?), ?), ?)
                 """,
                 (
                     source_id,
@@ -112,7 +141,13 @@ def recompute_source_profiles(store: InboxStore) -> dict[str, Any]:
                     duplicate_rate,
                     near_duplicate_rate,
                     new_event_rate,
+                    discovery_avg,
+                    fact_avg,
                     inc_avg,
+                    interpretation_avg,
+                    duplicate_noise_rate,
+                    non_event_noise_rate,
+                    review_acceptance,
                     report_avg,
                     source_material_rate,
                     source_material_rate,

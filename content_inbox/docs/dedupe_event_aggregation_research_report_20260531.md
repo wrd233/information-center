@@ -1,5 +1,7 @@
 # 去重与事件聚合能力深度调研报告
 
+Status: historical diagnosis. It explains prior failure modes; current implementation policy lives in `event_aggregation_operational_v3.md`.
+
 生成日期: 2026-05-31
 
 ## 摘要
@@ -400,4 +402,3 @@ legacy clusters、embedding clustering、operational event objects 没有统一�
 - 所有自动合并必须有证据链。
 - 所有 medium/uncertain 进入 review。
 - Event object 必须能支撑 briefing/report。
-

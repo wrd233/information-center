@@ -1,5 +1,7 @@
 # 去重与事件聚合模块全量改进说明书
 
+Status: historical design input. Do not treat this file as the active implementation contract without checking `event_aggregation_operational_v3.md`.
+
 生成日期: 2026-05-31
 
 ## 目标
@@ -712,4 +714,3 @@ PYTHONPATH=. python -m app.semantic.cli rebuild-events --dry-run --limit 500
 - 自动合并精度达到质量门。
 - review 可以纠错并回写。
 - briefing/report 基于可信事件对象生成。
-

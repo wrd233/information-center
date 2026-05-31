@@ -514,25 +514,34 @@ def write_source_signal(conn, store: InboxStore, cluster_id: str, item_id: str, 
     if not source_id:
         return
     source_role = "source_material" if primary_relation == "source_material" else "reporter"
+    discovery_value = 1 if primary_relation in {"source_material", "new_info"} else 0
+    fact_value = 1 if primary_relation in {"source_material", "technical_detail", "context"} else 0
+    interpretation_value = 1 if primary_relation in {"analysis", "experience", "context"} else 0
+    duplicate_noise = 1 if primary_relation in {"repeat", "duplicate", "near_duplicate"} else 0
     conn.execute(
         """
         INSERT OR REPLACE INTO source_signals (
-            source_id, item_id, cluster_id, originality_delta, duplicate_signal,
+            source_id, item_id, cluster_id, discovery_value, fact_value,
+            originality_delta, duplicate_signal,
             near_duplicate_signal, new_event_signal, incremental_value, report_value,
-            source_role, llm_call_id, created_at, updated_at
+            interpretation_value, duplicate_noise, source_role, llm_call_id, created_at, updated_at
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             source_id,
             item_id,
             cluster_id,
+            discovery_value,
+            fact_value,
             1 if primary_relation in {"source_material", "new_info", "analysis", "experience"} else 0,
             int(primary_relation == "repeat"),
             0,
             int(primary_relation in {"source_material", "new_info"}),
             incremental_value,
             report_value,
+            interpretation_value,
+            duplicate_noise,
             source_role,
             llm_call_id,
             now,
