@@ -1638,24 +1638,24 @@ def api_run_pipeline_stage(request: Request, run_id: str, stage: str) -> Any:
         return fail("RUN_NOT_FOUND", "Run not found.", status_code=404)
     item_ids = item_ids_for_run(store, run_id)
     if stage == "dedupe":
-        add_event(store, run_id, "dedupe_started", message="Dedupe stage started.")
+        add_event(store, run_id, "dedupe_started", message="去重阶段开始。")
         result = run_dedupe_stage(store, run_id, item_ids)
-        add_event(store, run_id, "dedupe_completed", message="Dedupe stage completed.", payload=result)
+        add_event(store, run_id, "dedupe_completed", message="去重阶段完成。", payload=result)
     elif stage in {"semantic", "clusters", "events", "review"}:
-        add_event(store, run_id, "semantic_started", message="Semantic/cluster/event stage started.")
+        add_event(store, run_id, "semantic_started", message="语义/聚合/事件阶段开始。")
         generate_information_objects(store, run_id, item_ids)
-        add_event(store, run_id, "semantic_completed", message="Semantic extraction completed.")
-        add_event(store, run_id, "cluster_completed", message="Cluster generation completed.")
-        add_event(store, run_id, "event_completed", message="Event generation completed.")
-        add_event(store, run_id, "review_queue_generated", message="Review queue generation completed.")
+        add_event(store, run_id, "semantic_completed", message="语义提取完成。")
+        add_event(store, run_id, "cluster_completed", message="聚合线索生成完成。")
+        add_event(store, run_id, "event_completed", message="事件生成完成。")
+        add_event(store, run_id, "review_queue_generated", message="审核队列生成完成。")
         result = {"item_count": len(item_ids)}
     elif stage == "briefing":
         briefing = generate_briefing(store, "daily")
-        add_event(store, run_id, "briefing_generated", message="Daily briefing generated.", payload={"briefing_id": briefing["briefing_id"]})
+        add_event(store, run_id, "briefing_generated", message="每日简报已生成。", payload={"briefing_id": briefing["briefing_id"]})
         result = {"briefing": briefing}
     elif stage == "report":
         report = api_report_generate(request, {"report_type": "run", "object_type": "run", "object_id": run_id})["data"]
-        add_event(store, run_id, "report_generated", message="Run report generated.", payload=report)
+        add_event(store, run_id, "report_generated", message="运行报告已生成。", payload=report)
         result = report
     else:
         return fail("INVALID_PIPELINE_STAGE", "Unsupported pipeline stage.")
@@ -1677,7 +1677,7 @@ def api_run_report_generate(request: Request, run_id: str) -> Any:
 def api_run_cancel(request: Request, run_id: str) -> dict[str, Any]:
     store = get_ops_store(request)
     _CANCELLED_RUNS.add(run_id)
-    add_event(store, run_id, "run_cancelled", level="warning", message="Cancellation requested.")
+    add_event(store, run_id, "run_cancelled", level="warning", message="已请求取消任务。")
     audit(store, "run_cancelled", run_id=run_id)
     return ok({"run_id": run_id, "cancel_requested": True})
 
@@ -1985,8 +1985,9 @@ def generate_briefing(store: InboxStore, briefing_type: str) -> dict[str, Any]:
     with store.connect() as conn:
         events = [dict(r) for r in conn.execute("SELECT * FROM events ORDER BY created_at DESC LIMIT 10").fetchall()]
         reviews = [dict(r) for r in conn.execute("SELECT * FROM review_queue WHERE status = 'pending' ORDER BY created_at DESC LIMIT 10").fetchall()]
-        title = f"{briefing_type.title()} Briefing {now[:10]}"
-        body = "# " + title + "\n\n## Events\n" + "\n".join(f"- {e['event_title']} ({e['status']})" for e in events) + "\n\n## Review Queue\n" + "\n".join(f"- {r['review_type']} {r['target_type']}:{r['target_id']}" for r in reviews)
+        type_cn = "每日" if briefing_type == "daily" else "每周"
+        title = f"{type_cn}简报 {now[:10]}"
+        body = "# " + title + "\n\n## 事件\n" + "\n".join(f"- {e['event_title']}（{e['status']}）" for e in events) + "\n\n## 待审核\n" + "\n".join(f"- {r['review_type']} {r['target_type']}:{r['target_id']}" for r in reviews)
         briefing_id = f"brief_{briefing_type}_{stable_hash(now)[:12]}"
         conn.execute("INSERT OR REPLACE INTO briefings(briefing_id, briefing_type, title, body_markdown, payload_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)", (briefing_id, briefing_type, title, body, json.dumps({"events": events, "reviews": reviews}, ensure_ascii=False), now, now))
         row = conn.execute("SELECT * FROM briefings WHERE briefing_id = ?", (briefing_id,)).fetchone()
@@ -2055,7 +2056,7 @@ def api_agent_query(request: Request, payload: dict[str, Any]) -> dict[str, Any]
     items = api_items(request, keyword=payload.get("query"), limit=int(payload.get("limit", 10)))["data"]["items"]
     compact = [{"item_id": item["item_id"], "title": item["title"], "url": item["url"], "published_at": item["published_at"]} for item in items]
     markdown = "\n".join(f"- [{item['title']}]({item['url'] or '#'})" for item in items)
-    return ok({"query": payload.get("query"), "format": payload.get("format", "compact"), "context_pack": compact, "markdown": markdown, "json": compact, "human": markdown or "No matching items."})
+    return ok({"query": payload.get("query"), "format": payload.get("format", "compact"), "context_pack": compact, "markdown": markdown, "json": compact, "human": markdown or "没有匹配的条目。"})
 
 
 @router.get("/api/reports")
@@ -2069,8 +2070,9 @@ def api_report_generate(request: Request, payload: dict[str, Any]) -> dict[str, 
     now = utc_now()
     report_id = f"report_{stable_hash(now + json.dumps(payload, sort_keys=True))[:12]}"
     report_type = payload.get("report_type", "summary")
-    title = f"{report_type.title()} Report"
-    body = f"# {title}\n\nGenerated at {now}\n\nObject: {payload.get('object_type', 'environment')} {payload.get('object_id', '')}\n"
+    type_cn = {"summary": "总体摘要", "source_health": "信息源健康度", "event": "事件报告", "run": "运行报告"}.get(report_type, report_type)
+    title = f"{type_cn}"
+    body = f"# {title}\n\n生成时间: {now}\n\n关联对象: {payload.get('object_type', 'environment')} {payload.get('object_id', '')}\n"
     with store.connect() as conn:
         conn.execute("INSERT OR REPLACE INTO reports(report_id, report_type, object_type, object_id, title, body_markdown, payload_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (report_id, report_type, payload.get("object_type"), payload.get("object_id"), title, body, json.dumps(payload, ensure_ascii=False), now, now))
     return ok({"report_id": report_id, "title": title, "content": body})
