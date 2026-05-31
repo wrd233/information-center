@@ -1,0 +1,26 @@
+{
+  "actors": {
+    "OpenAI": ["OpenAI/Codex", "ChatGPT", "Codex"],
+    "DeepSeek": ["深度求索", "DeepSeek AI"],
+    "European Commission": ["EU Commission", "欧盟委员会", "EU"]
+  },
+  "products": {
+    "GPT-5.5": {
+      "aliases": ["GPT 5.5", "GPT5.5", "GPT-5.5 Pro"],
+      "owner": "OpenAI"
+    },
+    "DeepSeek V4.1": {
+      "aliases": ["DeepSeek-V4.1", "深度求索 V4.1"],
+      "owner": "DeepSeek"
+    },
+    "Claude Code": {
+      "aliases": ["Claude-Code", "ClaudeCode"],
+      "owner": "Anthropic"
+    }
+  },
+  "actions": {
+    "release": ["launch", "launched", "released", "rollout", "发布", "推出", "上线"],
+    "funding": ["raises", "raised", "financing", "round", "融资", "投资"],
+    "availability": ["available", "preview", "beta", "开放", "内测", "公测"]
+  }
+}

@@ -23,6 +23,8 @@ from app.processor import build_dedupe_key, normalize_content, process_content_t
 from app.rss import parse_feed
 from app.rss_errors import classify_exception, retryable_for
 from app.rss_runner import sort_entries_for_processing
+from app.semantic.candidates import assess_candidate, deterministic_duplicate
+from app.semantic.signatures import EventSignature, extract_event_signature
 from app.storage import InboxStore
 from app.utils import normalize_url, stable_hash, utc_now
 
@@ -208,6 +210,7 @@ PIPELINE_OUTPUT_TABLES = [
     "event_items",
     "events",
     "semantic_extractions",
+    "event_candidate_pairs",
     "dedupe_group_items",
     "dedupe_groups",
     "cluster_items",
@@ -415,6 +418,8 @@ def delete_item_downstream(conn, item_ids: list[str], downstream: dict[str, list
         for table in ["semantic_extractions", "item_entities", "topic_items", "dedupe_group_items", "cluster_items", "event_items", "item_cards", "source_signals"]:
             if table in existing_tables(conn, [table]):
                 conn.execute(f"DELETE FROM {table} WHERE item_id IN ({marks})", item_ids)
+        if "event_candidate_pairs" in existing_tables(conn, ["event_candidate_pairs"]):
+            conn.execute(f"DELETE FROM event_candidate_pairs WHERE item_a_id IN ({marks}) OR item_b_id IN ({marks})", [*item_ids, *item_ids])
         if "item_relations" in existing_tables(conn, ["item_relations"]):
             conn.execute(f"DELETE FROM item_relations WHERE item_a_id IN ({marks}) OR item_b_id IN ({marks})", [*item_ids, *item_ids])
         if "llm_call_logs" in existing_tables(conn, ["llm_call_logs"]):
@@ -457,6 +462,8 @@ def clear_source_item_downstream(conn, item_ids: list[str], downstream: dict[str
     for table in ["semantic_extractions", "item_entities", "topic_items", "dedupe_group_items", "cluster_items", "event_items", "item_cards", "source_signals"]:
         if table in existing_tables(conn, [table]):
             conn.execute(f"DELETE FROM {table} WHERE item_id IN ({marks})", item_ids)
+    if "event_candidate_pairs" in existing_tables(conn, ["event_candidate_pairs"]):
+        conn.execute(f"DELETE FROM event_candidate_pairs WHERE item_a_id IN ({marks}) OR item_b_id IN ({marks})", [*item_ids, *item_ids])
     if "item_relations" in existing_tables(conn, ["item_relations"]):
         conn.execute(f"DELETE FROM item_relations WHERE item_a_id IN ({marks}) OR item_b_id IN ({marks})", [*item_ids, *item_ids])
     if "llm_call_logs" in existing_tables(conn, ["llm_call_logs"]):
@@ -1400,9 +1407,12 @@ def execute_run(store: InboxStore, run_id: str, sources: list[dict[str, Any]], c
             }
         )
     if mode == "real_write" and linked_item_ids:
-        add_event(store, run_id, "semantic_started", message="Generating lightweight semantic objects.")
-        generate_information_objects(store, run_id, linked_item_ids)
-        add_event(store, run_id, "semantic_completed", message="Semantic objects generated.")
+        add_event(store, run_id, "semantic_started", message="Generating event-aware semantic objects.")
+        semantic_result = generate_information_objects(store, run_id, linked_item_ids)
+        add_event(store, run_id, "semantic_completed", message="Semantic objects generated.", payload=semantic_result)
+        add_event(store, run_id, "cluster_completed", message="Event clusters generated.", payload={"clusters_created_or_updated": semantic_result.get("clusters_created_or_updated", 0)})
+        add_event(store, run_id, "event_completed", message="Events generated.", payload={"events_created_or_updated": semantic_result.get("events_created_or_updated", 0)})
+        add_event(store, run_id, "review_queue_generated", message="Review queue generated.", payload={"review_required": semantic_result.get("review_required", 0)})
     final_status = "cancelled" if run_id in _CANCELLED_RUNS else ("failed" if failure_sources and not success_sources else "success")
     duration_ms = int((time.monotonic() - started) * 1000)
     store.create_ingest_run(
@@ -1440,84 +1450,397 @@ def extract_terms(text: str) -> list[str]:
     return terms[:8]
 
 
-def generate_information_objects(store: InboxStore, run_id: str, item_ids: list[str]) -> None:
+EVENTNESS_NON_EVENT_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("ad", ("sponsored", "advertisement", "promo code", "limited offer", "成人", "广告", "优惠券")),
+    ("digest", ("digest", "newsletter", "roundup", "weekly recap", "daily briefing", "market wrap", "日报", "周报", "简报", "综述", "汇总")),
+    ("content", ("how to", "tutorial", "guide", "case study", "opinion", "analysis:", "教程", "指南", "如何", "观点", "案例")),
+)
+
+
+def _json_loads(value: Any, fallback: Any) -> Any:
+    if value in (None, ""):
+        return fallback
+    try:
+        return json.loads(str(value))
+    except Exception:
+        return fallback
+
+
+def classify_item_eventness(row: dict[str, Any], signature: EventSignature | None = None) -> dict[str, Any]:
+    title = row.get("title") or ""
+    summary = row.get("summary") or ""
+    text = f"{title}\n{summary}".strip()
+    lowered = text.lower()
+    reasons: list[str] = []
+    negative_features: list[str] = []
+
+    if not re.sub(r"https?://\S+", "", lowered).strip():
+        return {"decision": "low_signal", "confidence": 0.95, "reasons": ["pure_link_or_empty"], "negative_features": ["pure_link_or_empty"]}
+    if len(re.findall(r"[A-Za-z0-9\u4e00-\u9fff]", title)) < 8:
+        return {"decision": "low_signal", "confidence": 0.9, "reasons": ["short_or_symbolic_title"], "negative_features": ["short_or_symbolic_title"]}
+
+    for decision, needles in EVENTNESS_NON_EVENT_PATTERNS:
+        hits = [needle for needle in needles if needle in lowered]
+        if hits:
+            negative_features.extend(hits)
+            return {"decision": decision, "confidence": 0.88 if decision == "content" else 0.93, "reasons": [f"{decision}_keyword"], "negative_features": negative_features}
+
+    signature = signature or extract_event_signature(row)
+    if signature.semantic_level == "event_signature" and signature.is_concrete:
+        reasons.append("concrete_event_signature")
+        return {"decision": "event", "confidence": max(0.9, signature.confidence), "reasons": reasons, "negative_features": negative_features}
+    if signature.semantic_level == "thread_signature":
+        return {"decision": "thread", "confidence": max(0.62, signature.confidence), "reasons": ["thread_signature"], "negative_features": signature.invalid_reasons}
+    if signature.semantic_level == "content_signature":
+        return {"decision": "content", "confidence": max(0.7, signature.confidence), "reasons": ["content_signature"], "negative_features": signature.invalid_reasons}
+    return {"decision": "unknown", "confidence": 0.55, "reasons": ["no_concrete_event_signature"], "negative_features": signature.invalid_reasons}
+
+
+def _source_variants_from_raw(*values: Any) -> dict[str, list[str]]:
+    urls: list[str] = []
+    guids: list[str] = []
+    source_ids: list[str] = []
+    for value in values:
+        raw = _json_loads(value, {})
+        if not isinstance(raw, dict):
+            continue
+        for key in ("url", "link"):
+            if raw.get(key):
+                urls.append(str(raw[key]))
+        if raw.get("guid"):
+            guids.append(str(raw["guid"]))
+        if raw.get("source_id"):
+            source_ids.append(str(raw["source_id"]))
+    return {
+        "url_variants": sorted(set(urls))[:10],
+        "guid_variants": sorted(set(guids))[:10],
+        "source_ids": sorted(set(source_ids))[:10],
+    }
+
+
+def _dedupe_method(row: dict[str, Any]) -> str:
+    key = row.get("dedupe_key") or ""
+    if key.startswith("url:"):
+        return "url"
+    if key.startswith("guid:"):
+        return "guid"
+    if "title_date" in key:
+        return "title_date"
+    if "content" in key:
+        return "title_content"
+    return "dedupe_key"
+
+
+def _insert_semantic_extraction(conn: Any, row: dict[str, Any], now: str, eventness: dict[str, Any], signature: EventSignature) -> None:
+    item_id = row["item_id"]
+    title = row["title"]
+    body = f"{title}\n{row['summary'] or ''}"
+    terms = extract_terms(body)
+    extraction_id = f"se_{stable_hash(item_id)[:16]}"
+    normalized = {
+        "entities": terms,
+        "topics": [row["source_category"] or "General"],
+        "claims": [title] if title else [],
+        "eventness": eventness,
+        "signature": signature.model_dump(),
+    }
+    conn.execute(
+        "INSERT OR REPLACE INTO semantic_extractions(extraction_id, item_id, processor, confidence, needs_review, raw_output_json, normalized_output_json, evidence_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        (
+            extraction_id,
+            item_id,
+            "operational_event_pipeline_v2",
+            "high" if eventness["decision"] == "event" else "medium",
+            0 if eventness["decision"] == "event" and signature.is_concrete else 1,
+            json.dumps({"title": title}, ensure_ascii=False),
+            json.dumps(normalized, ensure_ascii=False),
+            json.dumps({"eventness": eventness, "signature_invalid_reasons": signature.invalid_reasons}, ensure_ascii=False),
+            now,
+        ),
+    )
+    for term in terms:
+        entity_id = "ent_" + stable_hash(term.lower())[:16]
+        conn.execute(
+            "INSERT OR IGNORE INTO entities(entity_id, entity_name, entity_type, confidence, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+            (entity_id, term, "keyword", 0.45, now, now),
+        )
+        conn.execute(
+            "INSERT OR IGNORE INTO item_entities(item_id, entity_id, confidence, evidence_json, created_at) VALUES (?, ?, ?, ?, ?)",
+            (item_id, entity_id, 0.45, json.dumps([{"title": title}], ensure_ascii=False), now),
+        )
+    topic_name = row["source_category"] or "General"
+    topic_id = "topic_" + stable_hash(topic_name.lower())[:16]
+    conn.execute(
+        "INSERT OR IGNORE INTO topics(topic_id, topic_name, topic_summary, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+        (topic_id, topic_name, f"Items categorized as {topic_name}", now, now),
+    )
+    conn.execute("INSERT OR IGNORE INTO topic_items(topic_id, item_id, confidence, created_at) VALUES (?, ?, ?, ?)", (topic_id, item_id, 0.5, now))
+
+
+def _event_title(signature: EventSignature, representative: dict[str, Any]) -> str:
+    if signature.actor and signature.product_or_model and signature.action != "other":
+        return f"{signature.actor} {signature.action.replace('_', ' ')} {signature.product_or_model}"
+    return representative["title"]
+
+
+def _event_summary(signature: EventSignature, members: list[dict[str, Any]]) -> str:
+    representative = members[0]
+    if signature.actor and signature.product_or_model and signature.action != "other":
+        return f"{signature.actor} {signature.action.replace('_', ' ')} {signature.product_or_model}; supported by {len(members)} item(s)."
+    return representative.get("summary") or representative["title"]
+
+
+def _relation_from_candidate(left: dict[str, Any], right: dict[str, Any], assessment: Any) -> tuple[str, int, int, int, str]:
+    hard = deterministic_duplicate(left, right)
+    if hard:
+        relation = "item_duplicate" if hard[0] == "duplicate" else "near_duplicate"
+        return relation, 1, 1, 0, "deterministic_duplicate"
+    if assessment.candidate_priority in {"must_run", "high"} and not set(assessment.disqualifiers) & {"generic_entity_overlap", "generic_only_overlap", "same_account_boilerplate", "wide_time_window", "semantic_level_reject"}:
+        return "same_event_repeat", 1, 1, 0, "high_confidence_same_event"
+    if assessment.candidate_priority == "medium":
+        return "uncertain", 0, 1, 1, "medium_candidate_requires_review"
+    if assessment.candidate_priority == "suppress":
+        return "non_event" if "semantic_level_reject" in assessment.disqualifiers else "different", 0, 0, 0, assessment.candidate_suppression_reason or "suppressed_candidate"
+    return "same_topic_different_event", 0, 1, 1, "low_confidence_same_topic"
+
+
+def generate_information_objects(store: InboxStore, run_id: str, item_ids: list[str]) -> dict[str, Any]:
     if not item_ids:
-        return
+        return {"item_count": 0}
     now = utc_now()
+    stats = {
+        "item_count": 0,
+        "eventness": {},
+        "signature": {"event_signature": 0, "thread_signature": 0, "content_signature": 0, "reject": 0, "invalid": 0},
+        "candidates_by_priority": {},
+        "auto_merged": 0,
+        "review_required": 0,
+        "rejected_non_event": 0,
+        "clusters_created_or_updated": 0,
+        "events_created_or_updated": 0,
+    }
     with store.connect() as conn:
         rows = conn.execute(
             f"SELECT * FROM inbox_items WHERE item_id IN ({','.join('?' for _ in item_ids)})",
             item_ids,
         ).fetchall()
+        items = [dict(row) for row in rows]
+        stats["item_count"] = len(items)
+        enriched: list[dict[str, Any]] = []
         for row in rows:
-            item_id = row["item_id"]
-            title = row["title"]
-            body = f"{title}\n{row['summary'] or ''}"
-            terms = extract_terms(body)
-            extraction_id = f"se_{stable_hash(item_id)[:16]}"
-            normalized = {"entities": terms, "topics": [row["source_category"] or "General"], "claims": [title] if title else []}
-            conn.execute(
-                "INSERT OR REPLACE INTO semantic_extractions(extraction_id, item_id, processor, confidence, needs_review, raw_output_json, normalized_output_json, evidence_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (extraction_id, item_id, "lightweight_rule", "low", 1, json.dumps({"title": title}, ensure_ascii=False), json.dumps(normalized, ensure_ascii=False), json.dumps([{"field": "title", "text": title}], ensure_ascii=False), now),
-            )
-            for term in terms:
-                entity_id = "ent_" + stable_hash(term.lower())[:16]
+            item = dict(row)
+            signature = extract_event_signature(item)
+            eventness = classify_item_eventness(item, signature)
+            stats["eventness"][eventness["decision"]] = stats["eventness"].get(eventness["decision"], 0) + 1
+            stats["signature"][signature.semantic_level] = stats["signature"].get(signature.semantic_level, 0) + 1
+            if signature.invalid_reasons:
+                stats["signature"]["invalid"] += 1
+            _insert_semantic_extraction(conn, item, now, eventness, signature)
+            enriched.append({"item": item, "signature": signature, "eventness": eventness})
+            if eventness["decision"] != "event":
+                stats["rejected_non_event"] += 1
                 conn.execute(
-                    "INSERT OR IGNORE INTO entities(entity_id, entity_name, entity_type, confidence, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
-                    (entity_id, term, "keyword", 0.45, now, now),
+                    "INSERT INTO review_queue(review_type, target_type, target_id, status, suggestion_json, reason, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    (
+                        "eventness_review",
+                        "item",
+                        item["item_id"],
+                        "pending",
+                        json.dumps({"eventness": eventness, "signature": signature.model_dump(), "action": "review_item_eventness"}, ensure_ascii=False),
+                        "Item did not pass eventness gate; it will not be materialized as an event automatically.",
+                        now,
+                        now,
+                    ),
                 )
-                conn.execute(
-                    "INSERT OR IGNORE INTO item_entities(item_id, entity_id, confidence, evidence_json, created_at) VALUES (?, ?, ?, ?, ?)",
-                    (item_id, entity_id, 0.45, json.dumps([{"title": title}], ensure_ascii=False), now),
-                )
-            topic_name = row["source_category"] or "General"
-            topic_id = "topic_" + stable_hash(topic_name.lower())[:16]
-            conn.execute(
-                "INSERT OR IGNORE INTO topics(topic_id, topic_name, topic_summary, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
-                (topic_id, topic_name, f"Items categorized as {topic_name}", now, now),
-            )
-            conn.execute("INSERT OR IGNORE INTO topic_items(topic_id, item_id, confidence, created_at) VALUES (?, ?, ?, ?)", (topic_id, item_id, 0.5, now))
-        groups: dict[str, list[Any]] = {}
-        for row in rows:
-            groups.setdefault(normalized_title(row["title"]), []).append(row)
-        for key, members in groups.items():
-            first = members[0]
-            cluster_id = "cluster_" + stable_hash(key)[:16]
-            conn.execute(
-                """
-                INSERT OR IGNORE INTO event_clusters(cluster_id, cluster_title, cluster_summary, entities_json, representative_item_id, first_seen_at, last_seen_at, item_count, status, created_by, confidence, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (cluster_id, first["title"], f"{len(members)} related item(s) grouped by normalized title.", json.dumps(extract_terms(first["title"]), ensure_ascii=False), first["item_id"], now, now, len(members), "active", "lightweight_rule", 0.55 if len(members) > 1 else 0.35, now, now),
-            )
-            for member in members:
+
+        event_like = [entry for entry in enriched if entry["eventness"]["decision"] == "event" and entry["signature"].is_concrete]
+        parent = {entry["item"]["item_id"]: entry["item"]["item_id"] for entry in event_like}
+
+        def find(item_id: str) -> str:
+            while parent[item_id] != item_id:
+                parent[item_id] = parent[parent[item_id]]
+                item_id = parent[item_id]
+            return item_id
+
+        def union(left: str, right: str) -> None:
+            root_left = find(left)
+            root_right = find(right)
+            if root_left != root_right:
+                parent[root_right] = root_left
+
+        item_by_id = {entry["item"]["item_id"]: entry for entry in event_like}
+        relation_rows: list[dict[str, Any]] = []
+        for idx, left_entry in enumerate(event_like):
+            for right_entry in event_like[idx + 1 :]:
+                left = left_entry["item"]
+                right = right_entry["item"]
+                assessment = assess_candidate(left, right)
+                stats["candidates_by_priority"][assessment.candidate_priority] = stats["candidates_by_priority"].get(assessment.candidate_priority, 0) + 1
+                relation_type, same_event, same_topic, review_required, reason = _relation_from_candidate(left, right, assessment)
+                status = "auto_merge" if same_event and relation_type in {"same_event_repeat", "same_event_new_info", "near_duplicate", "item_duplicate"} else ("review" if review_required else "rejected")
                 conn.execute(
                     """
-                    INSERT OR IGNORE INTO cluster_items(cluster_id, item_id, primary_relation, same_event, same_topic, confidence, reason, evidence_json, decision_source, schema_version, input_fingerprint, created_at, updated_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO event_candidate_pairs(run_id, item_a_id, item_b_id, candidate_score, candidate_priority, lane, features_json, disqualifiers_json, status, created_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
-                    (cluster_id, member["item_id"], "same_topic" if len(members) == 1 else "same_event", 1 if len(members) > 1 else 0, 1, 0.55, "轻量级标题规范化分组", json.dumps([{"title": member["title"]}], ensure_ascii=False), "lightweight_rule", "operational_v1", stable_hash(cluster_id + member["item_id"]), now, now),
+                    (
+                        run_id,
+                        left["item_id"],
+                        right["item_id"],
+                        assessment.candidate_score,
+                        assessment.candidate_priority,
+                        assessment.lane,
+                        json.dumps(assessment.model_dump(), ensure_ascii=False),
+                        json.dumps(assessment.disqualifiers, ensure_ascii=False),
+                        status,
+                        now,
+                    ),
                 )
-                conn.execute("UPDATE inbox_items SET primary_cluster_id = ? WHERE item_id = ?", (cluster_id, member["item_id"]))
-            event_id = "event_" + stable_hash(cluster_id)[:16]
+                relation_rows.append({"left": left, "right": right, "assessment": assessment, "relation_type": relation_type, "same_event": same_event, "same_topic": same_topic, "review_required": review_required, "reason": reason})
+                if same_event:
+                    union(left["item_id"], right["item_id"])
+                    stats["auto_merged"] += 1
+                elif review_required:
+                    stats["review_required"] += 1
+                    conn.execute(
+                        "INSERT INTO review_queue(review_type, target_type, target_id, status, suggestion_json, reason, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                        (
+                            "event_relation_review",
+                            "item_pair",
+                            f"{left['item_id']}:{right['item_id']}",
+                            "pending",
+                            json.dumps({"relation_type": relation_type, "candidate": assessment.model_dump(), "action": "review_relation"}, ensure_ascii=False),
+                            reason,
+                            now,
+                            now,
+                        ),
+                    )
+
+        groups: dict[str, list[dict[str, Any]]] = {}
+        for entry in event_like:
+            groups.setdefault(find(entry["item"]["item_id"]), []).append(entry)
+
+        for root, members in groups.items():
+            representative_entry = max(members, key=lambda entry: (entry["signature"].confidence, len(entry["item"].get("summary") or ""), entry["item"]["title"]))
+            signature = representative_entry["signature"]
+            member_items = [entry["item"] for entry in members]
+            cluster_key = signature.signature_key or root
+            cluster_id = "cluster_" + stable_hash(f"operational_v2:{cluster_key}")[:16]
+            evidence = {
+                "schema_version": "operational_v2",
+                "run_id": run_id,
+                "signature": signature.model_dump(),
+                "eventness": [entry["eventness"] for entry in members],
+                "member_item_ids": [entry["item"]["item_id"] for entry in members],
+                "decision_source": "rule",
+            }
             conn.execute(
-                "INSERT OR IGNORE INTO events(event_id, event_title, event_summary, event_type, status, importance, confidence, primary_cluster_id, evidence_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (event_id, first["title"], f"由聚合线索 {cluster_id} 自动生成的候选事件。", "unknown", "needs_review", min(5, max(1, len(members))), 0.5 if len(members) > 1 else 0.3, cluster_id, json.dumps({"cluster_id": cluster_id, "method": "lightweight_rule"}, ensure_ascii=False), now, now),
+                """
+                INSERT OR REPLACE INTO event_clusters(cluster_id, cluster_title, cluster_summary, entities_json, representative_item_id, first_seen_at, last_seen_at, item_count, status, created_by, confidence, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    cluster_id,
+                    _event_title(signature, representative_entry["item"]),
+                    _event_summary(signature, member_items),
+                    json.dumps({"actor": signature.actor, "product": signature.product_or_model, "action": signature.action, "signature_key": signature.signature_key}, ensure_ascii=False),
+                    representative_entry["item"]["item_id"],
+                    min((entry["item"].get("published_at") or now) for entry in members),
+                    max((entry["item"].get("published_at") or now) for entry in members),
+                    len(members),
+                    "active" if len(members) > 1 else "needs_review",
+                    "operational_v2_rule",
+                    min(0.98, max(0.72, signature.confidence if len(members) == 1 else signature.confidence + 0.05)),
+                    now,
+                    now,
+                ),
             )
             for member in members:
-                conn.execute("INSERT OR IGNORE INTO event_items(event_id, item_id, role, created_at) VALUES (?, ?, ?, ?)", (event_id, member["item_id"], "supporting", now))
+                item = member["item"]
+                item_relation = "source_material" if item["item_id"] == representative_entry["item"]["item_id"] else "same_event_repeat"
+                relation = next((row for row in relation_rows if item["item_id"] in {row["left"]["item_id"], row["right"]["item_id"]} and row["same_event"]), None)
+                if relation:
+                    item_relation = relation["relation_type"]
+                item_evidence = {
+                    "schema_version": "operational_v2",
+                    "run_id": run_id,
+                    "signature": member["signature"].model_dump(),
+                    "eventness": member["eventness"],
+                    "cluster_evidence": evidence,
+                }
+                conn.execute(
+                    """
+                    INSERT OR REPLACE INTO cluster_items(cluster_id, item_id, primary_relation, same_event, same_topic, confidence, reason, evidence_json, decision_source, schema_version, input_fingerprint, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        cluster_id,
+                        item["item_id"],
+                        item_relation,
+                        1,
+                        1,
+                        member["signature"].confidence,
+                        "High-confidence event signature/relation materialization.",
+                        json.dumps(item_evidence, ensure_ascii=False),
+                        "rule",
+                        "operational_v2",
+                        stable_hash(cluster_id + item["item_id"] + json.dumps(member["signature"].model_dump(), sort_keys=True)),
+                        now,
+                        now,
+                    ),
+                )
+                conn.execute("UPDATE inbox_items SET primary_cluster_id = ? WHERE item_id = ?", (cluster_id, item["item_id"]))
+            event_id = "event_" + stable_hash(cluster_id)[:16]
+            relation_summary: dict[str, int] = {}
+            for member in members:
+                relation = "source_material" if member["item"]["item_id"] == representative_entry["item"]["item_id"] else "same_event_repeat"
+                relation_summary[relation] = relation_summary.get(relation, 0) + 1
+            event_evidence = {
+                **evidence,
+                "primary_cluster_id": cluster_id,
+                "source_item_count": len(members),
+                "source_count": len({entry["item"].get("source_id") or entry["item"].get("source_name") for entry in members}),
+                "relation_summary": relation_summary,
+            }
             conn.execute(
-                "INSERT INTO review_queue(review_type, target_type, target_id, status, suggestion_json, reason, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                ("event_candidate", "event", event_id, "pending", json.dumps({"action": "review_event"}, ensure_ascii=False), "轻量级规则自动生成的候选事件，需要人工确认。", now, now),
+                "INSERT OR REPLACE INTO events(event_id, event_title, event_summary, event_type, event_time, status, importance, confidence, primary_cluster_id, evidence_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    event_id,
+                    _event_title(signature, representative_entry["item"]),
+                    _event_summary(signature, member_items),
+                    signature.action if signature.action != "other" else "event",
+                    signature.date_bucket,
+                    "ready" if len(members) > 1 else "needs_review",
+                    min(5, max(1, len(members) + (1 if len(members) > 1 else 0))),
+                    min(0.98, max(0.72, signature.confidence if len(members) == 1 else signature.confidence + 0.05)),
+                    cluster_id,
+                    json.dumps(event_evidence, ensure_ascii=False),
+                    now,
+                    now,
+                ),
             )
+            for member in members:
+                role = "source_material" if member["item"]["item_id"] == representative_entry["item"]["item_id"] else "supporting"
+                conn.execute("INSERT OR IGNORE INTO event_items(event_id, item_id, role, created_at) VALUES (?, ?, ?, ?)", (event_id, member["item"]["item_id"], role, now))
+            if len(members) == 1:
+                stats["review_required"] += 1
+                conn.execute(
+                    "INSERT INTO review_queue(review_type, target_type, target_id, status, suggestion_json, reason, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    ("event_candidate", "event", event_id, "pending", json.dumps({"action": "review_event", "evidence": event_evidence}, ensure_ascii=False), "Single-item event cluster needs review before high-confidence use.", now, now),
+                )
+            stats["clusters_created_or_updated"] += 1
+            stats["events_created_or_updated"] += 1
+    return stats
 
 
 def run_dedupe_stage(store: InboxStore, run_id: str, item_ids: list[str]) -> dict[str, Any]:
     now = utc_now()
     created = 0
+    explained_duplicates = 0
+    seen_multiple = 0
     with store.connect() as conn:
         rows = conn.execute(
-            f"SELECT item_id, dedupe_key, url, title FROM inbox_items WHERE item_id IN ({','.join('?' for _ in item_ids)})",
+            f"SELECT item_id, dedupe_key, url, guid, title, source_id, source_name, source_category, published_at, created_at, last_seen_at, seen_count, raw_json, latest_raw_json, latest_seen_summary FROM inbox_items WHERE item_id IN ({','.join('?' for _ in item_ids)})",
             item_ids,
         ).fetchall() if item_ids else []
         groups: dict[str, list[Any]] = {}
@@ -1527,14 +1850,41 @@ def run_dedupe_stage(store: InboxStore, run_id: str, item_ids: list[str]) -> dic
         for key, members in groups.items():
             group_id = "dg_" + stable_hash(key)[:16]
             primary = members[0]["item_id"]
+            total_seen = sum(int(member["seen_count"] or 1) for member in members)
+            if total_seen > len(members):
+                explained_duplicates += 1
+            seen_multiple += sum(1 for member in members if int(member["seen_count"] or 1) > 1)
+            variants = {}
+            for member in members:
+                merged = _source_variants_from_raw(member["raw_json"], member["latest_raw_json"])
+                for variant_key, values in merged.items():
+                    variants.setdefault(variant_key, set()).update(values)
+            evidence = {
+                "schema_version": "operational_v2",
+                "run_id": run_id,
+                "dedupe_key": key,
+                "dedupe_method": _dedupe_method(dict(members[0])),
+                "canonical_item_id": primary,
+                "member_count": len(members),
+                "seen_count": total_seen,
+                "source_count": len({member["source_id"] or member["source_name"] for member in members}),
+                "first_seen_at": min(member["created_at"] or now for member in members),
+                "last_seen_at": max(member["last_seen_at"] or now for member in members),
+                "latest_seen_summaries": [member["latest_seen_summary"] for member in members if member["latest_seen_summary"]][:5],
+                "url_variants": sorted(variants.get("url_variants", set()))[:10],
+                "guid_variants": sorted(variants.get("guid_variants", set()))[:10],
+                "source_ids": sorted(variants.get("source_ids", set()))[:10],
+            }
             conn.execute(
                 "INSERT OR REPLACE INTO dedupe_groups(dedupe_group_id, primary_item_id, dedupe_method, confidence, evidence_json, review_status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                (group_id, primary, "dedupe_key", 0.8 if len(members) > 1 else 0.5, json.dumps({"key": key, "member_count": len(members)}, ensure_ascii=False), "reviewed" if len(members) == 1 else "pending", now, now),
+                (group_id, primary, evidence["dedupe_method"], 0.9 if total_seen > 1 else 0.55, json.dumps(evidence, ensure_ascii=False), "reviewed" if total_seen == 1 else "explained", now, now),
             )
             for member in members:
-                conn.execute("INSERT OR IGNORE INTO dedupe_group_items(dedupe_group_id, item_id, role, created_at) VALUES (?, ?, ?, ?)", (group_id, member["item_id"], "primary" if member["item_id"] == primary else "member", now))
+                role = "canonical" if member["item_id"] == primary else _dedupe_method(dict(member))
+                conn.execute("INSERT OR IGNORE INTO dedupe_group_items(dedupe_group_id, item_id, role, created_at) VALUES (?, ?, ?, ?)", (group_id, member["item_id"], role, now))
             created += 1
-    return {"dedupe_groups_created_or_updated": created}
+    coverage = explained_duplicates / seen_multiple if seen_multiple else 1.0
+    return {"dedupe_groups_created_or_updated": created, "seen_count_gt_1_items": seen_multiple, "dedupe_explanation_count": explained_duplicates, "dedupe_explanation_coverage": round(coverage, 4)}
 
 
 def item_ids_for_run(store: InboxStore, run_id: str) -> list[str]:
@@ -1643,12 +1993,11 @@ def api_run_pipeline_stage(request: Request, run_id: str, stage: str) -> Any:
         add_event(store, run_id, "dedupe_completed", message="去重阶段完成。", payload=result)
     elif stage in {"semantic", "clusters", "events", "review"}:
         add_event(store, run_id, "semantic_started", message="语义/聚合/事件阶段开始。")
-        generate_information_objects(store, run_id, item_ids)
-        add_event(store, run_id, "semantic_completed", message="语义提取完成。")
-        add_event(store, run_id, "cluster_completed", message="聚合线索生成完成。")
-        add_event(store, run_id, "event_completed", message="事件生成完成。")
-        add_event(store, run_id, "review_queue_generated", message="审核队列生成完成。")
-        result = {"item_count": len(item_ids)}
+        result = generate_information_objects(store, run_id, item_ids)
+        add_event(store, run_id, "semantic_completed", message="语义提取完成。", payload=result)
+        add_event(store, run_id, "cluster_completed", message="聚合线索生成完成。", payload={"clusters_created_or_updated": result.get("clusters_created_or_updated", 0)})
+        add_event(store, run_id, "event_completed", message="事件生成完成。", payload={"events_created_or_updated": result.get("events_created_or_updated", 0)})
+        add_event(store, run_id, "review_queue_generated", message="审核队列生成完成。", payload={"review_required": result.get("review_required", 0)})
     elif stage == "briefing":
         briefing = generate_briefing(store, "daily")
         add_event(store, run_id, "briefing_generated", message="每日简报已生成。", payload={"briefing_id": briefing["briefing_id"]})

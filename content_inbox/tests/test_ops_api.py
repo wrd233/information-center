@@ -78,14 +78,15 @@ def test_dry_run_does_not_write_items_and_real_run_links_items(tmp_path: Path) -
     run_id = real["data"]["run_id"]
     run_items = client.get(f"/api/runs/{run_id}/items").json()
     events = client.get(f"/api/runs/{run_id}/events").json()
-    generated_events = client.get("/api/events").json()
+    semantic_events = [event for event in events["data"]["events"] if event["event_type"] == "semantic_completed"]
 
     assert dry["ok"] is True
     assert dry_total == 0
     assert real["ok"] is True
     assert run_items["data"]["stats"]["returned"] == 2
     assert any(event["event_type"] == "item_inserted" for event in events["data"]["events"])
-    assert generated_events["data"]["events"]
+    assert semantic_events
+    assert semantic_events[-1]["payload"]["rejected_non_event"] == 2
 
 
 def test_published_time_filter_excludes_out_of_range_items(tmp_path: Path) -> None:
@@ -203,9 +204,49 @@ def test_pipeline_stage_briefing_and_report(tmp_path: Path) -> None:
     assert report["data"]["pipeline"]["report"] == "completed"
 
 
+def test_operational_event_pipeline_rejects_digest_without_event(tmp_path: Path) -> None:
+    client, _store = make_client(tmp_path)
+    feed_uri = (FIXTURES / "rss_digest.xml").as_uri()
+    preview = client.post("/api/sources/import/preview", json={"format": "urls", "content": f"{feed_uri}, Digest Source, Tests"}).json()
+    source_id = client.post("/api/sources/import/commit", json={"operation_id": preview["data"]["operation_id"]}).json()["data"]["created"][0]["source_id"]
+
+    run = client.post(
+        "/api/runs",
+        json={"mode": "real_write", "source_scope": {"type": "selected", "source_ids": [source_id]}, "limits": {"max_items_per_source": 1}, "time_filter": {}, "run_synchronously": True},
+    ).json()
+    semantic_event = [event for event in client.get(f"/api/runs/{run['data']['run_id']}/events").json()["data"]["events"] if event["event_type"] == "semantic_completed"][-1]
+    events = client.get("/api/events").json()["data"]["events"]
+    reviews = client.get("/api/review-queue").json()["data"]["reviews"]
+
+    assert semantic_event["payload"]["eventness"]["digest"] == 1
+    assert semantic_event["payload"]["rejected_non_event"] == 1
+    assert events == []
+    assert any(review["review_type"] == "eventness_review" for review in reviews)
+
+
+def test_operational_event_pipeline_writes_signature_cluster_evidence(tmp_path: Path) -> None:
+    client, _store = make_client(tmp_path)
+    feed_uri = (FIXTURES / "rss_event.xml").as_uri()
+    preview = client.post("/api/sources/import/preview", json={"format": "urls", "content": f"{feed_uri}, Fixture Source, Tests"}).json()
+    source_id = client.post("/api/sources/import/commit", json={"operation_id": preview["data"]["operation_id"]}).json()["data"]["created"][0]["source_id"]
+
+    run = client.post(
+        "/api/runs",
+        json={"mode": "real_write", "source_scope": {"type": "selected", "source_ids": [source_id]}, "limits": {"max_items_per_source": 2}, "time_filter": {}, "run_synchronously": True},
+    ).json()
+    event = client.get("/api/events").json()["data"]["events"][0]
+    event_detail = client.get(f"/api/events/{event['event_id']}").json()["data"]
+    summary = client.get(f"/api/runs/{run['data']['run_id']}/summary").json()["data"]
+
+    assert event["event_type"] == "funding"
+    assert event["primary_cluster_id"]
+    assert event_detail["items"]
+    assert summary["pipeline"]["semantic"] == "completed"
+
+
 def test_reset_clear_pipeline_outputs_keeps_items_and_runs(tmp_path: Path) -> None:
     client, _store = make_client(tmp_path)
-    feed_uri = (FIXTURES / "rss_basic.xml").as_uri()
+    feed_uri = (FIXTURES / "rss_event.xml").as_uri()
     preview = client.post("/api/sources/import/preview", json={"format": "urls", "content": f"{feed_uri}, Fixture Source, Tests"}).json()
     source_id = client.post("/api/sources/import/commit", json={"operation_id": preview["data"]["operation_id"]}).json()["data"]["created"][0]["source_id"]
     run_id = client.post(
@@ -228,7 +269,7 @@ def test_reset_clear_pipeline_outputs_keeps_items_and_runs(tmp_path: Path) -> No
 
 def test_reset_clear_outputs_keeps_events(tmp_path: Path) -> None:
     client, _store = make_client(tmp_path)
-    feed_uri = (FIXTURES / "rss_basic.xml").as_uri()
+    feed_uri = (FIXTURES / "rss_event.xml").as_uri()
     preview = client.post("/api/sources/import/preview", json={"format": "urls", "content": f"{feed_uri}, Fixture Source, Tests"}).json()
     source_id = client.post("/api/sources/import/commit", json={"operation_id": preview["data"]["operation_id"]}).json()["data"]["created"][0]["source_id"]
     run_id = client.post(

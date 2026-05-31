@@ -4,6 +4,7 @@ import json
 import re
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
@@ -124,6 +125,34 @@ KNOWN_VALID_PRODUCTS = {
     "syncless",
     "token calling plan",
 }
+
+
+def load_alias_registry() -> dict[str, Any]:
+    path = Path(__file__).resolve().parents[2] / "config" / "event_aliases.json"
+    try:
+        parsed = json.loads(path.read_text(encoding="utf-8"))
+        return parsed if isinstance(parsed, dict) else {}
+    except Exception:
+        return {}
+
+
+ALIAS_REGISTRY = load_alias_registry()
+for canonical_actor, aliases in (ALIAS_REGISTRY.get("actors") or {}).items():
+    for alias in aliases or []:
+        KNOWN_ACTOR_ALIASES[str(alias).lower()] = str(canonical_actor)
+for canonical_product, config in (ALIAS_REGISTRY.get("products") or {}).items():
+    product_config = config if isinstance(config, dict) else {}
+    owner = str(product_config.get("owner") or "")
+    if owner:
+        KNOWN_PRODUCT_OWNER[str(canonical_product).lower()] = owner
+        for alias in product_config.get("aliases") or []:
+            KNOWN_PRODUCT_OWNER[str(alias).lower()] = owner
+    KNOWN_VALID_PRODUCTS.add(str(canonical_product).lower())
+    for alias in product_config.get("aliases") or []:
+        KNOWN_VALID_PRODUCTS.add(str(alias).lower())
+for canonical_action, aliases in (ALIAS_REGISTRY.get("actions") or {}).items():
+    for alias in aliases or []:
+        EVENT_ACTION_ALIASES[str(alias).lower()] = str(canonical_action)
 
 
 AI_ENTITY_RE = re.compile(
@@ -446,6 +475,15 @@ def explicit_products(text: str) -> list[str]:
                 product = "Feishu CLI"
             if product and not is_invalid_product(product) and product.lower() not in {p.lower() for p in products}:
                 products.append(product)
+    lowered = (text or "").lower()
+    for canonical_product, config in (ALIAS_REGISTRY.get("products") or {}).items():
+        aliases = [canonical_product]
+        if isinstance(config, dict):
+            aliases.extend(config.get("aliases") or [])
+        if any(str(alias).lower() in lowered for alias in aliases):
+            canonical = str(canonical_product)
+            if canonical.lower() not in {p.lower() for p in products}:
+                products.append(canonical)
     if "Notion" in (text or "") and any(term in text for term in ["CLI", "Workers", "Custom Agents", "Tools", "Developer Platform"]):
         if "Notion Developer Platform" not in products:
             products.append("Notion Developer Platform")

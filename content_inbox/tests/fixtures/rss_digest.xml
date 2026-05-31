@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Fixture Digest RSS</title>
+    <link>https://fixtures.example.com/digest/</link>
+    <description>Digest fixture feed.</description>
+    <item>
+      <title>AI Daily Briefing: OpenAI, Anthropic, Nvidia updates</title>
+      <link>https://fixtures.example.com/digest/one</link>
+      <guid>digest-1</guid>
+      <pubDate>Sat, 16 May 2026 01:00:00 GMT</pubDate>
+      <description>Roundup of several unrelated AI stories.</description>
+    </item>
+  </channel>
+</rss>

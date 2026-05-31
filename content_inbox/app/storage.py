@@ -361,6 +361,24 @@ class InboxStore:
         )
         conn.execute(
             """
+            CREATE TABLE IF NOT EXISTS event_candidate_pairs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                run_id TEXT,
+                item_a_id TEXT NOT NULL,
+                item_b_id TEXT,
+                candidate_cluster_id TEXT,
+                candidate_score REAL NOT NULL,
+                candidate_priority TEXT NOT NULL,
+                lane TEXT NOT NULL,
+                features_json TEXT NOT NULL DEFAULT '{}',
+                disqualifiers_json TEXT NOT NULL DEFAULT '[]',
+                status TEXT NOT NULL DEFAULT 'generated',
+                created_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS events (
                 event_id TEXT PRIMARY KEY,
                 event_title TEXT NOT NULL,
@@ -530,6 +548,8 @@ class InboxStore:
             "CREATE INDEX IF NOT EXISTS idx_event_items_item ON event_items(item_id)",
             "CREATE INDEX IF NOT EXISTS idx_item_entities_entity ON item_entities(entity_id)",
             "CREATE INDEX IF NOT EXISTS idx_semantic_extractions_item ON semantic_extractions(item_id)",
+            "CREATE INDEX IF NOT EXISTS idx_event_candidate_pairs_run ON event_candidate_pairs(run_id)",
+            "CREATE INDEX IF NOT EXISTS idx_event_candidate_pairs_priority ON event_candidate_pairs(candidate_priority)",
         ]:
             conn.execute(sql)
 

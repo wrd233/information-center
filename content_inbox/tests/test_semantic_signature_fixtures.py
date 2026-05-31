@@ -67,6 +67,25 @@ def test_phase1_3b_low_signal_rejects() -> None:
         assert not sig.is_concrete
 
 
+def test_configured_alias_registry_normalizes_actor_product_action() -> None:
+    sig = extract_event_signature(
+        {
+            "item_id": "alias-gpt-55",
+            "title": "OpenAI makes GPT 5.5 now available to coding teams",
+            "summary": "",
+            "content_text": "",
+            "source_name": "Fixture",
+            "published_at": "2026-05-17T00:00:00+00:00",
+        }
+    )
+
+    assert sig.semantic_level == "event_signature"
+    assert sig.actor == "OpenAI"
+    assert sig.product_or_model == "GPT-5.5"
+    assert sig.action == "availability"
+    assert sig.signature_key == "openai|gpt55|availability|2026-05-17"
+
+
 def test_phase1_3b_invalid_products_are_not_accepted() -> None:
     rows = load_rows()
     for row in rows:

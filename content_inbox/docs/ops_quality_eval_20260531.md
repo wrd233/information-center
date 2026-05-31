@@ -1,6 +1,6 @@
 # 作战台信息质量评估报告
 
-生成时间: 2026-05-31T12:17:27.792010+00:00
+生成时间: 2026-05-31T16:13:17.629056+00:00
 
 ## 结论
 
@@ -9,9 +9,9 @@
 核心发现:
 
 - 处理时去重 F1: 85.7%，召回 75.0%。
-- 事件聚合 F1: 21.1%，召回 16.7%。
-- 事件类型识别率: 0.0%。
-- 事件摘要具体率: 0.0%。
+- 事件聚合 F1: 40.0%，召回 25.0%。
+- 事件类型识别率: 100.0%。
+- 事件摘要具体率: 100.0%。
 - 实体召回: 97.1%。
 - 每日简报质量分: 77.8%。
 - 运行报告质量分: 66.7%。
@@ -52,19 +52,19 @@
 
 ### 事件聚合
 
-- precision/recall/F1: 28.6% / 16.7% / 21.1%
-- clusters: 77
-- 多条目 cluster 比率: 6.5%
-- 误合并 pair 样例: `[('daily_digest_a', 'daily_digest_b'), ('daily_digest_a', 'daily_digest_c'), ('daily_digest_b', 'daily_digest_c'), ('generic_title_a', 'generic_title_b'), ('market_wrap_a', 'market_wrap_b')]`
-- 漏合并 pair 样例: `[('anthropic_funding_a', 'anthropic_funding_b'), ('deepseek_cn_a', 'deepseek_cn_b'), ('deepseek_cn_a', 'guid_a'), ('deepseek_cn_b', 'guid_a'), ('openai_punctuation_variant', 'openai_variant_a'), ('openai_punctuation_variant', 'openai_variant_b'), ('openai_variant_a', 'openai_variant_b'), ('openai_variant_a', 'url_tracking_a'), ('openai_variant_b', 'url_tracking_a'), ('policy_a', 'policy_b')]`
+- precision/recall/F1: 100.0% / 25.0% / 40.0%
+- clusters: 3
+- 多条目 cluster 比率: 33.3%
+- 误合并 pair 样例: `[]`
+- 漏合并 pair 样例: `[('anthropic_funding_a', 'anthropic_funding_b'), ('deepseek_cn_a', 'deepseek_cn_b'), ('deepseek_cn_a', 'guid_a'), ('deepseek_cn_b', 'guid_a'), ('http_https_a', 'http_https_b'), ('openai_punctuation_variant', 'openai_variant_a'), ('openai_variant_a', 'openai_variant_b'), ('openai_variant_a', 'url_tracking_a'), ('policy_a', 'policy_b')]`
 
 ### 事件提取
 
-- events: 77
-- event_type known rate: 0.0%
-- summary specific rate: 0.0%
-- review coverage: 100.0%
-- 非事件条目被生成候选事件比率: 100.0%
+- events: 3
+- event_type known rate: 100.0%
+- summary specific rate: 100.0%
+- review coverage: 2933.3%
+- 非事件条目被生成候选事件比率: 0.0%
 - entity recall: 97.1% (100/103)
 
 ### 简报和报告
@@ -80,28 +80,21 @@
 # 每日简报 2026-05-31
 
 ## 事件
-- Microsoft market update 29（needs_review）
-- Google security update 21（needs_review）
-- Nvidia product update 44（needs_review）
-- Nvidia product update 14（needs_review）
-- Microsoft market update 41（needs_review）
-- Market wrap: AI stocks rally（needs_review）
-- Meta benchmark update 28（needs_review）
-- Google security update 15（needs_review）
-- NVIDIA unveils Rubin Ultra platform（needs_review）
-- OpenAI signs new cloud capacity deal with Oracle（needs_review）
+- OpenAI release GPT-5.5（ready）
+- OpenAI integration major API（needs_review）
+- DeepSeek release DeepSeek V4（needs_review）
 
 ## 待审核
-- event_candidate event:event_817118d142798288
-- event_candidate event:event_d617b90e2368bd13
-- event_candidate event:event_4ecf2d1949d60d71
-- event_candidate event:event_f1d807601c6a0dc8
-- event_candidate event:event_05843d2e02561006
-- event_candidate event:event_07f34c672e41ce2f
-- event_candidate event:event_7042ba7643234370
-- event_candidate event:event_720dc0137165170b
-- event_candidate event:event_50893e88ed0c9583
-- event_candidate event:event_8d68318ea34376cf
+- eventness_review item:item_00b1e808fda34e31a77127afb3e6352b
+- eventness_review item:item_01486cc074b141b99563fa34a7fba343
+- eventness_review item:item_018189dbdef644378dab79f7fb794007
+- eventness_review item:item_01a73ecf9472424bae2b4d69cfeb45fc
+- eventness_review item:item_040093492b774da1aeb9ad7725a9282b
+- eventness_review item:item_08ebcad66a334221a50172cef41fe697
+- eventness_review item:item_0bbab0ff2f3b4610ba5fac4abbfd715d
+- eventness_review item:item_15443252a4a2464ea7587311e3006c93
+- eventness_review item:item_1e197fb935e040d0b8b0d35b73e72d08
+- eventness_review item:item_205a4592454c4031815f6af46a203845
 ```
 
 运行报告预览:
@@ -109,16 +102,16 @@
 ```markdown
 # 运行报告
 
-生成时间: 2026-05-31T12:17:27.785354+00:00
+生成时间: 2026-05-31T16:13:17.622334+00:00
 
-关联对象: run run_quality_eval_6354108178
+关联对象: run run_quality_eval_771beb00cc
 
 ```
 
 Run endpoint 报告预览:
 
 ```markdown
-# 运行报告 run_quality_eval_6354108178
+# 运行报告 run_quality_eval_771beb00cc
 
 状态: success
 
@@ -156,7 +149,7 @@ Run endpoint 报告预览:
     "gold_duplicate_pairs": 4,
     "gold_same_event_pairs": 12,
     "gold_non_event_items": 5,
-    "temp_db": "/var/folders/f_/12__g2851hv407x2tv3xbx580000gn/T/content_inbox_quality_eval_dtbk1u8m/quality_eval.db"
+    "temp_db": "/var/folders/f_/12__g2851hv407x2tv3xbx580000gn/T/content_inbox_quality_eval_yd7dt_pq/quality_eval.db"
   },
   "process_dedupe": {
     "tp": 3,
@@ -175,36 +168,15 @@ Run endpoint 报告预览:
     "multi_item_group_rate": 0.0
   },
   "event_clustering": {
-    "tp": 2,
-    "fp": 5,
-    "fn": 10,
-    "precision": 0.2857142857142857,
-    "recall": 0.16666666666666666,
-    "f1": 0.2105263157894737,
-    "clusters": 77,
-    "multi_item_event_rate": 0.06493506493506493,
-    "false_positive_pairs": [
-      [
-        "daily_digest_a",
-        "daily_digest_b"
-      ],
-      [
-        "daily_digest_a",
-        "daily_digest_c"
-      ],
-      [
-        "daily_digest_b",
-        "daily_digest_c"
-      ],
-      [
-        "generic_title_a",
-        "generic_title_b"
-      ],
-      [
-        "market_wrap_a",
-        "market_wrap_b"
-      ]
-    ],
+    "tp": 3,
+    "fp": 0,
+    "fn": 9,
+    "precision": 1.0,
+    "recall": 0.25,
+    "f1": 0.4,
+    "clusters": 3,
+    "multi_item_event_rate": 0.3333333333333333,
+    "false_positive_pairs": [],
     "false_negative_pairs": [
       [
         "anthropic_funding_a",
@@ -223,23 +195,19 @@ Run endpoint 报告预览:
         "guid_a"
       ],
       [
+        "http_https_a",
+        "http_https_b"
+      ],
+      [
         "openai_punctuation_variant",
         "openai_variant_a"
       ],
       [
-        "openai_punctuation_variant",
-        "openai_variant_b"
-      ],
-      [
         "openai_variant_a",
         "openai_variant_b"
       ],
       [
         "openai_variant_a",
-        "url_tracking_a"
-      ],
-      [
-        "openai_variant_b",
         "url_tracking_a"
       ],
       [
@@ -249,12 +217,12 @@ Run endpoint 报告预览:
     ]
   },
   "event_extraction": {
-    "events": 77,
-    "event_type_known_rate": 0.0,
-    "event_summary_specific_rate": 0.0,
-    "review_entries": 77,
-    "review_coverage": 1.0,
-    "non_event_candidate_rate": 1.0,
+    "events": 3,
+    "event_type_known_rate": 1.0,
+    "event_summary_specific_rate": 1.0,
+    "review_entries": 88,
+    "review_coverage": 29.333333333333332,
+    "non_event_candidate_rate": 0.0,
     "entity_recall": 0.970873786407767,
     "matched_entities": 100,
     "expected_entities": 103
@@ -316,16 +284,16 @@ Run endpoint 报告预览:
         "not_too_thin": false
       }
     },
-    "daily_briefing_preview": "# 每日简报 2026-05-31\n\n## 事件\n- Microsoft market update 29（needs_review）\n- Google security update 21（needs_review）\n- Nvidia product update 44（needs_review）\n- Nvidia product update 14（needs_review）\n- Microsoft market update 41（needs_review）\n- Market wrap: AI stocks rally（needs_review）\n- Meta benchmark update 28（needs_review）\n- Google security update 15（needs_review）\n- NVIDIA unveils Rubin Ultra platform（needs_review）\n- OpenAI signs new cloud capacity deal with Oracle（needs_review）\n\n## 待审核\n- event_candidate event:event_817118d142798288\n- event_candidate event:event_d617b90e2368bd13\n- event_candidate event:event_4ecf2d1949d60d71\n- event_candidate event:event_f1d807601c6a0dc8\n- event_candidate event:event_05843d2e02561006\n- event_candidate event:event_07f34c672e41ce2f\n- event_candidate event:event_7042ba7643234370\n- event_candidate event:event_720dc0137165170b\n- event_candidate event:event_50893e88ed0c9583\n- event_candidate event:event_8d68318ea34376cf",
-    "run_report_preview": "# 运行报告\n\n生成时间: 2026-05-31T12:17:27.785354+00:00\n\n关联对象: run run_quality_eval_6354108178\n",
-    "run_endpoint_report_preview": "# 运行报告 run_quality_eval_6354108178\n\n状态: success\n\n新增条目: 0\n\n信息源数量: 0\n"
+    "daily_briefing_preview": "# 每日简报 2026-05-31\n\n## 事件\n- OpenAI release GPT-5.5（ready）\n- OpenAI integration major API（needs_review）\n- DeepSeek release DeepSeek V4（needs_review）\n\n## 待审核\n- eventness_review item:item_00b1e808fda34e31a77127afb3e6352b\n- eventness_review item:item_01486cc074b141b99563fa34a7fba343\n- eventness_review item:item_018189dbdef644378dab79f7fb794007\n- eventness_review item:item_01a73ecf9472424bae2b4d69cfeb45fc\n- eventness_review item:item_040093492b774da1aeb9ad7725a9282b\n- eventness_review item:item_08ebcad66a334221a50172cef41fe697\n- eventness_review item:item_0bbab0ff2f3b4610ba5fac4abbfd715d\n- eventness_review item:item_15443252a4a2464ea7587311e3006c93\n- eventness_review item:item_1e197fb935e040d0b8b0d35b73e72d08\n- eventness_review item:item_205a4592454c4031815f6af46a203845",
+    "run_report_preview": "# 运行报告\n\n生成时间: 2026-05-31T16:13:17.622334+00:00\n\n关联对象: run run_quality_eval_771beb00cc\n",
+    "run_endpoint_report_preview": "# 运行报告 run_quality_eval_771beb00cc\n\n状态: success\n\n新增条目: 0\n\n信息源数量: 0\n"
   },
   "threshold_results": {
     "process_dedupe_pair_f1": false,
     "event_cluster_pair_f1": false,
     "event_cluster_pair_recall": false,
-    "event_type_known_rate": false,
-    "event_summary_specific_rate": false,
+    "event_type_known_rate": true,
+    "event_summary_specific_rate": true,
     "entity_recall": true,
     "briefing_quality_score": false,
     "report_quality_score": false
