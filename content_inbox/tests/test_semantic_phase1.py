@@ -818,6 +818,99 @@ def test_phase2_alias_signature_lane_is_explainable() -> None:
     assert "alias_normalized_signature_match" in assessment.same_event_evidence
 
 
+def test_operational_v3_same_source_repeat_lane_recalls_close_reposts() -> None:
+    left = {
+        "item_id": "repeat-a",
+        "title": "QVeris launches QVeris CLI for AI agents",
+        "summary": "QVeris CLI launches for agent workflows.",
+        "published_at": "2026-05-17T00:00:00+00:00",
+        "source_id": "socialmedia-qveris-qveris",
+    }
+    right = {
+        "item_id": "repeat-b",
+        "title": "QVeris CLI launches for developers",
+        "summary": "QVeris launches QVeris CLI for agent workflows today.",
+        "published_at": "2026-05-17T02:00:00+00:00",
+        "source_id": "socialmedia-qveris-qveris",
+    }
+
+    assessment = assess_candidate(left, right)
+
+    assert assessment.candidate_priority == "high"
+    assert assessment.lane == "same_source_repeat"
+    assert "same_source_repeat" in assessment.same_event_evidence
+
+
+def test_operational_v3_same_source_repeat_keeps_different_products_out() -> None:
+    left = {
+        "item_id": "repeat-negative-a",
+        "title": "Firecrawl releases PHP SDK for Laravel",
+        "summary": "The Firecrawl PHP SDK is released for Laravel developers.",
+        "published_at": "2026-05-17T00:00:00+00:00",
+        "source_id": "socialmedia-firecrawl-firecrawl-dev",
+    }
+    right = {
+        "item_id": "repeat-negative-b",
+        "title": "Firecrawl releases Python SDK for agents",
+        "summary": "Firecrawl releases a Python SDK for agent workflows.",
+        "published_at": "2026-05-17T02:00:00+00:00",
+        "source_id": "socialmedia-firecrawl-firecrawl-dev",
+    }
+
+    assessment = assess_candidate(left, right)
+
+    assert assessment.lane != "same_source_repeat"
+    assert not (assessment.candidate_priority == "high" and assessment.same_product and assessment.same_action)
+
+
+def test_operational_v3_cross_source_same_product_goes_to_review_window() -> None:
+    left = {
+        "item_id": "cross-source-a",
+        "title": "OpenAI says GPT 5.5 Instant is now available",
+        "summary": "GPT 5.5 Instant is available in ChatGPT.",
+        "published_at": "2026-05-17T00:00:00+00:00",
+        "source_id": "socialmedia-openai-openai",
+    }
+    right = {
+        "item_id": "cross-source-b",
+        "title": "Perplexity adds GPT-5.5 Instant availability",
+        "summary": "OpenAI GPT-5.5 Instant is available through Perplexity.",
+        "published_at": "2026-05-22T00:00:00+00:00",
+        "source_id": "socialmedia-perplexity-perplexity-ai",
+    }
+
+    assessment = assess_candidate(left, right)
+
+    assert assessment.candidate_priority == "medium"
+    assert assessment.lane == "cross_source_same_product"
+    assert assessment.same_actor is True
+    assert assessment.same_product is True
+    assert assessment.same_action is True
+
+
+def test_operational_v3_cross_language_alias_lane_matches_strong_aliases() -> None:
+    left = {
+        "item_id": "cross-language-a",
+        "title": "深度求索发布 DeepSeek-V4.1 模型",
+        "summary": "深度求索发布面向代码智能体的 DeepSeek-V4.1 模型。",
+        "published_at": "2026-05-17T00:00:00+00:00",
+        "source_id": "socialmedia-deepseek-cn",
+    }
+    right = {
+        "item_id": "cross-language-b",
+        "title": "DeepSeek releases DeepSeek V4.1 model for coding agents",
+        "summary": "DeepSeek V4.1 is released for coding agent workflows.",
+        "published_at": "2026-05-17T01:00:00+00:00",
+        "source_id": "socialmedia-deepseek-ai",
+    }
+
+    assessment = assess_candidate(left, right)
+
+    assert assessment.candidate_priority == "medium"
+    assert assessment.lane == "cross_language_alias"
+    assert "cross_language_alias" in assessment.same_event_evidence
+
+
 def test_phase1_3_relation_policy_same_product_and_thread() -> None:
     assessment = assess_candidate(
         {"item_id": "a", "title": "Manus Recommended Connectors launches", "summary": "Manus ships recommended connectors."},

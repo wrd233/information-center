@@ -20,6 +20,7 @@ RELATION_ACTIONS: dict[str, dict[str, Any]] = {
 RELATION_REASON_CODES = {
     "deterministic_duplicate",
     "same_announcement_no_new_info",
+    "same_event_signature_match",
     "same_event_new_fact",
     "same_product_different_feature",
     "same_thread_different_event",

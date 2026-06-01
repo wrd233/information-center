@@ -8,3 +8,20 @@
 
 rsshub/.env
 !rsshub/.env.example
+
+# Local dependencies and caches.
+node_modules/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Runtime databases and generated run artifacts.
+*.db
+*.sqlite
+*.sqlite3
+content_inbox/data/**
+content_inbox/outputs/runs/**

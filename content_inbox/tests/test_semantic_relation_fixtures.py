@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 from app.semantic.cluster_policy import relation_can_seed_cluster
-from app.semantic.relation_policy import relation_cluster_eligible, should_fold
+from app.semantic.relation_policy import RELATION_REASON_CODES, default_reason_code, relation_cluster_eligible, should_fold
 
 
 FIXTURE = Path(__file__).parent / "fixtures" / "semantic_relation_benchmark_phase1_3b.jsonl"
@@ -41,3 +41,22 @@ def test_phase1_3b_related_with_new_info_can_seed_only_at_high_confidence() -> N
     assert relation_cluster_eligible("related_with_new_info", "same_event", 0.8)
     assert not relation_cluster_eligible("related_with_new_info", "same_product_different_event", 0.95)
     assert not relation_cluster_eligible("related_with_new_info", "same_event", 0.79)
+
+
+def test_default_reason_codes_are_registered() -> None:
+    cases = [
+        ("different", "same_event"),
+        ("same", "same_event"),
+        ("same", "update"),
+        ("same", "background"),
+        ("duplicate", "same_event"),
+        ("near_duplicate", "same_event"),
+        ("related_with_new_info", "same_event"),
+        ("same_product_different_event", "same_product_different_event"),
+        ("same_thread", "same_thread"),
+        ("uncertain", "different"),
+    ]
+
+    for primary_relation, event_relation_type in cases:
+        assert default_reason_code(primary_relation, event_relation_type) in RELATION_REASON_CODES
+    assert default_reason_code("different", "different", generic_only=True) in RELATION_REASON_CODES

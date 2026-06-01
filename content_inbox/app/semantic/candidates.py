@@ -519,6 +519,10 @@ def parse_time(value: str | None) -> datetime | None:
         return None
 
 
+def has_cjk(text: str) -> bool:
+    return any("\u4e00" <= char <= "\u9fff" for char in text or "")
+
+
 def hours_apart(left: str | None, right: str | None) -> float | None:
     a = parse_time(left)
     b = parse_time(right)
@@ -589,6 +593,14 @@ def assess_candidate(
     shared_actors = sorted(normalized_entity_terms([left_sig_obj.actor]) & normalized_entity_terms([right_sig_obj.actor]))
     shared_products = sorted(normalized_entity_terms([left_sig_obj.product_or_model]) & normalized_entity_terms([right_sig_obj.product_or_model]))
     same_action = bool(left_sig_obj.action and left_sig_obj.action == right_sig_obj.action and left_sig_obj.action != "other")
+    left_source = left_item.get("source_id") or left_item.get("source_name") or ""
+    right_source = right_item.get("source_id") or right_item.get("source_name") or ""
+    same_source = bool(left_source and right_source and left_source == right_source)
+    full_actor_product_action = bool(shared_actors and shared_products and same_action)
+    close_time_window = time_gap is None or time_gap <= 72
+    review_time_window = time_gap is None or time_gap <= 168
+    alias_normalized = bool(left_sig_obj.alias_hits or right_sig_obj.alias_hits)
+    cross_language_pair = has_cjk(left_text) != has_cjk(right_text)
     actor_product_action_match = compatible_actor_product_action(left_sig_obj, right_sig_obj, max_hours=72)
     concrete_event_match = signature_match or (
         actor_product_action_match
@@ -655,9 +667,40 @@ def assess_candidate(
         lane = "suppressed"
         priority = "suppress"
         suppression_reason = "suppressed_generic_entity"
-    elif signature_match and (left_sig_obj.alias_hits or right_sig_obj.alias_hits):
+    elif (
+        same_source
+        and signature_match
+        and full_actor_product_action
+        and close_time_window
+        and not (set(disqualifiers) & {"generic_entity_overlap", "generic_only_overlap", "same_account_boilerplate", "semantic_level_reject"})
+    ):
+        lane = "same_source_repeat"
+        priority = "high"
+    elif (
+        cross_language_pair
+        and alias_normalized
+        and left_sig_obj.semantic_level == "event_signature"
+        and right_sig_obj.semantic_level == "event_signature"
+        and shared_actors
+        and shared_products
+        and close_time_window
+        and not (set(disqualifiers) & {"generic_entity_overlap", "generic_only_overlap", "same_account_boilerplate", "semantic_level_reject", "proxy_domain_only"})
+    ):
+        lane = "cross_language_alias"
+        priority = "must_run" if signature_match and same_action else "medium"
+    elif signature_match and alias_normalized:
         lane = "exact_signature_alias"
         priority = "must_run"
+    elif (
+        cross_source
+        and left_sig_obj.semantic_level == "event_signature"
+        and right_sig_obj.semantic_level == "event_signature"
+        and full_actor_product_action
+        and review_time_window
+        and not (set(disqualifiers) & {"generic_entity_overlap", "generic_only_overlap", "same_account_boilerplate", "semantic_level_reject", "proxy_domain_only"})
+    ):
+        lane = "cross_source_same_product"
+        priority = "high" if close_time_window else "medium"
     elif (
         left_sig_obj.semantic_level == "event_signature"
         and right_sig_obj.semantic_level == "event_signature"
@@ -714,10 +757,18 @@ def assess_candidate(
         same_event_evidence.append(f"shared_weighted_entities:{', '.join(weighted[:5])}")
     if signature_match:
         same_event_evidence.append(f"event_signature_match:{left_sig_obj.signature_key}")
-        if left_sig_obj.alias_hits or right_sig_obj.alias_hits:
+        if alias_normalized:
             same_event_evidence.append("alias_normalized_signature_match")
+        if same_source and full_actor_product_action and close_time_window:
+            same_event_evidence.append("same_source_repeat")
+        if cross_language_pair and alias_normalized:
+            same_event_evidence.append("cross_language_alias")
     elif concrete_event_match:
         same_event_evidence.append("same_actor_product_action_72h")
+    if lane == "cross_language_alias" and "cross_language_alias" not in same_event_evidence:
+        same_event_evidence.append("cross_language_alias")
+    if lane == "cross_source_same_product":
+        same_event_evidence.append("cross_source_same_product_review")
     if event_left & event_right:
         same_event_evidence.append(f"shared_event_phrases:{', '.join(sorted(event_left & event_right))}")
     if concrete_event_phrase_overlap:
