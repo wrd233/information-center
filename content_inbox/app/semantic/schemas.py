@@ -15,6 +15,7 @@ ITEM_CLUSTER_PROMPT_VERSION = "item_cluster_relation_v3"
 CLUSTER_CARD_PROMPT_VERSION = "cluster_card_patch_v1"
 SOURCE_REVIEW_PROMPT_VERSION = "source_review_v1"
 EVENT_SIGNATURE_PROMPT_VERSION = "event_signature_v1"
+SEMANTIC_RELATION_JUDGE_PROMPT_VERSION = "semantic_relation_judge_v1"
 
 ItemRelationPrimary = Literal[
     "duplicate",
@@ -129,6 +130,14 @@ EventSignatureAction = Literal[
     "opinion_analysis",
     "other",
 ]
+SemanticJudgeRelation = Literal["same_event", "update", "background", "related", "different_event"]
+SemanticJudgeReasonCode = Literal[
+    "llm_same_event",
+    "llm_update",
+    "llm_background",
+    "llm_related",
+    "llm_different_event",
+]
 
 
 class ItemCardData(BaseModel):
@@ -208,6 +217,27 @@ class ItemRelationDecision(BaseModel):
 class ItemRelationOutput(BaseModel):
     new_item_id: str
     relations: list[ItemRelationDecision]
+
+
+class SemanticRelationJudgeProposal(BaseModel):
+    relation: SemanticJudgeRelation
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    should_merge_event_cluster: bool = False
+    should_link_as_thread: bool = False
+    reason_code: SemanticJudgeReasonCode
+    evidence: list[str] = Field(default_factory=list)
+    risk_flags: list[str] = Field(default_factory=list)
+
+    @field_validator("evidence", "risk_flags", mode="before")
+    @classmethod
+    def coerce_string_list(cls, value: object) -> list[str]:
+        if value is None or value is False:
+            return []
+        if isinstance(value, str):
+            return [value] if value.strip() else []
+        if isinstance(value, list):
+            return [str(item) for item in value if str(item).strip()]
+        return [str(value)] if str(value).strip() else []
 
 
 class ItemClusterDecision(BaseModel):

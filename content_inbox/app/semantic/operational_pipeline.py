@@ -6,7 +6,12 @@ from typing import Any
 
 from app.semantic.candidates import assess_candidate, deterministic_duplicate
 from app.semantic.llm_client import SemanticLLMClient
-from app.semantic.schemas import ITEM_RELATION_PROMPT_VERSION, ItemRelationOutput
+from app.semantic.schemas import (
+    ITEM_RELATION_PROMPT_VERSION,
+    SEMANTIC_RELATION_JUDGE_PROMPT_VERSION,
+    ItemRelationOutput,
+    SemanticRelationJudgeProposal,
+)
 from app.semantic.signatures import EventSignature, extract_event_signature
 from app.storage import InboxStore
 from app.utils import normalize_url, stable_hash, utc_now
@@ -387,6 +392,138 @@ def adjudicate_candidate_with_llm(
     }
 
 
+SEMANTIC_JUDGE_LANES = {
+    "same_event_recall",
+    "same_actor_product",
+    "exploratory_recall",
+    "cross_source_same_product",
+    "cross_language_alias",
+}
+
+
+def candidate_semantic_judge_eligible(assessment: Any) -> bool:
+    if candidate_hard_negative(assessment):
+        return False
+    if assessment.candidate_priority in {"medium", "high"}:
+        return True
+    return assessment.lane in SEMANTIC_JUDGE_LANES
+
+
+def propose_cluster_with_semantic_judge(
+    store: InboxStore,
+    *,
+    run_id: str,
+    left: dict[str, Any],
+    right: dict[str, Any],
+    assessment: Any,
+    live: bool = False,
+    model: str | None = None,
+    max_calls: int | None = None,
+    client: SemanticLLMClient | None = None,
+) -> dict[str, Any]:
+    """Return a schema-bound cluster proposal for review/dry-run only."""
+    if candidate_hard_negative(assessment):
+        return {
+            "status": "skipped_hard_negative",
+            "decision_source": "rule",
+            "llm_call_id": None,
+            "should_auto_merge": False,
+            "should_enqueue_review": False,
+            "reason": "hard negative candidate is not eligible for semantic judge",
+            "disqualifiers": list(assessment.disqualifiers),
+        }
+    if not candidate_semantic_judge_eligible(assessment):
+        return {
+            "status": "skipped_not_gated",
+            "decision_source": "rule",
+            "llm_call_id": None,
+            "should_auto_merge": False,
+            "should_enqueue_review": False,
+            "reason": "candidate is outside semantic judge gates",
+            "disqualifiers": list(assessment.disqualifiers),
+        }
+
+    left_signature = extract_event_signature(left)
+    right_signature = extract_event_signature(right)
+    input_data = {
+        "candidate_pair": {
+            "left_item": {
+                "item_id": left["item_id"],
+                "title": left.get("title"),
+                "summary": left.get("summary"),
+                "published_at": left.get("published_at"),
+                "source_id": left.get("source_id") or left.get("source_name"),
+                "signature": left_signature.model_dump(),
+            },
+            "right_item": {
+                "item_id": right["item_id"],
+                "title": right.get("title"),
+                "summary": right.get("summary"),
+                "published_at": right.get("published_at"),
+                "source_id": right.get("source_id") or right.get("source_name"),
+                "signature": right_signature.model_dump(),
+            },
+            "rule_assessment": assessment.model_dump(),
+        },
+        "policy": {
+            "proposal_only": True,
+            "do_not_auto_merge": True,
+            "hard_negatives_already_filtered": True,
+            "review_required_unless_high_confidence_low_risk": True,
+            "allowed_relations": ["same_event", "update", "background", "related", "different_event"],
+        },
+    }
+    llm = client or SemanticLLMClient(store, live=live, model=model, max_calls=max_calls)
+    output, call_id, reason = llm.call_json(
+        task_type="semantic_relation_judge",
+        prompt_version=SEMANTIC_RELATION_JUDGE_PROMPT_VERSION,
+        schema_version=SCHEMA_VERSION,
+        input_data=input_data,
+        output_model=SemanticRelationJudgeProposal,
+        max_tokens=800,
+        item_id=left["item_id"],
+        source_id=left.get("source_id") or left.get("feed_url") or left.get("source_name"),
+        request_metadata={
+            "run_id": run_id,
+            "candidate_priority": assessment.candidate_priority,
+            "candidate_lane": assessment.lane,
+            "created_by": CREATED_BY,
+            "proposal_only": True,
+        },
+    )
+    if not output:
+        return {
+            "status": "llm_failed_review_required",
+            "decision_source": "llm",
+            "llm_call_id": call_id,
+            "should_auto_merge": False,
+            "should_enqueue_review": True,
+            "reason": reason,
+            "disqualifiers": list(assessment.disqualifiers),
+        }
+    proposal = output.model_dump()
+    low_risk_auto_merge_candidate = (
+        output.should_merge_event_cluster
+        and output.relation in {"same_event", "update"}
+        and output.confidence >= 0.92
+        and not output.risk_flags
+    )
+    return {
+        "status": "cluster_proposal_review_required",
+        "decision_source": "llm",
+        "llm_call_id": call_id,
+        "should_auto_merge": False,
+        "should_enqueue_review": True,
+        "proposal": proposal,
+        "reason": output.reason_code,
+        "confidence": output.confidence,
+        "positive_features": output.evidence,
+        "negative_features": output.risk_flags,
+        "disqualifiers": list(assessment.disqualifiers) + list(output.risk_flags),
+        "controlled_auto_merge_candidate": low_risk_auto_merge_candidate,
+    }
+
+
 def generate_information_objects(
     store: InboxStore,
     run_id: str,
@@ -521,7 +658,8 @@ def generate_information_objects(
                 elif review_required:
                     llm_suggestion: dict[str, Any] | None = None
                     if live_relation_llm and assessment.candidate_priority in {"medium", "high"}:
-                        llm_suggestion = adjudicate_candidate_with_llm(
+                        conn.commit()
+                        llm_suggestion = propose_cluster_with_semantic_judge(
                             store,
                             run_id=run_id,
                             left=left,
@@ -564,7 +702,7 @@ def generate_information_objects(
                             "schema_version": SCHEMA_VERSION,
                             "created_by": CREATED_BY,
                             "input_fingerprint": _candidate_fingerprint(run_id, left["item_id"], right["item_id"], assessment, "review"),
-                            "llm_suggestion": llm_suggestion,
+                            "llm_cluster_proposal": llm_suggestion,
                         },
                         reason,
                         now,

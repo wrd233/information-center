@@ -20,6 +20,7 @@ from app.ops_api import (
     run_dedupe_stage,
 )
 from app.processor import process_content_thread_safe
+from app.semantic.cards import generate_item_cards
 from app.semantic.review import decide_review
 from app.semantic.source_profiles import recompute_source_profiles
 from app.storage import InboxStore
@@ -548,6 +549,250 @@ def fetch_table(store: InboxStore, table: str) -> list[dict[str, Any]]:
         return [dict(row) for row in conn.execute(f"SELECT * FROM {table}").fetchall()]
 
 
+def parse_json_object(value: Any) -> dict[str, Any]:
+    if isinstance(value, dict):
+        return value
+    if not value:
+        return {}
+    try:
+        parsed = json.loads(str(value))
+        return parsed if isinstance(parsed, dict) else {}
+    except Exception:
+        return {}
+
+
+def parse_json_array(value: Any) -> list[Any]:
+    if isinstance(value, list):
+        return value
+    if not value:
+        return []
+    try:
+        parsed = json.loads(str(value))
+        return parsed if isinstance(parsed, list) else []
+    except Exception:
+        return []
+
+
+def compact_signature(row: dict[str, Any] | None) -> dict[str, Any]:
+    if not row:
+        return {"present": False}
+    normalized = parse_json_object(row.get("normalized_output_json"))
+    signature = parse_json_object(normalized.get("signature"))
+    return {
+        "present": True,
+        "actor": signature.get("actor") or "",
+        "product_or_model": signature.get("product_or_model") or "",
+        "action": signature.get("action") or "",
+        "semantic_level": signature.get("semantic_level") or "",
+        "signature_key": signature.get("signature_key"),
+        "is_concrete": bool(signature.get("is_concrete")),
+        "alias_hits": signature.get("alias_hits") or [],
+        "invalid_reasons": signature.get("invalid_reasons") or [],
+    }
+
+
+def compact_item_card(row: dict[str, Any] | None) -> dict[str, Any]:
+    if not row:
+        return {"present": False}
+    return {
+        "present": True,
+        "canonical_title": row.get("canonical_title") or "",
+        "language": row.get("language") or "unknown",
+        "entities": parse_json_array(row.get("entities_json")),
+        "event_hint": row.get("event_hint") or "",
+        "content_role": row.get("content_role") or "unknown",
+        "confidence": row.get("confidence"),
+        "warnings": parse_json_array(row.get("warnings_json")),
+    }
+
+
+def compact_candidate(row: dict[str, Any] | None) -> dict[str, Any]:
+    if not row:
+        return {"present": False}
+    features = parse_json_object(row.get("features_json"))
+    return {
+        "present": True,
+        "candidate_priority": row.get("candidate_priority"),
+        "lane": row.get("lane"),
+        "relation_type": row.get("relation_type"),
+        "decision_source": row.get("decision_source"),
+        "confidence": row.get("confidence"),
+        "reason_code": row.get("reason_code"),
+        "status": row.get("status"),
+        "same_actor": features.get("same_actor"),
+        "same_product": features.get("same_product"),
+        "same_action": features.get("same_action"),
+        "event_signature_match": features.get("event_signature_match"),
+        "positive_features": parse_json_array(row.get("positive_features_json")),
+        "negative_features": parse_json_array(row.get("negative_features_json")),
+        "disqualifiers": parse_json_array(row.get("disqualifiers_json")),
+    }
+
+
+def build_false_negative_traces(
+    false_negative_pairs: list[tuple[str, str]],
+    *,
+    item_id_by_case: dict[str, str],
+    cluster_members_by_cluster: dict[str, list[str]],
+    stored_case_by_item: dict[str, str],
+    inbox_items: list[dict[str, Any]],
+    item_cards: list[dict[str, Any]],
+    semantic_extractions: list[dict[str, Any]],
+    event_candidate_pairs: list[dict[str, Any]],
+    review_queue: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    inbox_by_id = {row["item_id"]: row for row in inbox_items}
+    card_by_item = {row["item_id"]: row for row in item_cards if row.get("is_current", 1)}
+    extraction_by_item = {row["item_id"]: row for row in semantic_extractions}
+    candidate_by_pair: dict[frozenset[str], dict[str, Any]] = {}
+    for row in event_candidate_pairs:
+        if row.get("item_a_id") and row.get("item_b_id"):
+            candidate_by_pair[frozenset([row["item_a_id"], row["item_b_id"]])] = row
+    reviews_by_pair: dict[frozenset[str], list[dict[str, Any]]] = defaultdict(list)
+    for row in review_queue:
+        if row.get("target_type") != "item_pair":
+            continue
+        parts = str(row.get("target_id") or "").split(":", 1)
+        if len(parts) == 2:
+            reviews_by_pair[frozenset(parts)].append(row)
+    clusters_by_item: dict[str, list[str]] = defaultdict(list)
+    for cluster_id, case_ids in cluster_members_by_cluster.items():
+        for case_id in set(case_ids):
+            item_id = item_id_by_case.get(case_id)
+            if item_id:
+                clusters_by_item[item_id].append(cluster_id)
+
+    traces: list[dict[str, Any]] = []
+    for case_a, case_b in false_negative_pairs:
+        item_a_id = item_id_by_case.get(case_a)
+        item_b_id = item_id_by_case.get(case_b)
+        pair_key = frozenset([item_a_id or "", item_b_id or ""])
+        candidate = candidate_by_pair.get(pair_key)
+        reviews = reviews_by_pair.get(pair_key, [])
+        clusters_a = sorted(clusters_by_item.get(item_a_id or "", []))
+        clusters_b = sorted(clusters_by_item.get(item_b_id or "", []))
+        same_cluster = bool(set(clusters_a) & set(clusters_b))
+        if not item_a_id or not item_b_id:
+            failure_reason = "one_or_both_cases_missing_from_stored_items"
+        elif not candidate:
+            failure_reason = "no_candidate_pair_generated"
+        elif reviews and not same_cluster:
+            failure_reason = "candidate_went_to_review_but_not_clustered_before_eval"
+        elif candidate.get("status") == "rejected":
+            failure_reason = "candidate_rejected_by_rule"
+        elif candidate.get("status") == "review":
+            failure_reason = "candidate_requires_review_not_auto_merged"
+        elif not same_cluster:
+            failure_reason = "items_not_in_same_cluster_at_eval_time"
+        else:
+            failure_reason = "unexpected_trace_state"
+        traces.append(
+            {
+                "pair": [case_a, case_b],
+                "item_ids": [item_a_id, item_b_id],
+                "items": [
+                    {
+                        "case_id": case_a,
+                        "item_id": item_a_id,
+                        "title": (inbox_by_id.get(item_a_id or "", {}).get("title") if item_a_id else None),
+                        "item_card": compact_item_card(card_by_item.get(item_a_id or "")),
+                        "signature": compact_signature(extraction_by_item.get(item_a_id or "")),
+                        "clusters": clusters_a,
+                    },
+                    {
+                        "case_id": case_b,
+                        "item_id": item_b_id,
+                        "title": (inbox_by_id.get(item_b_id or "", {}).get("title") if item_b_id else None),
+                        "item_card": compact_item_card(card_by_item.get(item_b_id or "")),
+                        "signature": compact_signature(extraction_by_item.get(item_b_id or "")),
+                        "clusters": clusters_b,
+                    },
+                ],
+                "candidate": compact_candidate(candidate),
+                "relation": {
+                    "judged_as": candidate.get("relation_type") if candidate else None,
+                    "reason_code": candidate.get("reason_code") if candidate else None,
+                    "status": candidate.get("status") if candidate else None,
+                    "decision_source": candidate.get("decision_source") if candidate else None,
+                },
+                "review_queue": [
+                    {
+                        "id": row.get("id"),
+                        "status": row.get("status"),
+                        "review_type": row.get("review_type"),
+                        "reason": row.get("reason"),
+                    }
+                    for row in reviews
+                ],
+                "cluster_eval": {
+                    "same_cluster": same_cluster,
+                    "cluster_ids_by_item": {case_a: clusters_a, case_b: clusters_b},
+                    "counted_as_failure_because": failure_reason,
+                },
+            }
+        )
+    return traces
+
+
+SEMANTIC_JUDGE_HARD_NEGATIVES = {
+    "generic_entity_overlap",
+    "generic_only_overlap",
+    "same_account_boilerplate",
+    "wide_time_window",
+    "semantic_level_reject",
+    "proxy_domain_only",
+}
+
+
+def build_semantic_judge_dry_run_proposals(
+    event_candidate_pairs: list[dict[str, Any]],
+    *,
+    stored_case_by_item: dict[str, str],
+) -> list[dict[str, Any]]:
+    proposals: list[dict[str, Any]] = []
+    for row in event_candidate_pairs:
+        disqualifiers = parse_json_array(row.get("disqualifiers_json"))
+        hard_negative = bool(set(disqualifiers) & SEMANTIC_JUDGE_HARD_NEGATIVES)
+        eligible = (
+            row.get("status") == "review"
+            and row.get("candidate_priority") in {"medium", "high"}
+            and not hard_negative
+        )
+        if not eligible:
+            continue
+        features = parse_json_object(row.get("features_json"))
+        proposals.append(
+            {
+                "proposal_status": "dry_run_not_called",
+                "task_type": "semantic_relation_judge",
+                "item_pair": [
+                    stored_case_by_item.get(row.get("item_a_id"), row.get("item_a_id")),
+                    stored_case_by_item.get(row.get("item_b_id"), row.get("item_b_id")),
+                ],
+                "candidate_priority": row.get("candidate_priority"),
+                "lane": row.get("lane"),
+                "rule_relation_type": row.get("relation_type"),
+                "rule_reason_code": row.get("reason_code"),
+                "rule_status": row.get("status"),
+                "judge_input_evidence": {
+                    "same_actor": features.get("same_actor"),
+                    "same_product": features.get("same_product"),
+                    "same_action": features.get("same_action"),
+                    "event_signature_match": features.get("event_signature_match"),
+                    "positive_features": parse_json_array(row.get("positive_features_json"))[:5],
+                    "negative_features": parse_json_array(row.get("negative_features_json"))[:5],
+                    "disqualifiers": disqualifiers,
+                },
+                "proposal_policy": {
+                    "proposal_only": True,
+                    "should_auto_merge": False,
+                    "review_queue_or_dry_run_report_only": True,
+                },
+            }
+        )
+    return proposals
+
+
 def build_request(store: InboxStore) -> Any:
     return SimpleNamespace(app=SimpleNamespace(state=SimpleNamespace(store=store)))
 
@@ -594,6 +839,7 @@ def run_evaluation() -> dict[str, Any]:
 
     unique_item_ids = sorted(set(linked_item_ids))
     run_dedupe_stage(store, run_id, unique_item_ids)
+    generate_item_cards(store, limit=len(unique_item_ids), live=False)
     generate_information_objects(store, run_id, unique_item_ids)
     daily_briefing = generate_briefing(store, "daily")
     weekly_briefing = generate_briefing(store, "weekly")
@@ -642,9 +888,26 @@ def run_evaluation() -> dict[str, Any]:
 
     events = fetch_table(store, "events")
     event_items = fetch_table(store, "event_items")
+    inbox_items = fetch_table(store, "inbox_items")
+    item_cards = fetch_table(store, "item_cards")
     review_queue = fetch_table(store, "review_queue")
     semantic_extractions = fetch_table(store, "semantic_extractions")
     event_candidate_pairs = fetch_table(store, "event_candidate_pairs")
+    false_negative_traces = build_false_negative_traces(
+        false_negative_pairs,
+        item_id_by_case=item_id_by_case,
+        cluster_members_by_cluster=cluster_members_by_cluster,
+        stored_case_by_item=stored_case_by_item,
+        inbox_items=inbox_items,
+        item_cards=item_cards,
+        semantic_extractions=semantic_extractions,
+        event_candidate_pairs=event_candidate_pairs,
+        review_queue=review_queue,
+    )
+    semantic_judge_dry_run_proposals = build_semantic_judge_dry_run_proposals(
+        event_candidate_pairs,
+        stored_case_by_item=stored_case_by_item,
+    )
     review_apply_result = run_review_apply_sample(store, review_queue)
     source_profile_result = recompute_source_profiles(store)
     source_profiles = fetch_table(store, "source_profiles")
@@ -717,6 +980,7 @@ def run_evaluation() -> dict[str, Any]:
             "multi_item_event_rate": multi_item_event_rate,
             "false_positive_pairs": false_positive_pairs[:20],
             "false_negative_pairs": false_negative_pairs[:30],
+            "false_negative_traces": false_negative_traces,
         },
         "event_extraction": {
             "events": len(events),
@@ -746,6 +1010,12 @@ def run_evaluation() -> dict[str, Any]:
                 )
             ),
             "alias_hit_count": alias_hit_count,
+        },
+        "semantic_judge": {
+            "dry_run_proposal_count": len(semantic_judge_dry_run_proposals),
+            "dry_run_proposals": semantic_judge_dry_run_proposals,
+            "live_calls": sum(1 for row in llm_call_logs if row.get("task_type") == "semantic_relation_judge"),
+            "proposal_policy": "review_queue_or_dry_run_report_only",
         },
         "review_apply": review_apply_result,
         "source_scoring": {
@@ -903,6 +1173,37 @@ def render_report(metrics: dict[str, Any]) -> str:
         f"- 误合并 pair 样例: `{metrics['event_clustering']['false_positive_pairs']}`",
         f"- 漏合并 pair 样例: `{metrics['event_clustering']['false_negative_pairs']}`",
         "",
+        "### False Negative Trace",
+        "",
+    ]
+    for trace in metrics["event_clustering"].get("false_negative_traces", []):
+        pair = trace["pair"]
+        candidate = trace["candidate"]
+        relation = trace["relation"]
+        item_lines = []
+        for item in trace["items"]:
+            signature = item["signature"]
+            item_card = item["item_card"]
+            card_entities = ", ".join(str(entity) for entity in (item_card.get("entities") or [])[:4])
+            item_lines.append(
+                f"  - {item['case_id']}: actor={signature.get('actor')!r}, product={signature.get('product_or_model')!r}, "
+                f"action={signature.get('action')!r}, signature_key={signature.get('signature_key')!r}, "
+                f"item_card_present={item_card.get('present')}, card_entities=[{card_entities}], "
+                f"card_event_hint={item_card.get('event_hint')!r}, clusters={item['clusters']}"
+            )
+        lines.extend(
+            [
+                f"- Pair `{pair[0]}` / `{pair[1]}`:",
+                *item_lines,
+                f"  - candidate: present={candidate.get('present')}, priority={candidate.get('candidate_priority')}, lane={candidate.get('lane')}, status={candidate.get('status')}",
+                f"  - relation: judged_as={relation.get('judged_as')}, reason_code={relation.get('reason_code')}, decision_source={relation.get('decision_source')}",
+                f"  - review_queue: {len(trace['review_queue'])} entr{'y' if len(trace['review_queue']) == 1 else 'ies'}",
+                f"  - eval_failure: {trace['cluster_eval']['counted_as_failure_because']}",
+            ]
+        )
+    lines.extend(
+        [
+        "",
         "### Candidate 诊断",
         "",
         f"- candidate counts by priority: `{metrics['candidate_diagnostics']['by_priority']}`",
@@ -911,6 +1212,13 @@ def render_report(metrics: dict[str, Any]) -> str:
         f"- disqualifier counts: `{metrics['candidate_diagnostics']['disqualifiers']}`",
         f"- medium review rate: {pct(metrics['candidate_diagnostics']['medium_review_rate'])}",
         f"- alias hit count: {metrics['candidate_diagnostics']['alias_hit_count']}",
+        "",
+        "### Semantic Judge Dry-Run Proposals",
+        "",
+        f"- dry-run proposal count: {metrics['semantic_judge']['dry_run_proposal_count']}",
+        f"- live semantic judge calls: {metrics['semantic_judge']['live_calls']}",
+        f"- proposal policy: {metrics['semantic_judge']['proposal_policy']}",
+        f"- proposals: `{metrics['semantic_judge']['dry_run_proposals'][:10]}`",
         "",
         "### Review Apply 与 Source Scoring",
         "",
@@ -978,6 +1286,7 @@ def render_report(metrics: dict[str, Any]) -> str:
         "```",
         "",
     ]
+    )
     return "\n".join(lines)
 
 

@@ -19,13 +19,14 @@ from app.semantic.clusters import candidate_clusters
 from app.semantic.evaluate import run_evaluation
 from app.semantic.evidence import export_evidence
 from app.semantic.live_smoke import run_live_smoke
-from app.semantic.operational_pipeline import adjudicate_candidate_with_llm
+from app.semantic.operational_pipeline import adjudicate_candidate_with_llm, generate_information_objects, propose_cluster_with_semantic_judge
 from app.semantic.relations import process_item_relations
 from app.semantic.review import decide_review, list_reviews
-from app.semantic.schemas import ItemRelationDecision, ItemRelationOutput, cluster_relation_action, item_relation_should_fold
+from app.semantic.schemas import ItemClusterDecision, ItemClusterOutput, ItemRelationDecision, ItemRelationOutput, SemanticRelationJudgeProposal, cluster_relation_action, item_relation_should_fold
 from app.semantic.signatures import extract_event_signature
 from app.semantic.source_profiles import get_profile, recompute_source_profiles
 from app.storage import InboxStore
+from scripts.evaluate_ops_quality import build_false_negative_traces, build_semantic_judge_dry_run_proposals
 
 
 def make_store(tmp_path: Path) -> InboxStore:
@@ -52,6 +53,24 @@ def seed_item(store: InboxStore, title: str, *, source_id: str = "source-a", url
     )
     row = store.insert(f"dedupe-{title}-{url}", normalized, screening, raw={"title": title})
     return row["item_id"]
+
+
+def seed_event_item(
+    store: InboxStore,
+    title: str,
+    *,
+    summary: str,
+    source_id: str,
+    published_at: str,
+    url: str,
+) -> str:
+    item_id = seed_item(store, title, source_id=source_id, url=url)
+    with store.connect() as conn:
+        conn.execute(
+            "UPDATE inbox_items SET summary = ?, content_text = ?, published_at = ? WHERE item_id = ?",
+            (summary, summary, published_at, item_id),
+        )
+    return item_id
 
 
 def test_semantic_migration_idempotent(tmp_path: Path) -> None:
@@ -173,6 +192,28 @@ class FakeOperationalRelationClient:
         return self.output, 123 if self.output else 124, "ok" if self.output else "parse error"
 
 
+class FakeSemanticJudgeClient:
+    def __init__(self, output: SemanticRelationJudgeProposal | None = None) -> None:
+        self.output = output
+        self.model = "fake-deepseek"
+        self.calls = 0
+
+    def call_json(self, **kwargs):
+        self.calls += 1
+        return self.output, 223 if self.output else 224, "ok" if self.output else "parse error"
+
+
+class FakeClusterRelationClient:
+    def __init__(self, output: ItemClusterOutput | None = None) -> None:
+        self.output = output
+        self.model = "fake-cluster-judge"
+        self.calls = 0
+
+    def call_json(self, **kwargs):
+        self.calls += 1
+        return self.output, 323 if self.output else 324, "ok" if self.output else "parse error"
+
+
 def test_operational_llm_relation_recommends_review_without_auto_merge(tmp_path: Path) -> None:
     store = make_store(tmp_path)
     left = {"item_id": "left", "title": "OpenAI launches GPT-5.5", "summary": "OpenAI launched GPT-5.5.", "source_id": "a"}
@@ -258,6 +299,311 @@ def test_operational_llm_relation_live_disabled_logs_skip(tmp_path: Path, monkey
         log = conn.execute("SELECT * FROM llm_call_logs WHERE task_type = 'operational_relation'").fetchone()
     assert log is not None
     assert log["status"] == "skipped"
+
+
+def test_semantic_judge_returns_cluster_proposal_review_only(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    left = {"item_id": "left", "title": "OpenAI launches GPT-5.5", "summary": "OpenAI launched GPT-5.5.", "source_id": "a", "published_at": "2026-05-30T10:00:00+00:00"}
+    right = {"item_id": "right", "title": "OpenAI rolls out GPT 5.5", "summary": "The rollout adds pricing detail.", "source_id": "b", "published_at": "2026-05-30T11:00:00+00:00"}
+    assessment = CandidateAssessment(
+        candidate_score=3.5,
+        candidate_priority="medium",
+        lane="cross_source_same_product",
+        positive_features=["same actor/product"],
+    )
+    proposal = SemanticRelationJudgeProposal(
+        relation="update",
+        confidence=0.93,
+        should_merge_event_cluster=True,
+        should_link_as_thread=False,
+        reason_code="llm_update",
+        evidence=["same product launch", "adds pricing detail"],
+        risk_flags=[],
+    )
+
+    result = propose_cluster_with_semantic_judge(
+        store,
+        run_id="run-test",
+        left=left,
+        right=right,
+        assessment=assessment,
+        live=True,
+        client=FakeSemanticJudgeClient(proposal),
+    )
+
+    assert result["status"] == "cluster_proposal_review_required"
+    assert result["decision_source"] == "llm"
+    assert result["llm_call_id"] == 223
+    assert result["proposal"]["relation"] == "update"
+    assert result["controlled_auto_merge_candidate"] is True
+    assert result["should_auto_merge"] is False
+    assert result["should_enqueue_review"] is True
+
+
+def test_semantic_judge_hard_negative_skips_call(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    assessment = CandidateAssessment(
+        candidate_score=0.1,
+        candidate_priority="suppress",
+        lane="suppressed",
+        disqualifiers=["generic_only_overlap"],
+    )
+    client = FakeSemanticJudgeClient()
+
+    result = propose_cluster_with_semantic_judge(
+        store,
+        run_id="run-test",
+        left={"item_id": "left", "title": "AI digest", "summary": ""},
+        right={"item_id": "right", "title": "AI roundup", "summary": ""},
+        assessment=assessment,
+        live=True,
+        client=client,
+    )
+
+    assert result["status"] == "skipped_hard_negative"
+    assert result["should_auto_merge"] is False
+    assert result["should_enqueue_review"] is False
+    assert client.calls == 0
+
+
+def test_semantic_judge_live_disabled_logs_skip(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("CONTENT_INBOX_LLM_ENABLE_LIVE", raising=False)
+    store = make_store(tmp_path)
+    assessment = CandidateAssessment(candidate_score=3.0, candidate_priority="medium", lane="same_event_recall")
+
+    result = propose_cluster_with_semantic_judge(
+        store,
+        run_id="run-test",
+        left={"item_id": "left", "title": "OpenAI launches GPT-5.5", "summary": "", "source_id": "a"},
+        right={"item_id": "right", "title": "OpenAI rolls out GPT 5.5", "summary": "", "source_id": "b"},
+        assessment=assessment,
+        live=True,
+    )
+
+    assert result["status"] == "llm_failed_review_required"
+    assert result["should_auto_merge"] is False
+    assert result["should_enqueue_review"] is True
+    with store.connect() as conn:
+        log = conn.execute("SELECT * FROM llm_call_logs WHERE task_type = 'semantic_relation_judge'").fetchone()
+    assert log is not None
+    assert log["status"] == "skipped"
+
+
+def test_generate_information_objects_places_semantic_judge_result_in_review_queue(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("CONTENT_INBOX_LLM_ENABLE_LIVE", raising=False)
+    store = make_store(tmp_path)
+    left = seed_event_item(
+        store,
+        "OpenAI says GPT 5.5 Instant is now available",
+        summary="GPT 5.5 Instant is available in ChatGPT.",
+        source_id="socialmedia-openai-openai",
+        published_at="2026-05-17T00:00:00+00:00",
+        url="https://example.com/openai-gpt55",
+    )
+    right = seed_event_item(
+        store,
+        "Perplexity adds GPT-5.5 Instant availability",
+        summary="OpenAI GPT-5.5 Instant is available through Perplexity.",
+        source_id="socialmedia-perplexity-perplexity-ai",
+        published_at="2026-05-22T00:00:00+00:00",
+        url="https://example.com/perplexity-gpt55",
+    )
+
+    result = generate_information_objects(store, "run-test", [left, right], live_relation_llm=True, relation_llm_max_calls=1)
+
+    assert result["review_required"] >= 1
+    with store.connect() as conn:
+        review = conn.execute("SELECT * FROM review_queue WHERE review_type = 'event_relation_review'").fetchone()
+        call_log = conn.execute("SELECT * FROM llm_call_logs WHERE task_type = 'semantic_relation_judge'").fetchone()
+        candidate = conn.execute("SELECT * FROM event_candidate_pairs").fetchone()
+    assert review is not None
+    suggestion = json.loads(review["suggestion_json"])
+    assert suggestion["llm_cluster_proposal"]["status"] == "llm_failed_review_required"
+    assert suggestion["llm_cluster_proposal"]["should_auto_merge"] is False
+    assert call_log is not None
+    assert call_log["status"] == "skipped"
+    assert candidate["decision_source"] == "llm"
+
+
+def test_process_item_clusters_keeps_llm_absorption_as_review_proposal(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    store = make_store(tmp_path)
+    first = seed_event_item(
+        store,
+        "OpenAI launches GPT-5.5 for coding agents",
+        summary="OpenAI launched GPT-5.5 for coding agents.",
+        source_id="source-a",
+        published_at="2026-05-30T10:00:00+00:00",
+        url="https://example.com/a",
+    )
+    process_item_clusters(store, limit=10, live=False)
+    second = seed_event_item(
+        store,
+        "OpenAI GPT 5.5 launches for software agents",
+        summary="OpenAI launched GPT 5.5 for software agents with rollout details.",
+        source_id="source-b",
+        published_at="2026-05-30T11:00:00+00:00",
+        url="https://example.com/b",
+    )
+    output = ItemClusterOutput(
+        item_id=second,
+        best_relation=ItemClusterDecision(
+            cluster_id=None,
+            primary_relation="new_info",
+            same_event=True,
+            same_topic=True,
+            confidence=0.95,
+            incremental_value=3,
+            report_value=3,
+            should_update_cluster_card=True,
+            new_facts=["rollout details"],
+            reason="same launch with rollout detail",
+            evidence=["same product launch"],
+            cluster_relation_type="same_event_new_info",
+            attach_eligible=True,
+        ),
+    )
+
+    monkeypatch.setattr("app.semantic.clusters.SemanticLLMClient", lambda *args, **kwargs: FakeClusterRelationClient(output))
+    result = process_item_clusters(store, limit=10, live=True, llm_proposal_only=True)
+
+    assert result["stats"]["review"] >= 1
+    with store.connect() as conn:
+        attached_second = conn.execute("SELECT * FROM cluster_items WHERE item_id = ?", (second,)).fetchone()
+        review = conn.execute("SELECT * FROM review_queue WHERE review_type = 'cluster_proposal'").fetchone()
+    assert attached_second is None
+    assert review is not None
+    suggestion = json.loads(review["suggestion_json"])
+    assert suggestion["proposal_only"] is True
+    assert suggestion["should_auto_merge"] is False
+    assert suggestion["llm_cluster_proposal"]["primary_relation"] == "new_info"
+
+
+def test_semantic_relation_judge_proposal_schema_is_strict() -> None:
+    proposal = SemanticRelationJudgeProposal.model_validate(
+        {
+            "relation": "update",
+            "confidence": 0.87,
+            "should_merge_event_cluster": True,
+            "should_link_as_thread": False,
+            "reason_code": "llm_update",
+            "evidence": "same actor/product/action with new availability detail",
+            "risk_flags": ["cross_source"],
+        }
+    )
+
+    assert proposal.relation == "update"
+    assert proposal.evidence == ["same actor/product/action with new availability detail"]
+
+    with pytest.raises(Exception):
+        SemanticRelationJudgeProposal.model_validate(
+            {
+                "relation": "same_event",
+                "confidence": 1.2,
+                "should_merge_event_cluster": True,
+                "should_link_as_thread": False,
+                "reason_code": "freeform_reason",
+                "evidence": [],
+                "risk_flags": [],
+            }
+        )
+
+
+def test_quality_eval_false_negative_trace_explains_review_miss() -> None:
+    trace = build_false_negative_traces(
+        [("case_a", "case_b")],
+        item_id_by_case={"case_a": "item_a", "case_b": "item_b"},
+        cluster_members_by_cluster={"cluster_a": ["case_a"], "cluster_b": ["case_b"]},
+        stored_case_by_item={"item_a": "case_a", "item_b": "case_b"},
+        inbox_items=[
+            {"item_id": "item_a", "title": "OpenAI launches GPT-5.5"},
+            {"item_id": "item_b", "title": "OpenAI rolls out GPT 5.5"},
+        ],
+        item_cards=[],
+        semantic_extractions=[
+            {
+                "item_id": "item_a",
+                "normalized_output_json": json.dumps({"signature": {"actor": "OpenAI", "product_or_model": "GPT-5.5", "action": "release", "signature_key": "openai|gpt55|release|2026-05-30", "semantic_level": "event_signature", "is_concrete": True}}),
+            },
+            {
+                "item_id": "item_b",
+                "normalized_output_json": json.dumps({"signature": {"actor": "OpenAI", "product_or_model": "GPT-5.5", "action": "release", "signature_key": "openai|gpt55|release|2026-05-30", "semantic_level": "event_signature", "is_concrete": True}}),
+            },
+        ],
+        event_candidate_pairs=[
+            {
+                "item_a_id": "item_a",
+                "item_b_id": "item_b",
+                "candidate_priority": "medium",
+                "lane": "cross_source_same_product",
+                "relation_type": "uncertain",
+                "decision_source": "rule",
+                "confidence": 0.7,
+                "reason_code": "same_event_signature_match",
+                "status": "review",
+                "features_json": json.dumps({"same_actor": True, "same_product": True, "same_action": True, "event_signature_match": True}),
+                "positive_features_json": json.dumps(["shared_products:gpt-5.5"]),
+                "negative_features_json": "[]",
+                "disqualifiers_json": "[]",
+            }
+        ],
+        review_queue=[
+            {
+                "id": 1,
+                "review_type": "event_relation_review",
+                "target_type": "item_pair",
+                "target_id": "item_a:item_b",
+                "status": "pending",
+                "reason": "medium candidate requires review",
+            }
+        ],
+    )
+
+    assert trace[0]["candidate"]["present"] is True
+    assert trace[0]["candidate"]["same_actor"] is True
+    assert trace[0]["items"][0]["signature"]["actor"] == "OpenAI"
+    assert trace[0]["items"][0]["item_card"]["present"] is False
+    assert trace[0]["review_queue"][0]["status"] == "pending"
+    assert trace[0]["cluster_eval"]["counted_as_failure_because"] == "candidate_went_to_review_but_not_clustered_before_eval"
+
+
+def test_quality_eval_semantic_judge_dry_run_proposals_are_review_only() -> None:
+    proposals = build_semantic_judge_dry_run_proposals(
+        [
+            {
+                "item_a_id": "item_a",
+                "item_b_id": "item_b",
+                "candidate_priority": "medium",
+                "lane": "cross_source_same_product",
+                "relation_type": "uncertain",
+                "reason_code": "same_event_signature_match",
+                "status": "review",
+                "features_json": json.dumps({"same_actor": True, "same_product": True, "same_action": False, "event_signature_match": False}),
+                "positive_features_json": json.dumps(["shared_products:gpt-5.5"]),
+                "negative_features_json": json.dumps(["action_mismatch"]),
+                "disqualifiers_json": "[]",
+            },
+            {
+                "item_a_id": "item_c",
+                "item_b_id": "item_d",
+                "candidate_priority": "medium",
+                "lane": "same_event_recall",
+                "relation_type": "different",
+                "reason_code": "generic_topic_overlap_only",
+                "status": "review",
+                "features_json": "{}",
+                "positive_features_json": "[]",
+                "negative_features_json": "[]",
+                "disqualifiers_json": json.dumps(["generic_only_overlap"]),
+            },
+        ],
+        stored_case_by_item={"item_a": "case_a", "item_b": "case_b", "item_c": "case_c", "item_d": "case_d"},
+    )
+
+    assert len(proposals) == 1
+    assert proposals[0]["proposal_status"] == "dry_run_not_called"
+    assert proposals[0]["task_type"] == "semantic_relation_judge"
+    assert proposals[0]["item_pair"] == ["case_a", "case_b"]
+    assert proposals[0]["proposal_policy"]["should_auto_merge"] is False
 
 
 def test_item_card_generation_heuristic_and_llm_log_skip(tmp_path: Path) -> None:

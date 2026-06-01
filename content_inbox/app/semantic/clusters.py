@@ -111,6 +111,8 @@ def process_item_clusters(
     token_budget: int | None = None,
     global_call_limit: bool = False,
     patch_cards: bool = True,
+    llm_proposal_only: bool = True,
+    allow_controlled_auto_merge: bool = False,
 ) -> dict[str, Any]:
     generate_item_cards(store, limit=limit, live=False, force=False)
     with store.connect() as conn:
@@ -256,6 +258,25 @@ def process_item_clusters(
             stats["review"] += 1
             continue
         decision = output.best_relation
+        if llm_proposal_only and not allow_controlled_auto_merge:
+            insert_review(
+                store,
+                "cluster_proposal",
+                "item",
+                item_id,
+                {
+                    "action": "review_cluster_absorption",
+                    "proposal_only": True,
+                    "should_auto_merge": False,
+                    "candidate_cluster_ids": [cluster["cluster_id"] for cluster in candidates],
+                    "llm_cluster_proposal": decision.model_dump(),
+                    "llm_call_id": call_id,
+                    "prompt_version": ITEM_CLUSTER_PROMPT_VERSION,
+                    "model": client.model,
+                },
+            )
+            stats["review"] += 1
+            continue
         selected_cluster = next((cluster for cluster in candidates if cluster["cluster_id"] == decision.cluster_id), candidates[0] if candidates else None)
         if selected_cluster and decision.primary_relation != "follow_up" and not same_event_cluster_candidate(store, item, item_card, selected_cluster):
             payload = decision.model_dump()
