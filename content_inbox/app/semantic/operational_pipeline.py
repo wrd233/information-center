@@ -243,6 +243,21 @@ def _relation_from_candidate(left: dict[str, Any], right: dict[str, Any], assess
     if hard:
         relation = "item_duplicate" if hard[0] == "duplicate" else "near_duplicate"
         return relation, 1, 1, 0, "deterministic_duplicate"
+    # Guard: when the assessment says different_event but lacks same-actor or same-product
+    # evidence, it's likely a false positive (e.g., both mentioning DeepSeek but in different
+    # contexts). Only auto-merge when both actor AND product match concretely.
+    # When reason_code says different_event but actor and product DO match, send to review
+    # rather than auto-merging — the assessment found conflicting signals.
+    if getattr(assessment, "reason_code", "") == "different_event":
+        if getattr(assessment, "same_actor", False) and getattr(assessment, "same_product", False):
+            return "uncertain", 0, 1, 1, "same_actor_product_but_assessment_differs"
+        return "different", 0, 0, 0, "assessment_says_different_no_actor_product"
+    # Additional guard: exact_signature_alias with reason_code=same_event_signature_match
+    # but lacking same_actor+same_product+same_action is likely a false positive from
+    # loose entity overlap. Send to review instead of auto-merging.
+    if getattr(assessment, "lane", "") == "exact_signature_alias" and getattr(assessment, "reason_code", "") == "same_event_signature_match":
+        if not (getattr(assessment, "same_actor", False) and getattr(assessment, "same_product", False) and getattr(assessment, "same_action", False)):
+            return "uncertain", 0, 1, 1, "exact_signature_alias_without_full_actor_product_action"
     if assessment.candidate_priority in {"must_run", "high"} and not set(assessment.disqualifiers) & {"generic_entity_overlap", "generic_only_overlap", "same_account_boilerplate", "wide_time_window", "semantic_level_reject"}:
         return "same_event_repeat", 1, 1, 0, "high_confidence_same_event"
     if assessment.candidate_priority == "medium":

@@ -1,26 +1,105 @@
 {
   "actors": {
-    "OpenAI": ["OpenAI/Codex", "ChatGPT", "Codex"],
-    "DeepSeek": ["深度求索", "DeepSeek AI"],
-    "European Commission": ["EU Commission", "欧盟委员会", "EU"]
+    "OpenAI": ["OpenAI/Codex", "ChatGPT", "Codex", "开放AI"],
+    "DeepSeek": ["深度求索", "DeepSeek AI", "deepseek_ai", "Deepseek"],
+    "European Commission": ["EU Commission", "欧盟委员会", "EU", "欧盟", "European Union", "Europe"],
+    "Anthropic": ["AnthropicAI", "Anthropic AI", "Claude maker", "Anthropic/Claude", "claude"],
+    "Meta": ["Meta AI", "Facebook AI", "AI at Meta", "MetaAI", "meta"],
+    "xAI": ["xAI", "x.ai", "Grok", "grok"],
+    "Google": ["Google DeepMind", "DeepMind", "Google AI", "谷歌", "Gemini"],
+    "Mistral": ["Mistral AI", "MistralAI", "Mistral.ai"],
+    "Perplexity": ["Perplexity AI", "PerplexityAI"],
+    "NVIDIA": ["Nvidia", "nvidia", "NVIDIA AI"],
+    "Cohere": ["Cohere AI", "CohereAI"],
+    "Hugging Face": ["HuggingFace", "huggingface", "HF"],
+    "Stability AI": ["StabilityAI", "Stability"],
+    "Microsoft": ["MSFT", "Microsoft AI", "微软"],
+    "GitHub": ["Github", "github"],
+    "LangChain": ["Langchain", "langchain", "LangChainAI"],
+    "Notion": ["NotionHQ", "notionhq", "Notion AI"],
+    "ElevenLabs": ["ElevenLabs", "Eleven Labs"],
+    "Firecrawl": ["Firecrawl", "firecrawl"],
+    "Cursor": ["Cursor AI", "cursor"],
+    "Windsurf": ["Windsurf AI", "Codeium"],
+    "Qwen": ["通义千问", "Tongyi Qianwen", "Alibaba Qwen"],
+    "Alibaba": ["阿里巴巴", "阿里云", "Alibaba Cloud"],
+    "Kimi": ["Kimi AI", "Moonshot AI", "月之暗面"],
+    "Manus": ["Manus AI", "ManusIM"],
+    "Codex": ["OpenAI Codex", "codex", "OpenAI/Codex"]
   },
   "products": {
     "GPT-5.5": {
-      "aliases": ["GPT 5.5", "GPT5.5", "GPT-5.5 Pro"],
+      "aliases": ["GPT 5.5", "GPT5.5", "GPT-5.5 Pro", "GPT-5.5 Instant", "GPT5.5 Instant", "gpt-5.5"],
       "owner": "OpenAI"
     },
-    "DeepSeek V4.1": {
-      "aliases": ["DeepSeek-V4.1", "深度求索 V4.1"],
+    "DeepSeek V4": {
+      "aliases": ["DeepSeek-V4", "DeepSeek V4.1", "DeepSeek-V4.1", "DeepSeek-V4-Pro", "DeepSeek V4 Pro", "深度求索 V4", "深度求索 V4.1", "DeepSeekV4", "deepseek v4", "deepseek-v4"],
       "owner": "DeepSeek"
     },
     "Claude Code": {
-      "aliases": ["Claude-Code", "ClaudeCode"],
+      "aliases": ["Claude-Code", "ClaudeCode", "Claude CLI", "Claude Agent SDK", "claude code"],
       "owner": "Anthropic"
+    },
+    "Claude": {
+      "aliases": ["Claude Sonnet", "Claude Opus", "Claude Haiku", "Sonnet 4.6", "Opus 4.8"],
+      "owner": "Anthropic"
+    },
+    "Codex": {
+      "aliases": ["OpenAI Codex", "codex", "Codex CLI", "Codex for Windows", "Codex Remote Control", "codex pets"],
+      "owner": "OpenAI"
+    },
+    "Grok": {
+      "aliases": ["Grok-1", "Grok-2", "Grok-3", "grok"],
+      "owner": "xAI"
+    },
+    "Gemini": {
+      "aliases": ["Gemini 2.5", "Gemini Pro", "Gemini Flash", "Gemini Ultra", "Gemini API"],
+      "owner": "Google"
+    },
+    "Voxtral Mini Transcribe 2": {
+      "aliases": ["Mini Transcribe 2", "Voxtral Mini", "Mini Transcribe"],
+      "owner": "Mistral"
+    },
+    "Mistral": {
+      "aliases": ["Mistral Large", "Mistral Small", "Mistral NeMo", "Mistral API"],
+      "owner": "Mistral"
+    },
+    "Perplexity": {
+      "aliases": ["Perplexity Computer", "Perplexity Max", "Perplexity Pro"],
+      "owner": "Perplexity"
+    },
+    "TRIBE v2": {
+      "aliases": ["TRIBE v2", "TRIBEv2", "Trimodal Brain Encoder", "TRIBE"],
+      "owner": "Meta"
+    },
+    "CHMv2": {
+      "aliases": ["Canopy Height Maps v2", "CHM v2", "CHMv2"],
+      "owner": "Meta"
+    },
+    "OpenShell": {
+      "aliases": ["openshell", "Open Shell"],
+      "owner": "NVIDIA"
+    },
+    "Notion Custom Agents": {
+      "aliases": ["Notion Agent Tools", "Notion Agents", "Notion Workers"],
+      "owner": "Notion"
+    },
+    "AI Act": {
+      "aliases": ["EU AI Act", "AI Act implementation", "AI法案", "人工智能法案", "EU AI法案", "AI Act guidance"],
+      "owner": "European Commission"
     }
   },
   "actions": {
-    "release": ["launch", "launched", "released", "rollout", "发布", "推出", "上线"],
-    "funding": ["raises", "raised", "financing", "round", "融资", "投资"],
-    "availability": ["available", "preview", "beta", "开放", "内测", "公测"]
+    "release": ["launch", "launched", "released", "rollout", "rolling out", "发布", "推出", "上线", "introducing", "announcing", "unveiled", "unveils", "释出", "开源", "open-sourced", "opensourced"],
+    "funding": ["raises", "raised", "financing", "round", "融资", "投资", "funding round", "secures", "secured", "closes", "closed", "series a", "series b", "series c", "raised $", "raises $", "valuation", "估值"],
+    "availability": ["available", "preview", "beta", "开放", "内测", "公测", "now available", "available now", "access", "early access", "waitlist", "候补"],
+    "pricing": ["discount", "price drop", "price cut", "pricing", "降价", "优惠", "折扣", "free", "免费", "75% OFF", "off", "extended"],
+    "partnership": ["partner", "partnership", "collaboration", "together with", "teaming up", "合作", "联手", "战略合作", "签约", "multi-year agreement", "agreement with"],
+    "benchmark": ["benchmark", "evaluation", "score", "accuracy", "performance", "基准", "评测", "跑分", "榜单"],
+    "policy": ["publishes", "published", "guidance", "regulation", "regulatory", "法案", "监管", "政策", "实施指南", "guidelines", "compliance", "act", "directive"],
+    "security": ["vulnerability", "CVE", "security fix", "patch", "advisory", "incident", "breach", "漏洞", "修复"],
+    "research": ["paper", "research", "arxiv", "preprint", "论文", "预印本", "published in", "study"],
+    "feature_update": ["now supports", "can now", "new feature", "update", "新增", "更新", "功能", "now you can", "added support", "improved"],
+    "integration": ["integrate", "integration", "connect", "plugin", "extension", "API", "SDK", "works with", "集成", "接入", "打通"]
   }
 }

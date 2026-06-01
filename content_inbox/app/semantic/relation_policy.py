@@ -64,6 +64,8 @@ def default_reason_code(primary_relation: str, event_relation_type: str, *, gene
         return "same_thread_different_event"
     if primary_relation == "uncertain":
         return "insufficient_content"
+    if event_relation_type == "same_event":
+        return "same_event_signature_match"
     return "different_event"
 
 

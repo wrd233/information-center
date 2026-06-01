@@ -1,6 +1,6 @@
 # 作战台信息质量评估报告
 
-生成时间: 2026-05-31T17:38:35.599212+00:00
+生成时间: 2026-05-31T18:15:56.080036+00:00
 
 ## 结论
 
@@ -12,7 +12,7 @@
 - 事件聚合 F1: 42.9%，召回 27.3%。
 - 自动合并 precision: 100.0%。
 - medium review rate: 100.0%。
-- alias hit count: 17。
+- alias hit count: 215。
 - review apply sample: ok。
 - source scoring profiles/signals: 23/82。
 - operational DeepSeek relation calls: 0。
@@ -59,33 +59,33 @@
 ### 事件聚合
 
 - precision/recall/F1: 100.0% / 27.3% / 42.9%
-- clusters: 3
-- 多条目 cluster 比率: 33.3%
+- clusters: 4
+- 多条目 cluster 比率: 25.0%
 - 误合并 pair 样例: `[]`
 - 漏合并 pair 样例: `[('anthropic_funding_a', 'anthropic_funding_b'), ('deepseek_cn_a', 'deepseek_cn_b'), ('deepseek_cn_a', 'guid_a'), ('deepseek_cn_b', 'guid_a'), ('openai_punctuation_variant', 'openai_variant_a'), ('openai_variant_a', 'openai_variant_b'), ('openai_variant_a', 'url_tracking_a'), ('policy_a', 'policy_b')]`
 
 ### Candidate 诊断
 
-- candidate counts by priority: `{'low': 7, 'high': 1, 'medium': 1, 'must_run': 1}`
-- candidate counts by lane: `{'same_thread': 3, 'exploratory_recall': 4, 'same_event_recall': 2, 'exact_signature_alias': 1}`
-- candidate counts by status: `{'review': 8, 'auto_merge': 2}`
+- candidate counts by priority: `{'low': 12, 'high': 1, 'must_run': 1, 'medium': 1}`
+- candidate counts by lane: `{'exploratory_recall': 9, 'same_thread': 3, 'same_event_recall': 2, 'exact_signature_alias': 1}`
+- candidate counts by status: `{'rejected': 12, 'auto_merge': 2, 'review': 1}`
 - disqualifier counts: `{}`
 - medium review rate: 100.0%
-- alias hit count: 17
+- alias hit count: 215
 
 ### Review Apply 与 Source Scoring
 
-- review apply sample: `{'attempted': True, 'review_id': 78, 'ok': True, 'apply_result': {'applied': True, 'action': 'event_relation_approved', 'event_id': 'event_52285f514277588f', 'cluster_id': 'cluster_9292e895fe7b3e7f', 'item_ids': ['item_996ec456324e4e64ad7ad30bb594f244', 'item_a18982e2336544fd8dcb9765eebd8c1a']}}`
-- source scoring dimension totals: `{'discovery_value': 4.0, 'fact_value': 4.0, 'incremental_value': 2.0, 'interpretation_value': 0.0, 'duplicate_noise': 3.0, 'non_event_noise': 77.0, 'review_acceptance': 2.0}`
-- source scoring example profile: `{'source_id': 'site_a', 'discovery_value_avg': 2.0, 'fact_value_avg': 2.0, 'incremental_value_avg': 0.0, 'interpretation_value_avg': 0.0, 'duplicate_noise_rate': 0.0, 'non_event_noise_rate': 0.0, 'review_acceptance': 1.0, 'llm_yield_score': 3.0, 'priority_suggestion': 'new_source_under_evaluation'}`
+- review apply sample: `{'attempted': True, 'review_id': 77, 'ok': True, 'apply_result': {'applied': True, 'action': 'event_relation_approved', 'event_id': 'event_d6770cbf532ba00c', 'cluster_id': 'cluster_1be3f3059f449572', 'item_ids': ['item_d3c6dda68ad14520952606fb00f40214', 'item_ec1c4f68b2ba4904ab3536b2ff8ea619']}}`
+- source scoring dimension totals: `{'discovery_value': 5.0, 'fact_value': 5.0, 'incremental_value': 2.0, 'interpretation_value': 0.0, 'duplicate_noise': 3.0, 'non_event_noise': 76.0, 'review_acceptance': 2.0}`
+- source scoring example profile: `{'source_id': 'techcrunch', 'discovery_value_avg': 1.0, 'fact_value_avg': 1.0, 'incremental_value_avg': 2.0, 'interpretation_value_avg': 0.0, 'duplicate_noise_rate': 1.0, 'non_event_noise_rate': 0.0, 'review_acceptance': 1.0, 'llm_yield_score': 2.667, 'priority_suggestion': 'new_source_under_evaluation'}`
 - operational DeepSeek relation stats: `{'operational_relation_calls': 0, 'live_ok_calls': 0, 'failed_or_skipped_calls': 0, 'total_tokens': 0}`
 
 ### 事件提取
 
-- events: 3
+- events: 4
 - event_type known rate: 100.0%
 - summary specific rate: 100.0%
-- review coverage: 2900.0%
+- review coverage: 2000.0%
 - 非事件条目被生成候选事件比率: 0.0%
 - entity recall: 97.0% (98/101)
 
@@ -103,20 +103,21 @@
 
 ## 可信事件
 - OpenAI release GPT-5.5（可信事件，置信度 0.98）
-- OpenAI integration major API（可信事件，置信度 0.98）
 - DeepSeek release DeepSeek V4（可信事件，置信度 0.98）
+- European Commission technical blog AI Act（可信事件，置信度 0.98）
+- OpenAI integration major API（可信事件，置信度 0.98）
 
 ## 待审核
-- eventness_review item:item_0a9dba87db3b488e8123359db5f514e6
-- eventness_review item:item_0c402fb56c974d0ead662722f53f9f98
-- eventness_review item:item_13fab38298994b4db3633331515d48c2
-- eventness_review item:item_1c8862d2c12e489bbdb59d74f55eadc6
-- eventness_review item:item_20501b28f57e4433a9d5d95255943557
-- eventness_review item:item_232eac2e48214401b94da047f4edad46
-- eventness_review item:item_24d2c0e194a74172987eda0633d28654
-- eventness_review item:item_2b38e0b8b7a042609a7c22394e7a26d7
-- eventness_review item:item_2bde36798e3848b3b2f49d333c55d688
-- eventness_review item:item_2ed9d293e592462f833c5edd4cfdb133
+- eventness_review item:item_04c46ef22db04c8c81810e914cf9a63a
+- eventness_review item:item_07b8e34ba1954dd48833bc1f82e84de0
+- eventness_review item:item_08e9fd2edeaa40cfb2ffe643eb570216
+- eventness_review item:item_0aa6ea666eab49599f8d464b8cbe4a09
+- eventness_review item:item_0d734b3a77a74f1282aedd0542d8fbd5
+- eventness_review item:item_0db50cc3fb924b6fb08a1470d787e2cc
+- eventness_review item:item_0fc0b3df4ffc4ffeb918f89c01bfc353
+- eventness_review item:item_112b8b56d7db4e69b5bff671e973bb8a
+- eventness_review item:item_14b3c8a285cb4b2b8266c07bc99c43f1
+- eventness_review item:item_153ff14c83bc494a912b80c30b3a6b88
 ```
 
 运行报告预览:
@@ -124,19 +125,20 @@
 ```markdown
 # 运行报告
 
-生成时间: 2026-05-31T17:38:35.583600+00:00
+生成时间: 2026-05-31T18:15:56.070413+00:00
 
-关联对象: run run_quality_eval_e1912f6c70
+关联对象: run run_quality_eval_bf645b2739
 
 ## 可信事件
 - OpenAI release GPT-5.5：release，置信度 0.98，cluster cluster_1be3f3059f449572
-- OpenAI integration major API：integration，置信度 0.98，cluster cluster_9292e895fe7b3e7f
 - DeepSeek release DeepSeek V4：release，置信度 0.98，cluster cluster_ee6e44e0884d81fd
+- European Commission technical blog AI Act：technical_blog，置信度 0.98，cluster cluster_a1a20d64e03cad90
+- OpenAI integration major API：integration，置信度 0.98，cluster cluster_9292e895fe7b3e7f
 
 ## 质量概览
-- 可信事件数: 3
-- 全部事件数: 3
-- 待审核项: 87
+- 可信事件数: 4
+- 全部事件数: 4
+- 待审核项: 80
 - 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。
 
 ```
@@ -144,7 +146,7 @@
 Run endpoint 报告预览:
 
 ```markdown
-# 运行报告 run_quality_eval_e1912f6c70
+# 运行报告 run_quality_eval_bf645b2739
 
 状态: success
 
@@ -154,12 +156,13 @@ Run endpoint 报告预览:
 
 ## 可信事件
 - OpenAI release GPT-5.5：release，置信度 0.98
-- OpenAI integration major API：integration，置信度 0.98
 - DeepSeek release DeepSeek V4：release，置信度 0.98
+- European Commission technical blog AI Act：technical_blog，置信度 0.98
+- OpenAI integration major API：integration，置信度 0.98
 
 ## 质量概览
-- 可信事件数: 3
-- 待审核项: 87
+- 可信事件数: 4
+- 待审核项: 80
 - 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。
 
 ```
@@ -192,7 +195,7 @@ Run endpoint 报告预览:
     "gold_duplicate_pairs": 4,
     "gold_same_event_pairs": 11,
     "gold_non_event_items": 5,
-    "temp_db": "/var/folders/f_/12__g2851hv407x2tv3xbx580000gn/T/content_inbox_quality_eval_5v1v7gnd/quality_eval.db"
+    "temp_db": "/tmp/claude-501/content_inbox_quality_eval_ag_84s73/quality_eval.db"
   },
   "process_dedupe": {
     "tp": 4,
@@ -216,8 +219,8 @@ Run endpoint 报告预览:
     "recall": 0.2727272727272727,
     "f1": 0.42857142857142855,
     "auto_merge_precision": 1.0,
-    "clusters": 3,
-    "multi_item_event_rate": 0.3333333333333333,
+    "clusters": 4,
+    "multi_item_event_rate": 0.25,
     "false_positive_pairs": [],
     "false_negative_pairs": [
       [
@@ -255,50 +258,51 @@ Run endpoint 报告预览:
     ]
   },
   "event_extraction": {
-    "events": 3,
+    "events": 4,
     "event_type_known_rate": 1.0,
     "event_summary_specific_rate": 1.0,
-    "review_entries": 87,
-    "review_coverage": 29.0,
+    "review_entries": 80,
+    "review_coverage": 20.0,
     "non_event_candidate_rate": 0.0,
     "entity_recall": 0.9702970297029703,
     "matched_entities": 98,
     "expected_entities": 101
   },
   "candidate_diagnostics": {
-    "total_candidates": 10,
+    "total_candidates": 15,
     "by_priority": {
-      "low": 7,
+      "low": 12,
       "high": 1,
-      "medium": 1,
-      "must_run": 1
+      "must_run": 1,
+      "medium": 1
     },
     "by_lane": {
+      "exploratory_recall": 9,
       "same_thread": 3,
-      "exploratory_recall": 4,
       "same_event_recall": 2,
       "exact_signature_alias": 1
     },
     "by_status": {
-      "review": 8,
-      "auto_merge": 2
+      "rejected": 12,
+      "auto_merge": 2,
+      "review": 1
     },
     "medium_review_rate": 1.0,
     "disqualifiers": {},
-    "alias_hit_count": 17
+    "alias_hit_count": 215
   },
   "review_apply": {
     "attempted": true,
-    "review_id": 78,
+    "review_id": 77,
     "ok": true,
     "apply_result": {
       "applied": true,
       "action": "event_relation_approved",
-      "event_id": "event_52285f514277588f",
-      "cluster_id": "cluster_9292e895fe7b3e7f",
+      "event_id": "event_d6770cbf532ba00c",
+      "cluster_id": "cluster_1be3f3059f449572",
       "item_ids": [
-        "item_996ec456324e4e64ad7ad30bb594f244",
-        "item_a18982e2336544fd8dcb9765eebd8c1a"
+        "item_d3c6dda68ad14520952606fb00f40214",
+        "item_ec1c4f68b2ba4904ab3536b2ff8ea619"
       ]
     }
   },
@@ -307,24 +311,24 @@ Run endpoint 报告预览:
     "profile_count": 23,
     "signal_count": 82,
     "example_profile": {
-      "source_id": "site_a",
-      "discovery_value_avg": 2.0,
-      "fact_value_avg": 2.0,
-      "incremental_value_avg": 0.0,
+      "source_id": "techcrunch",
+      "discovery_value_avg": 1.0,
+      "fact_value_avg": 1.0,
+      "incremental_value_avg": 2.0,
       "interpretation_value_avg": 0.0,
-      "duplicate_noise_rate": 0.0,
+      "duplicate_noise_rate": 1.0,
       "non_event_noise_rate": 0.0,
       "review_acceptance": 1.0,
-      "llm_yield_score": 3.0,
+      "llm_yield_score": 2.667,
       "priority_suggestion": "new_source_under_evaluation"
     },
     "dimension_totals": {
-      "discovery_value": 4.0,
-      "fact_value": 4.0,
+      "discovery_value": 5.0,
+      "fact_value": 5.0,
       "incremental_value": 2.0,
       "interpretation_value": 0.0,
       "duplicate_noise": 3.0,
-      "non_event_noise": 77.0,
+      "non_event_noise": 76.0,
       "review_acceptance": 2.0
     }
   },
@@ -391,9 +395,9 @@ Run endpoint 报告预览:
         "not_too_thin": true
       }
     },
-    "daily_briefing_preview": "# 每日简报 2026-05-31\n\n## 可信事件\n- OpenAI release GPT-5.5（可信事件，置信度 0.98）\n- OpenAI integration major API（可信事件，置信度 0.98）\n- DeepSeek release DeepSeek V4（可信事件，置信度 0.98）\n\n## 待审核\n- eventness_review item:item_0a9dba87db3b488e8123359db5f514e6\n- eventness_review item:item_0c402fb56c974d0ead662722f53f9f98\n- eventness_review item:item_13fab38298994b4db3633331515d48c2\n- eventness_review item:item_1c8862d2c12e489bbdb59d74f55eadc6\n- eventness_review item:item_20501b28f57e4433a9d5d95255943557\n- eventness_review item:item_232eac2e48214401b94da047f4edad46\n- eventness_review item:item_24d2c0e194a74172987eda0633d28654\n- eventness_review item:item_2b38e0b8b7a042609a7c22394e7a26d7\n- eventness_review item:item_2bde36798e3848b3b2f49d333c55d688\n- eventness_review item:item_2ed9d293e592462f833c5edd4cfdb133",
-    "run_report_preview": "# 运行报告\n\n生成时间: 2026-05-31T17:38:35.583600+00:00\n\n关联对象: run run_quality_eval_e1912f6c70\n\n## 可信事件\n- OpenAI release GPT-5.5：release，置信度 0.98，cluster cluster_1be3f3059f449572\n- OpenAI integration major API：integration，置信度 0.98，cluster cluster_9292e895fe7b3e7f\n- DeepSeek release DeepSeek V4：release，置信度 0.98，cluster cluster_ee6e44e0884d81fd\n\n## 质量概览\n- 可信事件数: 3\n- 全部事件数: 3\n- 待审核项: 87\n- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n",
-    "run_endpoint_report_preview": "# 运行报告 run_quality_eval_e1912f6c70\n\n状态: success\n\n新增条目: 0\n\n信息源数量: 0\n\n## 可信事件\n- OpenAI release GPT-5.5：release，置信度 0.98\n- OpenAI integration major API：integration，置信度 0.98\n- DeepSeek release DeepSeek V4：release，置信度 0.98\n\n## 质量概览\n- 可信事件数: 3\n- 待审核项: 87\n- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n"
+    "daily_briefing_preview": "# 每日简报 2026-05-31\n\n## 可信事件\n- OpenAI release GPT-5.5（可信事件，置信度 0.98）\n- DeepSeek release DeepSeek V4（可信事件，置信度 0.98）\n- European Commission technical blog AI Act（可信事件，置信度 0.98）\n- OpenAI integration major API（可信事件，置信度 0.98）\n\n## 待审核\n- eventness_review item:item_04c46ef22db04c8c81810e914cf9a63a\n- eventness_review item:item_07b8e34ba1954dd48833bc1f82e84de0\n- eventness_review item:item_08e9fd2edeaa40cfb2ffe643eb570216\n- eventness_review item:item_0aa6ea666eab49599f8d464b8cbe4a09\n- eventness_review item:item_0d734b3a77a74f1282aedd0542d8fbd5\n- eventness_review item:item_0db50cc3fb924b6fb08a1470d787e2cc\n- eventness_review item:item_0fc0b3df4ffc4ffeb918f89c01bfc353\n- eventness_review item:item_112b8b56d7db4e69b5bff671e973bb8a\n- eventness_review item:item_14b3c8a285cb4b2b8266c07bc99c43f1\n- eventness_review item:item_153ff14c83bc494a912b80c30b3a6b88",
+    "run_report_preview": "# 运行报告\n\n生成时间: 2026-05-31T18:15:56.070413+00:00\n\n关联对象: run run_quality_eval_bf645b2739\n\n## 可信事件\n- OpenAI release GPT-5.5：release，置信度 0.98，cluster cluster_1be3f3059f449572\n- DeepSeek release DeepSeek V4：release，置信度 0.98，cluster cluster_ee6e44e0884d81fd\n- European Commission technical blog AI Act：technical_blog，置信度 0.98，cluster cluster_a1a20d64e03cad90\n- OpenAI integration major API：integration，置信度 0.98，cluster cluster_9292e895fe7b3e7f\n\n## 质量概览\n- 可信事件数: 4\n- 全部事件数: 4\n- 待审核项: 80\n- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n",
+    "run_endpoint_report_preview": "# 运行报告 run_quality_eval_bf645b2739\n\n状态: success\n\n新增条目: 0\n\n信息源数量: 0\n\n## 可信事件\n- OpenAI release GPT-5.5：release，置信度 0.98\n- DeepSeek release DeepSeek V4：release，置信度 0.98\n- European Commission technical blog AI Act：technical_blog，置信度 0.98\n- OpenAI integration major API：integration，置信度 0.98\n\n## 质量概览\n- 可信事件数: 4\n- 待审核项: 80\n- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n"
   },
   "threshold_results": {
     "process_dedupe_pair_f1": true,
