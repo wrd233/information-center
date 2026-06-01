@@ -1,0 +1,740 @@
+{
+  "candidate_audit": {
+    "by_lane": {
+      "exact_signature_alias": 1,
+      "exploratory_recall": 21,
+      "same_source_repeat": 3,
+      "same_thread": 8,
+      "suppressed": 12
+    },
+    "by_priority": {
+      "high": 3,
+      "low": 29,
+      "must_run": 1,
+      "suppress": 12
+    },
+    "by_status": {
+      "auto_merge": 4,
+      "rejected": 36,
+      "review": 5
+    },
+    "candidate_pair_count": 45,
+    "pending_review_count": 68,
+    "review_samples": [
+      {
+        "reason": "non-event semantic level cannot seed event cluster",
+        "review_type": "low_signal",
+        "suggestion_json": "{\"reason\": \"non-event semantic level cannot seed event cluster\", \"semantic_level\": \"reject\", \"signature\": {\"action\": \"research_paper\", \"actor\": \"\", \"actor_type\": \"unknown\", \"alias_hits\": [{\"alias\": \"HuggingFace\", \"canonical\": \"Hugging Face\", \"type\": \"actor\"}, {\"alias\": \"huggingface\", \"canonical\": \"Hugging Face\", \"type\": \"actor\"}, {\"alias\": \"paper\", \"canonical\": \"research\", \"type\": \"action\"}], \"concreteness_score\": 0.38, \"confidence\": 0.38, \"date_bucket\": \"2026-05-28\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"invalid_reasons\": [\"missing_concrete_actor_or_product\", \"semantic_level_reject\"], \"is_concrete\": false, \"is_event_like\": false, \"is_thread_like\": false, \"object\": \"\", \"product_or_model\": \"\", \"reject_reason\": \"abstract_commentary_without_event_entity\", \"semantic_level\": \"reject\", \"signature_key\": null, \"source_item_ids\": [\"item_9bf64d3c100546f5ba4d4052639a662f\"], \"source_type\": \"social\", \"supporting_tokens\": [\"by\", \"huggingface.co\", \"papers\", \"x2u1m9upa2\"], \"time_window_hours\": 72.0}}",
+        "target_id": "item_9bf64d3c100546f5ba4d4052639a662f",
+        "target_type": "item"
+      },
+      {
+        "reason": "non-event semantic level cannot seed event cluster",
+        "review_type": "low_signal",
+        "suggestion_json": "{\"reason\": \"non-event semantic level cannot seed event cluster\", \"semantic_level\": \"reject\", \"signature\": {\"action\": \"tutorial\", \"actor\": \"\", \"actor_type\": \"unknown\", \"alias_hits\": [{\"alias\": \"act\", \"canonical\": \"policy\", \"type\": \"action\"}], \"concreteness_score\": 0.38, \"confidence\": 0.38, \"date_bucket\": \"2026-05-28\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"invalid_reasons\": [\"missing_concrete_actor_or_product\", \"semantic_level_reject\"], \"is_concrete\": false, \"is_event_like\": false, \"is_thread_like\": false, \"object\": \"\", \"product_or_model\": \"\", \"reject_reason\": \"missing_concrete_actor_or_product\", \"semantic_level\": \"reject\", \"signature_key\": null, \"source_item_ids\": [\"item_413261cbb0004698b99a3410613efa7d\"], \"source_type\": \"social\", \"supporting_tokens\": [\"by\", \"effective\", \"estimation\", \"gradient\", \"learning\", \"policy\", \"proactive\", \"prorl\", \"recommendation\", \"rectified\", \"reinforcement\", \"via\"], \"time_window_hours\": 72.0}}",
+        "target_id": "item_413261cbb0004698b99a3410613efa7d",
+        "target_type": "item"
+      },
+      {
+        "reason": "non-event semantic level cannot seed event cluster",
+        "review_type": "low_signal",
+        "suggestion_json": "{\"reason\": \"non-event semantic level cannot seed event cluster\", \"semantic_level\": \"reject\", \"signature\": {\"action\": \"research_paper\", \"actor\": \"\", \"actor_type\": \"unknown\", \"alias_hits\": [{\"alias\": \"HuggingFace\", \"canonical\": \"Hugging Face\", \"type\": \"actor\"}, {\"alias\": \"huggingface\", \"canonical\": \"Hugging Face\", \"type\": \"actor\"}, {\"alias\": \"paper\", \"canonical\": \"research\", \"type\": \"action\"}], \"concreteness_score\": 0.38, \"confidence\": 0.38, \"date_bucket\": \"2026-05-28\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"invalid_reasons\": [\"missing_concrete_actor_or_product\", \"semantic_level_reject\"], \"is_concrete\": false, \"is_event_like\": false, \"is_thread_like\": false, \"object\": \"\", \"product_or_model\": \"\", \"reject_reason\": \"abstract_commentary_without_event_entity\", \"semantic_level\": \"reject\", \"signature_key\": null, \"source_item_ids\": [\"item_805f1f04d3b54e70991690d7dd036141\"], \"source_type\": \"social\", \"supporting_tokens\": [\"by\", \"huggingface.co\", \"papers\", \"rh0pduh0sc\"], \"time_window_hours\": 72.0}}",
+        "target_id": "item_805f1f04d3b54e70991690d7dd036141",
+        "target_type": "item"
+      },
+      {
+        "reason": "non-event semantic level cannot seed event cluster",
+        "review_type": "low_signal",
+        "suggestion_json": "{\"reason\": \"non-event semantic level cannot seed event cluster\", \"semantic_level\": \"reject\", \"signature\": {\"action\": \"feature_update\", \"actor\": \"\", \"actor_type\": \"unknown\", \"alias_hits\": [], \"concreteness_score\": 0.38, \"confidence\": 0.38, \"date_bucket\": \"2026-05-28\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"invalid_reasons\": [\"missing_concrete_actor_or_product\", \"weak_action_without_entity\", \"semantic_level_reject\"], \"is_concrete\": false, \"is_event_like\": false, \"is_thread_like\": false, \"object\": \"\", \"product_or_model\": \"\", \"reject_reason\": \"missing_concrete_actor_or_product\", \"semantic_level\": \"reject\", \"signature_key\": null, \"source_item_ids\": [\"item_d60c060db0214f7eaeb1b9d2ccfa7e25\"], \"source_type\": \"social\", \"supporting_tokens\": [\"by\", \"does\", \"executive\", \"not\", \"on\", \"self-evolving\", \"skillopt\", \"skills\", \"strategy\", \"support\", \"tag\", \"video\", \"your\"], \"time_window_hours\": 72.0}}",
+        "target_id": "item_d60c060db0214f7eaeb1b9d2ccfa7e25",
+        "target_type": "item"
+      },
+      {
+        "reason": "non-event semantic level cannot seed event cluster",
+        "review_type": "low_signal",
+        "suggestion_json": "{\"reason\": \"non-event semantic level cannot seed event cluster\", \"semantic_level\": \"reject\", \"signature\": {\"action\": \"research_paper\", \"actor\": \"\", \"actor_type\": \"unknown\", \"alias_hits\": [{\"alias\": \"HuggingFace\", \"canonical\": \"Hugging Face\", \"type\": \"actor\"}, {\"alias\": \"huggingface\", \"canonical\": \"Hugging Face\", \"type\": \"actor\"}, {\"alias\": \"paper\", \"canonical\": \"research\", \"type\": \"action\"}], \"concreteness_score\": 0.38, \"confidence\": 0.38, \"date_bucket\": \"2026-05-28\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"invalid_reasons\": [\"missing_concrete_actor_or_product\", \"semantic_level_reject\"], \"is_concrete\": false, \"is_event_like\": false, \"is_thread_like\": false, \"object\": \"\", \"product_or_model\": \"\", \"reject_reason\": \"abstract_commentary_without_event_entity\", \"semantic_level\": \"reject\", \"signature_key\": null, \"source_item_ids\": [\"item_84f775d9f37348438a2841d4a2e0471f\"], \"source_type\": \"social\", \"supporting_tokens\": [\"by\", \"goqphjn9\", \"huggingface.co\", \"jtgoqphjn9\", \"papers\"], \"time_window_hours\": 72.0}}",
+        "target_id": "item_84f775d9f37348438a2841d4a2e0471f",
+        "target_type": "item"
+      },
+      {
+        "reason": "non-event semantic level cannot seed event cluster",
+        "review_type": "low_signal",
+        "suggestion_json": "{\"reason\": \"non-event semantic level cannot seed event cluster\", \"semantic_level\": \"reject\", \"signature\": {\"action\": \"other\", \"actor\": \"\", \"actor_type\": \"unknown\", \"alias_hits\": [], \"concreteness_score\": 0.18, \"confidence\": 0.35, \"date_bucket\": \"2026-05-28\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"invalid_reasons\": [\"missing_concrete_actor_or_product\", \"weak_action_without_entity\", \"semantic_level_reject\"], \"is_concrete\": false, \"is_event_like\": false, \"is_thread_like\": false, \"object\": \"\", \"product_or_model\": \"\", \"reject_reason\": \"missing_concrete_actor_or_product\", \"semantic_level\": \"reject\", \"signature_key\": null, \"source_item_ids\": [\"item_fb3fe9520e6d4eb990367da40a948805\"], \"source_type\": \"social\", \"supporting_tokens\": [\"at\", \"by\", \"editing\", \"generation\", \"image\", \"layered\", \"masked\", \"mrt\", \"region\", \"scale\", \"transformer\"], \"time_window_hours\": 72.0}}",
+        "target_id": "item_fb3fe9520e6d4eb990367da40a948805",
+        "target_type": "item"
+      },
+      {
+        "reason": "non-event semantic level cannot seed event cluster",
+        "review_type": "low_signal",
+        "suggestion_json": "{\"reason\": \"non-event semantic level cannot seed event cluster\", \"semantic_level\": \"reject\", \"signature\": {\"action\": \"research_paper\", \"actor\": \"\", \"actor_type\": \"unknown\", \"alias_hits\": [{\"alias\": \"HuggingFace\", \"canonical\": \"Hugging Face\", \"type\": \"actor\"}, {\"alias\": \"huggingface\", \"canonical\": \"Hugging Face\", \"type\": \"actor\"}, {\"alias\": \"paper\", \"canonical\": \"research\", \"type\": \"action\"}], \"concreteness_score\": 0.38, \"confidence\": 0.38, \"date_bucket\": \"2026-05-28\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"invalid_reasons\": [\"missing_concrete_actor_or_product\", \"semantic_level_reject\"], \"is_concrete\": false, \"is_event_like\": false, \"is_thread_like\": false, \"object\": \"\", \"product_or_model\": \"\", \"reject_reason\": \"abstract_commentary_without_event_entity\", \"semantic_level\": \"reject\", \"signature_key\": null, \"source_item_ids\": [\"item_e00846f129e540d9b08b67396dd4d991\"], \"source_type\": \"social\", \"supporting_tokens\": [\"by\", \"huggingface.co\", \"kaeolvddv\", \"papers\"], \"time_window_hours\": 72.0}}",
+        "target_id": "item_e00846f129e540d9b08b67396dd4d991",
+        "target_type": "item"
+      },
+      {
+        "reason": "non-event semantic level cannot seed event cluster",
+        "review_type": "low_signal",
+        "suggestion_json": "{\"reason\": \"non-event semantic level cannot seed event cluster\", \"semantic_level\": \"reject\", \"signature\": {\"action\": \"research_paper\", \"actor\": \"\", \"actor_type\": \"unknown\", \"alias_hits\": [{\"alias\": \"HuggingFace\", \"canonical\": \"Hugging Face\", \"type\": \"actor\"}, {\"alias\": \"huggingface\", \"canonical\": \"Hugging Face\", \"type\": \"actor\"}, {\"alias\": \"paper\", \"canonical\": \"research\", \"type\": \"action\"}], \"concreteness_score\": 0.38, \"confidence\": 0.38, \"date_bucket\": \"2026-05-28\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"invalid_reasons\": [\"missing_concrete_actor_or_product\", \"semantic_level_reject\"], \"is_concrete\": false, \"is_event_like\": false, \"is_thread_like\": false, \"object\": \"\", \"product_or_model\": \"\", \"reject_reason\": \"abstract_commentary_without_event_entity\", \"semantic_level\": \"reject\", \"signature_key\": null, \"source_item_ids\": [\"item_19f0f96015c949f6b82290e72412ea1a\"], \"source_type\": \"social\", \"supporting_tokens\": [\"by\", \"huggingface.co\", \"papers\", \"ymehjlwohl\"], \"time_window_hours\": 72.0}}",
+        "target_id": "item_19f0f96015c949f6b82290e72412ea1a",
+        "target_type": "item"
+      },
+      {
+        "reason": "non-event semantic level cannot seed event cluster",
+        "review_type": "low_signal",
+        "suggestion_json": "{\"reason\": \"non-event semantic level cannot seed event cluster\", \"semantic_level\": \"reject\", \"signature\": {\"action\": \"other\", \"actor\": \"\", \"actor_type\": \"unknown\", \"alias_hits\": [], \"concreteness_score\": 0.18, \"confidence\": 0.35, \"date_bucket\": \"2026-05-28\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"invalid_reasons\": [\"missing_concrete_actor_or_product\", \"weak_action_without_entity\", \"semantic_level_reject\"], \"is_concrete\": false, \"is_event_like\": false, \"is_thread_like\": false, \"object\": \"\", \"product_or_model\": \"\", \"reject_reason\": \"missing_concrete_actor_or_product\", \"semantic_level\": \"reject\", \"signature_key\": null, \"source_item_ids\": [\"item_193356763044416597c6a5ef0557bf49\"], \"source_type\": \"social\", \"supporting_tokens\": [\"amortized\", \"by\", \"carlo\", \"contrastive\", \"diffusion\", \"discrete\", \"distribution\", \"in\", \"matching\", \"monte\", \"sequential\"], \"time_window_hours\": 72.0}}",
+        "target_id": "item_193356763044416597c6a5ef0557bf49",
+        "target_type": "item"
+      },
+      {
+        "reason": "non-event semantic level cannot seed event cluster",
+        "review_type": "low_signal",
+        "suggestion_json": "{\"reason\": \"non-event semantic level cannot seed event cluster\", \"semantic_level\": \"reject\", \"signature\": {\"action\": \"other\", \"actor\": \"\", \"actor_type\": \"unknown\", \"alias_hits\": [], \"concreteness_score\": 0.18, \"confidence\": 0.35, \"date_bucket\": \"2026-05-28\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"invalid_reasons\": [\"missing_concrete_actor_or_product\", \"weak_action_without_entity\", \"semantic_level_reject\"], \"is_concrete\": false, \"is_event_like\": false, \"is_thread_like\": false, \"object\": \"\", \"product_or_model\": \"\", \"reject_reason\": \"missing_concrete_actor_or_product\", \"semantic_level\": \"reject\", \"signature_key\": null, \"source_item_ids\": [\"item_539f7b857b97435bad5105de21434e8e\"], \"source_type\": \"social\", \"supporting_tokens\": [\"by\", \"iv\", \"joe\", \"joeschmidtiv\", \"sbbvoiosr\", \"schmidt\", \"阅读原文\"], \"time_window_hours\": 72.0}}",
+        "target_id": "item_539f7b857b97435bad5105de21434e8e",
+        "target_type": "item"
+      }
+    ]
+  },
+  "cluster_audit": {
+    "cluster_count": 7,
+    "cluster_item_relations": {
+      "same_event_repeat": 3,
+      "source_material": 7
+    },
+    "multi_item_cluster_count": 2,
+    "multi_item_clusters": [
+      {
+        "cluster_id": "cluster_b063616c10239614",
+        "cluster_title": "OpenAI/Codex integration Codex",
+        "confidence": 0.98,
+        "entities_json": "{\"actor\": \"OpenAI/Codex\", \"product\": \"Codex\", \"action\": \"integration\", \"signature_key\": \"openaicodex|codex|integration|2026-05-07\"}",
+        "item_count": 3,
+        "representative_item_id": "item_82cc030c6c264bf5b18f7b59d73c991d",
+        "status": "active"
+      },
+      {
+        "cluster_id": "cluster_601081733adc458c",
+        "cluster_title": "Anthropic event Claude",
+        "confidence": 0.98,
+        "entities_json": "{\"actor\": \"Anthropic\", \"product\": \"Claude\", \"action\": \"event\", \"signature_key\": \"anthropic|claude|event|2026-05-06\"}",
+        "item_count": 2,
+        "representative_item_id": "item_9e7cfb3f3989480aa6b6b9506be099f6",
+        "status": "active"
+      }
+    ],
+    "ready_event_count": 7,
+    "top_clusters": [
+      {
+        "cluster_id": "cluster_b063616c10239614",
+        "confidence": 0.98,
+        "item_count": 3,
+        "members": [
+          {
+            "item_id": "item_590c9bb9603b4388ae0bd39062e030f8",
+            "primary_relation": "same_event_repeat",
+            "published_at": "2026-05-07T20:08:50+00:00",
+            "source_id": "socialmedia-openai-openai",
+            "source_name": "OpenAI(@OpenAI)",
+            "title": "With the new Chrome extension, Codex can quickly move through repetitive browser work, like navigati..."
+          },
+          {
+            "item_id": "item_82cc030c6c264bf5b18f7b59d73c991d",
+            "primary_relation": "source_material",
+            "published_at": "2026-05-07T20:08:50+00:00",
+            "source_id": "socialmedia-openai-openai",
+            "source_name": "OpenAI(@OpenAI)",
+            "title": "Codex now works directly in Chrome on macOS and Windows. It’s even better at working with apps and ..."
+          },
+          {
+            "item_id": "item_ab6c54f4e0cf4b09ba902264afe6bdce",
+            "primary_relation": "same_event_repeat",
+            "published_at": "2026-05-07T20:08:51+00:00",
+            "source_id": "socialmedia-openai-openai",
+            "source_name": "OpenAI(@OpenAI)",
+            "title": "If a task needs multiple tools, Codex chooses the best one for each step. It uses plugins when they..."
+          }
+        ],
+        "signature": {
+          "action": "integration",
+          "actor": "OpenAI/Codex",
+          "product": "Codex",
+          "signature_key": "openaicodex|codex|integration|2026-05-07"
+        },
+        "status": "active",
+        "title": "OpenAI/Codex integration Codex"
+      },
+      {
+        "cluster_id": "cluster_601081733adc458c",
+        "confidence": 0.98,
+        "item_count": 2,
+        "members": [
+          {
+            "item_id": "item_4a50d19fc03e41fa90b8dbf353c82521",
+            "primary_relation": "same_event_repeat",
+            "published_at": "2026-05-06T16:25:16+00:00",
+            "source_id": "socialmedia-latent-space-latentspacepod",
+            "source_name": "Latent.Space(@latentspacepod)",
+            "title": "experiment: livetweeting the @AnthropicAI code with claude event! first up - @katelyn_lesse and @an..."
+          },
+          {
+            "item_id": "item_9e7cfb3f3989480aa6b6b9506be099f6",
+            "primary_relation": "source_material",
+            "published_at": "2026-05-06T15:59:28+00:00",
+            "source_id": "socialmedia-simon-willison-simonw",
+            "source_name": "Simon Willison(@simonw)",
+            "title": "I'm at the Claude w/ Code event in San Francisco, and I'll be live blogging the keynote here https:/..."
+          }
+        ],
+        "signature": {
+          "action": "event",
+          "actor": "Anthropic",
+          "product": "Claude",
+          "signature_key": "anthropic|claude|event|2026-05-06"
+        },
+        "status": "active",
+        "title": "Anthropic event Claude"
+      },
+      {
+        "cluster_id": "cluster_b2784f076cc5c636",
+        "confidence": 0.98,
+        "item_count": 1,
+        "members": [
+          {
+            "item_id": "item_cce11b2b7a524895bb71eb4f890002d4",
+            "primary_relation": "source_material",
+            "published_at": "2026-05-28T08:00:51+00:00",
+            "source_id": "socialmedia-ai-will-financeyf5",
+            "source_name": "AI Will(@FinanceYF5)",
+            "title": "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个session健忘，每次重新推导架构，结果都不一..."
+          }
+        ],
+        "signature": {
+          "action": "adoption_metric",
+          "actor": "Anthropic",
+          "product": "Claude",
+          "signature_key": "anthropic|claude|adoptionmetric|2026-05-28"
+        },
+        "status": "needs_review",
+        "title": "Anthropic adoption metric Claude"
+      },
+      {
+        "cluster_id": "cluster_385b1d130279f8ae",
+        "confidence": 0.98,
+        "item_count": 1,
+        "members": [
+          {
+            "item_id": "item_2da0ace4db4e48139e678c0488ac553a",
+            "primary_relation": "source_material",
+            "published_at": "2026-05-28T08:00:44+00:00",
+            "source_id": "socialmedia-ai-will-financeyf5",
+            "source_name": "AI Will(@FinanceYF5)",
+            "title": "3/2026最大创业陷阱 Anthropic引了个数据：42%的创业失败因为做了没人要的东西。AI之前的数字。他们说这个比例只会继续往上走 为什么？ 过去做prototype要几个月——这本身就..."
+          }
+        ],
+        "signature": {
+          "action": "company_launch",
+          "actor": "Anthropic",
+          "product": "Claude Code",
+          "signature_key": "anthropic|claudecode|companylaunch|2026-05-28"
+        },
+        "status": "needs_review",
+        "title": "Anthropic company launch Claude Code"
+      },
+      {
+        "cluster_id": "cluster_e6a84769e4c123d8",
+        "confidence": 0.98,
+        "item_count": 1,
+        "members": [
+          {
+            "item_id": "item_ccfccd64dfb841fbb026286ad2bd09f1",
+            "primary_relation": "source_material",
+            "published_at": "2026-05-13T16:15:44+00:00",
+            "source_id": "socialmedia-notion-notionhq",
+            "source_name": "Notion(@NotionHQ)",
+            "title": "The Notion command-line interface (CLI) is a new way to work with Notion programmatically, made just..."
+          }
+        ],
+        "signature": {
+          "action": "release",
+          "actor": "Notion",
+          "product": "Notion Developer Platform",
+          "signature_key": "notion|notiondeveloperplatform|release|2026-05-13"
+        },
+        "status": "needs_review",
+        "title": "Notion release Notion Developer Platform"
+      },
+      {
+        "cluster_id": "cluster_81069ecd4b34a8b9",
+        "confidence": 0.98,
+        "item_count": 1,
+        "members": [
+          {
+            "item_id": "item_4e443b13cc9b421d8eef453efba8f0b1",
+            "primary_relation": "source_material",
+            "published_at": "2026-05-28T08:01:08+00:00",
+            "source_id": "socialmedia-ai-will-financeyf5",
+            "source_name": "AI Will(@FinanceYF5)",
+            "title": "GenAI Summit SF 2026：湾区数万人大会！ 🔗 Will粉丝专属购票链接（可享受15%优惠）： 专属Code：WILL 专属链接： Luma：https://t.co/OoGPFp..."
+          }
+        ],
+        "signature": {
+          "action": "event",
+          "actor": "OpenAI",
+          "product": "SF 2026",
+          "signature_key": "openai|sf2026|event|2026-05-28"
+        },
+        "status": "needs_review",
+        "title": "OpenAI event SF 2026"
+      },
+      {
+        "cluster_id": "cluster_65829a0c8c61fb5f",
+        "confidence": 0.98,
+        "item_count": 1,
+        "members": [
+          {
+            "item_id": "item_5bcb4c09e4e54baab4f6458c54eb308b",
+            "primary_relation": "source_material",
+            "published_at": "2026-05-28T06:55:36+00:00",
+            "source_id": "socialmedia-ai-will-financeyf5",
+            "source_name": "AI Will(@FinanceYF5)",
+            "title": "源：https://t.co/O7NnTsIIPF"
+          }
+        ],
+        "signature": {
+          "action": "feature_update",
+          "actor": "OpenAI/Codex",
+          "product": "codex",
+          "signature_key": "openaicodex|codex|featureupdate|2026-05-28"
+        },
+        "status": "needs_review",
+        "title": "OpenAI/Codex feature update codex"
+      }
+    ]
+  },
+  "live_llm": {
+    "calls_attempted": 20,
+    "calls_failed": 0,
+    "calls_skipped": 0,
+    "calls_succeeded": 20,
+    "enabled": true,
+    "examples": [
+      {
+        "confidence": 0.6,
+        "mode": "signature_repair",
+        "proposed_action": "research_paper",
+        "proposed_actor": "unknown",
+        "proposed_product": "Paper 2605.28",
+        "title": "paper: https://t.co/X2u1M9UpA2",
+        "type": "signature_repair"
+      },
+      {
+        "confidence": 0.7,
+        "mode": "signature_repair",
+        "proposed_action": "research_paper",
+        "proposed_actor": "unknown",
+        "proposed_product": "MRT Masked Region Transformer",
+        "title": "MRT Masked Region Transformer for Layered Image Generation and Editing at Scale",
+        "type": "signature_repair"
+      },
+      {
+        "confidence": 0.4,
+        "mode": "signature_repair",
+        "proposed_action": "research_paper",
+        "proposed_actor": "unknown",
+        "proposed_product": "paper 2605.21",
+        "title": "paper: https://t.co/3KAeoLVDdV",
+        "type": "signature_repair"
+      },
+      {
+        "confidence": 0.2,
+        "left_title": "experiment: livetweeting the @AnthropicAI code with claude event! first up - @ka",
+        "mode": "relation_judge",
+        "reason_code": "llm_different_event",
+        "relation": "different_event",
+        "right_title": "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个sessio",
+        "type": "relation_judge"
+      },
+      {
+        "confidence": 0.6,
+        "left_title": "With the new Chrome extension, Codex can quickly move through repetitive browser",
+        "mode": "relation_judge",
+        "reason_code": "llm_related",
+        "relation": "related",
+        "right_title": "源：https://t.co/O7NnTsIIPF",
+        "type": "relation_judge"
+      },
+      {
+        "confidence": 0.6,
+        "left_title": "源：https://t.co/O7NnTsIIPF",
+        "mode": "relation_judge",
+        "reason_code": "llm_update",
+        "relation": "update",
+        "right_title": "Codex now works directly in Chrome on macOS and Windows. It’s even better at wor",
+        "type": "relation_judge"
+      }
+    ],
+    "max_calls": 50,
+    "modes_run": [
+      "candidate_discovery",
+      "signature_repair",
+      "relation_judge",
+      "cluster_proposal"
+    ],
+    "proposals": {
+      "candidate_discovery": 0,
+      "cluster_proposal": 20,
+      "relation_judge": 5,
+      "signature_repair": 3
+    },
+    "provider": "deepseek-v4-flash",
+    "schema_invalid": 0,
+    "schema_valid": 20,
+    "timeout_count": 0
+  },
+  "metadata": {
+    "backup_path": null,
+    "dry_run": true,
+    "evaluation_db_path": "/tmp/claude-501/content_inbox_real_use_smoke_k6n2hbx4.sqlite3",
+    "generated_at": "2026-06-01T03:28:35.540823+00:00",
+    "items_sampled": 40,
+    "limit": 40,
+    "live_llm_enabled": true,
+    "live_llm_max_calls": 50,
+    "live_llm_provider": "deepseek-v4-flash",
+    "sample_mode": "event_hotspots",
+    "source_db_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3",
+    "source_filter": null,
+    "source_url_prefix": null,
+    "warnings": [],
+    "write_real_db": false
+  },
+  "outputs": {
+    "daily_briefing_path": null,
+    "daily_briefing_preview": "# 每日简报 2026-06-01\n\n## 可信事件\n- OpenAI/Codex integration Codex（可信事件，置信度 0.98）\n- Anthropic event Claude（可信事件，置信度 0.98）\n- Anthropic company launch Claude Code（可信事件，置信度 0.98）\n- OpenAI event SF 2026（可信事件，置信度 0.98）\n- OpenAI/Codex feature update codex（可信事件，置信度 0.98）\n- Anthropic adoption metric Claude（可信事件，置信度 0.98）\n- Notion release Notion Developer Platform（可信事件，置信度 0.98）\n\n## 待审核\n- eventness_review item:item_0513431281ed4b1c8dc89127100648d9\n- eventness_review item:item_121fb943b0f24e3bba309474b8d35c76\n- eventness_review item:item_193356763044416597c6a5ef0557bf49\n- eventness_review item:item_194e2990d69843398e4ad24814bebef1\n- eventness_review item:item_19f0f96015c949f6b82290e72412ea1a\n- eventness_review item:item_1da7d26c653d494a9c1c099de5c15f40\n- eventness_review item:item_260c0406b6dd4fda9b9a8ac4a4da918c\n- eventness_review item:item_291caeefffc847638ac30a08cd3230a8\n- eventness_review item:item_29fd642dc61747229ddaadc26d83b95d\n- eventness_review item:item_413261cbb0004698b99a3410613efa7d",
+    "report_path": "docs/real_use_llm_smoke_20260601_calls50/real_use_smoke_report.md",
+    "run_endpoint_report_preview": "# 运行报告 real_use_smoke_36e57ad0ddad\n\n状态: success\n\n新增条目: 40\n\n信息源数量: 0\n\n## 可信事件\n- OpenAI/Codex integration Codex：integration，置信度 0.98\n- Anthropic event Claude：event，置信度 0.98\n- Anthropic company launch Claude Code：company_launch，置信度 0.98\n- OpenAI event SF 2026：event，置信度 0.98\n- OpenAI/Codex feature update codex：feature_update，置信度 0.98\n- Anthropic adoption metric Claude：adoption_metric，置信度 0.98\n- Notion release Notion Developer Platform：release，置信度 0.98\n\n## 质量概览\n- 可信事件数: 7\n- 待审核项: 40\n- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n",
+    "run_report_path": null,
+    "run_report_preview": "# 运行报告\n\n生成时间: 2026-06-01T03:27:07.419801+00:00\n\n关联对象: run real_use_smoke_36e57ad0ddad\n\n## 可信事件\n- OpenAI/Codex integration Codex：integration，置信度 0.98，cluster cluster_b063616c10239614\n- Anthropic event Claude：event，置信度 0.98，cluster cluster_601081733adc458c\n- Anthropic company launch Claude Code：company_launch，置信度 0.98，cluster cluster_385b1d130279f8ae\n- OpenAI event SF 2026：event，置信度 0.98，cluster cluster_81069ecd4b34a8b9\n- OpenAI/Codex feature update codex：feature_update，置信度 0.98，cluster cluster_65829a0c8c61fb5f\n- Anthropic adoption metric Claude：adoption_metric，置信度 0.98，cluster cluster_b2784f076cc5c636\n- Notion release Notion Developer Platform：release，置信度 0.98，cluster cluster_e6a84769e4c123d8\n\n## 质量概览\n- 可信事件数: 7\n- 全部事件数: 7\n- 待审核项: 40\n- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n",
+    "summary_path": "docs/real_use_llm_smoke_20260601_calls50/real_use_smoke_summary.json"
+  },
+  "pipeline": {
+    "dedupe": {
+      "dedupe_explanation_count": 0,
+      "dedupe_explanation_coverage": 1.0,
+      "dedupe_groups_created_or_updated": 40,
+      "schema_version": "operational_v3",
+      "seen_count_gt_1_items": 0
+    },
+    "information_objects": {
+      "alias_hit_count": 58,
+      "auto_merged": 4,
+      "candidates_by_lane": {
+        "exact_signature_alias": 1,
+        "exploratory_recall": 21,
+        "same_source_repeat": 3,
+        "same_thread": 8,
+        "suppressed": 12
+      },
+      "candidates_by_priority": {
+        "high": 3,
+        "low": 29,
+        "must_run": 1,
+        "suppress": 12
+      },
+      "clusters_created_or_updated": 7,
+      "created_by": "operational_v3_rule",
+      "disqualifiers_by_reason": {
+        "wide_time_window": 25
+      },
+      "eventness": {
+        "content": 1,
+        "event": 10,
+        "low_signal": 1,
+        "thread": 8,
+        "unknown": 20
+      },
+      "events_created_or_updated": 7,
+      "item_count": 40,
+      "llm_calls": 0,
+      "rejected_non_event": 30,
+      "review_required": 10,
+      "schema_version": "operational_v3",
+      "signature": {
+        "content_signature": 0,
+        "event_signature": 11,
+        "invalid": 29,
+        "reject": 20,
+        "thread_signature": 9
+      }
+    },
+    "item_cards": {
+      "items": [
+        {
+          "id": 1,
+          "item_id": "item_dd85313dcfba4fae9644256af2f1b49d",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 2,
+          "item_id": "item_580e9e5c48c94a228c0735c19dbbe955",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 3,
+          "item_id": "item_260c0406b6dd4fda9b9a8ac4a4da918c",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 4,
+          "item_id": "item_121fb943b0f24e3bba309474b8d35c76",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 5,
+          "item_id": "item_abc8785708be49cd81459193c016ad12",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 6,
+          "item_id": "item_c8893f927e604eff984e7038a955ba43",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 7,
+          "item_id": "item_291caeefffc847638ac30a08cd3230a8",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 8,
+          "item_id": "item_a5c1a40304484274a0b1d6e615171e04",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 9,
+          "item_id": "item_d2ad54ac112c458cafb0b828994757f7",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 10,
+          "item_id": "item_95ce8f56fa4041df8c669e0a15c47647",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 11,
+          "item_id": "item_539f7b857b97435bad5105de21434e8e",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 12,
+          "item_id": "item_193356763044416597c6a5ef0557bf49",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 13,
+          "item_id": "item_19f0f96015c949f6b82290e72412ea1a",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 14,
+          "item_id": "item_e00846f129e540d9b08b67396dd4d991",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 15,
+          "item_id": "item_fb3fe9520e6d4eb990367da40a948805",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 16,
+          "item_id": "item_84f775d9f37348438a2841d4a2e0471f",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 17,
+          "item_id": "item_d60c060db0214f7eaeb1b9d2ccfa7e25",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 18,
+          "item_id": "item_805f1f04d3b54e70991690d7dd036141",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 19,
+          "item_id": "item_413261cbb0004698b99a3410613efa7d",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 20,
+          "item_id": "item_9bf64d3c100546f5ba4d4052639a662f",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 21,
+          "item_id": "item_e8019adaa3034d59a5016f1bd07b1b92",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 22,
+          "item_id": "item_75c6ebce7128422a811852761a0a9f5a",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 23,
+          "item_id": "item_4a50d19fc03e41fa90b8dbf353c82521",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 24,
+          "item_id": "item_9e7cfb3f3989480aa6b6b9506be099f6",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 25,
+          "item_id": "item_5bcb4c09e4e54baab4f6458c54eb308b",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 26,
+          "item_id": "item_5c565bfa97f74d74a7f8d44659d82559",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 27,
+          "item_id": "item_0513431281ed4b1c8dc89127100648d9",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 28,
+          "item_id": "item_58d3b86f1cf2481481a4f1dec88d480e",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 29,
+          "item_id": "item_2da0ace4db4e48139e678c0488ac553a",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 30,
+          "item_id": "item_cce11b2b7a524895bb71eb4f890002d4",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 31,
+          "item_id": "item_4e443b13cc9b421d8eef453efba8f0b1",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 32,
+          "item_id": "item_1da7d26c653d494a9c1c099de5c15f40",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 33,
+          "item_id": "item_9e2a0ae82de8499e9cced6f79c8579a5",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 34,
+          "item_id": "item_29fd642dc61747229ddaadc26d83b95d",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 35,
+          "item_id": "item_194e2990d69843398e4ad24814bebef1",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 36,
+          "item_id": "item_590c9bb9603b4388ae0bd39062e030f8",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 37,
+          "item_id": "item_82cc030c6c264bf5b18f7b59d73c991d",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 38,
+          "item_id": "item_ab6c54f4e0cf4b09ba902264afe6bdce",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 39,
+          "item_id": "item_cb9ab608941947ca9877e7a9fc2578f7",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 40,
+          "item_id": "item_ccfccd64dfb841fbb026286ad2bd09f1",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        }
+      ],
+      "ok": true,
+      "stats": {
+        "budget_skip_fallback_count": 0,
+        "card_tiers": {
+          "full": 1,
+          "minimal": 24,
+          "standard": 15
+        },
+        "deterministic_minimal_cards": 24,
+        "dry_run": false,
+        "errors": 0,
+        "failed_batch_count": 4,
+        "heuristic_fallback_count": 16,
+        "llm_calls": 0,
+        "local_minimal_cards": 24,
+        "parse_error_fallback_count": 0,
+        "selected": 40,
+        "single_retry_success_count": 0,
+        "skipped": 0,
+        "split_retry_success_count": 0,
+        "written": 40
+      }
+    }
+  },
+  "source_scope": {
+    "item_count": 3278,
+    "latest_item_time": "2026-05-28T15:29:11+00:00",
+    "source_count": 469
+  }
+}

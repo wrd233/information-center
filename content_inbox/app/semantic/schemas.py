@@ -130,14 +130,17 @@ EventSignatureAction = Literal[
     "opinion_analysis",
     "other",
 ]
-SemanticJudgeRelation = Literal["same_event", "update", "background", "related", "different_event"]
+SemanticJudgeRelation = Literal["same_event", "update", "background", "related", "different_event", "uncertain"]
 SemanticJudgeReasonCode = Literal[
     "llm_same_event",
     "llm_update",
     "llm_background",
     "llm_related",
     "llm_different_event",
+    "llm_uncertain",
 ]
+CANDIDATE_DISCOVERY_PROMPT_VERSION = "semantic_candidate_discovery_v1"
+SIGNATURE_REPAIR_PROMPT_VERSION = "semantic_signature_repair_v1"
 
 
 class ItemCardData(BaseModel):
@@ -301,6 +304,58 @@ class EventSignatureExtractionOutput(BaseModel):
     is_thread_like: bool = False
     reject_reason: str = ""
     extraction_notes: str = ""
+
+
+class CandidateDiscoveryProposal(BaseModel):
+    should_create_candidate: bool = False
+    candidate_lane: str = "llm_candidate_discovery"
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    candidate_relation_hint: str = "uncertain"
+    reason_code: str = "llm_candidate_same_event_possible"
+    evidence: list[str] = Field(default_factory=list)
+    risk_flags: list[str] = Field(default_factory=list)
+
+    @field_validator("evidence", "risk_flags", mode="before")
+    @classmethod
+    def coerce_string_list(cls, value: object) -> list[str]:
+        if value is None or value is False:
+            return []
+        if isinstance(value, str):
+            return [value] if value.strip() else []
+        if isinstance(value, list):
+            return [str(item) for item in value if str(item).strip()]
+        return [str(value)] if str(value).strip() else []
+
+
+class CandidateDiscoveryOutput(BaseModel):
+    candidates: list[CandidateDiscoveryProposal] = Field(default_factory=list)
+
+
+class SignatureRepairProposal(BaseModel):
+    item_id: str = ""
+    proposed_actor: str = ""
+    proposed_product: str = ""
+    proposed_action: str = "other"
+    proposed_object: str = ""
+    proposed_event_signature: str = ""
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    evidence: list[str] = Field(default_factory=list)
+    risk_flags: list[str] = Field(default_factory=list)
+
+    @field_validator("evidence", "risk_flags", mode="before")
+    @classmethod
+    def coerce_string_list(cls, value: object) -> list[str]:
+        if value is None or value is False:
+            return []
+        if isinstance(value, str):
+            return [value] if value.strip() else []
+        if isinstance(value, list):
+            return [str(item) for item in value if str(item).strip()]
+        return [str(value)] if str(value).strip() else []
+
+
+class SignatureRepairOutput(BaseModel):
+    repairs: list[SignatureRepairProposal] = Field(default_factory=list)
 
 
 def item_relation_should_fold(primary_relation: str) -> bool:

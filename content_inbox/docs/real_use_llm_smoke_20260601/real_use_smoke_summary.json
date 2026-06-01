@@ -1,0 +1,681 @@
+{
+  "candidate_audit": {
+    "by_lane": {
+      "exact_signature_alias": 1,
+      "exploratory_recall": 21,
+      "same_source_repeat": 3,
+      "same_thread": 8,
+      "suppressed": 12
+    },
+    "by_priority": {
+      "high": 3,
+      "low": 29,
+      "must_run": 1,
+      "suppress": 12
+    },
+    "by_status": {
+      "auto_merge": 4,
+      "rejected": 36,
+      "review": 5
+    },
+    "candidate_pair_count": 45,
+    "pending_review_count": 40,
+    "review_samples": [
+      {
+        "reason": "Item did not pass eventness gate; it will not be materialized as an event automatically.",
+        "review_type": "eventness_review",
+        "suggestion_json": "{\"eventness\": {\"decision\": \"low_signal\", \"confidence\": 0.9, \"reasons\": [\"short_or_symbolic_title\"], \"negative_features\": [\"short_or_symbolic_title\"]}, \"signature\": {\"semantic_level\": \"event_signature\", \"actor\": \"Notion\", \"actor_type\": \"organization\", \"product_or_model\": \"Notion Developer Platform\", \"action\": \"release\", \"object\": \"\", \"date_bucket\": \"2026-05-13\", \"time_window_hours\": 72.0, \"source_type\": \"social\", \"signature_key\": \"notion|notiondeveloperplatform|release|2026-05-13\", \"supporting_tokens\": [\"along\", \"any\", \"blocks\", \"broadcasts\", \"building\", \"by\", \"coding\", \"developer\", \"developers\", \"follow\", \"help\", \"introducing\", \"it\", \"live\", \"notion\", \"notiondevs\", \"orchestrate\", \"sync\", \"you\", \"your\"], \"source_item_ids\": [\"item_016e5ea8975e41aeb7fee172f4ca03cb\"], \"confidence\": 1.0, \"is_event_like\": true, \"is_thread_like\": false, \"reject_reason\": \"\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"concreteness_score\": 1.0, \"is_concrete\": true, \"invalid_reasons\": [], \"alias_hits\": [{\"type\": \"action\", \"alias\": \"introducing\", \"canonical\": \"release\"}]}, \"action\": \"review_item_eventness\", \"run_id\": \"real_use_smoke_50c66760ded5\", \"schema_version\": \"operational_v3\", \"created_by\": \"operational_v3_rule\", \"input_fingerprint\": \"04658170709bd1534990e6a206c6e1f702262785e80f7ffdaff7a6608d6b84cd\"}",
+        "target_id": "item_016e5ea8975e41aeb7fee172f4ca03cb",
+        "target_type": "item"
+      },
+      {
+        "reason": "Item did not pass eventness gate; it will not be materialized as an event automatically.",
+        "review_type": "eventness_review",
+        "suggestion_json": "{\"eventness\": {\"decision\": \"unknown\", \"confidence\": 0.55, \"reasons\": [\"no_concrete_event_signature\"], \"negative_features\": [\"missing_concrete_actor_or_product\", \"semantic_level_reject\"]}, \"signature\": {\"semantic_level\": \"reject\", \"actor\": \"\", \"actor_type\": \"unknown\", \"product_or_model\": \"\", \"action\": \"research_paper\", \"object\": \"\", \"date_bucket\": \"2026-05-28\", \"time_window_hours\": 72.0, \"source_type\": \"social\", \"signature_key\": null, \"supporting_tokens\": [\"by\", \"huggingface.co\", \"papers\", \"ymehjlwohl\"], \"source_item_ids\": [\"item_0f407d418b224808b8d223a2bf77733e\"], \"confidence\": 0.38, \"is_event_like\": false, \"is_thread_like\": false, \"reject_reason\": \"abstract_commentary_without_event_entity\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"concreteness_score\": 0.38, \"is_concrete\": false, \"invalid_reasons\": [\"missing_concrete_actor_or_product\", \"semantic_level_reject\"], \"alias_hits\": [{\"type\": \"actor\", \"alias\": \"HuggingFace\", \"canonical\": \"Hugging Face\"}, {\"type\": \"actor\", \"alias\": \"huggingface\", \"canonical\": \"Hugging Face\"}, {\"type\": \"action\", \"alias\": \"paper\", \"canonical\": \"research\"}]}, \"action\": \"review_item_eventness\", \"run_id\": \"real_use_smoke_50c66760ded5\", \"schema_version\": \"operational_v3\", \"created_by\": \"operational_v3_rule\", \"input_fingerprint\": \"4d8baa62bd1dc993c416ec08e85c49d2363c281dc946958798b46da4fc813cb1\"}",
+        "target_id": "item_0f407d418b224808b8d223a2bf77733e",
+        "target_type": "item"
+      },
+      {
+        "reason": "Item did not pass eventness gate; it will not be materialized as an event automatically.",
+        "review_type": "eventness_review",
+        "suggestion_json": "{\"eventness\": {\"decision\": \"unknown\", \"confidence\": 0.55, \"reasons\": [\"no_concrete_event_signature\"], \"negative_features\": [\"missing_concrete_actor_or_product\", \"weak_action_without_entity\", \"semantic_level_reject\"]}, \"signature\": {\"semantic_level\": \"reject\", \"actor\": \"\", \"actor_type\": \"unknown\", \"product_or_model\": \"\", \"action\": \"feature_update\", \"object\": \"\", \"date_bucket\": \"2026-05-28\", \"time_window_hours\": 72.0, \"source_type\": \"social\", \"signature_key\": null, \"supporting_tokens\": [\"by\", \"does\", \"executive\", \"not\", \"on\", \"self-evolving\", \"skillopt\", \"skills\", \"strategy\", \"support\", \"tag\", \"video\", \"your\"], \"source_item_ids\": [\"item_2d43f59dad0b4440a8a12e291b13df7d\"], \"confidence\": 0.38, \"is_event_like\": false, \"is_thread_like\": false, \"reject_reason\": \"missing_concrete_actor_or_product\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"concreteness_score\": 0.38, \"is_concrete\": false, \"invalid_reasons\": [\"missing_concrete_actor_or_product\", \"weak_action_without_entity\", \"semantic_level_reject\"], \"alias_hits\": []}, \"action\": \"review_item_eventness\", \"run_id\": \"real_use_smoke_50c66760ded5\", \"schema_version\": \"operational_v3\", \"created_by\": \"operational_v3_rule\", \"input_fingerprint\": \"89f9d1ed487f6a55fcef6006e588257e8bc0483b79d8a701045fb6c54a812581\"}",
+        "target_id": "item_2d43f59dad0b4440a8a12e291b13df7d",
+        "target_type": "item"
+      },
+      {
+        "reason": "Item did not pass eventness gate; it will not be materialized as an event automatically.",
+        "review_type": "eventness_review",
+        "suggestion_json": "{\"eventness\": {\"decision\": \"unknown\", \"confidence\": 0.55, \"reasons\": [\"no_concrete_event_signature\"], \"negative_features\": [\"missing_concrete_actor_or_product\", \"semantic_level_reject\"]}, \"signature\": {\"semantic_level\": \"reject\", \"actor\": \"\", \"actor_type\": \"unknown\", \"product_or_model\": \"\", \"action\": \"tutorial\", \"object\": \"\", \"date_bucket\": \"2026-05-28\", \"time_window_hours\": 72.0, \"source_type\": \"social\", \"signature_key\": null, \"supporting_tokens\": [\"by\", \"effective\", \"estimation\", \"gradient\", \"learning\", \"policy\", \"proactive\", \"prorl\", \"recommendation\", \"rectified\", \"reinforcement\", \"via\"], \"source_item_ids\": [\"item_2deea276720a49839ee11b1bff335dbb\"], \"confidence\": 0.38, \"is_event_like\": false, \"is_thread_like\": false, \"reject_reason\": \"missing_concrete_actor_or_product\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"concreteness_score\": 0.38, \"is_concrete\": false, \"invalid_reasons\": [\"missing_concrete_actor_or_product\", \"semantic_level_reject\"], \"alias_hits\": [{\"type\": \"action\", \"alias\": \"act\", \"canonical\": \"policy\"}]}, \"action\": \"review_item_eventness\", \"run_id\": \"real_use_smoke_50c66760ded5\", \"schema_version\": \"operational_v3\", \"created_by\": \"operational_v3_rule\", \"input_fingerprint\": \"15c2764992c7278adf16da472f7c498bc8e982aefc93d8b865b331fed67ac137\"}",
+        "target_id": "item_2deea276720a49839ee11b1bff335dbb",
+        "target_type": "item"
+      },
+      {
+        "reason": "Item did not pass eventness gate; it will not be materialized as an event automatically.",
+        "review_type": "eventness_review",
+        "suggestion_json": "{\"eventness\": {\"decision\": \"unknown\", \"confidence\": 0.55, \"reasons\": [\"no_concrete_event_signature\"], \"negative_features\": [\"missing_concrete_actor_or_product\", \"weak_action_without_entity\", \"semantic_level_reject\"]}, \"signature\": {\"semantic_level\": \"reject\", \"actor\": \"\", \"actor_type\": \"unknown\", \"product_or_model\": \"\", \"action\": \"other\", \"object\": \"\", \"date_bucket\": \"2026-05-28\", \"time_window_hours\": 72.0, \"source_type\": \"social\", \"signature_key\": null, \"supporting_tokens\": [\"by\", \"ceo\", \"david\", \"solomon\", \"上表示\", \"纽约时报\", \"高盛\"], \"source_item_ids\": [\"item_2f52e9dc5959454698e52736ec982d37\"], \"confidence\": 0.35, \"is_event_like\": false, \"is_thread_like\": false, \"reject_reason\": \"missing_concrete_actor_or_product\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"concreteness_score\": 0.18, \"is_concrete\": false, \"invalid_reasons\": [\"missing_concrete_actor_or_product\", \"weak_action_without_entity\", \"semantic_level_reject\"], \"alias_hits\": []}, \"action\": \"review_item_eventness\", \"run_id\": \"real_use_smoke_50c66760ded5\", \"schema_version\": \"operational_v3\", \"created_by\": \"operational_v3_rule\", \"input_fingerprint\": \"b0bb0da87f562a1c6737153c59f1a6985e87de414f949a5fcfed567b054fb3a9\"}",
+        "target_id": "item_2f52e9dc5959454698e52736ec982d37",
+        "target_type": "item"
+      },
+      {
+        "reason": "Item did not pass eventness gate; it will not be materialized as an event automatically.",
+        "review_type": "eventness_review",
+        "suggestion_json": "{\"eventness\": {\"decision\": \"unknown\", \"confidence\": 0.55, \"reasons\": [\"no_concrete_event_signature\"], \"negative_features\": [\"missing_concrete_actor_or_product\", \"weak_action_without_entity\", \"semantic_level_reject\"]}, \"signature\": {\"semantic_level\": \"reject\", \"actor\": \"\", \"actor_type\": \"unknown\", \"product_or_model\": \"\", \"action\": \"other\", \"object\": \"\", \"date_bucket\": \"2026-05-28\", \"time_window_hours\": 72.0, \"source_type\": \"social\", \"signature_key\": null, \"supporting_tokens\": [\"amortized\", \"by\", \"carlo\", \"contrastive\", \"diffusion\", \"discrete\", \"distribution\", \"in\", \"matching\", \"monte\", \"sequential\"], \"source_item_ids\": [\"item_3055cf1fe8d141bda5e1cf4d1bfd1223\"], \"confidence\": 0.35, \"is_event_like\": false, \"is_thread_like\": false, \"reject_reason\": \"missing_concrete_actor_or_product\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"concreteness_score\": 0.18, \"is_concrete\": false, \"invalid_reasons\": [\"missing_concrete_actor_or_product\", \"weak_action_without_entity\", \"semantic_level_reject\"], \"alias_hits\": []}, \"action\": \"review_item_eventness\", \"run_id\": \"real_use_smoke_50c66760ded5\", \"schema_version\": \"operational_v3\", \"created_by\": \"operational_v3_rule\", \"input_fingerprint\": \"c77f8a1392d7a7223a81dcbcb7a48c686c29e1a42351c581e28d2defe92d7e20\"}",
+        "target_id": "item_3055cf1fe8d141bda5e1cf4d1bfd1223",
+        "target_type": "item"
+      },
+      {
+        "reason": "Item did not pass eventness gate; it will not be materialized as an event automatically.",
+        "review_type": "eventness_review",
+        "suggestion_json": "{\"eventness\": {\"decision\": \"thread\", \"confidence\": 0.7, \"reasons\": [\"thread_signature\"], \"negative_features\": [\"semantic_level_thread_signature\"]}, \"signature\": {\"semantic_level\": \"thread_signature\", \"actor\": \"\", \"actor_type\": \"unknown\", \"product_or_model\": \"Physical 3D\", \"action\": \"feature_update\", \"object\": \"\", \"date_bucket\": \"2026-05-28\", \"time_window_hours\": 72.0, \"source_type\": \"social\", \"signature_key\": null, \"supporting_tokens\": [\"articulated\", \"by\", \"deformable\", \"does\", \"generation\", \"not\", \"objects\", \"on\", \"physical\", \"physx-omni\", \"rigid\", \"simulation-ready\", \"support\", \"tag\", \"unified\", \"video\", \"your\"], \"source_item_ids\": [\"item_3070bedb31d24e78b28ed7cf3387bea7\"], \"confidence\": 0.7, \"is_event_like\": false, \"is_thread_like\": true, \"reject_reason\": \"entity_without_valid_event_action\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"concreteness_score\": 0.7, \"is_concrete\": false, \"invalid_reasons\": [\"semantic_level_thread_signature\"], \"alias_hits\": []}, \"action\": \"review_item_eventness\", \"run_id\": \"real_use_smoke_50c66760ded5\", \"schema_version\": \"operational_v3\", \"created_by\": \"operational_v3_rule\", \"input_fingerprint\": \"15140caea6891e0d2dce9b8fc9432b1eb88ebfa62b184467a7f7e11e5144b523\"}",
+        "target_id": "item_3070bedb31d24e78b28ed7cf3387bea7",
+        "target_type": "item"
+      },
+      {
+        "reason": "Item did not pass eventness gate; it will not be materialized as an event automatically.",
+        "review_type": "eventness_review",
+        "suggestion_json": "{\"eventness\": {\"decision\": \"thread\", \"confidence\": 0.68, \"reasons\": [\"thread_signature\"], \"negative_features\": [\"semantic_level_thread_signature\"]}, \"signature\": {\"semantic_level\": \"thread_signature\", \"actor\": \"Cognition\", \"actor_type\": \"organization\", \"product_or_model\": \"\", \"action\": \"pricing\", \"object\": \"\", \"date_bucket\": \"2026-05-28\", \"time_window_hours\": 72.0, \"source_type\": \"social\", \"signature_key\": null, \"supporting_tokens\": [\"by\", \"ceo\", \"cognition\", \"does\", \"not\", \"on\", \"scott\", \"support\", \"tag\", \"video\", \"wu\", \"your\", \"万到\", \"万美元攀升至约\", \"万软件工程师\", \"不止比现在多十倍\", \"人的效率都提高十\", \"亿美元\", \"亿美元融资时说道\", \"他们的收入在一年\"], \"source_item_ids\": [\"item_33d28987e34a43fb9c038fde9be51560\"], \"confidence\": 0.68, \"is_event_like\": false, \"is_thread_like\": true, \"reject_reason\": \"entity_without_valid_event_action\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"concreteness_score\": 0.68, \"is_concrete\": false, \"invalid_reasons\": [\"semantic_level_thread_signature\"], \"alias_hits\": [{\"type\": \"action\", \"alias\": \"融资\", \"canonical\": \"funding\"}]}, \"action\": \"review_item_eventness\", \"run_id\": \"real_use_smoke_50c66760ded5\", \"schema_version\": \"operational_v3\", \"created_by\": \"operational_v3_rule\", \"input_fingerprint\": \"1840a25ba6fb67e19f24cae1e4f7ae708f877da328298664c4785f1c0d61cd80\"}",
+        "target_id": "item_33d28987e34a43fb9c038fde9be51560",
+        "target_type": "item"
+      },
+      {
+        "reason": "Item did not pass eventness gate; it will not be materialized as an event automatically.",
+        "review_type": "eventness_review",
+        "suggestion_json": "{\"eventness\": {\"decision\": \"thread\", \"confidence\": 0.62, \"reasons\": [\"thread_signature\"], \"negative_features\": [\"semantic_level_thread_signature\"]}, \"signature\": {\"semantic_level\": \"thread_signature\", \"actor\": \"OpenAI\", \"actor_type\": \"organization\", \"product_or_model\": \"\", \"action\": \"other\", \"object\": \"\", \"date_bucket\": \"2026-05-28\", \"time_window_hours\": 72.0, \"source_type\": \"social\", \"signature_key\": null, \"supporting_tokens\": [\"anthropic\", \"by\", \"openai\", \"会不会把软件全包\", \"别急着下结论\", \"应用层还能做吗\", \"条路上\", \"该问的是你走在哪\", \"这个问题问错了\"], \"source_item_ids\": [\"item_43836685ab944baabeaf4a026df12fa5\"], \"confidence\": 0.5, \"is_event_like\": false, \"is_thread_like\": true, \"reject_reason\": \"entity_without_valid_event_action\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"concreteness_score\": 0.48, \"is_concrete\": false, \"invalid_reasons\": [\"semantic_level_thread_signature\"], \"alias_hits\": []}, \"action\": \"review_item_eventness\", \"run_id\": \"real_use_smoke_50c66760ded5\", \"schema_version\": \"operational_v3\", \"created_by\": \"operational_v3_rule\", \"input_fingerprint\": \"d70b08f5aa1c1593f540737bd3c39a20c1c1a00341a45a7d6e253a05a712fcf7\"}",
+        "target_id": "item_43836685ab944baabeaf4a026df12fa5",
+        "target_type": "item"
+      },
+      {
+        "reason": "Item did not pass eventness gate; it will not be materialized as an event automatically.",
+        "review_type": "eventness_review",
+        "suggestion_json": "{\"eventness\": {\"decision\": \"thread\", \"confidence\": 0.7, \"reasons\": [\"thread_signature\"], \"negative_features\": [\"semantic_level_thread_signature\"]}, \"signature\": {\"semantic_level\": \"thread_signature\", \"actor\": \"\", \"actor_type\": \"unknown\", \"product_or_model\": \"ing 4\", \"action\": \"funding\", \"object\": \"\", \"date_bucket\": \"2026-05-28\", \"time_window_hours\": 72.0, \"source_type\": \"social\", \"signature_key\": null, \"supporting_tokens\": [\"advisor\", \"by\", \"rlhf\", \"tam\", \"会怼你\", \"只会顺着你说\", \"台引擎\", \"在骗你\", \"够投资人买单\", \"它一定给你一个\", \"它一定给你找支持\", \"把它训练成了\", \"时代\", \"现在你的\", \"的数字\", \"的证据\", \"研究员\", \"给自我欺骗装了一\", \"认知纪律比\", \"让你满意的助手\"], \"source_item_ids\": [\"item_4578f20c634d4badb3cf575f5c79fe8c\"], \"confidence\": 0.7, \"is_event_like\": false, \"is_thread_like\": true, \"reject_reason\": \"chinese_thread_without_concrete_actor\", \"extraction_notes\": \"deterministic_phase1_3b_hybrid_fast_path\", \"concreteness_score\": 0.7, \"is_concrete\": false, \"invalid_reasons\": [\"semantic_level_thread_signature\"], \"alias_hits\": [{\"type\": \"actor\", \"alias\": \"HF\", \"canonical\": \"Hugging Face\"}, {\"type\": \"action\", \"alias\": \"投资\", \"canonical\": \"funding\"}]}, \"action\": \"review_item_eventness\", \"run_id\": \"real_use_smoke_50c66760ded5\", \"schema_version\": \"operational_v3\", \"created_by\": \"operational_v3_rule\", \"input_fingerprint\": \"5449e826e629583db86d6cd1eff13fbaaaee62e474947952e1c540036c344c20\"}",
+        "target_id": "item_4578f20c634d4badb3cf575f5c79fe8c",
+        "target_type": "item"
+      }
+    ]
+  },
+  "cluster_audit": {
+    "cluster_count": 7,
+    "cluster_item_relations": {
+      "same_event_repeat": 3,
+      "source_material": 7
+    },
+    "multi_item_cluster_count": 2,
+    "multi_item_clusters": [
+      {
+        "cluster_id": "cluster_b063616c10239614",
+        "cluster_title": "OpenAI/Codex integration Codex",
+        "confidence": 0.98,
+        "entities_json": "{\"actor\": \"OpenAI/Codex\", \"product\": \"Codex\", \"action\": \"integration\", \"signature_key\": \"openaicodex|codex|integration|2026-05-07\"}",
+        "item_count": 3,
+        "representative_item_id": "item_5071c9df1d374a1c9b86e6b2537fc6af",
+        "status": "active"
+      },
+      {
+        "cluster_id": "cluster_601081733adc458c",
+        "cluster_title": "Anthropic event Claude",
+        "confidence": 0.98,
+        "entities_json": "{\"actor\": \"Anthropic\", \"product\": \"Claude\", \"action\": \"event\", \"signature_key\": \"anthropic|claude|event|2026-05-06\"}",
+        "item_count": 2,
+        "representative_item_id": "item_d21a2e66ceeb43ffa275c88dfb906cb8",
+        "status": "active"
+      }
+    ],
+    "ready_event_count": 7,
+    "top_clusters": [
+      {
+        "cluster_id": "cluster_b063616c10239614",
+        "confidence": 0.98,
+        "item_count": 3,
+        "members": [
+          {
+            "item_id": "item_42be2456c67a45c4a8a740f0b4c0710d",
+            "primary_relation": "same_event_repeat",
+            "published_at": "2026-05-07T20:08:51+00:00",
+            "source_id": "socialmedia-openai-openai",
+            "source_name": "OpenAI(@OpenAI)",
+            "title": "If a task needs multiple tools, Codex chooses the best one for each step. It uses plugins when they..."
+          },
+          {
+            "item_id": "item_5071c9df1d374a1c9b86e6b2537fc6af",
+            "primary_relation": "source_material",
+            "published_at": "2026-05-07T20:08:50+00:00",
+            "source_id": "socialmedia-openai-openai",
+            "source_name": "OpenAI(@OpenAI)",
+            "title": "Codex now works directly in Chrome on macOS and Windows. It’s even better at working with apps and ..."
+          },
+          {
+            "item_id": "item_fffa0ce900644813b9d0b622221f5292",
+            "primary_relation": "same_event_repeat",
+            "published_at": "2026-05-07T20:08:50+00:00",
+            "source_id": "socialmedia-openai-openai",
+            "source_name": "OpenAI(@OpenAI)",
+            "title": "With the new Chrome extension, Codex can quickly move through repetitive browser work, like navigati..."
+          }
+        ],
+        "signature": {
+          "action": "integration",
+          "actor": "OpenAI/Codex",
+          "product": "Codex",
+          "signature_key": "openaicodex|codex|integration|2026-05-07"
+        },
+        "status": "active",
+        "title": "OpenAI/Codex integration Codex"
+      },
+      {
+        "cluster_id": "cluster_601081733adc458c",
+        "confidence": 0.98,
+        "item_count": 2,
+        "members": [
+          {
+            "item_id": "item_05c3d8a8e605435282a2de374ca26316",
+            "primary_relation": "same_event_repeat",
+            "published_at": "2026-05-06T16:25:16+00:00",
+            "source_id": "socialmedia-latent-space-latentspacepod",
+            "source_name": "Latent.Space(@latentspacepod)",
+            "title": "experiment: livetweeting the @AnthropicAI code with claude event! first up - @katelyn_lesse and @an..."
+          },
+          {
+            "item_id": "item_d21a2e66ceeb43ffa275c88dfb906cb8",
+            "primary_relation": "source_material",
+            "published_at": "2026-05-06T15:59:28+00:00",
+            "source_id": "socialmedia-simon-willison-simonw",
+            "source_name": "Simon Willison(@simonw)",
+            "title": "I'm at the Claude w/ Code event in San Francisco, and I'll be live blogging the keynote here https:/..."
+          }
+        ],
+        "signature": {
+          "action": "event",
+          "actor": "Anthropic",
+          "product": "Claude",
+          "signature_key": "anthropic|claude|event|2026-05-06"
+        },
+        "status": "active",
+        "title": "Anthropic event Claude"
+      },
+      {
+        "cluster_id": "cluster_b2784f076cc5c636",
+        "confidence": 0.98,
+        "item_count": 1,
+        "members": [
+          {
+            "item_id": "item_36c1ff9182cc41cdb66f896a836ef886",
+            "primary_relation": "source_material",
+            "published_at": "2026-05-28T08:00:51+00:00",
+            "source_id": "socialmedia-ai-will-financeyf5",
+            "source_name": "AI Will(@FinanceYF5)",
+            "title": "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个session健忘，每次重新推导架构，结果都不一..."
+          }
+        ],
+        "signature": {
+          "action": "adoption_metric",
+          "actor": "Anthropic",
+          "product": "Claude",
+          "signature_key": "anthropic|claude|adoptionmetric|2026-05-28"
+        },
+        "status": "needs_review",
+        "title": "Anthropic adoption metric Claude"
+      },
+      {
+        "cluster_id": "cluster_385b1d130279f8ae",
+        "confidence": 0.98,
+        "item_count": 1,
+        "members": [
+          {
+            "item_id": "item_e63832c09de240cca53a58b4871f7346",
+            "primary_relation": "source_material",
+            "published_at": "2026-05-28T08:00:44+00:00",
+            "source_id": "socialmedia-ai-will-financeyf5",
+            "source_name": "AI Will(@FinanceYF5)",
+            "title": "3/2026最大创业陷阱 Anthropic引了个数据：42%的创业失败因为做了没人要的东西。AI之前的数字。他们说这个比例只会继续往上走 为什么？ 过去做prototype要几个月——这本身就..."
+          }
+        ],
+        "signature": {
+          "action": "company_launch",
+          "actor": "Anthropic",
+          "product": "Claude Code",
+          "signature_key": "anthropic|claudecode|companylaunch|2026-05-28"
+        },
+        "status": "needs_review",
+        "title": "Anthropic company launch Claude Code"
+      },
+      {
+        "cluster_id": "cluster_e6a84769e4c123d8",
+        "confidence": 0.98,
+        "item_count": 1,
+        "members": [
+          {
+            "item_id": "item_b882600810034c4ea1537063e773e020",
+            "primary_relation": "source_material",
+            "published_at": "2026-05-13T16:15:44+00:00",
+            "source_id": "socialmedia-notion-notionhq",
+            "source_name": "Notion(@NotionHQ)",
+            "title": "The Notion command-line interface (CLI) is a new way to work with Notion programmatically, made just..."
+          }
+        ],
+        "signature": {
+          "action": "release",
+          "actor": "Notion",
+          "product": "Notion Developer Platform",
+          "signature_key": "notion|notiondeveloperplatform|release|2026-05-13"
+        },
+        "status": "needs_review",
+        "title": "Notion release Notion Developer Platform"
+      },
+      {
+        "cluster_id": "cluster_81069ecd4b34a8b9",
+        "confidence": 0.98,
+        "item_count": 1,
+        "members": [
+          {
+            "item_id": "item_f21c4545cf97499c919fc3ecb82f06a6",
+            "primary_relation": "source_material",
+            "published_at": "2026-05-28T08:01:08+00:00",
+            "source_id": "socialmedia-ai-will-financeyf5",
+            "source_name": "AI Will(@FinanceYF5)",
+            "title": "GenAI Summit SF 2026：湾区数万人大会！ 🔗 Will粉丝专属购票链接（可享受15%优惠）： 专属Code：WILL 专属链接： Luma：https://t.co/OoGPFp..."
+          }
+        ],
+        "signature": {
+          "action": "event",
+          "actor": "OpenAI",
+          "product": "SF 2026",
+          "signature_key": "openai|sf2026|event|2026-05-28"
+        },
+        "status": "needs_review",
+        "title": "OpenAI event SF 2026"
+      },
+      {
+        "cluster_id": "cluster_65829a0c8c61fb5f",
+        "confidence": 0.98,
+        "item_count": 1,
+        "members": [
+          {
+            "item_id": "item_01d5d6c095df4c21afdcc38c3186a0b3",
+            "primary_relation": "source_material",
+            "published_at": "2026-05-28T06:55:36+00:00",
+            "source_id": "socialmedia-ai-will-financeyf5",
+            "source_name": "AI Will(@FinanceYF5)",
+            "title": "源：https://t.co/O7NnTsIIPF"
+          }
+        ],
+        "signature": {
+          "action": "feature_update",
+          "actor": "OpenAI/Codex",
+          "product": "codex",
+          "signature_key": "openaicodex|codex|featureupdate|2026-05-28"
+        },
+        "status": "needs_review",
+        "title": "OpenAI/Codex feature update codex"
+      }
+    ]
+  },
+  "live_llm": {
+    "calls_attempted": 5,
+    "calls_failed": 5,
+    "calls_skipped": 2,
+    "calls_succeeded": 0,
+    "enabled": true,
+    "examples": [],
+    "max_calls": 5,
+    "modes_run": [
+      "candidate_discovery",
+      "signature_repair"
+    ],
+    "proposals": {
+      "candidate_discovery": 0,
+      "signature_repair": 0
+    },
+    "provider": "deepseek",
+    "schema_invalid": 5,
+    "schema_valid": 0,
+    "timeout_count": 0
+  },
+  "metadata": {
+    "backup_path": null,
+    "dry_run": true,
+    "evaluation_db_path": "/tmp/claude-501/content_inbox_real_use_smoke_y_52rg4l.sqlite3",
+    "generated_at": "2026-06-01T03:18:38.248825+00:00",
+    "items_sampled": 40,
+    "limit": 40,
+    "live_llm_enabled": true,
+    "live_llm_max_calls": 5,
+    "live_llm_provider": "deepseek",
+    "sample_mode": "event_hotspots",
+    "source_db_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3",
+    "source_filter": null,
+    "source_url_prefix": null,
+    "warnings": [],
+    "write_real_db": false
+  },
+  "outputs": {
+    "daily_briefing_path": null,
+    "daily_briefing_preview": "# 每日简报 2026-06-01\n\n## 可信事件\n- OpenAI/Codex integration Codex（可信事件，置信度 0.98）\n- Anthropic event Claude（可信事件，置信度 0.98）\n- OpenAI/Codex feature update codex（可信事件，置信度 0.98）\n- Anthropic adoption metric Claude（可信事件，置信度 0.98）\n- Anthropic company launch Claude Code（可信事件，置信度 0.98）\n- OpenAI event SF 2026（可信事件，置信度 0.98）\n- Notion release Notion Developer Platform（可信事件，置信度 0.98）\n\n## 待审核\n- eventness_review item:item_016e5ea8975e41aeb7fee172f4ca03cb\n- eventness_review item:item_0f407d418b224808b8d223a2bf77733e\n- eventness_review item:item_2d43f59dad0b4440a8a12e291b13df7d\n- eventness_review item:item_2deea276720a49839ee11b1bff335dbb\n- eventness_review item:item_2f52e9dc5959454698e52736ec982d37\n- eventness_review item:item_3055cf1fe8d141bda5e1cf4d1bfd1223\n- eventness_review item:item_3070bedb31d24e78b28ed7cf3387bea7\n- eventness_review item:item_33d28987e34a43fb9c038fde9be51560\n- eventness_review item:item_43836685ab944baabeaf4a026df12fa5\n- eventness_review item:item_4578f20c634d4badb3cf575f5c79fe8c",
+    "report_path": "docs/real_use_llm_smoke_20260601/real_use_smoke_report.md",
+    "run_endpoint_report_preview": "# 运行报告 real_use_smoke_50c66760ded5\n\n状态: success\n\n新增条目: 40\n\n信息源数量: 0\n\n## 可信事件\n- OpenAI/Codex integration Codex：integration，置信度 0.98\n- Anthropic event Claude：event，置信度 0.98\n- OpenAI/Codex feature update codex：feature_update，置信度 0.98\n- Anthropic adoption metric Claude：adoption_metric，置信度 0.98\n- Anthropic company launch Claude Code：company_launch，置信度 0.98\n- OpenAI event SF 2026：event，置信度 0.98\n- Notion release Notion Developer Platform：release，置信度 0.98\n\n## 质量概览\n- 可信事件数: 7\n- 待审核项: 40\n- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n",
+    "run_report_path": null,
+    "run_report_preview": "# 运行报告\n\n生成时间: 2026-06-01T03:18:26.415329+00:00\n\n关联对象: run real_use_smoke_50c66760ded5\n\n## 可信事件\n- OpenAI/Codex integration Codex：integration，置信度 0.98，cluster cluster_b063616c10239614\n- Anthropic event Claude：event，置信度 0.98，cluster cluster_601081733adc458c\n- OpenAI/Codex feature update codex：feature_update，置信度 0.98，cluster cluster_65829a0c8c61fb5f\n- Anthropic adoption metric Claude：adoption_metric，置信度 0.98，cluster cluster_b2784f076cc5c636\n- Anthropic company launch Claude Code：company_launch，置信度 0.98，cluster cluster_385b1d130279f8ae\n- OpenAI event SF 2026：event，置信度 0.98，cluster cluster_81069ecd4b34a8b9\n- Notion release Notion Developer Platform：release，置信度 0.98，cluster cluster_e6a84769e4c123d8\n\n## 质量概览\n- 可信事件数: 7\n- 全部事件数: 7\n- 待审核项: 40\n- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n",
+    "summary_path": "docs/real_use_llm_smoke_20260601/real_use_smoke_summary.json"
+  },
+  "pipeline": {
+    "dedupe": {
+      "dedupe_explanation_count": 0,
+      "dedupe_explanation_coverage": 1.0,
+      "dedupe_groups_created_or_updated": 40,
+      "schema_version": "operational_v3",
+      "seen_count_gt_1_items": 0
+    },
+    "information_objects": {
+      "alias_hit_count": 58,
+      "auto_merged": 4,
+      "candidates_by_lane": {
+        "exact_signature_alias": 1,
+        "exploratory_recall": 21,
+        "same_source_repeat": 3,
+        "same_thread": 8,
+        "suppressed": 12
+      },
+      "candidates_by_priority": {
+        "high": 3,
+        "low": 29,
+        "must_run": 1,
+        "suppress": 12
+      },
+      "clusters_created_or_updated": 7,
+      "created_by": "operational_v3_rule",
+      "disqualifiers_by_reason": {
+        "wide_time_window": 25
+      },
+      "eventness": {
+        "content": 1,
+        "event": 10,
+        "low_signal": 1,
+        "thread": 8,
+        "unknown": 20
+      },
+      "events_created_or_updated": 7,
+      "item_count": 40,
+      "llm_calls": 0,
+      "rejected_non_event": 30,
+      "review_required": 10,
+      "schema_version": "operational_v3",
+      "signature": {
+        "content_signature": 0,
+        "event_signature": 11,
+        "invalid": 29,
+        "reject": 20,
+        "thread_signature": 9
+      }
+    },
+    "item_cards": {
+      "items": [
+        {
+          "id": 1,
+          "item_id": "item_479432d8276d4b1abc6bab294782210a",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 2,
+          "item_id": "item_2f52e9dc5959454698e52736ec982d37",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 3,
+          "item_id": "item_9584a1449a8a493dba4622091b2f7e23",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 4,
+          "item_id": "item_7be724bb80ee4bc8bc3d64ad74f65b93",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 5,
+          "item_id": "item_8f195f0cce43428d8d09c1fe9c21f09f",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 6,
+          "item_id": "item_cff14e7604df47ecb6824bde8dcd34ba",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 7,
+          "item_id": "item_4578f20c634d4badb3cf575f5c79fe8c",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 8,
+          "item_id": "item_52d621f35f61448f945c72315a0a3d04",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 9,
+          "item_id": "item_7f5de977ad194d14bb826a74762aed09",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 10,
+          "item_id": "item_43836685ab944baabeaf4a026df12fa5",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 11,
+          "item_id": "item_f231823027fd48a5a1cb0b1841e85e56",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 12,
+          "item_id": "item_3055cf1fe8d141bda5e1cf4d1bfd1223",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 13,
+          "item_id": "item_0f407d418b224808b8d223a2bf77733e",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 14,
+          "item_id": "item_b268a8f14db843ff8ab0a86cbb48b092",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 15,
+          "item_id": "item_4c8af2b527f346598773f60ec5a056ba",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 16,
+          "item_id": "item_c477e4a9bc0145c49188367499ed0227",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 17,
+          "item_id": "item_2d43f59dad0b4440a8a12e291b13df7d",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 18,
+          "item_id": "item_f441df2803404dcd99573dcf88608ee5",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 19,
+          "item_id": "item_2deea276720a49839ee11b1bff335dbb",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 20,
+          "item_id": "item_e777fc1c14794c0c862893618b8008cb",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 21,
+          "item_id": "item_80b3363d0b1743c7a4a7ee6bcc672886",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 22,
+          "item_id": "item_aa636df411d549d68bb9a791163b4c00",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 23,
+          "item_id": "item_05c3d8a8e605435282a2de374ca26316",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 24,
+          "item_id": "item_d21a2e66ceeb43ffa275c88dfb906cb8",
+          "reason": "local deterministic minimal card",
+          "source": "deterministic_minimal"
+        },
+        {
+          "id": 25,
+          "item_id": "item_01d5d6c095df4c21afdcc38c3186a0b3",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 26,
+          "item_id": "item_9b1b6b71be3d4b838702d58efe62b547",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 27,
+          "item_id": "item_94701ebb9bf246cd86fa31a30ee01302",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 28,
+          "item_id": "item_33d28987e34a43fb9c038fde9be51560",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 29,
+          "item_id": "item_e63832c09de240cca53a58b4871f7346",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 30,
+          "item_id": "item_36c1ff9182cc41cdb66f896a836ef886",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 31,
+          "item_id": "item_f21c4545cf97499c919fc3ecb82f06a6",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 32,
+          "item_id": "item_ef4006e711ab47979d3c106fb3092e90",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 33,
+          "item_id": "item_d30aab8a9cc9473696419431c44b9b1b",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 34,
+          "item_id": "item_c1745b7ae6d04222bab06d6e4eeb3438",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 35,
+          "item_id": "item_3070bedb31d24e78b28ed7cf3387bea7",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 36,
+          "item_id": "item_fffa0ce900644813b9d0b622221f5292",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 37,
+          "item_id": "item_5071c9df1d374a1c9b86e6b2537fc6af",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 38,
+          "item_id": "item_42be2456c67a45c4a8a740f0b4c0710d",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 39,
+          "item_id": "item_016e5ea8975e41aeb7fee172f4ca03cb",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        },
+        {
+          "id": 40,
+          "item_id": "item_b882600810034c4ea1537063e773e020",
+          "reason": "live LLM disabled",
+          "source": "heuristic"
+        }
+      ],
+      "ok": true,
+      "stats": {
+        "budget_skip_fallback_count": 0,
+        "card_tiers": {
+          "full": 1,
+          "minimal": 24,
+          "standard": 15
+        },
+        "deterministic_minimal_cards": 24,
+        "dry_run": false,
+        "errors": 0,
+        "failed_batch_count": 4,
+        "heuristic_fallback_count": 16,
+        "llm_calls": 0,
+        "local_minimal_cards": 24,
+        "parse_error_fallback_count": 0,
+        "selected": 40,
+        "single_retry_success_count": 0,
+        "skipped": 0,
+        "split_retry_success_count": 0,
+        "written": 40
+      }
+    }
+  },
+  "source_scope": {
+    "item_count": 3278,
+    "latest_item_time": "2026-05-28T15:29:11+00:00",
+    "source_count": 469
+  }
+}

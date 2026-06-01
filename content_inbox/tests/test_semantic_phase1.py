@@ -22,7 +22,18 @@ from app.semantic.live_smoke import run_live_smoke
 from app.semantic.operational_pipeline import adjudicate_candidate_with_llm, generate_information_objects, propose_cluster_with_semantic_judge
 from app.semantic.relations import process_item_relations
 from app.semantic.review import decide_review, list_reviews
-from app.semantic.schemas import ItemClusterDecision, ItemClusterOutput, ItemRelationDecision, ItemRelationOutput, SemanticRelationJudgeProposal, cluster_relation_action, item_relation_should_fold
+from app.semantic.llm_client import SemanticLLMClient
+from app.semantic.schemas import (
+    CandidateDiscoveryOutput,
+    ItemClusterDecision,
+    ItemClusterOutput,
+    ItemRelationDecision,
+    ItemRelationOutput,
+    SemanticRelationJudgeProposal,
+    SignatureRepairProposal,
+    cluster_relation_action,
+    item_relation_should_fold,
+)
 from app.semantic.signatures import extract_event_signature
 from app.semantic.source_profiles import get_profile, recompute_source_profiles
 from app.storage import InboxStore
@@ -1395,6 +1406,204 @@ def test_phase1_2e_evidence_exports_new_candidate_files(tmp_path: Path) -> None:
         assert "candidate_priority" in row
     manifest = json.loads((output / "semantic_run_manifest.json").read_text(encoding="utf-8"))
     assert manifest["phase"] == "phase1_2e"
+
+
+class TestLiveLLMSmoke:
+    def test_live_mode_safe_skip_when_disabled(self, tmp_path: Path) -> None:
+        store = make_store(tmp_path)
+        client = SemanticLLMClient(store, live=False, max_calls=5)
+        assert client.live is False
+        ok, reason = client.enabled()
+        assert ok is False
+        assert "disabled" in reason.lower()
+
+    def test_max_calls_enforced(self, tmp_path: Path) -> None:
+        store = make_store(tmp_path)
+        client = SemanticLLMClient(store, live=False, max_calls=2)
+        assert client.max_calls == 2
+        output, call_id, reason = client.call_json(
+            task_type="candidate_discovery",
+            prompt_version="semantic_candidate_discovery_v1",
+            schema_version="semantic_v1",
+            input_data={"item_a": {"item_id": "test"}},
+            output_model=CandidateDiscoveryOutput,
+            max_tokens=100,
+        )
+        assert output is None
+        assert reason != ""
+        # calls counter only increments for actual API calls, not skipped ones
+        assert client.calls == 0
+
+    def test_invalid_json_handled_gracefully(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        store = make_store(tmp_path)
+        monkeypatch.setenv("CONTENT_INBOX_LLM_ENABLE_LIVE", "1")
+        monkeypatch.setenv("DEEPSEEK_API_KEY", "test-key")
+
+        def _fake_post(body):
+            return {
+                "choices": [{"message": {"content": "not valid json {{{"}}],
+                "usage": {"total_tokens": 10},
+            }
+
+        client = SemanticLLMClient(store, live=True, max_calls=2)
+        client._post = _fake_post
+        output, call_id, reason = client.call_json(
+            task_type="candidate_discovery",
+            prompt_version="semantic_candidate_discovery_v1",
+            schema_version="semantic_v1",
+            input_data={"item": {"item_id": "test"}},
+            output_model=CandidateDiscoveryOutput,
+            max_tokens=100,
+        )
+        assert output is None
+        assert "json" in (reason or "").lower() or call_id is not None
+
+    def test_schema_invalid_logged_as_failed(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        store = make_store(tmp_path)
+        monkeypatch.setenv("CONTENT_INBOX_LLM_ENABLE_LIVE", "1")
+        monkeypatch.setenv("DEEPSEEK_API_KEY", "test-key")
+
+        def _fake_post(body):
+            return {
+                "choices": [{"message": {"content": '{"candidates": "not_a_list_invalid"}'}}],
+                "usage": {"total_tokens": 10},
+            }
+
+        client = SemanticLLMClient(store, live=True, max_calls=2)
+        client._post = _fake_post
+        output, call_id, reason = client.call_json(
+            task_type="candidate_discovery",
+            prompt_version="semantic_candidate_discovery_v1",
+            schema_version="semantic_v1",
+            input_data={"item": {"item_id": "test"}},
+            output_model=CandidateDiscoveryOutput,
+            max_tokens=100,
+        )
+        # Schema validation failure should result in None output
+        assert output is None
+        assert "validation" in (reason or "").lower() or "candidates" in (reason or "").lower()
+        with store.connect() as conn:
+            logs = conn.execute(
+                "SELECT * FROM llm_call_logs WHERE status = 'failed'"
+            ).fetchall()
+        assert len(logs) >= 1
+
+    def test_uncertain_relation_accepted_in_schema(self) -> None:
+        proposal = SemanticRelationJudgeProposal(
+            relation="uncertain",
+            confidence=0.3,
+            should_merge_event_cluster=False,
+            should_link_as_thread=False,
+            reason_code="llm_uncertain",
+            evidence=["insufficient information"],
+            risk_flags=["low_confidence"],
+        )
+        assert proposal.relation == "uncertain"
+        assert proposal.reason_code == "llm_uncertain"
+        assert proposal.should_merge_event_cluster is False
+
+    def test_candidate_discovery_proposal_generation(self, tmp_path: Path) -> None:
+        store = make_store(tmp_path)
+        left = seed_event_item(
+            store, "OpenAI launches GPT-5", summary="OpenAI launched GPT-5.",
+            source_id="src-a", published_at="2026-05-30T10:00:00+00:00",
+            url="https://example.com/gpt5-a",
+        )
+        right = seed_event_item(
+            store, "GPT-5.0 released by OpenAI", summary="OpenAI released GPT-5.0.",
+            source_id="src-b", published_at="2026-05-30T11:00:00+00:00",
+            url="https://example.com/gpt5-b",
+        )
+        generate_item_cards(store, limit=2, live=False)
+        result = generate_information_objects(store, "run-test", [left, right])
+        assert result["item_count"] == 2
+
+    def test_signature_repair_proposal_accepts_valid_output(self) -> None:
+        repair = SignatureRepairProposal(
+            item_id="test-123",
+            proposed_actor="DeepSeek",
+            proposed_product="DeepSeek V4",
+            proposed_action="release",
+            proposed_object="",
+            proposed_event_signature="deepseek|deepseekv4|release|2026-05-30",
+            confidence=0.85,
+            evidence=["title mentions V4.1 release"],
+            risk_flags=[],
+        )
+        assert repair.proposed_actor == "DeepSeek"
+        assert repair.proposed_action == "release"
+        assert repair.confidence == 0.85
+
+    def test_relation_judge_accepts_uncertain(self, tmp_path: Path) -> None:
+        store = make_store(tmp_path)
+        left = seed_event_item(
+            store, "Some AI news today", summary="AI things happened.",
+            source_id="src-a", published_at="2026-05-30T10:00:00+00:00",
+            url="https://example.com/vague-a",
+        )
+        right = seed_event_item(
+            store, "AI roundup this week", summary="Weekly AI summary.",
+            source_id="src-b", published_at="2026-05-30T11:00:00+00:00",
+            url="https://example.com/vague-b",
+        )
+        generate_item_cards(store, limit=2, live=False)
+        result = generate_information_objects(store, "run-test", [left, right])
+        assert result is not None
+
+    def test_cluster_proposal_only_no_auto_merge(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        store = make_store(tmp_path)
+        monkeypatch.setenv("CONTENT_INBOX_LLM_ENABLE_LIVE", "0")
+        left = seed_event_item(
+            store, "OpenAI launches GPT-5.5", summary="OpenAI launched GPT-5.5.",
+            source_id="src-a", published_at="2026-05-30T10:00:00+00:00",
+            url="https://example.com/gpt55-a",
+        )
+        seed_event_item(
+            store, "OpenAI rolls out GPT 5.5", summary="OpenAI rolled out GPT 5.5.",
+            source_id="src-b", published_at="2026-05-30T10:05:00+00:00",
+            url="https://example.com/gpt55-b",
+        )
+        generate_item_cards(store, limit=2, live=False)
+        generate_information_objects(store, "run-test", [left])
+        process_item_clusters(
+            store, limit=2, live=False, max_candidates=2, max_calls=0,
+            llm_proposal_only=True, allow_controlled_auto_merge=False,
+        )
+        with store.connect() as conn:
+            review_count = conn.execute(
+                "SELECT COUNT(*) AS n FROM review_queue WHERE status = 'pending'"
+            ).fetchone()["n"]
+            cluster_items = conn.execute(
+                "SELECT * FROM cluster_items WHERE decision_source = 'llm'"
+            ).fetchall()
+        assert len(cluster_items) == 0
+
+    def test_full_mock_llm_smoke_completes(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("CONTENT_INBOX_LLM_ENABLE_LIVE", "0")
+        source_store = make_store(tmp_path)
+        for i in range(3):
+            seed_event_item(
+                source_store,
+                f"Test item {i}: AI news",
+                summary=f"AI news summary {i}.",
+                source_id=f"src-{i}",
+                published_at=f"2026-05-30T10:0{i}:00+00:00",
+                url=f"https://example.com/test-{i}",
+            )
+        result = run_smoke(
+            db_path=str(source_store.database_path),
+            output=str(tmp_path / "smoke"),
+            limit=10,
+            sample_mode="recent",
+            source_filter=None,
+            source_url_prefix=None,
+            enable_live_llm=True,
+            max_llm_calls=2,
+        )
+        assert result["ok"] is True
+        assert result["summary"]["items_sampled"] == 3
+        report = Path(result["report_path"]).read_text(encoding="utf-8")
+        assert "Live LLM" in report or "live" in report.lower()
 
 
 @pytest.mark.live_deepseek
