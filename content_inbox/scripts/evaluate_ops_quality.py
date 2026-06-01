@@ -1176,7 +1176,10 @@ def render_report(metrics: dict[str, Any]) -> str:
         "### False Negative Trace",
         "",
     ]
-    for trace in metrics["event_clustering"].get("false_negative_traces", []):
+    false_negative_traces = metrics["event_clustering"].get("false_negative_traces", [])
+    if not false_negative_traces:
+        lines.append("- No false negative pairs in this run.")
+    for trace in false_negative_traces:
         pair = trace["pair"]
         candidate = trace["candidate"]
         relation = trace["relation"]

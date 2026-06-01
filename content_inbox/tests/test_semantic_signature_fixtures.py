@@ -87,6 +87,45 @@ def test_configured_alias_registry_normalizes_actor_product_action() -> None:
     assert {"type": "product", "alias": "GPT 5.5", "canonical": "GPT-5.5"} in sig.alias_hits
 
 
+def test_operational_v3_recall_repair_signature_phrasing() -> None:
+    cases = [
+        (
+            "OpenAI rolls out GPT-5.5 model aimed at coding agents",
+            "OpenAI rolled out GPT-5.5 for coding agents with enterprise controls.",
+            ("OpenAI", "GPT-5.5", "release", "openai|gpt55|release|2026-05-30"),
+        ),
+        (
+            "DeepSeek 发布 V4.1 模型，推理延迟下降",
+            "DeepSeek 发布 V4.1 模型，降低推理延迟。",
+            ("DeepSeek", "DeepSeek V4", "release", "deepseek|deepseekv4|release|2026-05-30"),
+        ),
+        (
+            "Anthropic raises $2B at $60B valuation",
+            "Anthropic raised $2B at a $60B valuation from strategic investors.",
+            ("Anthropic", "Funding round $2B", "funding", "anthropic|fundinground2b|funding|2026-05-30"),
+        ),
+        (
+            "European Commission issues AI Act guidance for model providers",
+            "The European Commission issued AI Act guidance for model providers.",
+            ("European Commission", "AI Act", "policy", "europeancommission|aiact|policy|2026-05-30"),
+        ),
+    ]
+    for title, summary, expected in cases:
+        sig = extract_event_signature(
+            {
+                "item_id": title,
+                "title": title,
+                "summary": summary,
+                "content_text": "",
+                "source_name": "Fixture",
+                "published_at": "2026-05-30T10:00:00+00:00",
+            }
+        )
+        assert (sig.actor, sig.product_or_model, sig.action, sig.signature_key) == expected
+        assert sig.semantic_level == "event_signature"
+        assert sig.is_concrete
+
+
 def test_phase1_3b_invalid_products_are_not_accepted() -> None:
     rows = load_rows()
     for row in rows:

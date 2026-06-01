@@ -1,15 +1,15 @@
 # 作战台信息质量评估报告
 
-生成时间: 2026-06-01T01:50:27.673287+00:00
+生成时间: 2026-06-01T02:17:34.912955+00:00
 
 ## 结论
 
-整体状态: **不通过**。本次离线评估使用合成样例，不读取真实运行数据。
+整体状态: **通过**。本次离线评估使用合成样例，不读取真实运行数据。
 
 核心发现:
 
 - 处理时去重 F1: 100.0%，召回 100.0%。
-- 事件聚合 F1: 42.9%，召回 27.3%。
+- 事件聚合 F1: 100.0%，召回 100.0%。
 - 自动合并 precision: 100.0%。
 - medium review rate: 100.0%。
 - alias hit count: 215。
@@ -58,100 +58,45 @@
 
 ### 事件聚合
 
-- precision/recall/F1: 100.0% / 27.3% / 42.9%
-- clusters: 4
-- 多条目 cluster 比率: 25.0%
+- precision/recall/F1: 100.0% / 100.0% / 100.0%
+- clusters: 5
+- 多条目 cluster 比率: 80.0%
 - 误合并 pair 样例: `[]`
-- 漏合并 pair 样例: `[('anthropic_funding_a', 'anthropic_funding_b'), ('deepseek_cn_a', 'deepseek_cn_b'), ('deepseek_cn_a', 'guid_a'), ('deepseek_cn_b', 'guid_a'), ('openai_punctuation_variant', 'openai_variant_a'), ('openai_variant_a', 'openai_variant_b'), ('openai_variant_a', 'url_tracking_a'), ('policy_a', 'policy_b')]`
+- 漏合并 pair 样例: `[]`
 
 ### False Negative Trace
 
-- Pair `anthropic_funding_a` / `anthropic_funding_b`:
-  - anthropic_funding_a: actor='Anthropic', product='', action='adoption_metric', signature_key=None, item_card_present=True, card_entities=[Anthropic], card_event_hint='Anthropic raises $2B at $60B valuation', clusters=[]
-  - anthropic_funding_b: actor='Anthropic', product='', action='funding', signature_key=None, item_card_present=True, card_entities=[Anthropic], card_event_hint='Anthropic closes new $2 billion financing round', clusters=[]
-  - candidate: present=False, priority=None, lane=None, status=None
-  - relation: judged_as=None, reason_code=None, decision_source=None
-  - review_queue: 0 entries
-  - eval_failure: no_candidate_pair_generated
-- Pair `deepseek_cn_a` / `deepseek_cn_b`:
-  - deepseek_cn_a: actor='DeepSeek', product='', action='release', signature_key=None, item_card_present=True, card_entities=[DeepSeek, 发布, V4.1, 模型], card_event_hint='DeepSeek 发布 V4.1 模型，推理延迟下降', clusters=[]
-  - deepseek_cn_b: actor='DeepSeek', product='DeepSeek V4', action='release', signature_key='deepseek|deepseekv4|release|2026-05-30', item_card_present=True, card_entities=[深度求索推出, DeepSeek, V4.1, 主打低延迟推理], card_event_hint='深度求索推出 DeepSeek V4.1，主打低延迟推理', clusters=['cluster_ee6e44e0884d81fd']
-  - candidate: present=False, priority=None, lane=None, status=None
-  - relation: judged_as=None, reason_code=None, decision_source=None
-  - review_queue: 0 entries
-  - eval_failure: no_candidate_pair_generated
-- Pair `deepseek_cn_a` / `guid_a`:
-  - deepseek_cn_a: actor='DeepSeek', product='', action='release', signature_key=None, item_card_present=True, card_entities=[DeepSeek, 发布, V4.1, 模型], card_event_hint='DeepSeek 发布 V4.1 模型，推理延迟下降', clusters=[]
-  - guid_a: actor='DeepSeek', product='', action='release', signature_key=None, item_card_present=True, card_entities=[DeepSeek, V4.1, V4.1.], card_event_hint='DeepSeek releases V4.1 model', clusters=[]
-  - candidate: present=False, priority=None, lane=None, status=None
-  - relation: judged_as=None, reason_code=None, decision_source=None
-  - review_queue: 0 entries
-  - eval_failure: no_candidate_pair_generated
-- Pair `deepseek_cn_b` / `guid_a`:
-  - deepseek_cn_b: actor='DeepSeek', product='DeepSeek V4', action='release', signature_key='deepseek|deepseekv4|release|2026-05-30', item_card_present=True, card_entities=[深度求索推出, DeepSeek, V4.1, 主打低延迟推理], card_event_hint='深度求索推出 DeepSeek V4.1，主打低延迟推理', clusters=['cluster_ee6e44e0884d81fd']
-  - guid_a: actor='DeepSeek', product='', action='release', signature_key=None, item_card_present=True, card_entities=[DeepSeek, V4.1, V4.1.], card_event_hint='DeepSeek releases V4.1 model', clusters=[]
-  - candidate: present=False, priority=None, lane=None, status=None
-  - relation: judged_as=None, reason_code=None, decision_source=None
-  - review_queue: 0 entries
-  - eval_failure: no_candidate_pair_generated
-- Pair `openai_punctuation_variant` / `openai_variant_a`:
-  - openai_punctuation_variant: actor='OpenAI', product='GPT-5.5', action='release', signature_key='openai|gpt55|release|2026-05-30', item_card_present=True, card_entities=[OpenAI, GPT], card_event_hint='OpenAI launches GPT 5.5 for coding agents', clusters=['cluster_1be3f3059f449572']
-  - openai_variant_a: actor='OpenAI', product='GPT-5.5', action='other', signature_key=None, item_card_present=True, card_entities=[OpenAI, GPT-5.5], card_event_hint='OpenAI rolls out GPT-5.5 model aimed at coding agents', clusters=[]
-  - candidate: present=False, priority=None, lane=None, status=None
-  - relation: judged_as=None, reason_code=None, decision_source=None
-  - review_queue: 0 entries
-  - eval_failure: no_candidate_pair_generated
-- Pair `openai_variant_a` / `openai_variant_b`:
-  - openai_variant_a: actor='OpenAI', product='GPT-5.5', action='other', signature_key=None, item_card_present=True, card_entities=[OpenAI, GPT-5.5], card_event_hint='OpenAI rolls out GPT-5.5 model aimed at coding agents', clusters=[]
-  - openai_variant_b: actor='OpenAI', product='GPT-5.5', action='integration', signature_key='openai|gpt55|integration|2026-05-30', item_card_present=True, card_entities=[OpenAI, GPT], card_event_hint='OpenAI GPT 5.5 model launches for software agents', clusters=['cluster_1be3f3059f449572']
-  - candidate: present=False, priority=None, lane=None, status=None
-  - relation: judged_as=None, reason_code=None, decision_source=None
-  - review_queue: 0 entries
-  - eval_failure: no_candidate_pair_generated
-- Pair `openai_variant_a` / `url_tracking_a`:
-  - openai_variant_a: actor='OpenAI', product='GPT-5.5', action='other', signature_key=None, item_card_present=True, card_entities=[OpenAI, GPT-5.5], card_event_hint='OpenAI rolls out GPT-5.5 model aimed at coding agents', clusters=[]
-  - url_tracking_a: actor='OpenAI', product='GPT-5.5', action='release', signature_key='openai|gpt55|release|2026-05-30', item_card_present=True, card_entities=[OpenAI, GPT-5.5], card_event_hint='OpenAI launches GPT-5.5 for coding agents', clusters=['cluster_1be3f3059f449572']
-  - candidate: present=False, priority=None, lane=None, status=None
-  - relation: judged_as=None, reason_code=None, decision_source=None
-  - review_queue: 0 entries
-  - eval_failure: no_candidate_pair_generated
-- Pair `policy_a` / `policy_b`:
-  - policy_a: actor='European Commission', product='AI Act', action='technical_blog', signature_key='europeancommission|aiact|technicalblog|2026-05-30', item_card_present=True, card_entities=[Act, The], card_event_hint='EU publishes final AI Act implementation guidance', clusters=['cluster_a1a20d64e03cad90']
-  - policy_b: actor='European Commission', product='AI Act', action='other', signature_key=None, item_card_present=True, card_entities=[European, Commission, Act, The], card_event_hint='European Commission issues AI Act guidance for model providers', clusters=[]
-  - candidate: present=False, priority=None, lane=None, status=None
-  - relation: judged_as=None, reason_code=None, decision_source=None
-  - review_queue: 0 entries
-  - eval_failure: no_candidate_pair_generated
+- No false negative pairs in this run.
 
 ### Candidate 诊断
 
-- candidate counts by priority: `{'low': 12, 'medium': 1, 'high': 1, 'must_run': 1}`
-- candidate counts by lane: `{'same_thread': 3, 'exploratory_recall': 9, 'same_event_recall': 2, 'exact_signature_alias': 1}`
-- candidate counts by status: `{'rejected': 12, 'review': 1, 'auto_merge': 2}`
-- disqualifier counts: `{}`
+- candidate counts by priority: `{'low': 50, 'must_run': 8, 'suppress': 5, 'medium': 2, 'high': 1}`
+- candidate counts by lane: `{'exploratory_recall': 46, 'cross_language_alias': 2, 'exact_signature_alias': 6, 'suppressed': 5, 'same_event_recall': 3, 'same_thread': 4}`
+- candidate counts by status: `{'rejected': 55, 'auto_merge': 9, 'review': 2}`
+- disqualifier counts: `{'generic_entity_overlap': 5, 'generic_only_overlap': 5}`
 - medium review rate: 100.0%
 - alias hit count: 215
 
 ### Semantic Judge Dry-Run Proposals
 
-- dry-run proposal count: 1
+- dry-run proposal count: 2
 - live semantic judge calls: 0
 - proposal policy: review_queue_or_dry_run_report_only
-- proposals: `[{'proposal_status': 'dry_run_not_called', 'task_type': 'semantic_relation_judge', 'item_pair': ['openai_variant_b', 'url_tracking_a'], 'candidate_priority': 'medium', 'lane': 'same_event_recall', 'rule_relation_type': 'uncertain', 'rule_reason_code': 'different_event', 'rule_status': 'review', 'judge_input_evidence': {'same_actor': True, 'same_product': True, 'same_action': False, 'event_signature_match': False, 'positive_features': ['shared_weighted_entities:launches, openai', 'shared_event_phrases:agent, launch', 'close_time_window', 'shared_products:gpt-5.5, gpt55', 'shared_actors:openai'], 'negative_features': ['generic_overlap:agents'], 'disqualifiers': []}, 'proposal_policy': {'proposal_only': True, 'should_auto_merge': False, 'review_queue_or_dry_run_report_only': True}}]`
+- proposals: `[{'proposal_status': 'dry_run_not_called', 'task_type': 'semantic_relation_judge', 'item_pair': ['url_tracking_a', 'openai_variant_b'], 'candidate_priority': 'medium', 'lane': 'same_event_recall', 'rule_relation_type': 'uncertain', 'rule_reason_code': 'different_event', 'rule_status': 'review', 'judge_input_evidence': {'same_actor': True, 'same_product': True, 'same_action': False, 'event_signature_match': False, 'positive_features': ['shared_weighted_entities:launches, openai', 'shared_event_phrases:agent, launch', 'close_time_window', 'shared_products:gpt-5.5, gpt55', 'shared_actors:openai'], 'negative_features': ['generic_overlap:agents'], 'disqualifiers': []}, 'proposal_policy': {'proposal_only': True, 'should_auto_merge': False, 'review_queue_or_dry_run_report_only': True}}, {'proposal_status': 'dry_run_not_called', 'task_type': 'semantic_relation_judge', 'item_pair': ['openai_variant_b', 'openai_variant_a'], 'candidate_priority': 'medium', 'lane': 'same_event_recall', 'rule_relation_type': 'uncertain', 'rule_reason_code': 'different_event', 'rule_status': 'review', 'judge_input_evidence': {'same_actor': True, 'same_product': True, 'same_action': False, 'event_signature_match': False, 'positive_features': ['shared_weighted_entities:openai', 'shared_event_phrases:agent', 'close_time_window', 'shared_products:gpt-5.5, gpt55', 'shared_actors:openai'], 'negative_features': ['generic_overlap:agents, model'], 'disqualifiers': []}, 'proposal_policy': {'proposal_only': True, 'should_auto_merge': False, 'review_queue_or_dry_run_report_only': True}}]`
 
 ### Review Apply 与 Source Scoring
 
-- review apply sample: `{'attempted': True, 'review_id': 77, 'ok': True, 'apply_result': {'applied': True, 'action': 'event_relation_approved', 'event_id': 'event_d6770cbf532ba00c', 'cluster_id': 'cluster_1be3f3059f449572', 'item_ids': ['item_3e85a19398cb481da4e9a4af9b6c683f', 'item_d189865f22804653bf78cccd72127385']}}`
-- source scoring dimension totals: `{'discovery_value': 5.0, 'fact_value': 5.0, 'incremental_value': 2.0, 'interpretation_value': 0.0, 'duplicate_noise': 3.0, 'non_event_noise': 76.0, 'review_acceptance': 2.0}`
-- source scoring example profile: `{'source_id': 'techcrunch', 'discovery_value_avg': 1.0, 'fact_value_avg': 1.0, 'incremental_value_avg': 2.0, 'interpretation_value_avg': 0.0, 'duplicate_noise_rate': 1.0, 'non_event_noise_rate': 0.0, 'review_acceptance': 1.0, 'llm_yield_score': 2.667, 'priority_suggestion': 'new_source_under_evaluation'}`
+- review apply sample: `{'attempted': True, 'review_id': 71, 'ok': True, 'apply_result': {'applied': True, 'action': 'event_relation_approved', 'event_id': 'event_d6770cbf532ba00c', 'cluster_id': 'cluster_1be3f3059f449572', 'item_ids': ['item_77e5bc04c3724868bf963a87a9e23c75', 'item_837e3043d08d42e397c08eed842bd0d9']}}`
+- source scoring dimension totals: `{'discovery_value': 6.0, 'fact_value': 6.0, 'incremental_value': 2.0, 'interpretation_value': 0.0, 'duplicate_noise': 7.0, 'non_event_noise': 70.0, 'review_acceptance': 2.0}`
+- source scoring example profile: `{'source_id': 'techcrunch', 'discovery_value_avg': 2.0, 'fact_value_avg': 2.0, 'incremental_value_avg': 0.0, 'interpretation_value_avg': 0.0, 'duplicate_noise_rate': 0.0, 'non_event_noise_rate': 0.0, 'review_acceptance': 1.0, 'llm_yield_score': 3.0, 'priority_suggestion': 'new_source_under_evaluation'}`
 - operational DeepSeek relation stats: `{'operational_relation_calls': 0, 'live_ok_calls': 0, 'failed_or_skipped_calls': 0, 'total_tokens': 0}`
 
 ### 事件提取
 
-- events: 4
+- events: 5
 - event_type known rate: 100.0%
 - summary specific rate: 100.0%
-- review coverage: 2000.0%
+- review coverage: 1460.0%
 - 非事件条目被生成候选事件比率: 0.0%
 - entity recall: 97.0% (98/101)
 
@@ -169,21 +114,22 @@
 
 ## 可信事件
 - OpenAI release GPT-5.5（可信事件，置信度 0.98）
-- OpenAI integration major API（可信事件，置信度 0.98）
-- European Commission technical blog AI Act（可信事件，置信度 0.98）
 - DeepSeek release DeepSeek V4（可信事件，置信度 0.98）
+- Anthropic funding Funding round $2B（可信事件，置信度 0.98）
+- European Commission policy AI Act（可信事件，置信度 0.98）
+- OpenAI integration major API（可信事件，置信度 0.98）
 
 ## 待审核
-- eventness_review item:item_057990f7399442e0a1a314e772765260
-- eventness_review item:item_06e3456286c940f8bda981d92f1c9e27
-- eventness_review item:item_08f1a6c1101d437ea0dd9707e4ee34a9
-- eventness_review item:item_09f84f97026f41cab67cefdf7f648a60
-- eventness_review item:item_0b4cc453648b460d865b42f7f8e6f66c
-- eventness_review item:item_0d24b2e317e043d7bb27697fe46f7209
-- eventness_review item:item_1406567ddd4f42a88af25c45366c2776
-- eventness_review item:item_1477bd8d898a4bd0a60f91ce32b60915
-- eventness_review item:item_193297eabb5c4b9fae70bd48237083b9
-- eventness_review item:item_1a5222c5cdbd461491c95f057acc5ccc
+- eventness_review item:item_03f7dc05cd8c47f68d1a19203ceb73e3
+- eventness_review item:item_08853a559663474185eb0e141e8ceb48
+- eventness_review item:item_0a91ef59fa74402692470972c54fa65d
+- eventness_review item:item_0e777e66dd10491b963c51ca944875aa
+- eventness_review item:item_1069d80bab444f8891aedb61caff0d44
+- eventness_review item:item_11c46d82571b4532962292b12ab7a0fc
+- eventness_review item:item_11d1d329d58041e7b4392668f62696b5
+- eventness_review item:item_13f006e6b1c747149ea2f56541d90ff7
+- eventness_review item:item_1438354686654049b4da111a8e441b4d
+- eventness_review item:item_1611c8b47fd24b2b9c602b3048f97abb
 ```
 
 运行报告预览:
@@ -191,20 +137,21 @@
 ```markdown
 # 运行报告
 
-生成时间: 2026-06-01T01:50:27.656888+00:00
+生成时间: 2026-06-01T02:17:34.898038+00:00
 
-关联对象: run run_quality_eval_8433248c19
+关联对象: run run_quality_eval_d8a85c3787
 
 ## 可信事件
 - OpenAI release GPT-5.5：release，置信度 0.98，cluster cluster_1be3f3059f449572
-- OpenAI integration major API：integration，置信度 0.98，cluster cluster_9292e895fe7b3e7f
-- European Commission technical blog AI Act：technical_blog，置信度 0.98，cluster cluster_a1a20d64e03cad90
 - DeepSeek release DeepSeek V4：release，置信度 0.98，cluster cluster_ee6e44e0884d81fd
+- Anthropic funding Funding round $2B：funding，置信度 0.98，cluster cluster_9ce52b9a54b462dd
+- European Commission policy AI Act：policy，置信度 0.98，cluster cluster_9a4ddb5f97cb4279
+- OpenAI integration major API：integration，置信度 0.98，cluster cluster_9292e895fe7b3e7f
 
 ## 质量概览
-- 可信事件数: 4
-- 全部事件数: 4
-- 待审核项: 80
+- 可信事件数: 5
+- 全部事件数: 5
+- 待审核项: 73
 - 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。
 
 ```
@@ -212,7 +159,7 @@
 Run endpoint 报告预览:
 
 ```markdown
-# 运行报告 run_quality_eval_8433248c19
+# 运行报告 run_quality_eval_d8a85c3787
 
 状态: success
 
@@ -222,13 +169,14 @@ Run endpoint 报告预览:
 
 ## 可信事件
 - OpenAI release GPT-5.5：release，置信度 0.98
-- OpenAI integration major API：integration，置信度 0.98
-- European Commission technical blog AI Act：technical_blog，置信度 0.98
 - DeepSeek release DeepSeek V4：release，置信度 0.98
+- Anthropic funding Funding round $2B：funding，置信度 0.98
+- European Commission policy AI Act：policy，置信度 0.98
+- OpenAI integration major API：integration，置信度 0.98
 
 ## 质量概览
-- 可信事件数: 4
-- 待审核项: 80
+- 可信事件数: 5
+- 待审核项: 73
 - 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。
 
 ```
@@ -261,7 +209,7 @@ Run endpoint 报告预览:
     "gold_duplicate_pairs": 4,
     "gold_same_event_pairs": 11,
     "gold_non_event_items": 5,
-    "temp_db": "/var/folders/f_/12__g2851hv407x2tv3xbx580000gn/T/content_inbox_quality_eval_k3g77pms/quality_eval.db"
+    "temp_db": "/var/folders/f_/12__g2851hv407x2tv3xbx580000gn/T/content_inbox_quality_eval_kysu34gd/quality_eval.db"
   },
   "process_dedupe": {
     "tp": 4,
@@ -278,1170 +226,68 @@ Run endpoint 报告预览:
     "multi_item_group_rate": 0.0
   },
   "event_clustering": {
-    "tp": 3,
+    "tp": 11,
     "fp": 0,
-    "fn": 8,
+    "fn": 0,
     "precision": 1.0,
-    "recall": 0.2727272727272727,
-    "f1": 0.42857142857142855,
+    "recall": 1.0,
+    "f1": 1.0,
     "auto_merge_precision": 1.0,
-    "clusters": 4,
-    "multi_item_event_rate": 0.25,
+    "clusters": 5,
+    "multi_item_event_rate": 0.8,
     "false_positive_pairs": [],
-    "false_negative_pairs": [
-      [
-        "anthropic_funding_a",
-        "anthropic_funding_b"
-      ],
-      [
-        "deepseek_cn_a",
-        "deepseek_cn_b"
-      ],
-      [
-        "deepseek_cn_a",
-        "guid_a"
-      ],
-      [
-        "deepseek_cn_b",
-        "guid_a"
-      ],
-      [
-        "openai_punctuation_variant",
-        "openai_variant_a"
-      ],
-      [
-        "openai_variant_a",
-        "openai_variant_b"
-      ],
-      [
-        "openai_variant_a",
-        "url_tracking_a"
-      ],
-      [
-        "policy_a",
-        "policy_b"
-      ]
-    ],
-    "false_negative_traces": [
-      {
-        "pair": [
-          "anthropic_funding_a",
-          "anthropic_funding_b"
-        ],
-        "item_ids": [
-          "item_d2917045499f4badadb0de3f3cb6e016",
-          "item_7f5bac74eb8a4e439feff2ae6bbd86b3"
-        ],
-        "items": [
-          {
-            "case_id": "anthropic_funding_a",
-            "item_id": "item_d2917045499f4badadb0de3f3cb6e016",
-            "title": "Anthropic raises $2B at $60B valuation",
-            "item_card": {
-              "present": true,
-              "canonical_title": "Anthropic raises $2B at $60B valuation",
-              "language": "en",
-              "entities": [
-                "Anthropic"
-              ],
-              "event_hint": "Anthropic raises $2B at $60B valuation",
-              "content_role": "report",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "Anthropic",
-              "product_or_model": "",
-              "action": "adoption_metric",
-              "semantic_level": "thread_signature",
-              "signature_key": null,
-              "is_concrete": false,
-              "alias_hits": [
-                {
-                  "type": "action",
-                  "alias": "raises",
-                  "canonical": "funding"
-                },
-                {
-                  "type": "action",
-                  "alias": "raised",
-                  "canonical": "funding"
-                },
-                {
-                  "type": "action",
-                  "alias": "raised $",
-                  "canonical": "funding"
-                },
-                {
-                  "type": "action",
-                  "alias": "raises $",
-                  "canonical": "funding"
-                },
-                {
-                  "type": "action",
-                  "alias": "valuation",
-                  "canonical": "funding"
-                }
-              ],
-              "invalid_reasons": [
-                "semantic_level_thread_signature"
-              ]
-            },
-            "clusters": []
-          },
-          {
-            "case_id": "anthropic_funding_b",
-            "item_id": "item_7f5bac74eb8a4e439feff2ae6bbd86b3",
-            "title": "Anthropic closes new $2 billion financing round",
-            "item_card": {
-              "present": true,
-              "canonical_title": "Anthropic closes new $2 billion financing round",
-              "language": "en",
-              "entities": [
-                "Anthropic"
-              ],
-              "event_hint": "Anthropic closes new $2 billion financing round",
-              "content_role": "report",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "Anthropic",
-              "product_or_model": "",
-              "action": "funding",
-              "semantic_level": "thread_signature",
-              "signature_key": null,
-              "is_concrete": false,
-              "alias_hits": [
-                {
-                  "type": "action",
-                  "alias": "financing",
-                  "canonical": "funding"
-                },
-                {
-                  "type": "action",
-                  "alias": "round",
-                  "canonical": "funding"
-                },
-                {
-                  "type": "action",
-                  "alias": "closes",
-                  "canonical": "funding"
-                },
-                {
-                  "type": "action",
-                  "alias": "closed",
-                  "canonical": "funding"
-                }
-              ],
-              "invalid_reasons": [
-                "semantic_level_thread_signature"
-              ]
-            },
-            "clusters": []
-          }
-        ],
-        "candidate": {
-          "present": false
-        },
-        "relation": {
-          "judged_as": null,
-          "reason_code": null,
-          "status": null,
-          "decision_source": null
-        },
-        "review_queue": [],
-        "cluster_eval": {
-          "same_cluster": false,
-          "cluster_ids_by_item": {
-            "anthropic_funding_a": [],
-            "anthropic_funding_b": []
-          },
-          "counted_as_failure_because": "no_candidate_pair_generated"
-        }
-      },
-      {
-        "pair": [
-          "deepseek_cn_a",
-          "deepseek_cn_b"
-        ],
-        "item_ids": [
-          "item_7bb1820784b143a395dc34a5343b61ab",
-          "item_f61c4826d216460eb425769ff2719f72"
-        ],
-        "items": [
-          {
-            "case_id": "deepseek_cn_a",
-            "item_id": "item_7bb1820784b143a395dc34a5343b61ab",
-            "title": "DeepSeek 发布 V4.1 模型，推理延迟下降",
-            "item_card": {
-              "present": true,
-              "canonical_title": "DeepSeek 发布 V4.1 模型，推理延迟下降",
-              "language": "zh",
-              "entities": [
-                "DeepSeek",
-                "发布",
-                "V4.1",
-                "模型",
-                "推理延迟下降"
-              ],
-              "event_hint": "DeepSeek 发布 V4.1 模型，推理延迟下降",
-              "content_role": "source_material",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "DeepSeek",
-              "product_or_model": "",
-              "action": "release",
-              "semantic_level": "thread_signature",
-              "signature_key": null,
-              "is_concrete": false,
-              "alias_hits": [
-                {
-                  "type": "actor",
-                  "alias": "Deepseek",
-                  "canonical": "DeepSeek"
-                },
-                {
-                  "type": "action",
-                  "alias": "发布",
-                  "canonical": "release"
-                }
-              ],
-              "invalid_reasons": [
-                "semantic_level_thread_signature"
-              ]
-            },
-            "clusters": []
-          },
-          {
-            "case_id": "deepseek_cn_b",
-            "item_id": "item_f61c4826d216460eb425769ff2719f72",
-            "title": "深度求索推出 DeepSeek V4.1，主打低延迟推理",
-            "item_card": {
-              "present": true,
-              "canonical_title": "深度求索推出 DeepSeek V4.1，主打低延迟推理",
-              "language": "zh",
-              "entities": [
-                "深度求索推出",
-                "DeepSeek",
-                "V4.1",
-                "主打低延迟推理"
-              ],
-              "event_hint": "深度求索推出 DeepSeek V4.1，主打低延迟推理",
-              "content_role": "report",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "DeepSeek",
-              "product_or_model": "DeepSeek V4",
-              "action": "release",
-              "semantic_level": "event_signature",
-              "signature_key": "deepseek|deepseekv4|release|2026-05-30",
-              "is_concrete": true,
-              "alias_hits": [
-                {
-                  "type": "actor",
-                  "alias": "深度求索",
-                  "canonical": "DeepSeek"
-                },
-                {
-                  "type": "actor",
-                  "alias": "Deepseek",
-                  "canonical": "DeepSeek"
-                },
-                {
-                  "type": "product",
-                  "alias": "DeepSeek V4.1",
-                  "canonical": "DeepSeek V4"
-                },
-                {
-                  "type": "product",
-                  "alias": "deepseek v4",
-                  "canonical": "DeepSeek V4"
-                },
-                {
-                  "type": "action",
-                  "alias": "推出",
-                  "canonical": "release"
-                }
-              ],
-              "invalid_reasons": []
-            },
-            "clusters": [
-              "cluster_ee6e44e0884d81fd"
-            ]
-          }
-        ],
-        "candidate": {
-          "present": false
-        },
-        "relation": {
-          "judged_as": null,
-          "reason_code": null,
-          "status": null,
-          "decision_source": null
-        },
-        "review_queue": [],
-        "cluster_eval": {
-          "same_cluster": false,
-          "cluster_ids_by_item": {
-            "deepseek_cn_a": [],
-            "deepseek_cn_b": [
-              "cluster_ee6e44e0884d81fd"
-            ]
-          },
-          "counted_as_failure_because": "no_candidate_pair_generated"
-        }
-      },
-      {
-        "pair": [
-          "deepseek_cn_a",
-          "guid_a"
-        ],
-        "item_ids": [
-          "item_7bb1820784b143a395dc34a5343b61ab",
-          "item_1d750424bc1244deb9453f0d2725d369"
-        ],
-        "items": [
-          {
-            "case_id": "deepseek_cn_a",
-            "item_id": "item_7bb1820784b143a395dc34a5343b61ab",
-            "title": "DeepSeek 发布 V4.1 模型，推理延迟下降",
-            "item_card": {
-              "present": true,
-              "canonical_title": "DeepSeek 发布 V4.1 模型，推理延迟下降",
-              "language": "zh",
-              "entities": [
-                "DeepSeek",
-                "发布",
-                "V4.1",
-                "模型",
-                "推理延迟下降"
-              ],
-              "event_hint": "DeepSeek 发布 V4.1 模型，推理延迟下降",
-              "content_role": "source_material",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "DeepSeek",
-              "product_or_model": "",
-              "action": "release",
-              "semantic_level": "thread_signature",
-              "signature_key": null,
-              "is_concrete": false,
-              "alias_hits": [
-                {
-                  "type": "actor",
-                  "alias": "Deepseek",
-                  "canonical": "DeepSeek"
-                },
-                {
-                  "type": "action",
-                  "alias": "发布",
-                  "canonical": "release"
-                }
-              ],
-              "invalid_reasons": [
-                "semantic_level_thread_signature"
-              ]
-            },
-            "clusters": []
-          },
-          {
-            "case_id": "guid_a",
-            "item_id": "item_1d750424bc1244deb9453f0d2725d369",
-            "title": "DeepSeek releases V4.1 model",
-            "item_card": {
-              "present": true,
-              "canonical_title": "DeepSeek releases V4.1 model",
-              "language": "en",
-              "entities": [
-                "DeepSeek",
-                "V4.1",
-                "V4.1."
-              ],
-              "event_hint": "DeepSeek releases V4.1 model",
-              "content_role": "source_material",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "DeepSeek",
-              "product_or_model": "",
-              "action": "release",
-              "semantic_level": "thread_signature",
-              "signature_key": null,
-              "is_concrete": false,
-              "alias_hits": [
-                {
-                  "type": "actor",
-                  "alias": "Deepseek",
-                  "canonical": "DeepSeek"
-                },
-                {
-                  "type": "action",
-                  "alias": "released",
-                  "canonical": "release"
-                }
-              ],
-              "invalid_reasons": [
-                "semantic_level_thread_signature"
-              ]
-            },
-            "clusters": []
-          }
-        ],
-        "candidate": {
-          "present": false
-        },
-        "relation": {
-          "judged_as": null,
-          "reason_code": null,
-          "status": null,
-          "decision_source": null
-        },
-        "review_queue": [],
-        "cluster_eval": {
-          "same_cluster": false,
-          "cluster_ids_by_item": {
-            "deepseek_cn_a": [],
-            "guid_a": []
-          },
-          "counted_as_failure_because": "no_candidate_pair_generated"
-        }
-      },
-      {
-        "pair": [
-          "deepseek_cn_b",
-          "guid_a"
-        ],
-        "item_ids": [
-          "item_f61c4826d216460eb425769ff2719f72",
-          "item_1d750424bc1244deb9453f0d2725d369"
-        ],
-        "items": [
-          {
-            "case_id": "deepseek_cn_b",
-            "item_id": "item_f61c4826d216460eb425769ff2719f72",
-            "title": "深度求索推出 DeepSeek V4.1，主打低延迟推理",
-            "item_card": {
-              "present": true,
-              "canonical_title": "深度求索推出 DeepSeek V4.1，主打低延迟推理",
-              "language": "zh",
-              "entities": [
-                "深度求索推出",
-                "DeepSeek",
-                "V4.1",
-                "主打低延迟推理"
-              ],
-              "event_hint": "深度求索推出 DeepSeek V4.1，主打低延迟推理",
-              "content_role": "report",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "DeepSeek",
-              "product_or_model": "DeepSeek V4",
-              "action": "release",
-              "semantic_level": "event_signature",
-              "signature_key": "deepseek|deepseekv4|release|2026-05-30",
-              "is_concrete": true,
-              "alias_hits": [
-                {
-                  "type": "actor",
-                  "alias": "深度求索",
-                  "canonical": "DeepSeek"
-                },
-                {
-                  "type": "actor",
-                  "alias": "Deepseek",
-                  "canonical": "DeepSeek"
-                },
-                {
-                  "type": "product",
-                  "alias": "DeepSeek V4.1",
-                  "canonical": "DeepSeek V4"
-                },
-                {
-                  "type": "product",
-                  "alias": "deepseek v4",
-                  "canonical": "DeepSeek V4"
-                },
-                {
-                  "type": "action",
-                  "alias": "推出",
-                  "canonical": "release"
-                }
-              ],
-              "invalid_reasons": []
-            },
-            "clusters": [
-              "cluster_ee6e44e0884d81fd"
-            ]
-          },
-          {
-            "case_id": "guid_a",
-            "item_id": "item_1d750424bc1244deb9453f0d2725d369",
-            "title": "DeepSeek releases V4.1 model",
-            "item_card": {
-              "present": true,
-              "canonical_title": "DeepSeek releases V4.1 model",
-              "language": "en",
-              "entities": [
-                "DeepSeek",
-                "V4.1",
-                "V4.1."
-              ],
-              "event_hint": "DeepSeek releases V4.1 model",
-              "content_role": "source_material",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "DeepSeek",
-              "product_or_model": "",
-              "action": "release",
-              "semantic_level": "thread_signature",
-              "signature_key": null,
-              "is_concrete": false,
-              "alias_hits": [
-                {
-                  "type": "actor",
-                  "alias": "Deepseek",
-                  "canonical": "DeepSeek"
-                },
-                {
-                  "type": "action",
-                  "alias": "released",
-                  "canonical": "release"
-                }
-              ],
-              "invalid_reasons": [
-                "semantic_level_thread_signature"
-              ]
-            },
-            "clusters": []
-          }
-        ],
-        "candidate": {
-          "present": false
-        },
-        "relation": {
-          "judged_as": null,
-          "reason_code": null,
-          "status": null,
-          "decision_source": null
-        },
-        "review_queue": [],
-        "cluster_eval": {
-          "same_cluster": false,
-          "cluster_ids_by_item": {
-            "deepseek_cn_b": [
-              "cluster_ee6e44e0884d81fd"
-            ],
-            "guid_a": []
-          },
-          "counted_as_failure_because": "no_candidate_pair_generated"
-        }
-      },
-      {
-        "pair": [
-          "openai_punctuation_variant",
-          "openai_variant_a"
-        ],
-        "item_ids": [
-          "item_d349226500574d6fb18da4ca737e5fe8",
-          "item_08f1a6c1101d437ea0dd9707e4ee34a9"
-        ],
-        "items": [
-          {
-            "case_id": "openai_punctuation_variant",
-            "item_id": "item_d349226500574d6fb18da4ca737e5fe8",
-            "title": "OpenAI launches GPT 5.5 for coding agents",
-            "item_card": {
-              "present": true,
-              "canonical_title": "OpenAI launches GPT 5.5 for coding agents",
-              "language": "en",
-              "entities": [
-                "OpenAI",
-                "GPT"
-              ],
-              "event_hint": "OpenAI launches GPT 5.5 for coding agents",
-              "content_role": "report",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "OpenAI",
-              "product_or_model": "GPT-5.5",
-              "action": "release",
-              "semantic_level": "event_signature",
-              "signature_key": "openai|gpt55|release|2026-05-30",
-              "is_concrete": true,
-              "alias_hits": [
-                {
-                  "type": "product",
-                  "alias": "GPT 5.5",
-                  "canonical": "GPT-5.5"
-                },
-                {
-                  "type": "action",
-                  "alias": "launch",
-                  "canonical": "release"
-                }
-              ],
-              "invalid_reasons": []
-            },
-            "clusters": [
-              "cluster_1be3f3059f449572"
-            ]
-          },
-          {
-            "case_id": "openai_variant_a",
-            "item_id": "item_08f1a6c1101d437ea0dd9707e4ee34a9",
-            "title": "OpenAI rolls out GPT-5.5 model aimed at coding agents",
-            "item_card": {
-              "present": true,
-              "canonical_title": "OpenAI rolls out GPT-5.5 model aimed at coding agents",
-              "language": "en",
-              "entities": [
-                "OpenAI",
-                "GPT-5.5"
-              ],
-              "event_hint": "OpenAI rolls out GPT-5.5 model aimed at coding agents",
-              "content_role": "report",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "OpenAI",
-              "product_or_model": "GPT-5.5",
-              "action": "other",
-              "semantic_level": "thread_signature",
-              "signature_key": null,
-              "is_concrete": false,
-              "alias_hits": [
-                {
-                  "type": "product",
-                  "alias": "gpt-5.5",
-                  "canonical": "GPT-5.5"
-                }
-              ],
-              "invalid_reasons": [
-                "semantic_level_thread_signature"
-              ]
-            },
-            "clusters": []
-          }
-        ],
-        "candidate": {
-          "present": false
-        },
-        "relation": {
-          "judged_as": null,
-          "reason_code": null,
-          "status": null,
-          "decision_source": null
-        },
-        "review_queue": [],
-        "cluster_eval": {
-          "same_cluster": false,
-          "cluster_ids_by_item": {
-            "openai_punctuation_variant": [
-              "cluster_1be3f3059f449572"
-            ],
-            "openai_variant_a": []
-          },
-          "counted_as_failure_because": "no_candidate_pair_generated"
-        }
-      },
-      {
-        "pair": [
-          "openai_variant_a",
-          "openai_variant_b"
-        ],
-        "item_ids": [
-          "item_08f1a6c1101d437ea0dd9707e4ee34a9",
-          "item_3e85a19398cb481da4e9a4af9b6c683f"
-        ],
-        "items": [
-          {
-            "case_id": "openai_variant_a",
-            "item_id": "item_08f1a6c1101d437ea0dd9707e4ee34a9",
-            "title": "OpenAI rolls out GPT-5.5 model aimed at coding agents",
-            "item_card": {
-              "present": true,
-              "canonical_title": "OpenAI rolls out GPT-5.5 model aimed at coding agents",
-              "language": "en",
-              "entities": [
-                "OpenAI",
-                "GPT-5.5"
-              ],
-              "event_hint": "OpenAI rolls out GPT-5.5 model aimed at coding agents",
-              "content_role": "report",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "OpenAI",
-              "product_or_model": "GPT-5.5",
-              "action": "other",
-              "semantic_level": "thread_signature",
-              "signature_key": null,
-              "is_concrete": false,
-              "alias_hits": [
-                {
-                  "type": "product",
-                  "alias": "gpt-5.5",
-                  "canonical": "GPT-5.5"
-                }
-              ],
-              "invalid_reasons": [
-                "semantic_level_thread_signature"
-              ]
-            },
-            "clusters": []
-          },
-          {
-            "case_id": "openai_variant_b",
-            "item_id": "item_3e85a19398cb481da4e9a4af9b6c683f",
-            "title": "OpenAI GPT 5.5 model launches for software agents",
-            "item_card": {
-              "present": true,
-              "canonical_title": "OpenAI GPT 5.5 model launches for software agents",
-              "language": "en",
-              "entities": [
-                "OpenAI",
-                "GPT"
-              ],
-              "event_hint": "OpenAI GPT 5.5 model launches for software agents",
-              "content_role": "report",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "OpenAI",
-              "product_or_model": "GPT-5.5",
-              "action": "integration",
-              "semantic_level": "event_signature",
-              "signature_key": "openai|gpt55|integration|2026-05-30",
-              "is_concrete": true,
-              "alias_hits": [
-                {
-                  "type": "product",
-                  "alias": "GPT 5.5",
-                  "canonical": "GPT-5.5"
-                },
-                {
-                  "type": "action",
-                  "alias": "launch",
-                  "canonical": "release"
-                },
-                {
-                  "type": "action",
-                  "alias": "launched",
-                  "canonical": "release"
-                },
-                {
-                  "type": "action",
-                  "alias": "integration",
-                  "canonical": "integration"
-                }
-              ],
-              "invalid_reasons": []
-            },
-            "clusters": [
-              "cluster_1be3f3059f449572"
-            ]
-          }
-        ],
-        "candidate": {
-          "present": false
-        },
-        "relation": {
-          "judged_as": null,
-          "reason_code": null,
-          "status": null,
-          "decision_source": null
-        },
-        "review_queue": [],
-        "cluster_eval": {
-          "same_cluster": false,
-          "cluster_ids_by_item": {
-            "openai_variant_a": [],
-            "openai_variant_b": [
-              "cluster_1be3f3059f449572"
-            ]
-          },
-          "counted_as_failure_because": "no_candidate_pair_generated"
-        }
-      },
-      {
-        "pair": [
-          "openai_variant_a",
-          "url_tracking_a"
-        ],
-        "item_ids": [
-          "item_08f1a6c1101d437ea0dd9707e4ee34a9",
-          "item_d189865f22804653bf78cccd72127385"
-        ],
-        "items": [
-          {
-            "case_id": "openai_variant_a",
-            "item_id": "item_08f1a6c1101d437ea0dd9707e4ee34a9",
-            "title": "OpenAI rolls out GPT-5.5 model aimed at coding agents",
-            "item_card": {
-              "present": true,
-              "canonical_title": "OpenAI rolls out GPT-5.5 model aimed at coding agents",
-              "language": "en",
-              "entities": [
-                "OpenAI",
-                "GPT-5.5"
-              ],
-              "event_hint": "OpenAI rolls out GPT-5.5 model aimed at coding agents",
-              "content_role": "report",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "OpenAI",
-              "product_or_model": "GPT-5.5",
-              "action": "other",
-              "semantic_level": "thread_signature",
-              "signature_key": null,
-              "is_concrete": false,
-              "alias_hits": [
-                {
-                  "type": "product",
-                  "alias": "gpt-5.5",
-                  "canonical": "GPT-5.5"
-                }
-              ],
-              "invalid_reasons": [
-                "semantic_level_thread_signature"
-              ]
-            },
-            "clusters": []
-          },
-          {
-            "case_id": "url_tracking_a",
-            "item_id": "item_d189865f22804653bf78cccd72127385",
-            "title": "OpenAI launches GPT-5.5 for coding agents",
-            "item_card": {
-              "present": true,
-              "canonical_title": "OpenAI launches GPT-5.5 for coding agents",
-              "language": "en",
-              "entities": [
-                "OpenAI",
-                "GPT-5.5"
-              ],
-              "event_hint": "OpenAI launches GPT-5.5 for coding agents",
-              "content_role": "source_material",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "OpenAI",
-              "product_or_model": "GPT-5.5",
-              "action": "release",
-              "semantic_level": "event_signature",
-              "signature_key": "openai|gpt55|release|2026-05-30",
-              "is_concrete": true,
-              "alias_hits": [
-                {
-                  "type": "product",
-                  "alias": "gpt-5.5",
-                  "canonical": "GPT-5.5"
-                },
-                {
-                  "type": "action",
-                  "alias": "launch",
-                  "canonical": "release"
-                },
-                {
-                  "type": "action",
-                  "alias": "released",
-                  "canonical": "release"
-                }
-              ],
-              "invalid_reasons": []
-            },
-            "clusters": [
-              "cluster_1be3f3059f449572"
-            ]
-          }
-        ],
-        "candidate": {
-          "present": false
-        },
-        "relation": {
-          "judged_as": null,
-          "reason_code": null,
-          "status": null,
-          "decision_source": null
-        },
-        "review_queue": [],
-        "cluster_eval": {
-          "same_cluster": false,
-          "cluster_ids_by_item": {
-            "openai_variant_a": [],
-            "url_tracking_a": [
-              "cluster_1be3f3059f449572"
-            ]
-          },
-          "counted_as_failure_because": "no_candidate_pair_generated"
-        }
-      },
-      {
-        "pair": [
-          "policy_a",
-          "policy_b"
-        ],
-        "item_ids": [
-          "item_c17ce686f2604583979b6b9792cd7c40",
-          "item_fe81fd24edf24d9c9ce6df11df8fe5f9"
-        ],
-        "items": [
-          {
-            "case_id": "policy_a",
-            "item_id": "item_c17ce686f2604583979b6b9792cd7c40",
-            "title": "EU publishes final AI Act implementation guidance",
-            "item_card": {
-              "present": true,
-              "canonical_title": "EU publishes final AI Act implementation guidance",
-              "language": "en",
-              "entities": [
-                "Act",
-                "The"
-              ],
-              "event_hint": "EU publishes final AI Act implementation guidance",
-              "content_role": "report",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "European Commission",
-              "product_or_model": "AI Act",
-              "action": "technical_blog",
-              "semantic_level": "event_signature",
-              "signature_key": "europeancommission|aiact|technicalblog|2026-05-30",
-              "is_concrete": true,
-              "alias_hits": [
-                {
-                  "type": "actor",
-                  "alias": "EU",
-                  "canonical": "European Commission"
-                },
-                {
-                  "type": "product",
-                  "alias": "AI Act implementation",
-                  "canonical": "AI Act"
-                },
-                {
-                  "type": "action",
-                  "alias": "publishes",
-                  "canonical": "policy"
-                },
-                {
-                  "type": "action",
-                  "alias": "published",
-                  "canonical": "policy"
-                },
-                {
-                  "type": "action",
-                  "alias": "guidance",
-                  "canonical": "policy"
-                },
-                {
-                  "type": "action",
-                  "alias": "act",
-                  "canonical": "policy"
-                }
-              ],
-              "invalid_reasons": []
-            },
-            "clusters": [
-              "cluster_a1a20d64e03cad90"
-            ]
-          },
-          {
-            "case_id": "policy_b",
-            "item_id": "item_fe81fd24edf24d9c9ce6df11df8fe5f9",
-            "title": "European Commission issues AI Act guidance for model providers",
-            "item_card": {
-              "present": true,
-              "canonical_title": "European Commission issues AI Act guidance for model providers",
-              "language": "en",
-              "entities": [
-                "European",
-                "Commission",
-                "Act",
-                "The"
-              ],
-              "event_hint": "European Commission issues AI Act guidance for model providers",
-              "content_role": "report",
-              "confidence": 0.55,
-              "warnings": [
-                "deterministic_minimal_card"
-              ]
-            },
-            "signature": {
-              "present": true,
-              "actor": "European Commission",
-              "product_or_model": "AI Act",
-              "action": "other",
-              "semantic_level": "thread_signature",
-              "signature_key": null,
-              "is_concrete": false,
-              "alias_hits": [
-                {
-                  "type": "actor",
-                  "alias": "EU",
-                  "canonical": "European Commission"
-                },
-                {
-                  "type": "actor",
-                  "alias": "Europe",
-                  "canonical": "European Commission"
-                },
-                {
-                  "type": "product",
-                  "alias": "AI Act guidance",
-                  "canonical": "AI Act"
-                },
-                {
-                  "type": "action",
-                  "alias": "guidance",
-                  "canonical": "policy"
-                },
-                {
-                  "type": "action",
-                  "alias": "act",
-                  "canonical": "policy"
-                }
-              ],
-              "invalid_reasons": [
-                "semantic_level_thread_signature"
-              ]
-            },
-            "clusters": []
-          }
-        ],
-        "candidate": {
-          "present": false
-        },
-        "relation": {
-          "judged_as": null,
-          "reason_code": null,
-          "status": null,
-          "decision_source": null
-        },
-        "review_queue": [],
-        "cluster_eval": {
-          "same_cluster": false,
-          "cluster_ids_by_item": {
-            "policy_a": [
-              "cluster_a1a20d64e03cad90"
-            ],
-            "policy_b": []
-          },
-          "counted_as_failure_because": "no_candidate_pair_generated"
-        }
-      }
-    ]
+    "false_negative_pairs": [],
+    "false_negative_traces": []
   },
   "event_extraction": {
-    "events": 4,
+    "events": 5,
     "event_type_known_rate": 1.0,
     "event_summary_specific_rate": 1.0,
-    "review_entries": 80,
-    "review_coverage": 20.0,
+    "review_entries": 73,
+    "review_coverage": 14.6,
     "non_event_candidate_rate": 0.0,
     "entity_recall": 0.9702970297029703,
     "matched_entities": 98,
     "expected_entities": 101
   },
   "candidate_diagnostics": {
-    "total_candidates": 15,
+    "total_candidates": 66,
     "by_priority": {
-      "low": 12,
-      "medium": 1,
-      "high": 1,
-      "must_run": 1
+      "low": 50,
+      "must_run": 8,
+      "suppress": 5,
+      "medium": 2,
+      "high": 1
     },
     "by_lane": {
-      "same_thread": 3,
-      "exploratory_recall": 9,
-      "same_event_recall": 2,
-      "exact_signature_alias": 1
+      "exploratory_recall": 46,
+      "cross_language_alias": 2,
+      "exact_signature_alias": 6,
+      "suppressed": 5,
+      "same_event_recall": 3,
+      "same_thread": 4
     },
     "by_status": {
-      "rejected": 12,
-      "review": 1,
-      "auto_merge": 2
+      "rejected": 55,
+      "auto_merge": 9,
+      "review": 2
     },
     "medium_review_rate": 1.0,
-    "disqualifiers": {},
+    "disqualifiers": {
+      "generic_entity_overlap": 5,
+      "generic_only_overlap": 5
+    },
     "alias_hit_count": 215
   },
   "semantic_judge": {
-    "dry_run_proposal_count": 1,
+    "dry_run_proposal_count": 2,
     "dry_run_proposals": [
       {
         "proposal_status": "dry_run_not_called",
         "task_type": "semantic_relation_judge",
         "item_pair": [
-          "openai_variant_b",
-          "url_tracking_a"
+          "url_tracking_a",
+          "openai_variant_b"
         ],
         "candidate_priority": "medium",
         "lane": "same_event_recall",
@@ -1470,6 +316,41 @@ Run endpoint 报告预览:
           "should_auto_merge": false,
           "review_queue_or_dry_run_report_only": true
         }
+      },
+      {
+        "proposal_status": "dry_run_not_called",
+        "task_type": "semantic_relation_judge",
+        "item_pair": [
+          "openai_variant_b",
+          "openai_variant_a"
+        ],
+        "candidate_priority": "medium",
+        "lane": "same_event_recall",
+        "rule_relation_type": "uncertain",
+        "rule_reason_code": "different_event",
+        "rule_status": "review",
+        "judge_input_evidence": {
+          "same_actor": true,
+          "same_product": true,
+          "same_action": false,
+          "event_signature_match": false,
+          "positive_features": [
+            "shared_weighted_entities:openai",
+            "shared_event_phrases:agent",
+            "close_time_window",
+            "shared_products:gpt-5.5, gpt55",
+            "shared_actors:openai"
+          ],
+          "negative_features": [
+            "generic_overlap:agents, model"
+          ],
+          "disqualifiers": []
+        },
+        "proposal_policy": {
+          "proposal_only": true,
+          "should_auto_merge": false,
+          "review_queue_or_dry_run_report_only": true
+        }
       }
     ],
     "live_calls": 0,
@@ -1477,7 +358,7 @@ Run endpoint 报告预览:
   },
   "review_apply": {
     "attempted": true,
-    "review_id": 77,
+    "review_id": 71,
     "ok": true,
     "apply_result": {
       "applied": true,
@@ -1485,8 +366,8 @@ Run endpoint 报告预览:
       "event_id": "event_d6770cbf532ba00c",
       "cluster_id": "cluster_1be3f3059f449572",
       "item_ids": [
-        "item_3e85a19398cb481da4e9a4af9b6c683f",
-        "item_d189865f22804653bf78cccd72127385"
+        "item_77e5bc04c3724868bf963a87a9e23c75",
+        "item_837e3043d08d42e397c08eed842bd0d9"
       ]
     }
   },
@@ -1496,23 +377,23 @@ Run endpoint 报告预览:
     "signal_count": 82,
     "example_profile": {
       "source_id": "techcrunch",
-      "discovery_value_avg": 1.0,
-      "fact_value_avg": 1.0,
-      "incremental_value_avg": 2.0,
+      "discovery_value_avg": 2.0,
+      "fact_value_avg": 2.0,
+      "incremental_value_avg": 0.0,
       "interpretation_value_avg": 0.0,
-      "duplicate_noise_rate": 1.0,
+      "duplicate_noise_rate": 0.0,
       "non_event_noise_rate": 0.0,
       "review_acceptance": 1.0,
-      "llm_yield_score": 2.667,
+      "llm_yield_score": 3.0,
       "priority_suggestion": "new_source_under_evaluation"
     },
     "dimension_totals": {
-      "discovery_value": 5.0,
-      "fact_value": 5.0,
+      "discovery_value": 6.0,
+      "fact_value": 6.0,
       "incremental_value": 2.0,
       "interpretation_value": 0.0,
-      "duplicate_noise": 3.0,
-      "non_event_noise": 76.0,
+      "duplicate_noise": 7.0,
+      "non_event_noise": 70.0,
       "review_acceptance": 2.0
     }
   },
@@ -1579,14 +460,14 @@ Run endpoint 报告预览:
         "not_too_thin": true
       }
     },
-    "daily_briefing_preview": "# 每日简报 2026-06-01\n\n## 可信事件\n- OpenAI release GPT-5.5（可信事件，置信度 0.98）\n- OpenAI integration major API（可信事件，置信度 0.98）\n- European Commission technical blog AI Act（可信事件，置信度 0.98）\n- DeepSeek release DeepSeek V4（可信事件，置信度 0.98）\n\n## 待审核\n- eventness_review item:item_057990f7399442e0a1a314e772765260\n- eventness_review item:item_06e3456286c940f8bda981d92f1c9e27\n- eventness_review item:item_08f1a6c1101d437ea0dd9707e4ee34a9\n- eventness_review item:item_09f84f97026f41cab67cefdf7f648a60\n- eventness_review item:item_0b4cc453648b460d865b42f7f8e6f66c\n- eventness_review item:item_0d24b2e317e043d7bb27697fe46f7209\n- eventness_review item:item_1406567ddd4f42a88af25c45366c2776\n- eventness_review item:item_1477bd8d898a4bd0a60f91ce32b60915\n- eventness_review item:item_193297eabb5c4b9fae70bd48237083b9\n- eventness_review item:item_1a5222c5cdbd461491c95f057acc5ccc",
-    "run_report_preview": "# 运行报告\n\n生成时间: 2026-06-01T01:50:27.656888+00:00\n\n关联对象: run run_quality_eval_8433248c19\n\n## 可信事件\n- OpenAI release GPT-5.5：release，置信度 0.98，cluster cluster_1be3f3059f449572\n- OpenAI integration major API：integration，置信度 0.98，cluster cluster_9292e895fe7b3e7f\n- European Commission technical blog AI Act：technical_blog，置信度 0.98，cluster cluster_a1a20d64e03cad90\n- DeepSeek release DeepSeek V4：release，置信度 0.98，cluster cluster_ee6e44e0884d81fd\n\n## 质量概览\n- 可信事件数: 4\n- 全部事件数: 4\n- 待审核项: 80\n- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n",
-    "run_endpoint_report_preview": "# 运行报告 run_quality_eval_8433248c19\n\n状态: success\n\n新增条目: 0\n\n信息源数量: 0\n\n## 可信事件\n- OpenAI release GPT-5.5：release，置信度 0.98\n- OpenAI integration major API：integration，置信度 0.98\n- European Commission technical blog AI Act：technical_blog，置信度 0.98\n- DeepSeek release DeepSeek V4：release，置信度 0.98\n\n## 质量概览\n- 可信事件数: 4\n- 待审核项: 80\n- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n"
+    "daily_briefing_preview": "# 每日简报 2026-06-01\n\n## 可信事件\n- OpenAI release GPT-5.5（可信事件，置信度 0.98）\n- DeepSeek release DeepSeek V4（可信事件，置信度 0.98）\n- Anthropic funding Funding round $2B（可信事件，置信度 0.98）\n- European Commission policy AI Act（可信事件，置信度 0.98）\n- OpenAI integration major API（可信事件，置信度 0.98）\n\n## 待审核\n- eventness_review item:item_03f7dc05cd8c47f68d1a19203ceb73e3\n- eventness_review item:item_08853a559663474185eb0e141e8ceb48\n- eventness_review item:item_0a91ef59fa74402692470972c54fa65d\n- eventness_review item:item_0e777e66dd10491b963c51ca944875aa\n- eventness_review item:item_1069d80bab444f8891aedb61caff0d44\n- eventness_review item:item_11c46d82571b4532962292b12ab7a0fc\n- eventness_review item:item_11d1d329d58041e7b4392668f62696b5\n- eventness_review item:item_13f006e6b1c747149ea2f56541d90ff7\n- eventness_review item:item_1438354686654049b4da111a8e441b4d\n- eventness_review item:item_1611c8b47fd24b2b9c602b3048f97abb",
+    "run_report_preview": "# 运行报告\n\n生成时间: 2026-06-01T02:17:34.898038+00:00\n\n关联对象: run run_quality_eval_d8a85c3787\n\n## 可信事件\n- OpenAI release GPT-5.5：release，置信度 0.98，cluster cluster_1be3f3059f449572\n- DeepSeek release DeepSeek V4：release，置信度 0.98，cluster cluster_ee6e44e0884d81fd\n- Anthropic funding Funding round $2B：funding，置信度 0.98，cluster cluster_9ce52b9a54b462dd\n- European Commission policy AI Act：policy，置信度 0.98，cluster cluster_9a4ddb5f97cb4279\n- OpenAI integration major API：integration，置信度 0.98，cluster cluster_9292e895fe7b3e7f\n\n## 质量概览\n- 可信事件数: 5\n- 全部事件数: 5\n- 待审核项: 73\n- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n",
+    "run_endpoint_report_preview": "# 运行报告 run_quality_eval_d8a85c3787\n\n状态: success\n\n新增条目: 0\n\n信息源数量: 0\n\n## 可信事件\n- OpenAI release GPT-5.5：release，置信度 0.98\n- DeepSeek release DeepSeek V4：release，置信度 0.98\n- Anthropic funding Funding round $2B：funding，置信度 0.98\n- European Commission policy AI Act：policy，置信度 0.98\n- OpenAI integration major API：integration，置信度 0.98\n\n## 质量概览\n- 可信事件数: 5\n- 待审核项: 73\n- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n"
   },
   "threshold_results": {
     "process_dedupe_pair_f1": true,
-    "event_cluster_pair_f1": false,
-    "event_cluster_pair_recall": false,
+    "event_cluster_pair_f1": true,
+    "event_cluster_pair_recall": true,
     "event_type_known_rate": true,
     "event_summary_specific_rate": true,
     "entity_recall": true,

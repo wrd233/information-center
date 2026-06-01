@@ -889,7 +889,11 @@ class InboxStore:
             for row in conn.execute(f"PRAGMA table_info({table_name})").fetchall()
         }
         if column_name not in columns:
-            conn.execute(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type}")
+            try:
+                conn.execute(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type}")
+            except sqlite3.OperationalError as exc:
+                if "duplicate column name" not in str(exc).lower():
+                    raise
 
     def archive_stale_clusters(self) -> None:
         days = int(settings.clustering.get("archive_after_days", 7))

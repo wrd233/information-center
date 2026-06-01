@@ -21,6 +21,7 @@ EVENT_ACTIONS = {
     "feature_update",
     "availability",
     "pricing",
+    "policy",
     "benchmark",
     "ranking",
     "adoption_metric",
@@ -351,6 +352,8 @@ def is_invalid_product(value: str) -> bool:
         return False
     if lowered.startswith(("deepseek v4", "deepseek-v4", "gpt-", "gpt ")):
         return False
+    if lowered.startswith("funding round"):
+        return False
     if lowered in GENERIC_ENTITY_TOKENS or is_generic_or_noise(lowered):
         return True
     if lowered in {"ai", "agent", "agents", "api", "model", "models", "data", "research", "paper", "code", "cli"}:
@@ -430,6 +433,16 @@ def is_invalid_actor(value: str) -> bool:
 
 def event_action(text: str) -> str:
     lowered = (text or "").lower()
+    if ("ai act" in lowered or "ai法案" in lowered or "人工智能法案" in lowered) and any(
+        term in lowered for term in ("guidance", "guidelines", "publishes", "published", "issues", "issued", "implementation", "compliance", "实施指南")
+    ):
+        return "policy"
+    if re.search(r"\b(?:raises?|raised|secures?|secured|closes?|closed)\b", lowered) and any(
+        term in lowered for term in ("funding", "financing", "round", "valuation", "$", "billion", "million")
+    ):
+        return "funding"
+    if "rolls out" in lowered or "rolled out" in lowered:
+        return "release"
     if "破万星" in text or "万星" in text:
         return "adoption_metric"
     if re.search(r"\b[A-Za-z][A-Za-z0-9_.-]{1,40}\s+v\d+(?:\.\d+)+", text or "", re.IGNORECASE):
@@ -462,7 +475,7 @@ def explicit_products(text: str) -> list[str]:
         r"\b(AI Security Summit)\b",
         r"\b(Agent View)\b",
         r"\b(ColaOS)\b",
-        r"\b(DeepSeek[-\s]?V4(?:\s+Preview)?)\b",
+        r"\b(DeepSeek[-\s]?V\d+(?:\.\d+)*(?:\s+Preview)?)\b",
         r"\b(ElevenAgents)\b",
         r"\b(Firecrawl\s+PHP\s+SDK|PHP\s+SDK)\b",
         r"\b(Gemini\s+API)\b",
@@ -507,6 +520,15 @@ def explicit_products(text: str) -> list[str]:
             canonical = str(canonical_product)
             if canonical.lower() not in {p.lower() for p in products}:
                 products.append(canonical)
+    if re.search(r"\b(?:raises?|raised|secures?|secured|closes?|closed)\b.*\b(?:\$?\d[\d,.]*\s*(?:b|bn|billion|m|mn|million)|financing|funding|round|valuation)\b", text or "", re.IGNORECASE):
+        amount_match = re.search(r"\$?\s*(\d+(?:\.\d+)?)\s*(billion|bn|b|million|mn|m)\b", text or "", re.IGNORECASE)
+        if amount_match:
+            amount = amount_match.group(1).rstrip(".")
+            unit = amount_match.group(2).lower()
+            normalized_unit = "B" if unit in {"b", "bn", "billion"} else "M"
+            products.append(f"Funding round ${amount}{normalized_unit}")
+        else:
+            products.append("Funding round")
     if "Notion" in (text or "") and any(term in text for term in ["CLI", "Workers", "Custom Agents", "Tools", "Developer Platform"]):
         if "Notion Developer Platform" not in products:
             products.append("Notion Developer Platform")
@@ -533,6 +555,8 @@ def explicit_products(text: str) -> list[str]:
         products.append("Agent View")
     if "DeepSeek" in (text or "") and ("open-sourcing" in (text or "").lower() or "why preview" in (text or "").lower() or "开源" in (text or "")):
         products.append("DeepSeek-V4 Preview")
+    if "DeepSeek" in (text or "") and re.search(r"\bV4(?:\.\d+)?\b", text or "", re.IGNORECASE):
+        products.append("DeepSeek V4")
     if "企业里的人+Agent" in (text or "") and "Syncless" in (text or ""):
         products.append("Syncless")
     return products
@@ -688,6 +712,8 @@ def extract_event_signature(item: dict[str, Any], card: dict[str, Any] | None = 
 
     deduped_products: list[str] = []
     for product_candidate in products:
+        if re.match(r"^DeepSeek[-\s]?V4(?:\.\d+)?(?:\s+Preview)?$", product_candidate, re.IGNORECASE):
+            product_candidate = "DeepSeek V4"
         if not is_invalid_product(product_candidate) and product_candidate.lower() not in {p.lower() for p in deduped_products}:
             deduped_products.append(product_candidate)
     products = deduped_products

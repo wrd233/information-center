@@ -1,0 +1,6741 @@
+# Semantic Quality Report
+
+## 1. Run Metadata
+
+```json
+{
+  "actual_calls": 0,
+  "actual_tokens": 0,
+  "backup_path": null,
+  "batch_size": 5,
+  "cache_hit_tokens": 0,
+  "cache_miss_tokens": 0,
+  "concurrency": 4,
+  "db_path": "/Users/wangrundong/work/infomation-center/content_inbox/data/content_inbox.sqlite3",
+  "dry_run": true,
+  "duration_seconds": 6.791,
+  "evaluation_db_path": "/var/folders/f_/12__g2851hv407x2tv3xbx580000gn/T/content_inbox_semantic_eval_m5b1x7m_.sqlite3",
+  "finished_at": "2026-06-01T02:11:03.796171+00:00",
+  "git_commit": "6efc5a0e3aae5bb5c705549d843e14522df0d49f",
+  "include_archived": false,
+  "items_sampled": 40,
+  "live": false,
+  "max_calls": 0,
+  "max_candidates": 5,
+  "max_items": 40,
+  "model": "deepseek-v4-flash",
+  "recall_strategy": "lexical/entity/time/source hybrid",
+  "run_id": "semantic_eval_20260601_021057_004537",
+  "sample_mode": "event_hotspots",
+  "source_filter": null,
+  "source_url_prefix": null,
+  "stage_budget_profile": "phase1_3_advisory",
+  "stage_budgets": {
+    "cluster_card_patch": 14000,
+    "item_card": 68000,
+    "item_cluster_relation": 50000,
+    "item_relation": 62000,
+    "source_profile": 6000
+  },
+  "started_at": "2026-06-01T02:10:57.004537+00:00",
+  "strong_model": null,
+  "token_budget": 200000,
+  "vector_index": false,
+  "warnings": [],
+  "write_confirmation": null,
+  "write_real_db": false
+}
+```
+
+## 2. Source Scope
+
+```json
+{
+  "matched_source_count": 469,
+  "source_filter": null,
+  "source_url_prefix": null,
+  "sources": [
+    {
+      "feed_url": null,
+      "item_count": 44,
+      "latest_item_time": "2026-05-05T04:17:28+00:00",
+      "sampled_item_count": 0,
+      "source_id": "🔔科技频道[奇诺分享-ccino.org]⚡️",
+      "source_name": "🔔科技频道[奇诺分享-ccino.org]⚡️"
+    },
+    {
+      "feed_url": null,
+      "item_count": 42,
+      "latest_item_time": "2026-05-02T08:02:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台",
+      "source_name": "51吃瓜网 - 吃瓜爆料第一站，全网最快最全的吃瓜平台"
+    },
+    {
+      "feed_url": null,
+      "item_count": 36,
+      "latest_item_time": "2026-05-05T03:40:15+00:00",
+      "sampled_item_count": 0,
+      "source_id": "新华社新闻_新华网",
+      "source_name": "新华社新闻_新华网"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/179bcc4b8e5d4274b6e9e935f9fd4434",
+      "item_count": 29,
+      "latest_item_time": "2026-05-25T21:10:56+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-aadit-sheth-aaditsh",
+      "source_name": "Aadit Sheth(@aaditsh)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/7d19a619a1cc4a9896129211269d2c85",
+      "item_count": 29,
+      "latest_item_time": "2026-05-27T15:22:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-ai-engineer-aidotengineer",
+      "source_name": "AI Engineer(@aiDotEngineer)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/aa74321087f9405a872fd9a76b743bf8",
+      "item_count": 29,
+      "latest_item_time": "2026-05-28T09:24:45+00:00",
+      "sampled_item_count": 20,
+      "source_id": "socialmedia-ai-will-financeyf5",
+      "source_name": "AI Will(@FinanceYF5)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/341f7b9f8d9b477e8bb200caa7f32c6e",
+      "item_count": 29,
+      "latest_item_time": "2026-05-28T15:29:11+00:00",
+      "sampled_item_count": 13,
+      "source_id": "socialmedia-ak-akhaliq",
+      "source_name": "AK(@_akhaliq)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/3434c0d56ee0446f991fb6af42bfac4b",
+      "item_count": 29,
+      "latest_item_time": "2026-05-26T21:04:20+00:00",
+      "sampled_item_count": 1,
+      "source_id": "socialmedia-akshay-kothari-akothari",
+      "source_name": "Akshay Kothari(@akothari)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/0277b0bbefd54df7bc6b7880122da8f7",
+      "item_count": 26,
+      "latest_item_time": "2026-05-17T02:16:56+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-orange-ai-oran-ge",
+      "source_name": "orange.ai(@oran_ge)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/05f1492e43514dc3862a076d3697c390",
+      "item_count": 25,
+      "latest_item_time": "2026-05-15T19:17:19+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-nvidia-ai-nvidiaai",
+      "source_name": "NVIDIA AI(@NVIDIAAI)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 25,
+      "latest_item_time": "2026-04-30T22:51:41+08:00",
+      "sampled_item_count": 0,
+      "source_id": "猴猴说话",
+      "source_name": "猴猴说话"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/0e3ebaf288014c45b0d24b71fe37312b",
+      "item_count": 24,
+      "latest_item_time": "2026-05-27T13:30:11+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-ai-breakfast-aibreakfast",
+      "source_name": "AI Breakfast(@AiBreakfast)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 24,
+      "latest_item_time": "2026-05-04T22:24:45+00:00",
+      "sampled_item_count": 0,
+      "source_id": "十年之约聚合订阅",
+      "source_name": "十年之约聚合订阅"
+    },
+    {
+      "feed_url": null,
+      "item_count": 20,
+      "latest_item_time": "2026-02-01T16:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "- 政府文件库",
+      "source_name": "- 政府文件库"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/ef7c70f9568d45f4915169fef4ce90b4",
+      "item_count": 20,
+      "latest_item_time": "2026-04-24T12:03:30+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-ai-at-meta-aiatmeta",
+      "source_name": "AI at Meta(@AIatMeta)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/22af005b21ec45b1a4503acca777b7f0",
+      "item_count": 20,
+      "latest_item_time": "2026-05-14T20:25:04+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-ai-sdk-aisdk",
+      "source_name": "AI SDK(@aisdk)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/524525de0d69407b80f0a7d891fdc8df",
+      "item_count": 20,
+      "latest_item_time": "2026-05-13T17:21:46+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-alex-albert-alexalbert",
+      "source_name": "Alex Albert(@alexalbert__)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 17,
+      "latest_item_time": "2026-05-05T02:28:25Z",
+      "sampled_item_count": 0,
+      "source_id": "daringfireball.net",
+      "source_name": "daringfireball.net"
+    },
+    {
+      "feed_url": null,
+      "item_count": 15,
+      "latest_item_time": "2026-05-04T17:28:28+00:00",
+      "sampled_item_count": 0,
+      "source_id": "AI Foundations",
+      "source_name": "AI Foundations"
+    },
+    {
+      "feed_url": null,
+      "item_count": 15,
+      "latest_item_time": "2025-01-23T03:30:16+00:00",
+      "sampled_item_count": 0,
+      "source_id": "小宇宙 Podcast 643928f99361a4e7c38a9555",
+      "source_name": "小宇宙 Podcast 643928f99361a4e7c38a9555"
+    },
+    {
+      "feed_url": null,
+      "item_count": 15,
+      "latest_item_time": "2026-04-30T09:44:28+00:00",
+      "sampled_item_count": 0,
+      "source_id": "最新发布_共产党员网",
+      "source_name": "最新发布_共产党员网"
+    },
+    {
+      "feed_url": null,
+      "item_count": 15,
+      "latest_item_time": "2026-05-04T18:17:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "极客公园",
+      "source_name": "极客公园"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a02496979a0e4d86baf2b72c24db52a4",
+      "item_count": 14,
+      "latest_item_time": "2026-03-24T23:59:57+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-aman-sanger-amanrsanger",
+      "source_name": "Aman Sanger(@amanrsanger)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 12,
+      "latest_item_time": "2026-05-04T22:30:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "Vista看天下",
+      "source_name": "Vista看天下"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/3042b6f912b24f64982cc23f7bd59681",
+      "item_count": 11,
+      "latest_item_time": "2026-05-03T21:32:32+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-adam-d-angelo-adamdangelo",
+      "source_name": "Adam D'Angelo(@adamdangelo)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/74e542992cf7441390c708f5601071d4",
+      "item_count": 11,
+      "latest_item_time": "2026-05-12T23:47:03+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-imxiaohu",
+      "source_name": "小互(@imxiaohu)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/082097117b4543e9a741cd2580f936d3",
+      "item_count": 11,
+      "latest_item_time": "2026-04-24T07:24:53+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-junyang-lin-justinlin610",
+      "source_name": "Junyang Lin(@JustinLin610)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 11,
+      "latest_item_time": "2025-07-26T10:23:14+00:00",
+      "sampled_item_count": 0,
+      "source_id": "图书推荐 – 书伴",
+      "source_name": "图书推荐 – 书伴"
+    },
+    {
+      "feed_url": null,
+      "item_count": 10,
+      "latest_item_time": "2026-04-15T03:16:11+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Rolen's Blog",
+      "source_name": "Rolen's Blog"
+    },
+    {
+      "feed_url": null,
+      "item_count": 10,
+      "latest_item_time": "2026-05-05T00:46:29+00:00",
+      "sampled_item_count": 0,
+      "source_id": "simonwillison.net",
+      "source_name": "simonwillison.net"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/08b5488b20bc437c8bfc317a52e5c26d",
+      "item_count": 10,
+      "latest_item_time": "2026-04-30T16:21:35+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-andrew-ng-andrewyng",
+      "source_name": "Andrew Ng(@AndrewYNg)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f7992687b8d74b14bf2341eb3a0a5ec4",
+      "item_count": 10,
+      "latest_item_time": "2026-05-05T17:02:24+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-chatgpt-chatgptapp",
+      "source_name": "ChatGPT(@ChatGPTapp)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/0be252fedbe84ad7bea21be44b18da89",
+      "item_count": 10,
+      "latest_item_time": "2026-04-30T19:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-dify-dify-ai",
+      "source_name": "Dify(@dify_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/1897eed387064dfab443764d6da50bc6",
+      "item_count": 10,
+      "latest_item_time": "2026-05-07T14:00:37+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-elevenlabs-elevenlabsio",
+      "source_name": "ElevenLabs(@elevenlabsio)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/931d6e88e067496cac6bf23f69d60f33",
+      "item_count": 10,
+      "latest_item_time": "2026-05-10T16:39:05+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-elvis-omarsar0",
+      "source_name": "elvis(@omarsar0)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/cb6169815e2e447e8e6148a4af3f9686",
+      "item_count": 10,
+      "latest_item_time": "2026-05-01T17:33:11+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-geoffrey-hinton-geoffreyhinton",
+      "source_name": "Geoffrey Hinton(@geoffreyhinton)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/771b32075fe54a83bdb6966de9647b4f",
+      "item_count": 10,
+      "latest_item_time": "2026-02-18T22:04:39+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-groq-inc-groqinc",
+      "source_name": "Groq Inc(@GroqInc)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/e8750659b8154dbfa0489f451e044af1",
+      "item_count": 10,
+      "latest_item_time": "2026-05-10T19:32:11+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-guillermo-rauch-rauchg",
+      "source_name": "Guillermo Rauch(@rauchg)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/58894bf2934a426ca833c682da2bc810",
+      "item_count": 10,
+      "latest_item_time": "2026-05-11T17:00:14+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-justin-welsh-thejustinwelsh",
+      "source_name": "Justin Welsh(@thejustinwelsh)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/db648e4d4eae4822aa0d34f0faef7ad2",
+      "item_count": 10,
+      "latest_item_time": "2026-04-30T06:49:02+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lovartai-lovart-ai",
+      "source_name": "LovartAI(@lovart_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/221a88341acb475db221a12fed8208d0",
+      "item_count": 10,
+      "latest_item_time": "2026-04-30T17:30:36+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-notebooklm-notebooklm",
+      "source_name": "NotebookLM(@NotebookLM)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/0c0856a69f9f49cf961018c32a0b0049",
+      "item_count": 10,
+      "latest_item_time": "2026-05-07T20:08:51+00:00",
+      "sampled_item_count": 3,
+      "source_id": "socialmedia-openai-openai",
+      "source_name": "OpenAI(@OpenAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/17687b1051204b2dbaed4ea4c9178f28",
+      "item_count": 10,
+      "latest_item_time": "2026-05-02T04:37:44+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-poe-poe-platform",
+      "source_name": "Poe(@poe_platform)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4838204097ed422eac24ad48e68dc3ff",
+      "item_count": 10,
+      "latest_item_time": "2026-05-07T21:07:12+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-ray-dalio-raydalio",
+      "source_name": "Ray Dalio(@RayDalio)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/12eba9c3db4940c5ab2a72bd00f9ff2c",
+      "item_count": 10,
+      "latest_item_time": "2026-04-30T14:02:05+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-replicate-replicate",
+      "source_name": "Replicate(@replicate)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/3953aa71e87a422eb9d7bf6ff1c7c43e",
+      "item_count": 10,
+      "latest_item_time": "2026-05-05T16:39:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-xai-xai",
+      "source_name": "xAI(@xai)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 10,
+      "latest_item_time": "2026-05-04T23:05:10+00:00",
+      "sampled_item_count": 0,
+      "source_id": "一觉醒来发生了什么 - 即刻圈子",
+      "source_name": "一觉醒来发生了什么 - 即刻圈子"
+    },
+    {
+      "feed_url": null,
+      "item_count": 10,
+      "latest_item_time": "2026-05-04T12:00:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "新智元",
+      "source_name": "新智元"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f3fedf817599470dbf8d8d11f0872475",
+      "item_count": 9,
+      "latest_item_time": "2026-05-08T18:00:28+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-a16z-a16z",
+      "source_name": "a16z(@a16z)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/edf707b5c0b248579085f66d7a3c5524",
+      "item_count": 9,
+      "latest_item_time": "2026-04-30T17:43:06+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-andrej-karpathy-karpathy",
+      "source_name": "Andrej Karpathy(@karpathy)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/fc28a211471b496682feff329ec616e5",
+      "item_count": 9,
+      "latest_item_time": "2026-05-07T17:08:35+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-anthropic-anthropicai",
+      "source_name": "Anthropic(@AnthropicAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/5f13b32b124a41cfb659f903a84032b1",
+      "item_count": 9,
+      "latest_item_time": "2026-05-04T10:49:37+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-anton-osika-eu-acc-antonosika",
+      "source_name": "Anton Osika – eu/acc(@antonosika)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/59e6b63ae9684d11be0ae13d9e7420f2",
+      "item_count": 9,
+      "latest_item_time": "2026-05-06T14:33:15+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-aravind-srinivas-aravsrinivas",
+      "source_name": "Aravind Srinivas(@AravSrinivas)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/e153fdd077df458b8298d975c060dcc3",
+      "item_count": 9,
+      "latest_item_time": "2026-05-04T23:25:51+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-augment-code-augmentcode",
+      "source_name": "Augment Code(@augmentcode)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/760ab7cd9708452c9ce1f9144b92a430",
+      "item_count": 9,
+      "latest_item_time": "2026-04-30T23:30:36+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-bolt-new-boltdotnew",
+      "source_name": "bolt.new(@boltdotnew)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/b8d7530f0b294405825013bbc1cc198f",
+      "item_count": 9,
+      "latest_item_time": "2026-05-06T00:48:01+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-browser-use-browser-use",
+      "source_name": "Browser Use(@browser_use)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/66a6b39ddcfa42e39621e0ab293c1bdd",
+      "item_count": 9,
+      "latest_item_time": "2026-04-30T21:29:34+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-cat-catwu",
+      "source_name": "cat(@_catwu)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/3877c31cdb554cffb750b3b683c98c4d",
+      "item_count": 9,
+      "latest_item_time": "2026-04-30T21:37:28+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-character-ai-character-ai",
+      "source_name": "Character.AI(@character_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4cc14cbd15c74e189d537c415369e1a7",
+      "item_count": 9,
+      "latest_item_time": "2026-05-05T17:00:56+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-cognition-cognition-labs",
+      "source_name": "Cognition(@cognition_labs)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/462aa134ed914f98b3491680ad9b36ed",
+      "item_count": 9,
+      "latest_item_time": "2026-04-30T13:11:45+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-cohere-cohere",
+      "source_name": "cohere(@cohere)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/49666ce6fe3e4cb786c6574684542ec5",
+      "item_count": 9,
+      "latest_item_time": "2026-04-07T18:14:19+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-dario-amodei-darioamodei",
+      "source_name": "Dario Amodei(@DarioAmodei)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/42e6b4901b97498eab2ab64c07d56177",
+      "item_count": 9,
+      "latest_item_time": "2026-05-01T00:09:55+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-deeplearning-ai-deeplearningai",
+      "source_name": "DeepLearning.AI(@DeepLearningAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/68b610deb24b47ae9a236811563cda86",
+      "item_count": 9,
+      "latest_item_time": "2026-04-29T02:20:52+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-deepseek-deepseek-ai",
+      "source_name": "DeepSeek(@deepseek_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4a884d5e2f3740c5a26c9c093de6388a",
+      "item_count": 9,
+      "latest_item_time": "2026-05-02T11:34:21+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-demis-hassabis-demishassabis",
+      "source_name": "Demis Hassabis(@demishassabis)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/6384ee3c656c48fea5e8b3cdacece4d0",
+      "item_count": 9,
+      "latest_item_time": "2026-03-26T17:03:19+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-dia-diabrowser",
+      "source_name": "Dia(@diabrowser)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/65f321be670b4ffba7f40d0afd38c94d",
+      "item_count": 9,
+      "latest_item_time": "2026-05-07T18:18:58+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-eric-zakariasson-ericzakariasson",
+      "source_name": "eric zakariasson(@ericzakariasson)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a4bfe44bfc0d4c949da21ebd3f5f42a5",
+      "item_count": 9,
+      "latest_item_time": "2026-04-07T16:48:36+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-fei-fei-li-drfeifei",
+      "source_name": "Fei-Fei Li(@drfeifei)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/326763c2f6154826babcfd71c5ab0f70",
+      "item_count": 9,
+      "latest_item_time": "2026-05-08T19:47:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-fellou-fellouai",
+      "source_name": "Fellou(@FellouAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/c04abb206bbf4f91b22795024d6c0614",
+      "item_count": 9,
+      "latest_item_time": "2026-05-06T16:11:06+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-firecrawl-firecrawl-dev",
+      "source_name": "Firecrawl(@firecrawl_dev)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/9f35c76341554bd78c2b9e63dc4fa5d8",
+      "item_count": 9,
+      "latest_item_time": "2026-05-06T23:42:49+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-fireworks-ai-fireworksai-hq",
+      "source_name": "Fireworks AI(@FireworksAI_HQ)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4900b3dcd592424687582ff9e0f148ea",
+      "item_count": 9,
+      "latest_item_time": "2026-04-29T10:59:12+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-fish-audio-fishaudio",
+      "source_name": "Fish Audio(@FishAudio)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/be74da51698d4cefb12b39830d6cd201",
+      "item_count": 9,
+      "latest_item_time": "2026-03-16T20:10:48+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-flowiseai-flowiseai",
+      "source_name": "FlowiseAI(@FlowiseAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/35a38c5646d946fb894d8c30c1d9629e",
+      "item_count": 9,
+      "latest_item_time": "2026-05-14T06:35:28+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-gary-marcus-garymarcus",
+      "source_name": "Gary Marcus(@GaryMarcus)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/71ffd342cb5d478185ef7d55bdfca011",
+      "item_count": 9,
+      "latest_item_time": "2026-05-05T02:48:37+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-genspark-genspark-ai",
+      "source_name": "Genspark(@genspark_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/69d925d4a8d44221b03eecbe07bd0f74",
+      "item_count": 9,
+      "latest_item_time": "2026-05-04T23:11:31+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-google-ai-developers-googleaidevs",
+      "source_name": "Google AI Developers(@googleaidevs)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4de0bd2d5cef4333a0260dc8157054a7",
+      "item_count": 9,
+      "latest_item_time": "2026-05-01T16:10:11+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-google-ai-googleai",
+      "source_name": "Google AI(@GoogleAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/6fb337feeec44ca38b79491b971d868d",
+      "item_count": 9,
+      "latest_item_time": "2026-05-04T18:39:22+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-google-gemini-app-geminiapp",
+      "source_name": "Google Gemini App(@GeminiApp)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/af19d054e26a49129f23abfa82d9e268",
+      "item_count": 9,
+      "latest_item_time": "2026-05-11T21:00:48+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-greg-brockman-gdb",
+      "source_name": "Greg Brockman(@gdb)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/831fac36aa0a49a9af79f35dc1c9b5d9",
+      "item_count": 9,
+      "latest_item_time": "2026-05-15T02:21:02+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-guizang-ai-op7418",
+      "source_name": "歸藏(guizang.ai)(@op7418)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/e65b5e59fcb544918c1ba17f5758f0f8",
+      "item_count": 9,
+      "latest_item_time": "2026-05-06T04:10:52+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-hailuo-ai-minimax-hailuo-ai",
+      "source_name": "Hailuo AI (MiniMax)(@Hailuo_AI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f299207df53745bca04a03db8d11c5aa",
+      "item_count": 9,
+      "latest_item_time": "2026-05-06T16:31:58+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-harrison-chase-hwchase17",
+      "source_name": "Harrison Chase(@hwchase17)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a9aff6b016c143ed8728dd86eb70d7db",
+      "item_count": 9,
+      "latest_item_time": "2026-05-11T16:14:16+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-heygen-heygen-official",
+      "source_name": "HeyGen(@HeyGen_Official)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/6e8e7b42cb434818810f87bcf77d86fb",
+      "item_count": 9,
+      "latest_item_time": "2026-04-29T13:55:43+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-hunyuan-txhunyuan",
+      "source_name": "Hunyuan(@TXhunyuan)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a719880fe66e4156a111187f50dae91b",
+      "item_count": 9,
+      "latest_item_time": "2026-04-22T16:46:12+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-ideogram-ideogram-ai",
+      "source_name": "Ideogram(@ideogram_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/dceb5cd131b34c72a8376cba8ea5d864",
+      "item_count": 9,
+      "latest_item_time": "2026-04-14T19:43:38+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-jan-leike-janleike",
+      "source_name": "Jan Leike(@janleike)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/b1013166769c49f8aa3fbdc222867054",
+      "item_count": 9,
+      "latest_item_time": "2026-04-28T20:16:21+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-jeff-dean-jeffdean",
+      "source_name": "Jeff Dean(@JeffDean)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/b3d904c0d7c446558ef3a1e7f2eb362b",
+      "item_count": 9,
+      "latest_item_time": "2026-05-06T17:44:01+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-jerry-liu-jerryjliu0",
+      "source_name": "Jerry Liu(@jerryjliu0)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/c6cfe7c0d6b74849997073233fdea840",
+      "item_count": 9,
+      "latest_item_time": "2026-04-01T15:15:09+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-jim-fan-drjimfan",
+      "source_name": "Jim Fan(@DrJimFan)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f510f6e7eecf456ca7e2895a46752888",
+      "item_count": 9,
+      "latest_item_time": "2026-03-13T12:29:21+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-jina-ai-jinaai",
+      "source_name": "Jina AI(@JinaAI_)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/44d9fa384087448a94d3c8595f8d535e",
+      "item_count": 9,
+      "latest_item_time": "2026-05-01T17:08:33+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-julien-chaumond-julien-c",
+      "source_name": "Julien Chaumond(@julien_c)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/c61046471f174d86bc0eb76cb44a21c3",
+      "item_count": 9,
+      "latest_item_time": "2026-05-12T15:17:41+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-justine-moore-venturetwins",
+      "source_name": "Justine Moore(@venturetwins)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/564237c3de274d58a04f064920817888",
+      "item_count": 9,
+      "latest_item_time": "2026-05-11T09:31:09+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-kling-ai-kling-ai",
+      "source_name": "Kling AI(@Kling_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/862fee50a745423c87e2633b274caf1d",
+      "item_count": 9,
+      "latest_item_time": "2026-05-14T19:33:28+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-langchain-langchainai",
+      "source_name": "LangChain(@LangChainAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a7be8b61a1264ea7984abfaea3eff686",
+      "item_count": 9,
+      "latest_item_time": "2026-05-06T16:25:16+00:00",
+      "sampled_item_count": 1,
+      "source_id": "socialmedia-latent-space-latentspacepod",
+      "source_name": "Latent.Space(@latentspacepod)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/dc2426bc8348495189b45451d1707a1c",
+      "item_count": 9,
+      "latest_item_time": "2026-05-02T23:47:09+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lee-robinson-leerob",
+      "source_name": "Lee Robinson(@leerob)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/77d5ce4736854b0ebae603e4b54d3095",
+      "item_count": 9,
+      "latest_item_time": "2026-05-12T15:41:09+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lenny-rachitsky-lennysan",
+      "source_name": "Lenny Rachitsky(@lennysan)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/adf65931519340f795e2336910b4cd15",
+      "item_count": 9,
+      "latest_item_time": "2026-04-09T17:56:46+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lex-fridman-lexfridman",
+      "source_name": "Lex Fridman(@lexfridman)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/ca2fa444b6ea4b8b974fe148056e497a",
+      "item_count": 9,
+      "latest_item_time": "2026-05-06T04:41:58+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lijigang-com",
+      "source_name": "李继刚(@lijigang_com)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a8f7e2238039461cbc8bf55f5f194498",
+      "item_count": 9,
+      "latest_item_time": "2026-03-10T17:08:44+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lilian-weng-lilianweng",
+      "source_name": "Lilian Weng(@lilianweng)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f01b088d5a39473e854b07143df77ec5",
+      "item_count": 9,
+      "latest_item_time": "2026-05-08T16:01:31+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lmarena-ai-lmarena-ai",
+      "source_name": "lmarena.ai(@lmarena_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4f63d960de644aeebd0aa97e4994dafe",
+      "item_count": 9,
+      "latest_item_time": "2026-05-04T22:53:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-logan-kilpatrick-officiallogank",
+      "source_name": "Logan Kilpatrick(@OfficialLoganK)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/639cd13d44284e10ac89fbd1c5399767",
+      "item_count": 9,
+      "latest_item_time": "2026-05-07T16:03:04+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-lovable-lovable-dev",
+      "source_name": "Lovable(@lovable_dev)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/320181c4651a41a08015946b55f704ab",
+      "item_count": 9,
+      "latest_item_time": "2026-05-06T15:01:44+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-manusai-manusai-hq",
+      "source_name": "ManusAI(@ManusAI_HQ)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/94bb691baeff461686326af619beb116",
+      "item_count": 9,
+      "latest_item_time": "2026-05-01T23:08:57+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-mem0-mem0ai",
+      "source_name": "mem0(@mem0ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/48aae530e0bf413aa7d44380f418e2e3",
+      "item_count": 9,
+      "latest_item_time": "2026-05-14T09:27:33+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-meng-shao-shao-meng",
+      "source_name": "meng shao(@shao__meng)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/61f4b78554fb4b8fa5653ec5d924d15a",
+      "item_count": 9,
+      "latest_item_time": "2026-05-04T16:57:40+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-microsoft-research-msftresearch",
+      "source_name": "Microsoft Research(@MSFTResearch)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/72dd496bfd9d44c5a5761a974630376d",
+      "item_count": 9,
+      "latest_item_time": "2026-04-30T22:04:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-midjourney-midjourney",
+      "source_name": "Midjourney(@midjourney)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/424e67b19eed4500b7a440976bbd2ade",
+      "item_count": 9,
+      "latest_item_time": "2026-05-04T15:00:01+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-milvus-milvusio",
+      "source_name": "Milvus(@milvusio)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/394acfaff8c44e09936f5bc0b8504f2c",
+      "item_count": 9,
+      "latest_item_time": "2026-04-28T17:12:10+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-mustafa-suleyman-mustafasuleyman",
+      "source_name": "Mustafa Suleyman(@mustafasuleyman)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/b43bc203409e4c5a9c3ae86fe1ac00c9",
+      "item_count": 9,
+      "latest_item_time": "2026-05-05T03:38:58+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-naval-naval",
+      "source_name": "Naval(@naval)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/6ebdf0d91eef4c149acd0ef110635866",
+      "item_count": 9,
+      "latest_item_time": "2026-04-24T19:15:41+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-nick-st-pierre-nickfloats",
+      "source_name": "Nick St. Pierre(@nickfloats)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f97a26863aec4425b021720d4f8e4ede",
+      "item_count": 9,
+      "latest_item_time": "2026-05-13T16:27:37+00:00",
+      "sampled_item_count": 1,
+      "source_id": "socialmedia-notion-notionhq",
+      "source_name": "Notion(@NotionHQ)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/6326c63a2dfa445bbde88bea0c3112c2",
+      "item_count": 9,
+      "latest_item_time": "2026-05-04T23:36:39+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-ollama-ollama",
+      "source_name": "ollama(@ollama)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/971dc1fc90da449bac23e5fad8a33d55",
+      "item_count": 9,
+      "latest_item_time": "2026-05-11T22:23:07+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-openai-developers-openaidevs",
+      "source_name": "OpenAI Developers(@OpenAIDevs)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/e503a90c035c4b1d8f8dd34907d15bf4",
+      "item_count": 9,
+      "latest_item_time": "2026-05-10T18:53:21+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-openrouter-openrouterai",
+      "source_name": "OpenRouter(@OpenRouterAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/c65c68f3713747bba863f92d6b5e996f",
+      "item_count": 9,
+      "latest_item_time": "2026-05-05T18:12:41+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-patrick-loeber-patloeber",
+      "source_name": "Patrick Loeber(@patloeber)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/b9912ac9a29042cf8c834419dc44cb1f",
+      "item_count": 9,
+      "latest_item_time": "2026-05-05T20:47:13+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-paul-couvert-itspaulai",
+      "source_name": "Paul Couvert(@itsPaulAi)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/900549ddadf04e839d3f7a17ebaba3fc",
+      "item_count": 9,
+      "latest_item_time": "2026-05-12T13:08:46+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-paul-graham-paulg",
+      "source_name": "Paul Graham(@paulg)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/ce352bbf72e44033985bc756db2ee0e2",
+      "item_count": 9,
+      "latest_item_time": "2026-05-06T16:20:22+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-philipp-schmid-philschmid",
+      "source_name": "Philipp Schmid(@_philschmid)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/3306d8b253ec4e03aca3c2e9967e7119",
+      "item_count": 9,
+      "latest_item_time": "2026-05-02T01:52:21+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-pika-pika-labs",
+      "source_name": "Pika(@pika_labs)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a55f6e33dd224235aabaabaaf9d58a06",
+      "item_count": 9,
+      "latest_item_time": "2026-05-04T15:00:02+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-qdrant-qdrant-engine",
+      "source_name": "Qdrant(@qdrant_engine)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/80032d016d654eb4afe741ff34b7643d",
+      "item_count": 9,
+      "latest_item_time": "2026-05-01T15:14:01+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-qwen-alibaba-qwen",
+      "source_name": "Qwen(@Alibaba_Qwen)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/acc648327c614d9b985b9fc3d737165b",
+      "item_count": 9,
+      "latest_item_time": "2026-05-11T09:54:46+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-recraft-recraftai",
+      "source_name": "Recraft(@recraftai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/613f859e4bc440c5a28f40732840f5cf",
+      "item_count": 9,
+      "latest_item_time": "2026-05-11T17:34:29+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-replit-replit",
+      "source_name": "Replit ⠕(@Replit)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a636de3cbda0495daabd15b9fd298614",
+      "item_count": 9,
+      "latest_item_time": "2026-05-04T15:18:21+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-rowan-cheung-rowancheung",
+      "source_name": "Rowan Cheung(@rowancheung)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/e6bb4f612dd24db5bc1a6811e6dd5820",
+      "item_count": 9,
+      "latest_item_time": "2026-05-05T14:22:35+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-runway-runwayml",
+      "source_name": "Runway(@runwayml)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/baad3713defe4182844d2756b4c2c9ed",
+      "item_count": 9,
+      "latest_item_time": "2026-05-04T16:41:48+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-sahil-lavingia-shl",
+      "source_name": "Sahil Lavingia(@shl)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/e30d4cd223f44bed9d404807105c8927",
+      "item_count": 9,
+      "latest_item_time": "2026-05-09T19:16:31+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-sam-altman-sama",
+      "source_name": "Sam Altman(@sama)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/baa68dbd9a9e461a96fd9b2e3f35dcbf",
+      "item_count": 9,
+      "latest_item_time": "2026-05-02T12:11:51+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-satya-nadella-satyanadella",
+      "source_name": "Satya Nadella(@satyanadella)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/30ad80be93c84e44acc37d5ddf31db57",
+      "item_count": 9,
+      "latest_item_time": "2026-05-07T17:13:19+00:00",
+      "sampled_item_count": 1,
+      "source_id": "socialmedia-simon-willison-simonw",
+      "source_name": "Simon Willison(@simonw)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/6d7d398dd80b48d79669c92745d32cf6",
+      "item_count": 9,
+      "latest_item_time": "2026-05-06T12:03:54+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-skywork-skywork-ai",
+      "source_name": "Skywork(@Skywork_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/fafa6df3c67644b1a367a177240e0173",
+      "item_count": 9,
+      "latest_item_time": "2026-04-21T22:41:39+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-sualeh-asif-sualehasif996",
+      "source_name": "Sualeh Asif(@sualehasif996)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/c961547e08df4396b3ab69367a07a1cd",
+      "item_count": 9,
+      "latest_item_time": "2026-05-11T16:44:53+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-suhail-suhail",
+      "source_name": "Suhail(@Suhail)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/8324d65a63dc42c584a8c08cc8323c9f",
+      "item_count": 9,
+      "latest_item_time": "2026-04-29T20:49:27+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-sundar-pichai-sundarpichai",
+      "source_name": "Sundar Pichai(@sundarpichai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/83b1ea38940b4a1d81ea57d1ffb12ad7",
+      "item_count": 9,
+      "latest_item_time": "2026-05-13T15:45:57+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-the-rundown-ai-therundownai",
+      "source_name": "The Rundown AI(@TheRundownAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4918efb13c47459b8dcaa79cfdf72d09",
+      "item_count": 9,
+      "latest_item_time": "2026-04-29T19:01:30+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-thomas-wolf-thom-wolf",
+      "source_name": "Thomas Wolf(@Thom_Wolf)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/dbf37973e6fc4eae91d4be9669a78fc7",
+      "item_count": 9,
+      "latest_item_time": "2026-04-30T00:36:35+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-v0-v0",
+      "source_name": "v0(@v0)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/7794c4268a504019a94af1778857a703",
+      "item_count": 9,
+      "latest_item_time": "2026-02-24T01:40:04+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-varun-mohan-mohansolo",
+      "source_name": "Varun Mohan(@_mohansolo)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/9de19c78f7454ad08c956c1a00d237fe",
+      "item_count": 9,
+      "latest_item_time": "2026-05-15T08:40:27+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-vista8",
+      "source_name": "向阳乔木(@vista8)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/2f1035ec6b28475987af06b600e1d04c",
+      "item_count": 9,
+      "latest_item_time": "2026-04-30T16:02:39+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-weaviate-vector-database-weaviate-io",
+      "source_name": "Weaviate • vector database(@weaviate_io)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4a8273800ed34a069eecdb6c5c1b9ccf",
+      "item_count": 9,
+      "latest_item_time": "2026-04-30T17:14:35+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-windsurf-windsurf-ai",
+      "source_name": "Windsurf(@windsurf_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/b1ab109f6afd42ab8ea32e17a19a3a3e",
+      "item_count": 9,
+      "latest_item_time": "2026-05-14T15:50:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-y-combinator-ycombinator",
+      "source_name": "Y Combinator(@ycombinator)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f5f4f928dede472ea55053672ad27ab6",
+      "item_count": 9,
+      "latest_item_time": "2026-05-04T16:44:38+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-yann-lecun-ylecun",
+      "source_name": "Yann LeCun(@ylecun)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 9,
+      "latest_item_time": "2026-04-29T17:35:30+08:00",
+      "sampled_item_count": 0,
+      "source_id": "大问题Dialectic",
+      "source_name": "大问题Dialectic"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/5fb1814c610c4af2911caa98c5c5ef82",
+      "item_count": 8,
+      "latest_item_time": "2026-05-05T21:08:54+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-amjad-masad-amasad",
+      "source_name": "Amjad Masad(@amasad)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a3eb6beb2d894da3a9b7ab6d2e46790e",
+      "item_count": 8,
+      "latest_item_time": "2026-05-07T18:02:57+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-andrew-chen-andrewchen",
+      "source_name": "andrew chen(@andrewchen)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f54b2b40185943ce8f48a880110b7bc2",
+      "item_count": 8,
+      "latest_item_time": "2026-04-22T02:10:13+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-binyuan-hui-huybery",
+      "source_name": "Binyuan Hui(@huybery)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/5287b4e0e13a4ab7ab7b1d56f9d88960",
+      "item_count": 8,
+      "latest_item_time": "2026-05-06T16:15:44+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-cursor-cursor-ai",
+      "source_name": "Cursor(@cursor_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/ddfdcdd4e390495c942f0b5da62af0fb",
+      "item_count": 8,
+      "latest_item_time": "2026-05-05T02:41:21+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-eric-jing-ericjing-ai",
+      "source_name": "Eric Jing(@ericjing_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/f8a106a09a7d404fb8de7eb0c5ddd2a2",
+      "item_count": 8,
+      "latest_item_time": "2026-05-04T16:33:18+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-figma-figma",
+      "source_name": "Figma(@figma)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/a99538443a484fcc846bdcc8f50745ec",
+      "item_count": 8,
+      "latest_item_time": "2026-05-01T16:01:19+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-google-deepmind-googledeepmind",
+      "source_name": "Google DeepMind(@GoogleDeepMind)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/fc16750ce50741f1b1f05ea1fb29436f",
+      "item_count": 8,
+      "latest_item_time": "2026-04-24T07:06:35+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-hugging-face-huggingface",
+      "source_name": "Hugging Face(@huggingface)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/57831559d22440debbfb2f2528e4ba84",
+      "item_count": 8,
+      "latest_item_time": "2026-04-09T18:58:45+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-ian-goodfellow-goodfellow-ian",
+      "source_name": "Ian Goodfellow(@goodfellow_ian)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/78d7b99318b04b309b04000f7e24da29",
+      "item_count": 8,
+      "latest_item_time": "2026-04-16T15:36:13+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-mike-krieger-mikeyk",
+      "source_name": "Mike Krieger(@mikeyk)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/8d2d03aea8af49818096da4ea00409d1",
+      "item_count": 8,
+      "latest_item_time": "2026-04-30T23:06:24+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-mistral-ai-mistralai",
+      "source_name": "Mistral AI(@MistralAI)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/5d749cc613ec4069bb2a47334739e1b6",
+      "item_count": 8,
+      "latest_item_time": "2026-04-23T07:39:32+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-monica-im-hey-im-monica",
+      "source_name": "Monica_IM(@hey_im_monica)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/4d2d4165a7524217a08d3f57f27fa190",
+      "item_count": 8,
+      "latest_item_time": "2026-05-04T04:34:32+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-richard-socher-richardsocher",
+      "source_name": "Richard Socher(@RichardSocher)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/5fca8ccd87344d388bc863304ed6fd86",
+      "item_count": 8,
+      "latest_item_time": "2026-05-04T17:57:54+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-scott-wu-scottwu46",
+      "source_name": "Scott Wu(@ScottWu46)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/2de92402f4a24c90bb27e7580b93a878",
+      "item_count": 8,
+      "latest_item_time": "2026-04-24T21:21:51+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-taranjeet-taranjeetio",
+      "source_name": "Taranjeet(@taranjeetio)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/fdd601ea751949e7bec9e4cdad7c8e6c",
+      "item_count": 7,
+      "latest_item_time": "2026-05-06T14:09:37+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-perplexity-perplexity-ai",
+      "source_name": "Perplexity(@perplexity_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/d5fc365556e641cba2278f501e8c6f92",
+      "item_count": 7,
+      "latest_item_time": "2026-04-23T07:26:58+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-stanford-ai-lab-stanfordailab",
+      "source_name": "Stanford AI Lab(@StanfordAILab)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T10:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "#UNTAG",
+      "source_name": "#UNTAG"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T04:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "-LKs-",
+      "source_name": "-LKs-"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T22:36:27+08:00",
+      "sampled_item_count": 0,
+      "source_id": "01Founder",
+      "source_name": "01Founder"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T01:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "3Blue1Brown",
+      "source_name": "3Blue1Brown"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T10:41:31+08:00",
+      "sampled_item_count": 0,
+      "source_id": "AGI Hunt",
+      "source_name": "AGI Hunt"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T10:07:38+08:00",
+      "sampled_item_count": 0,
+      "source_id": "AIGC开放社区",
+      "source_name": "AIGC开放社区"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T17:14:03+08:00",
+      "sampled_item_count": 0,
+      "source_id": "AI产品银海",
+      "source_name": "AI产品银海"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T14:07:38+08:00",
+      "sampled_item_count": 0,
+      "source_id": "AI产品阿颖",
+      "source_name": "AI产品阿颖"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-27T08:28:03+08:00",
+      "sampled_item_count": 0,
+      "source_id": "AI产品黄叔",
+      "source_name": "AI产品黄叔"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T13:30:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "AI前线",
+      "source_name": "AI前线"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T10:28:41+08:00",
+      "sampled_item_count": 0,
+      "source_id": "AI故事计划",
+      "source_name": "AI故事计划"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T10:13:11+00:00",
+      "sampled_item_count": 0,
+      "source_id": "AI洞察日报 RSS Feed",
+      "source_name": "AI洞察日报 RSS Feed"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T12:08:41+08:00",
+      "sampled_item_count": 0,
+      "source_id": "AI科技评论",
+      "source_name": "AI科技评论"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T09:54:16+08:00",
+      "sampled_item_count": 0,
+      "source_id": "APPSO",
+      "source_name": "APPSO"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-18T11:24:36+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Ahead of AI",
+      "source_name": "Ahead of AI"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-02-18T14:36:54+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Barsee 🐶(@heyBarsee)",
+      "source_name": "Barsee 🐶(@heyBarsee)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T23:59:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "CVer",
+      "source_name": "CVer"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T22:22:53+08:00",
+      "sampled_item_count": 0,
+      "source_id": "Datawhale",
+      "source_name": "Datawhale"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2024-11-30T16:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "GeekPlux Letters",
+      "source_name": "GeekPlux Letters"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-12-25T04:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Hi, DIYgod",
+      "source_name": "Hi, DIYgod"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T10:30:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "InfoQ",
+      "source_name": "InfoQ"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T00:50:10+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Kevin Weil 🇺🇸(@kevinweil)",
+      "source_name": "Kevin Weil 🇺🇸(@kevinweil)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T10:35:00-08:00",
+      "sampled_item_count": 0,
+      "source_id": "Kubernetes Blog",
+      "source_name": "Kubernetes Blog"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-11-08T16:05:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Larry想做技术大佬",
+      "source_name": "Larry想做技术大佬"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-09T17:43:17+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Lex Fridman Podcast",
+      "source_name": "Lex Fridman Podcast"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-05-01T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Lil'Log",
+      "source_name": "Lil'Log"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T01:17:36+00:00",
+      "sampled_item_count": 0,
+      "source_id": "LlamaIndex 🦙(@llama_index)",
+      "source_name": "LlamaIndex 🦙(@llama_index)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-12-13T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Lukas Petersson’s blog",
+      "source_name": "Lukas Petersson’s blog"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-03-26T07:50:12+00:00",
+      "sampled_item_count": 0,
+      "source_id": "LunaticMosfet",
+      "source_name": "LunaticMosfet"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T14:43:33+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Maki的完美算术教室",
+      "source_name": "Maki的完美算术教室"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T02:18:29+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Marc Andreessen 🇺🇸(@pmarca)",
+      "source_name": "Marc Andreessen 🇺🇸(@pmarca)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-09-20T02:55:37+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Morpheus红丸主义",
+      "source_name": "Morpheus红丸主义"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-25T10:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "MrBeast官方账号",
+      "source_name": "MrBeast官方账号"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-08-18T07:07:02+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Nenly同学",
+      "source_name": "Nenly同学"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T10:26:27+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Norah脱口秀",
+      "source_name": "Norah脱口秀"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T18:46:21+08:00",
+      "sampled_item_count": 0,
+      "source_id": "PaperWeekly",
+      "source_name": "PaperWeekly"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T11:42:01+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Podnews Daily - podcast industry news",
+      "source_name": "Podnews Daily - podcast industry news"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-27T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Very Small Woods",
+      "source_name": "Very Small Woods"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T15:30:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "YouTube深度访谈",
+      "source_name": "YouTube深度访谈"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T16:27:58+08:00",
+      "sampled_item_count": 0,
+      "source_id": "Z Finance",
+      "source_name": "Z Finance"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T17:48:20+08:00",
+      "sampled_item_count": 0,
+      "source_id": "Z Potentials",
+      "source_name": "Z Potentials"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-19T20:36:46+00:00",
+      "sampled_item_count": 0,
+      "source_id": "abortretry.fail",
+      "source_name": "abortretry.fail"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-01T00:00:00Z",
+      "sampled_item_count": 0,
+      "source_id": "anildash.com",
+      "source_name": "anildash.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T16:21:45+02:00",
+      "sampled_item_count": 0,
+      "source_id": "antirez.com",
+      "source_name": "antirez.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-03-27T15:02:13+0000",
+      "sampled_item_count": 0,
+      "source_id": "aresluna.org",
+      "source_name": "aresluna.org"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-03-12T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "beej.us",
+      "source_name": "beej.us"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-04T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "bernsteinbear.com",
+      "source_name": "bernsteinbear.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-19T21:00:00+02:00",
+      "sampled_item_count": 0,
+      "source_id": "berthub.eu",
+      "source_name": "berthub.eu"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-03T19:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "blog.jim-nielsen.com",
+      "source_name": "blog.jim-nielsen.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-10-19T15:07:31+01:00",
+      "sampled_item_count": 0,
+      "source_id": "bogdanthegeek.github.io",
+      "source_name": "bogdanthegeek.github.io"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-01-31T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "borretti.me",
+      "source_name": "borretti.me"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-28T15:14:09+00:00",
+      "sampled_item_count": 0,
+      "source_id": "buttondown.com/hillelwayne",
+      "source_name": "buttondown.com/hillelwayne"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T04:58:55.854689+00:00",
+      "sampled_item_count": 0,
+      "source_id": "chadnauseam.com",
+      "source_name": "chadnauseam.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-09-02T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "chiark.greenend.org.uk/~sgtatham",
+      "source_name": "chiark.greenend.org.uk/~sgtatham"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-03T16:54:55+00:00",
+      "sampled_item_count": 0,
+      "source_id": "clem 🤗(@ClementDelangue)",
+      "source_name": "clem 🤗(@ClementDelangue)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-26T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "computer.rip",
+      "source_name": "computer.rip"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T12:01:30+00:00",
+      "sampled_item_count": 0,
+      "source_id": "construction-physics.com",
+      "source_name": "construction-physics.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-01-07T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "danielchasehooper.com",
+      "source_name": "danielchasehooper.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-10-30T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "danieldelaney.net",
+      "source_name": "danieldelaney.net"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2021-12-09T19:35:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "danielwirtz.com",
+      "source_name": "danielwirtz.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-02-22T07:00:00-05:00",
+      "sampled_item_count": 0,
+      "source_id": "derekthompson.org",
+      "source_name": "derekthompson.org"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T14:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "devblogs.microsoft.com/oldnewthing",
+      "source_name": "devblogs.microsoft.com/oldnewthing"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-12-30T01:52:17+00:00",
+      "sampled_item_count": 0,
+      "source_id": "downtowndougbrown.com",
+      "source_name": "downtowndougbrown.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T17:07:03+00:00",
+      "sampled_item_count": 0,
+      "source_id": "dwarkesh.com",
+      "source_name": "dwarkesh.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "dynomight.net",
+      "source_name": "dynomight.net"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T07:17:00-07:00",
+      "sampled_item_count": 0,
+      "source_id": "eli.thegreenplace.net",
+      "source_name": "eli.thegreenplace.net"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-28T00:00:00+02:00",
+      "sampled_item_count": 0,
+      "source_id": "entropicthoughts.com",
+      "source_name": "entropicthoughts.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-03T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "evanhahn.com",
+      "source_name": "evanhahn.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-02-14T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "fabiensanglard.net",
+      "source_name": "fabiensanglard.net"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T15:46:03+00:00",
+      "sampled_item_count": 0,
+      "source_id": "filfre.net",
+      "source_name": "filfre.net"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-03-29T09:39:44+00:00",
+      "sampled_item_count": 0,
+      "source_id": "focus2flow",
+      "source_name": "focus2flow"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T14:32:37+00:00",
+      "sampled_item_count": 0,
+      "source_id": "garymarcus.substack.com",
+      "source_name": "garymarcus.substack.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-10-24T14:59:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "geoffreylitt.com",
+      "source_name": "geoffreylitt.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-03T00:00:00-07:00",
+      "sampled_item_count": 0,
+      "source_id": "geohot.github.io",
+      "source_name": "geohot.github.io"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-17T23:30:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "gilesthomas.com",
+      "source_name": "gilesthomas.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-02-08T17:54:20+00:00",
+      "sampled_item_count": 0,
+      "source_id": "grantslatton.com",
+      "source_name": "grantslatton.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2021-06-11T14:16:22+00:00",
+      "sampled_item_count": 0,
+      "source_id": "gwern.net",
+      "source_name": "gwern.net"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-22T01:28:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "herman.bearblog.dev",
+      "source_name": "herman.bearblog.dev"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2001-01-01T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "hey.paris",
+      "source_name": "hey.paris"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-10-26T00:00:00+01:00",
+      "sampled_item_count": 0,
+      "source_id": "hugotunius.se",
+      "source_name": "hugotunius.se"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T22:25:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "idiallo.com",
+      "source_name": "idiallo.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-03-20T11:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "it-notes.dragas.net",
+      "source_name": "it-notes.dragas.net"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-02-14T14:38:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "jayd.ml",
+      "source_name": "jayd.ml"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T01:54:43+00:00",
+      "sampled_item_count": 0,
+      "source_id": "joanwestenberg.com",
+      "source_name": "joanwestenberg.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-03T20:49:41+00:00",
+      "sampled_item_count": 0,
+      "source_id": "johndcook.com",
+      "source_name": "johndcook.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T03:04:25+00:00",
+      "sampled_item_count": 0,
+      "source_id": "joojen Zhou 的网站",
+      "source_name": "joojen Zhou 的网站"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-03T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "jyn.dev",
+      "source_name": "jyn.dev"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2021-08-04T05:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "keygen.sh",
+      "source_name": "keygen.sh"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-25T23:55:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "lcamtuf.substack.com",
+      "source_name": "lcamtuf.substack.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "lucumr.pocoo.org",
+      "source_name": "lucumr.pocoo.org"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "martinalderson.com",
+      "source_name": "martinalderson.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T12:02:49+00:00",
+      "sampled_item_count": 0,
+      "source_id": "matduggan.com",
+      "source_name": "matduggan.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-03T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "matklad.github.io",
+      "source_name": "matklad.github.io"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-03-01T21:21:35+00:00",
+      "sampled_item_count": 0,
+      "source_id": "micahflee.com",
+      "source_name": "micahflee.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-05T16:20:00+02:00",
+      "sampled_item_count": 0,
+      "source_id": "michael.stapelberg.ch",
+      "source_name": "michael.stapelberg.ch"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-26T14:05:41+00:00",
+      "sampled_item_count": 0,
+      "source_id": "miguelgrinberg.com",
+      "source_name": "miguelgrinberg.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-02-27T10:00:00-08:00",
+      "sampled_item_count": 0,
+      "source_id": "minimaxir.com",
+      "source_name": "minimaxir.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-28T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "mitchellh.com",
+      "source_name": "mitchellh.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T10:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "nesbitt.io",
+      "source_name": "nesbitt.io"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T23:44:00.000-07:00",
+      "sampled_item_count": 0,
+      "source_id": "oldvcr.blogspot.com",
+      "source_name": "oldvcr.blogspot.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-01-18T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "overreacted.io",
+      "source_name": "overreacted.io"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T04:55:46.517610+00:00",
+      "sampled_item_count": 0,
+      "source_id": "paulgraham.com",
+      "source_name": "paulgraham.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-04-21T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "philiplaine.com",
+      "source_name": "philiplaine.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T09:39:28+00:00",
+      "sampled_item_count": 0,
+      "source_id": "pluralistic.net",
+      "source_name": "pluralistic.net"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-03-31T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "rakhim.exotext.com",
+      "source_name": "rakhim.exotext.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-03-25T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "refactoringenglish.com",
+      "source_name": "refactoringenglish.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-18T09:24:00.000-07:00",
+      "sampled_item_count": 0,
+      "source_id": "righto.com",
+      "source_name": "righto.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T11:34:40+00:00",
+      "sampled_item_count": 0,
+      "source_id": "shkspr.mobi",
+      "source_name": "shkspr.mobi"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-10-28T15:26:41+00:00",
+      "sampled_item_count": 0,
+      "source_id": "simone.org",
+      "source_name": "simone.org"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-02-13T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "skyfall.dev",
+      "source_name": "skyfall.dev"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/d8121d969fb34c7daad2dd2aac4ba270",
+      "item_count": 5,
+      "latest_item_time": "2026-03-16T23:24:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-arthur-mensch-arthurmensch",
+      "source_name": "Arthur Mensch(@arthurmensch)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/6bbf31cac345443585c3280320ba9009",
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T15:45:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-berkeley-ai-research-berkeley-ai",
+      "source_name": "Berkeley AI Research(@berkeley_ai)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/97f1484ae48c430fbbf3438099743674",
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T02:33:59+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-dotey",
+      "source_name": "宝玉(@dotey)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-28T13:00:48+00:00",
+      "sampled_item_count": 0,
+      "source_id": "steveblank.com",
+      "source_name": "steveblank.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-03T13:41:32Z",
+      "sampled_item_count": 0,
+      "source_id": "tedium.co",
+      "source_name": "tedium.co"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-01T15:59:04+00:00",
+      "sampled_item_count": 0,
+      "source_id": "terriblesoftware.org",
+      "source_name": "terriblesoftware.org"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-12-04T23:58:22+00:00",
+      "sampled_item_count": 0,
+      "source_id": "timsh.org",
+      "source_name": "timsh.org"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-01-13T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "tomrenner.com",
+      "source_name": "tomrenner.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-28T05:01:42+00:00",
+      "sampled_item_count": 0,
+      "source_id": "troyhunt.com",
+      "source_name": "troyhunt.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T03:28:21Z",
+      "sampled_item_count": 0,
+      "source_id": "utcc.utoronto.ca/~cks",
+      "source_name": "utcc.utoronto.ca/~cks"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T14:09:22+00:00",
+      "sampled_item_count": 0,
+      "source_id": "wheresyoured.at",
+      "source_name": "wheresyoured.at"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-25T13:50:50+00:00",
+      "sampled_item_count": 0,
+      "source_id": "worksonmymachine.substack.com",
+      "source_name": "worksonmymachine.substack.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-12-31T21:30:00Z",
+      "sampled_item_count": 0,
+      "source_id": "xania.org",
+      "source_name": "xania.org"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-01T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "xeiaso.net",
+      "source_name": "xeiaso.net"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-07T10:45:41+00:00",
+      "sampled_item_count": 0,
+      "source_id": "不如读书",
+      "source_name": "不如读书"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-03-22T13:30:01+00:00",
+      "sampled_item_count": 0,
+      "source_id": "二次元的Datawhale",
+      "source_name": "二次元的Datawhale"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-07T09:24:53+08:00",
+      "sampled_item_count": 0,
+      "source_id": "云中江树",
+      "source_name": "云中江树"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T10:17:38+00:00",
+      "sampled_item_count": 0,
+      "source_id": "人间自习室",
+      "source_name": "人间自习室"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-23T01:37:21+00:00",
+      "sampled_item_count": 0,
+      "source_id": "付航脱口秀",
+      "source_name": "付航脱口秀"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-06-12T15:03:25+00:00",
+      "sampled_item_count": 0,
+      "source_id": "付航脱口秀精选",
+      "source_name": "付航脱口秀精选"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T07:28:08+00:00",
+      "sampled_item_count": 0,
+      "source_id": "你不知道的行业内幕 - 即刻圈子",
+      "source_name": "你不知道的行业内幕 - 即刻圈子"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T22:04:03+08:00",
+      "sampled_item_count": 0,
+      "source_id": "光子星球",
+      "source_name": "光子星球"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T19:09:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "刘聪NLP",
+      "source_name": "刘聪NLP"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-10-26T12:31:12+00:00",
+      "sampled_item_count": 0,
+      "source_id": "努力戒咕的coco锤",
+      "source_name": "努力戒咕的coco锤"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T09:11:44+08:00",
+      "sampled_item_count": 0,
+      "source_id": "十字路口Crossing",
+      "source_name": "十字路口Crossing"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T11:19:31+00:00",
+      "sampled_item_count": 0,
+      "source_id": "半只笨猪",
+      "source_name": "半只笨猪"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-25T19:25:30+00:00",
+      "sampled_item_count": 0,
+      "source_id": "单弦震脉",
+      "source_name": "单弦震脉"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T21:46:28+08:00",
+      "sampled_item_count": 0,
+      "source_id": "卡尔的AI沃茨",
+      "source_name": "卡尔的AI沃茨"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-06T09:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "卡纸大寨主",
+      "source_name": "卡纸大寨主"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T09:14:37+00:00",
+      "sampled_item_count": 0,
+      "source_id": "司马尘",
+      "source_name": "司马尘"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T12:45:29+00:00",
+      "sampled_item_count": 0,
+      "source_id": "向杨Alan君",
+      "source_name": "向杨Alan君"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-02-25T10:49:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "听泉赏宝",
+      "source_name": "听泉赏宝"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T11:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "周侃侃plus",
+      "source_name": "周侃侃plus"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-23T17:11:52+00:00",
+      "sampled_item_count": 0,
+      "source_id": "周刊 归档 - 酷口家数字花园",
+      "source_name": "周刊 归档 - 酷口家数字花园"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-01-24T23:02:20+00:00",
+      "sampled_item_count": 0,
+      "source_id": "和张程一起学习吧",
+      "source_name": "和张程一起学习吧"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T07:49:08+00:00",
+      "sampled_item_count": 0,
+      "source_id": "咖啡醉足球",
+      "source_name": "咖啡醉足球"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T23:19:10+08:00",
+      "sampled_item_count": 0,
+      "source_id": "哥飞",
+      "source_name": "哥飞"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2023-12-16T04:48:32+00:00",
+      "sampled_item_count": 0,
+      "source_id": "坚果熊说博弈",
+      "source_name": "坚果熊说博弈"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T11:16:17+08:00",
+      "sampled_item_count": 0,
+      "source_id": "夕小瑶科技说",
+      "source_name": "夕小瑶科技说"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T04:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "大祥哥来了",
+      "source_name": "大祥哥来了"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-24T09:35:55+00:00",
+      "sampled_item_count": 0,
+      "source_id": "天才简史",
+      "source_name": "天才简史"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T09:19:36+00:00",
+      "sampled_item_count": 0,
+      "source_id": "奥德修斯的绳索",
+      "source_name": "奥德修斯的绳索"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T06:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "学院派Academia",
+      "source_name": "学院派Academia"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-03-11T16:00:00.000Z",
+      "sampled_item_count": 0,
+      "source_id": "安全代码",
+      "source_name": "安全代码"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-02-13T03:48:25+00:00",
+      "sampled_item_count": 0,
+      "source_id": "小波心理",
+      "source_name": "小波心理"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-22T09:30:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "岺玖贰叁",
+      "source_name": "岺玖贰叁"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T03:30:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "峡谷玄学家",
+      "source_name": "峡谷玄学家"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-03T18:19:29+00:00",
+      "sampled_item_count": 0,
+      "source_id": "巅峰球迷汇",
+      "source_name": "巅峰球迷汇"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-28T13:03:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "差评君",
+      "source_name": "差评君"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T19:42:18+08:00",
+      "sampled_item_count": 0,
+      "source_id": "开源AI项目落地",
+      "source_name": "开源AI项目落地"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-26T03:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "影视飓风",
+      "source_name": "影视飓风"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T08:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "心河摆渡",
+      "source_name": "心河摆渡"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T02:45:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "思维实验室",
+      "source_name": "思维实验室"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-02T02:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "慢慢学的四饼",
+      "source_name": "慢慢学的四饼"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-22T08:20:15+00:00",
+      "sampled_item_count": 0,
+      "source_id": "戴建业老师",
+      "source_name": "戴建业老师"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-03T09:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "拣尽南枝",
+      "source_name": "拣尽南枝"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T11:30:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "探索AGI",
+      "source_name": "探索AGI"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T10:08:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "数字生命卡兹克",
+      "source_name": "数字生命卡兹克"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T12:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "新石器公园",
+      "source_name": "新石器公园"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T04:30:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "是啤酒鸭-梗图",
+      "source_name": "是啤酒鸭-梗图"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-02T15:23:30+00:00",
+      "sampled_item_count": 0,
+      "source_id": "是落拓呀",
+      "source_name": "是落拓呀"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T10:00:13+08:00",
+      "sampled_item_count": 0,
+      "source_id": "晚点LatePost",
+      "source_name": "晚点LatePost"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T21:40:07+08:00",
+      "sampled_item_count": 0,
+      "source_id": "智东西",
+      "source_name": "智东西"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T14:34:03+00:00",
+      "sampled_item_count": 0,
+      "source_id": "智能路障",
+      "source_name": "智能路障"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-11-21T11:55:32+08:00",
+      "sampled_item_count": 0,
+      "source_id": "机器之心",
+      "source_name": "机器之心"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2022-12-29T10:35:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "机器人夏先生1号",
+      "source_name": "机器人夏先生1号"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T04:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "李滇滇",
+      "source_name": "李滇滇"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T13:54:44+00:00",
+      "sampled_item_count": 0,
+      "source_id": "杰克森Jackson_",
+      "source_name": "杰克森Jackson_"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-03-19T13:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "林川登罗",
+      "source_name": "林川登罗"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-25T08:00:56+00:00",
+      "sampled_item_count": 0,
+      "source_id": "柯洁",
+      "source_name": "柯洁"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T04:29:30+00:00",
+      "sampled_item_count": 0,
+      "source_id": "歌白说Geslook",
+      "source_name": "歌白说Geslook"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-10-07T09:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "汤质看本质",
+      "source_name": "汤质看本质"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T10:30:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "沃垠AI",
+      "source_name": "沃垠AI"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T09:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "河口超人Aper",
+      "source_name": "河口超人Aper"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T04:34:17+00:00",
+      "sampled_item_count": 0,
+      "source_id": "泛式",
+      "source_name": "泛式"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T09:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "浮世叁千问",
+      "source_name": "浮世叁千问"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-23T10:50:53+00:00",
+      "sampled_item_count": 0,
+      "source_id": "海林A读书",
+      "source_name": "海林A读书"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T11:39:11+00:00",
+      "sampled_item_count": 0,
+      "source_id": "漫士沉思录",
+      "source_name": "漫士沉思录"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T10:30:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "灯果",
+      "source_name": "灯果"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T20:42:35+08:00",
+      "sampled_item_count": 0,
+      "source_id": "特工宇宙",
+      "source_name": "特工宇宙"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T10:04:16+00:00",
+      "sampled_item_count": 0,
+      "source_id": "猫眼看足球",
+      "source_name": "猫眼看足球"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T17:45:30+08:00",
+      "sampled_item_count": 0,
+      "source_id": "甲子光年",
+      "source_name": "甲子光年"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2023-01-30T10:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "白染one",
+      "source_name": "白染one"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T21:59:36+00:00",
+      "sampled_item_count": 0,
+      "source_id": "白马繁华",
+      "source_name": "白马繁华"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T23:37:09+00:00",
+      "sampled_item_count": 0,
+      "source_id": "真实球迷汇",
+      "source_name": "真实球迷汇"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-06-12T12:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "知识共享者",
+      "source_name": "知识共享者"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T11:07:13+08:00",
+      "sampled_item_count": 0,
+      "source_id": "硅星人Pro",
+      "source_name": "硅星人Pro"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-02-11T08:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "硬核学长2077",
+      "source_name": "硬核学长2077"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-27T20:48:53+08:00",
+      "sampled_item_count": 0,
+      "source_id": "秋芝2046",
+      "source_name": "秋芝2046"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T10:40:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "科幻视界",
+      "source_name": "科幻视界"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-03T09:30:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "管泽元",
+      "source_name": "管泽元"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T13:43:44+00:00",
+      "sampled_item_count": 0,
+      "source_id": "米国脱口秀",
+      "source_name": "米国脱口秀"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T08:00:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "网罗灯下黑",
+      "source_name": "网罗灯下黑"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-03T11:04:53+00:00",
+      "sampled_item_count": 0,
+      "source_id": "罗明落ny",
+      "source_name": "罗明落ny"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-27T04:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "罗翔说刑法",
+      "source_name": "罗翔说刑法"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T00:53:04+00:00",
+      "sampled_item_count": 0,
+      "source_id": "老T博客",
+      "source_name": "老T博客"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T02:00:20+00:00",
+      "sampled_item_count": 0,
+      "source_id": "老实憨厚的笑笑",
+      "source_name": "老实憨厚的笑笑"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T15:42:19+08:00",
+      "sampled_item_count": 0,
+      "source_id": "胡说成理",
+      "source_name": "胡说成理"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T14:07:57+08:00",
+      "sampled_item_count": 0,
+      "source_id": "脑极体",
+      "source_name": "脑极体"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-07-31T05:50:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "脱口秀_Talk_Show",
+      "source_name": "脱口秀_Talk_Show"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T17:31:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "腾讯研究院",
+      "source_name": "腾讯研究院"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-30T14:08:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "苍何",
+      "source_name": "苍何"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2024-04-19T13:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "英语播客狗",
+      "source_name": "英语播客狗"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-01-18T15:39:43+00:00",
+      "sampled_item_count": 0,
+      "source_id": "荒野初研园",
+      "source_name": "荒野初研园"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-03T08:00:00.000Z",
+      "sampled_item_count": 0,
+      "source_id": "莫尔索随笔",
+      "source_name": "莫尔索随笔"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T01:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "莫比乌斯",
+      "source_name": "莫比乌斯"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2023-05-19T11:55:44+00:00",
+      "sampled_item_count": 0,
+      "source_id": "蒙克MK_",
+      "source_name": "蒙克MK_"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2023-07-03T13:18:16+00:00",
+      "sampled_item_count": 0,
+      "source_id": "西山在何许",
+      "source_name": "西山在何许"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2022-11-20T03:18:07+00:00",
+      "sampled_item_count": 0,
+      "source_id": "要素分析",
+      "source_name": "要素分析"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-22T04:27:15+00:00",
+      "sampled_item_count": 0,
+      "source_id": "读书的Harry",
+      "source_name": "读书的Harry"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T10:30:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "贝拉kira",
+      "source_name": "贝拉kira"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-04T15:14:18+00:00",
+      "sampled_item_count": 0,
+      "source_id": "赏味不足",
+      "source_name": "赏味不足"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T14:25:24+08:00",
+      "sampled_item_count": 0,
+      "source_id": "赛博禅心",
+      "source_name": "赛博禅心"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-01-31T14:10:22+00:00",
+      "sampled_item_count": 0,
+      "source_id": "载脑体",
+      "source_name": "载脑体"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T14:37:11+00:00",
+      "sampled_item_count": 0,
+      "source_id": "辰星杂谈",
+      "source_name": "辰星杂谈"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-17T11:50:55+00:00",
+      "sampled_item_count": 0,
+      "source_id": "这是个令人疑惑的星球",
+      "source_name": "这是个令人疑惑的星球"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-02-17T12:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "迷因水母",
+      "source_name": "迷因水母"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-25T10:15:16+00:00",
+      "sampled_item_count": 0,
+      "source_id": "逗比的雀巢",
+      "source_name": "逗比的雀巢"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T11:13:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "逛逛GitHub",
+      "source_name": "逛逛GitHub"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-03T06:27:16+00:00",
+      "sampled_item_count": 0,
+      "source_id": "邵艾伦Alan",
+      "source_name": "邵艾伦Alan"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T12:00:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "量子位",
+      "source_name": "量子位"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-27T09:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "银屏系漫游指南",
+      "source_name": "银屏系漫游指南"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-04-29T12:41:36+08:00",
+      "sampled_item_count": 0,
+      "source_id": "阿伦AI学习笔记",
+      "source_name": "阿伦AI学习笔记"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-05T03:36:13+00:00",
+      "sampled_item_count": 0,
+      "source_id": "隔壁红魔",
+      "source_name": "隔壁红魔"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-01T11:30:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "雷峰网",
+      "source_name": "雷峰网"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2025-11-15T12:23:28+00:00",
+      "sampled_item_count": 0,
+      "source_id": "非卿漫谈",
+      "source_name": "非卿漫谈"
+    },
+    {
+      "feed_url": null,
+      "item_count": 5,
+      "latest_item_time": "2026-05-02T00:12:16+08:00",
+      "sampled_item_count": 0,
+      "source_id": "饼干哥哥AGI",
+      "source_name": "饼干哥哥AGI"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-03T08:01:09+00:00",
+      "sampled_item_count": 0,
+      "source_id": "- 求是网",
+      "source_name": "- 求是网"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-05T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Airing 的博客",
+      "source_name": "Airing 的博客"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-02T13:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "AliAbdaal",
+      "source_name": "AliAbdaal"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-18T06:43:39+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Ben's Love",
+      "source_name": "Ben's Love"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2025-02-22T20:54:13+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Blog - Remote Work Prep",
+      "source_name": "Blog - Remote Work Prep"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2025-09-10T05:51:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Boo布姐自译",
+      "source_name": "Boo布姐自译"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-24T11:05:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "CoCoVii",
+      "source_name": "CoCoVii"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-30T05:05:04+00:00",
+      "sampled_item_count": 0,
+      "source_id": "EVANGELION:ALL",
+      "source_name": "EVANGELION:ALL"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-28T17:48:50+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Experimental History",
+      "source_name": "Experimental History"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-02T09:20:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Gray格雷老师",
+      "source_name": "Gray格雷老师"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-28T00:05:57+00:00",
+      "sampled_item_count": 0,
+      "source_id": "HelloGithub - 月刊",
+      "source_name": "HelloGithub - 月刊"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-30T21:30:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "L先生说",
+      "source_name": "L先生说"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-01T10:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "MOJi辞書",
+      "source_name": "MOJi辞書"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-17T21:20:15+08:00",
+      "sampled_item_count": 0,
+      "source_id": "ONE字幕组",
+      "source_name": "ONE字幕组"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-01-31T17:21:04+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Paradise Lost",
+      "source_name": "Paradise Lost"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-04T03:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Super也好君",
+      "source_name": "Super也好君"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-01-27T02:49:02+00:00",
+      "sampled_item_count": 0,
+      "source_id": "Tinyfool的个人网站",
+      "source_name": "Tinyfool的个人网站"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2025-06-09T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "brutecat.com",
+      "source_name": "brutecat.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-28T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "ericmigi.com",
+      "source_name": "ericmigi.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-16T13:15:20+08:00",
+      "sampled_item_count": 0,
+      "source_id": "everystep",
+      "source_name": "everystep"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-01T09:00:00-05:00",
+      "sampled_item_count": 0,
+      "source_id": "jeffgeerling.com",
+      "source_name": "jeffgeerling.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-30T14:04:26+00:00",
+      "sampled_item_count": 0,
+      "source_id": "krebsonsecurity.com",
+      "source_name": "krebsonsecurity.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-18T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "maurycyz.com",
+      "source_name": "maurycyz.com"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-03T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "seangoedecke.com",
+      "source_name": "seangoedecke.com"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/5dbd038a8f5140938d0877511571797b",
+      "item_count": 4,
+      "latest_item_time": "2026-05-08T14:47:57+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-clem-129303-clementdelangue",
+      "source_name": "clem 🤗(@ClementDelangue)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/3ca3c7698fd04611a0e7d14fae93c84c",
+      "item_count": 4,
+      "latest_item_time": "2026-04-07T17:48:19+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-kevin-weil-127482-127480-kevinweil",
+      "source_name": "Kevin Weil 🇺🇸(@kevinweil)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/67e259bd5be544ce84bbc867eace54c2",
+      "item_count": 4,
+      "latest_item_time": "2026-04-21T13:47:55+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-llamaindex-129433-llama-index",
+      "source_name": "LlamaIndex 🦙(@llama_index)"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/63316630d94543f5a6480f230f483008",
+      "item_count": 4,
+      "latest_item_time": "2026-05-16T20:13:06+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-marc-andreessen-127482-127480-pmarca",
+      "source_name": "Marc Andreessen 🇺🇸(@pmarca)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-03-21T15:03:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "tanscp",
+      "source_name": "tanscp"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-13T11:15:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "下班的三爷",
+      "source_name": "下班的三爷"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-30T14:59:54+00:00",
+      "sampled_item_count": 0,
+      "source_id": "与书籍度过漫长岁月",
+      "source_name": "与书籍度过漫长岁月"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-30T02:30:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "你是想气死1酱么",
+      "source_name": "你是想气死1酱么"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2024-11-06T15:57:58+00:00",
+      "sampled_item_count": 0,
+      "source_id": "冲击波工作室",
+      "source_name": "冲击波工作室"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-02T04:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "冲男阿凉",
+      "source_name": "冲男阿凉"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-30T11:28:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "半月谈快报",
+      "source_name": "半月谈快报"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-03-25T07:01:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "啊桂实验室",
+      "source_name": "啊桂实验室"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-03T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "宝玉的分享",
+      "source_name": "宝玉的分享"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-04T01:00:09+00:00",
+      "sampled_item_count": 0,
+      "source_id": "小众软件",
+      "source_name": "小众软件"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-22T06:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "小宇宙 Podcast 5e5c52c9418a84a04625e6cc",
+      "source_name": "小宇宙 Podcast 5e5c52c9418a84a04625e6cc"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2025-07-09T23:30:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "小宇宙 Podcast 61cbaac48bb4cd867fcabe22",
+      "source_name": "小宇宙 Podcast 61cbaac48bb4cd867fcabe22"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-27T05:57:08+00:00",
+      "sampled_item_count": 0,
+      "source_id": "小宇宙 Podcast 63b7dd49289d2739647d9587",
+      "source_name": "小宇宙 Podcast 63b7dd49289d2739647d9587"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-23T13:30:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "小宇宙 Podcast 648b0b641c48983391a63f98",
+      "source_name": "小宇宙 Podcast 648b0b641c48983391a63f98"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-30T02:58:37+00:00",
+      "sampled_item_count": 0,
+      "source_id": "小宇宙 Podcast 6507bc165c88d2412626b401",
+      "source_name": "小宇宙 Podcast 6507bc165c88d2412626b401"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-13T06:07:30+00:00",
+      "sampled_item_count": 0,
+      "source_id": "岱川博士",
+      "source_name": "岱川博士"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2025-06-17T20:05:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "常青说",
+      "source_name": "常青说"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-30T05:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "本子在隔壁",
+      "source_name": "本子在隔壁"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2023-02-05T12:29:54+00:00",
+      "sampled_item_count": 0,
+      "source_id": "每周一书 – 书伴",
+      "source_name": "每周一书 – 书伴"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-24T03:50:09+00:00",
+      "sampled_item_count": 0,
+      "source_id": "毕导",
+      "source_name": "毕导"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-03T11:53:38+00:00",
+      "sampled_item_count": 0,
+      "source_id": "波士顿圆脸",
+      "source_name": "波士顿圆脸"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2022-11-20T16:03:38Z",
+      "sampled_item_count": 0,
+      "source_id": "混沌周刊",
+      "source_name": "混沌周刊"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-29T08:48:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "潦草学者",
+      "source_name": "潦草学者"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-01T04:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "火兰朋克",
+      "source_name": "火兰朋克"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-02T06:32:39+00:00",
+      "sampled_item_count": 0,
+      "source_id": "瓶子君152",
+      "source_name": "瓶子君152"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-27T17:58:00+08:00",
+      "sampled_item_count": 0,
+      "source_id": "白熊阿丸的小屋",
+      "source_name": "白熊阿丸的小屋"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-03T09:15:35+00:00",
+      "sampled_item_count": 0,
+      "source_id": "笔记交流站 - 即刻圈子",
+      "source_name": "笔记交流站 - 即刻圈子"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2025-11-15T00:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "笨方法学写作",
+      "source_name": "笨方法学写作"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-03-03T22:30:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "英语播客党",
+      "source_name": "英语播客党"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2024-11-24T15:35:34.196Z",
+      "sampled_item_count": 0,
+      "source_id": "草稿拾遗",
+      "source_name": "草稿拾遗"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-02T13:10:14+00:00",
+      "sampled_item_count": 0,
+      "source_id": "负面能量转换器",
+      "source_name": "负面能量转换器"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-03-30T17:38:24+08:00",
+      "sampled_item_count": 0,
+      "source_id": "走路",
+      "source_name": "走路"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-22T10:43:14+00:00",
+      "sampled_item_count": 0,
+      "source_id": "退役编辑雨上",
+      "source_name": "退役编辑雨上"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-24T07:43:01+08:00",
+      "sampled_item_count": 0,
+      "source_id": "阮一峰的网络日志",
+      "source_name": "阮一峰的网络日志"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-08T10:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "陈大东瓜",
+      "source_name": "陈大东瓜"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2023-03-03T11:27:31+00:00",
+      "sampled_item_count": 0,
+      "source_id": "靠谱电竞",
+      "source_name": "靠谱电竞"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-02T06:30:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "飞鸟手札",
+      "source_name": "飞鸟手札"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-05-01T02:00:00+00:00",
+      "sampled_item_count": 0,
+      "source_id": "食事史馆",
+      "source_name": "食事史馆"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-23T02:38:33+00:00",
+      "sampled_item_count": 0,
+      "source_id": "馆长刘下饭_环球档案",
+      "source_name": "馆长刘下饭_环球档案"
+    },
+    {
+      "feed_url": null,
+      "item_count": 4,
+      "latest_item_time": "2026-04-26T16:41:45.000Z",
+      "sampled_item_count": 0,
+      "source_id": "龙爪槐守望者",
+      "source_name": "龙爪槐守望者"
+    },
+    {
+      "feed_url": "https://api.xgo.ing/rss/user/244eb9fa77ce4fa3b7fa5ceba80027a4",
+      "item_count": 2,
+      "latest_item_time": "2025-05-23T14:50:37+00:00",
+      "sampled_item_count": 0,
+      "source_id": "socialmedia-barsee-128054-heybarsee",
+      "source_name": "Barsee 🐶(@heyBarsee)"
+    },
+    {
+      "feed_url": null,
+      "item_count": 2,
+      "latest_item_time": "2026-05-04T00:00:00Z",
+      "sampled_item_count": 0,
+      "source_id": "susam.net",
+      "source_name": "susam.net"
+    },
+    {
+      "feed_url": null,
+      "item_count": 1,
+      "latest_item_time": "2023-10-12T19:43:55Z",
+      "sampled_item_count": 0,
+      "source_id": "rachelbythebay.com",
+      "source_name": "rachelbythebay.com"
+    }
+  ]
+}
+```
+
+## 3. Input Sample Summary
+
+```json
+{
+  "items_sampled": 40,
+  "items_too_short": 0,
+  "items_with_raw_content": 40,
+  "items_with_summary_only": 0,
+  "languages": {
+    "en_or_unknown": 20,
+    "zh": 20
+  },
+  "source_count": 7,
+  "time_range": {
+    "max_created_at": "2026-06-01T02:10:57.598177+00:00",
+    "min_created_at": "2026-06-01T02:10:57.567268+00:00"
+  },
+  "top_sources": [
+    [
+      "socialmedia-ai-will-financeyf5",
+      20
+    ],
+    [
+      "socialmedia-ak-akhaliq",
+      13
+    ],
+    [
+      "socialmedia-openai-openai",
+      3
+    ],
+    [
+      "socialmedia-latent-space-latentspacepod",
+      1
+    ],
+    [
+      "socialmedia-simon-willison-simonw",
+      1
+    ],
+    [
+      "socialmedia-akshay-kothari-akothari",
+      1
+    ],
+    [
+      "socialmedia-notion-notionhq",
+      1
+    ]
+  ]
+}
+```
+
+## 4. Item Card Quality
+
+```json
+{
+  "avg_confidence": 0.55,
+  "avg_confidence_by_tier": {
+    "full": 0.55,
+    "minimal": 0.55,
+    "standard": 0.55
+  },
+  "avg_tokens_by_tier": {},
+  "budget_skip_fallback_count": 0,
+  "card_tier_distribution": {
+    "full": 1,
+    "minimal": 24,
+    "standard": 15
+  },
+  "content_role_distribution": {
+    "report": 32,
+    "source_material": 8
+  },
+  "deterministic_minimal_card_count": 24,
+  "entity_count_distribution": {
+    "2": 8,
+    "3": 2,
+    "4": 2,
+    "5": 3,
+    "6": 3,
+    "7": 6,
+    "8": 16
+  },
+  "heuristic_card_fallback_count": 16,
+  "item_cards_failed": 0,
+  "item_cards_generated": 40,
+  "item_cards_generated_or_reused": 40,
+  "item_cards_reused": 0,
+  "llm_failures_by_tier": {},
+  "parse_error_fallback_count": 0,
+  "samples": [
+    {
+      "item_id": "item_0adbf81242724dfc9c3e0797a9b6756b",
+      "role": "report",
+      "summary": "Contrastive Distribution Matching for Amortized Sequential Monte Carlo in Discrete Diffusion 💬 2 🔄 1 ❤️ 8 👀 1603 📊 4 ⚡ Powered by xgo.ing",
+      "title": "Contrastive Distribution Matching for Amortized Sequential Monte Carlo in Discrete Diffusion"
+    },
+    {
+      "item_id": "item_10b4f7ff0597483dba0aa0e5f14069dc",
+      "role": "report",
+      "summary": "With the new Chrome extension, Codex can quickly move through repetitive browser work, like navigating structured pages and complex data entry flows. Under the hood, it writes and runs code to navigate and complete tasks. Your browser does not support the video tag. 🔗 View on Twitter 💬 21 🔄 45 ❤️ 1143 👀 124650 📊 137 ⚡ Powered by xgo.ing",
+      "title": "With the new Chrome extension, Codex can quickly move through repetitive browser work, like navigati..."
+    },
+    {
+      "item_id": "item_2abcc5577be84d09878a7952797f3ef9",
+      "role": "report",
+      "summary": "以上就是全部 如果您喜欢这个主题： 1.关注我（ @FinanceYF5 ） 2. 点赞+转发下面第一条帖子 x.com/FinanceYF5/sta… AI Will @FinanceYF5 Anthropic发了一份36页创业手册，颠覆了我对\"创始人\"这个词的理解** 1/🔥 Anthropic官方亲自写了一份创业手册。 不是\"用AI提效10倍\"那种话术。 而是直接告诉你： 创业这件事本身，从底层逻辑被重写了。 硅谷Alan Walker读了三遍，提炼出8个最反直觉的观察👇 🔗 View Quoted Tweet 💬 0 🔄 0 ❤️ 0 👀 1017 ⚡ Powered by xgo.ing",
+      "title": "以上就是全部 如果您喜欢这个主题： 1.关注我（@FinanceYF5） 2. 点赞+转发下面第一条帖子 https://t.co/E2hgQ3ZFXb"
+    },
+    {
+      "item_id": "item_337312b433184570a7843af2113a17de",
+      "role": "report",
+      "summary": "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个session健忘，每次重新推导架构，结果都不一样 三个月后你的代码库：每块单独看合理，放一起就是精分 解药：写一份CLAUDE.md——你的\"项目宪法\" 每次开session先读再干 💬 1 🔄 0 ❤️ 0 👀 930 📊 1 ⚡ Powered by xgo.ing",
+      "title": "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个session健忘，每次重新推导架构，结果都不一..."
+    },
+    {
+      "item_id": "item_3dc26ddb25d944ba9143090933431f02",
+      "role": "report",
+      "summary": "源： x.com/rohanpaul_ai/s… Rohan Paul @rohanpaul_ai Goldman Sachs CEO, David M. Solomon on nytimes \"A.I. won’t eliminate 25% of jobs. What’s more likely is that people will find more productive ways to spend their time. When I was a first-year banking analyst, something as simple as making a graph of a stock’s performance took six hours of looking up prices i…",
+      "title": "源：https://t.co/jqZgRfY9Ey"
+    },
+    {
+      "item_id": "item_4b815b6411d2459884093554f41cf170",
+      "role": "report",
+      "summary": "“当今全球大约有 3000 万到 3500 万软件工程师。我们想让他们所有人的效率都提高十倍，而且我们认为，需要构建的软件远不止比现在多十倍。” —— Cognition 公司 CEO Scott Wu 在谈论他们今天完成的 10 亿美元融资时说道。 他们的收入在一年内从 3700 万美元攀升至约 5 亿美元。 Your browser does not support the video tag. 🔗 View on Twitter 💬 3 🔄 0 ❤️ 2 👀 630 📊 3 ⚡ Powered by xgo.ing",
+      "title": "“当今全球大约有 3000 万到 3500 万软件工程师。我们想让他们所有人的效率都提高十倍，而且我们认为，需要构建的软件远不止比现在多十倍。” —— Cognition 公司 CEO Scott ..."
+    },
+    {
+      "item_id": "item_4bf849071db5481c84e80d6cb6f02116",
+      "role": "report",
+      "summary": "Cognition AI 刚刚以 260 亿美元的投前估值，完成了超过 10 亿美元的融资。 💬 1 🔄 0 ❤️ 0 👀 303 📊 1 ⚡ Powered by xgo.ing",
+      "title": "Cognition AI 刚刚以 260 亿美元的投前估值，完成了超过 10 亿美元的融资。"
+    },
+    {
+      "item_id": "item_4ed2c19351f64843bca4a57564b87267",
+      "role": "report",
+      "summary": "Agent Explorative Policy Optimization for Multimodal Agentic Reasoning 💬 2 🔄 1 ❤️ 2 👀 849 📊 3 ⚡ Powered by xgo.ing",
+      "title": "Agent Explorative Policy Optimization for Multimodal Agentic Reasoning"
+    },
+    {
+      "item_id": "item_53341e694fa04de2bb8d6bd62a34477a",
+      "role": "report",
+      "summary": "4/AI给自我欺骗装了一台引擎 问AI验证你的idea？它一定给你找支持的证据。 让它算TAM？它一定给你一个\"够投资人买单\"的数字。 这不是AI在骗你——是RLHF把它训练成了\"让你满意的助手\"。 过去有advisor会怼你。 现在你的\"研究员\"只会顺着你说。 AI时代，认知纪律比idea重要十倍。 💬 1 🔄 0 ❤️ 0 👀 82 📊 1 ⚡ Powered by xgo.ing",
+      "title": "4/AI给自我欺骗装了一台引擎 问AI验证你的idea？它一定给你找支持的证据。 让它算TAM？它一定给你一个\"够投资人买单\"的数字。 这不是AI在骗你——是RLHF把它训练成了\"让你满意的助手\"..."
+    },
+    {
+      "item_id": "item_5538593657aa4724845b64f8a37be2d0",
+      "role": "report",
+      "summary": "experiment: livetweeting the @AnthropicAI code with claude event! first up - @katelyn_lesse and @angjiang on claude platform! 💬 7 🔄 4 ❤️ 38 👀 5049 📊 14 ⚡ Powered by xgo.ing",
+      "title": "experiment: livetweeting the @AnthropicAI code with claude event! first up - @katelyn_lesse and @an..."
+    }
+  ],
+  "warnings_distribution": {
+    "deterministic_minimal_card": 24,
+    "fallback_heuristic": 16,
+    "heuristic_card": 16
+  }
+}
+```
+
+## 5. Item-Item Relation Quality
+
+```json
+{
+  "avg_confidence": 0.842,
+  "candidate_lane_distribution": {
+    "exploratory_recall": 47,
+    "same_event_recall": 2,
+    "same_source_repeat": 6,
+    "same_thread": 341,
+    "suppressed": 288,
+    "unknown": 10
+  },
+  "candidate_pairs_considered": 59,
+  "candidate_priority_distribution": {
+    "high": 9,
+    "low": 340,
+    "medium": 57,
+    "suppress": 288
+  },
+  "candidates_suppressed_without_llm": 288,
+  "cluster_eligible_count": 0,
+  "different": 45,
+  "duplicate": 0,
+  "duplicate_direction_suppressed_count": 10,
+  "event_relation_type_distribution": {
+    "same_thread": 59
+  },
+  "examples": [
+    {
+      "candidate_item_title": "“当今全球大约有 3000 万到 3500 万软件工程师。我们想让他们所有人的效率都提高十倍，而且我们认为，需要构建的软件远不止比现在多十倍。” —— Cognition 公司 CEO Scott ...",
+      "confidence": 0.72,
+      "new_item_title": "Cognition AI 刚刚以 260 亿美元的投前估值，完成了超过 10 亿美元的融资。",
+      "primary_relation": "same_thread",
+      "published_at": "2026-05-28T07:56:23+00:00",
+      "reason": "deterministic same-thread lane",
+      "secondary_roles": [
+        "same_thread"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "PhysX-Omni Unified Simulation-Ready Physical 3D Generation for Rigid, Deformable, and Articulated O...",
+      "confidence": 0.88,
+      "new_item_title": "Cognition AI 刚刚以 260 亿美元的投前估值，完成了超过 10 亿美元的融资。",
+      "primary_relation": "different",
+      "published_at": "2026-05-28T07:56:23+00:00",
+      "reason": "weak thread lane without shared actor/product",
+      "secondary_roles": [
+        "weak_thread_lane"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "以上就是全部 如果您喜欢这个主题： 1.关注我（@FinanceYF5） 2. 点赞+转发下面第一条帖子 https://t.co/WeD4zARPlO",
+      "confidence": 0.88,
+      "new_item_title": "Cognition AI 刚刚以 260 亿美元的投前估值，完成了超过 10 亿美元的融资。",
+      "primary_relation": "different",
+      "published_at": "2026-05-28T07:56:23+00:00",
+      "reason": "weak thread lane without shared actor/product",
+      "secondary_roles": [
+        "weak_thread_lane"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个session健忘，每次重新推导架构，结果都不一...",
+      "confidence": 0.88,
+      "new_item_title": "Cognition AI 刚刚以 260 亿美元的投前估值，完成了超过 10 亿美元的融资。",
+      "primary_relation": "different",
+      "published_at": "2026-05-28T07:56:23+00:00",
+      "reason": "weak thread lane without shared actor/product",
+      "secondary_roles": [
+        "weak_thread_lane"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "3/2026最大创业陷阱 Anthropic引了个数据：42%的创业失败因为做了没人要的东西。AI之前的数字。他们说这个比例只会继续往上走 为什么？ 过去做prototype要几个月——这本身就...",
+      "confidence": 0.88,
+      "new_item_title": "Cognition AI 刚刚以 260 亿美元的投前估值，完成了超过 10 亿美元的融资。",
+      "primary_relation": "different",
+      "published_at": "2026-05-28T07:56:23+00:00",
+      "reason": "weak thread lane without shared actor/product",
+      "secondary_roles": [
+        "weak_thread_lane"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个session健忘，每次重新推导架构，结果都不一...",
+      "confidence": 0.72,
+      "new_item_title": "Anthropic发了一份36页创业手册，颠覆了我对\"创始人\"这个词的理解** 1/🔥 Anthropic官方亲自写了一份创业手册。 不是\"用AI提效10倍\"那种话术。 而是直接告诉你： 创业...",
+      "primary_relation": "same_thread",
+      "published_at": "2026-05-28T08:00:37+00:00",
+      "reason": "deterministic same-thread lane",
+      "secondary_roles": [
+        "same_thread"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "3/2026最大创业陷阱 Anthropic引了个数据：42%的创业失败因为做了没人要的东西。AI之前的数字。他们说这个比例只会继续往上走 为什么？ 过去做prototype要几个月——这本身就...",
+      "confidence": 0.88,
+      "new_item_title": "2/🎯 创始人的定义变了 过去：技术founder写代码，非技术founder跑BD。 现在：这堵墙塌了。 你不再是那个写代码的人—— 你是决定让哪个agent、用什么prompt、产出什么的人...",
+      "primary_relation": "different",
+      "published_at": "2026-05-28T08:00:40+00:00",
+      "reason": "weak thread lane without shared actor/product",
+      "secondary_roles": [
+        "weak_thread_lane"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "PhysX-Omni Unified Simulation-Ready Physical 3D Generation for Rigid, Deformable, and Articulated O...",
+      "confidence": 0.88,
+      "new_item_title": "4/AI给自我欺骗装了一台引擎 问AI验证你的idea？它一定给你找支持的证据。 让它算TAM？它一定给你一个\"够投资人买单\"的数字。 这不是AI在骗你——是RLHF把它训练成了\"让你满意的助手\"...",
+      "primary_relation": "different",
+      "published_at": "2026-05-28T08:00:47+00:00",
+      "reason": "weak thread lane without shared actor/product",
+      "secondary_roles": [
+        "weak_thread_lane"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "PhysX-Omni Unified Simulation-Ready Physical 3D Generation for Rigid, Deformable, and Articulated O...",
+      "confidence": 0.88,
+      "new_item_title": "2/🎯 创始人的定义变了 过去：技术founder写代码，非技术founder跑BD。 现在：这堵墙塌了。 你不再是那个写代码的人—— 你是决定让哪个agent、用什么prompt、产出什么的人...",
+      "primary_relation": "different",
+      "published_at": "2026-05-28T08:00:40+00:00",
+      "reason": "weak thread lane without shared actor/product",
+      "secondary_roles": [
+        "weak_thread_lane"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "3/2026最大创业陷阱 Anthropic引了个数据：42%的创业失败因为做了没人要的东西。AI之前的数字。他们说这个比例只会继续往上走 为什么？ 过去做prototype要几个月——这本身就...",
+      "confidence": 0.72,
+      "new_item_title": "Anthropic发了一份36页创业手册，颠覆了我对\"创始人\"这个词的理解** 1/🔥 Anthropic官方亲自写了一份创业手册。 不是\"用AI提效10倍\"那种话术。 而是直接告诉你： 创业...",
+      "primary_relation": "same_thread",
+      "published_at": "2026-05-28T08:00:37+00:00",
+      "reason": "deterministic same-thread lane",
+      "secondary_roles": [
+        "same_thread"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    }
+  ],
+  "fold_candidates": 0,
+  "high_priority_skips": 0,
+  "item_relation_failures": 0,
+  "item_relation_json_parse_failures": 0,
+  "llm_item_relation_calls": 0,
+  "low_confidence_examples": [],
+  "must_run_skips": 0,
+  "near_duplicate": 0,
+  "pair_conflict_count": 0,
+  "raw_relation_count": 59,
+  "related_with_new_info": 0,
+  "related_with_new_info_count": 0,
+  "relations_by_primary_relation": {
+    "different": 45,
+    "same_thread": 14
+  },
+  "rule_relations": 84,
+  "skipped_relation_llm_due_to_deterministic_decision": 26,
+  "uncertain_count": 0,
+  "unique_relation_pair_count": 57
+}
+```
+
+## 6. Event Signature Hotspots
+
+```json
+{
+  "evidence_files": [
+    "event_hotspots.jsonl",
+    "event_hotspot_items.csv"
+  ],
+  "generic_token_policy": "generic AI/template tokens are supporting evidence only and cannot independently create high-priority hotspots",
+  "sample_mode": "event_hotspots"
+}
+```
+
+## 7. Candidate Priority Distribution
+
+```json
+{
+  "candidate_priority_distribution": {
+    "high": 9,
+    "low": 340,
+    "medium": 57,
+    "suppress": 288
+  },
+  "candidates_suppressed_without_llm": 288,
+  "warning": "must_run/high should remain scarce; inspect candidate_generation.jsonl if inflated"
+}
+```
+
+## 8. Relation Precision Review
+
+```json
+{
+  "event_relation_type_distribution": {
+    "same_thread": 59
+  },
+  "examples": [
+    {
+      "candidate_item_title": "“当今全球大约有 3000 万到 3500 万软件工程师。我们想让他们所有人的效率都提高十倍，而且我们认为，需要构建的软件远不止比现在多十倍。” —— Cognition 公司 CEO Scott ...",
+      "confidence": 0.72,
+      "new_item_title": "Cognition AI 刚刚以 260 亿美元的投前估值，完成了超过 10 亿美元的融资。",
+      "primary_relation": "same_thread",
+      "published_at": "2026-05-28T07:56:23+00:00",
+      "reason": "deterministic same-thread lane",
+      "secondary_roles": [
+        "same_thread"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "PhysX-Omni Unified Simulation-Ready Physical 3D Generation for Rigid, Deformable, and Articulated O...",
+      "confidence": 0.88,
+      "new_item_title": "Cognition AI 刚刚以 260 亿美元的投前估值，完成了超过 10 亿美元的融资。",
+      "primary_relation": "different",
+      "published_at": "2026-05-28T07:56:23+00:00",
+      "reason": "weak thread lane without shared actor/product",
+      "secondary_roles": [
+        "weak_thread_lane"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "以上就是全部 如果您喜欢这个主题： 1.关注我（@FinanceYF5） 2. 点赞+转发下面第一条帖子 https://t.co/WeD4zARPlO",
+      "confidence": 0.88,
+      "new_item_title": "Cognition AI 刚刚以 260 亿美元的投前估值，完成了超过 10 亿美元的融资。",
+      "primary_relation": "different",
+      "published_at": "2026-05-28T07:56:23+00:00",
+      "reason": "weak thread lane without shared actor/product",
+      "secondary_roles": [
+        "weak_thread_lane"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个session健忘，每次重新推导架构，结果都不一...",
+      "confidence": 0.88,
+      "new_item_title": "Cognition AI 刚刚以 260 亿美元的投前估值，完成了超过 10 亿美元的融资。",
+      "primary_relation": "different",
+      "published_at": "2026-05-28T07:56:23+00:00",
+      "reason": "weak thread lane without shared actor/product",
+      "secondary_roles": [
+        "weak_thread_lane"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "3/2026最大创业陷阱 Anthropic引了个数据：42%的创业失败因为做了没人要的东西。AI之前的数字。他们说这个比例只会继续往上走 为什么？ 过去做prototype要几个月——这本身就...",
+      "confidence": 0.88,
+      "new_item_title": "Cognition AI 刚刚以 260 亿美元的投前估值，完成了超过 10 亿美元的融资。",
+      "primary_relation": "different",
+      "published_at": "2026-05-28T07:56:23+00:00",
+      "reason": "weak thread lane without shared actor/product",
+      "secondary_roles": [
+        "weak_thread_lane"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个session健忘，每次重新推导架构，结果都不一...",
+      "confidence": 0.72,
+      "new_item_title": "Anthropic发了一份36页创业手册，颠覆了我对\"创始人\"这个词的理解** 1/🔥 Anthropic官方亲自写了一份创业手册。 不是\"用AI提效10倍\"那种话术。 而是直接告诉你： 创业...",
+      "primary_relation": "same_thread",
+      "published_at": "2026-05-28T08:00:37+00:00",
+      "reason": "deterministic same-thread lane",
+      "secondary_roles": [
+        "same_thread"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "3/2026最大创业陷阱 Anthropic引了个数据：42%的创业失败因为做了没人要的东西。AI之前的数字。他们说这个比例只会继续往上走 为什么？ 过去做prototype要几个月——这本身就...",
+      "confidence": 0.88,
+      "new_item_title": "2/🎯 创始人的定义变了 过去：技术founder写代码，非技术founder跑BD。 现在：这堵墙塌了。 你不再是那个写代码的人—— 你是决定让哪个agent、用什么prompt、产出什么的人...",
+      "primary_relation": "different",
+      "published_at": "2026-05-28T08:00:40+00:00",
+      "reason": "weak thread lane without shared actor/product",
+      "secondary_roles": [
+        "weak_thread_lane"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "PhysX-Omni Unified Simulation-Ready Physical 3D Generation for Rigid, Deformable, and Articulated O...",
+      "confidence": 0.88,
+      "new_item_title": "4/AI给自我欺骗装了一台引擎 问AI验证你的idea？它一定给你找支持的证据。 让它算TAM？它一定给你一个\"够投资人买单\"的数字。 这不是AI在骗你——是RLHF把它训练成了\"让你满意的助手\"...",
+      "primary_relation": "different",
+      "published_at": "2026-05-28T08:00:47+00:00",
+      "reason": "weak thread lane without shared actor/product",
+      "secondary_roles": [
+        "weak_thread_lane"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "PhysX-Omni Unified Simulation-Ready Physical 3D Generation for Rigid, Deformable, and Articulated O...",
+      "confidence": 0.88,
+      "new_item_title": "2/🎯 创始人的定义变了 过去：技术founder写代码，非技术founder跑BD。 现在：这堵墙塌了。 你不再是那个写代码的人—— 你是决定让哪个agent、用什么prompt、产出什么的人...",
+      "primary_relation": "different",
+      "published_at": "2026-05-28T08:00:40+00:00",
+      "reason": "weak thread lane without shared actor/product",
+      "secondary_roles": [
+        "weak_thread_lane"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    },
+    {
+      "candidate_item_title": "3/2026最大创业陷阱 Anthropic引了个数据：42%的创业失败因为做了没人要的东西。AI之前的数字。他们说这个比例只会继续往上走 为什么？ 过去做prototype要几个月——这本身就...",
+      "confidence": 0.72,
+      "new_item_title": "Anthropic发了一份36页创业手册，颠覆了我对\"创始人\"这个词的理解** 1/🔥 Anthropic官方亲自写了一份创业手册。 不是\"用AI提效10倍\"那种话术。 而是直接告诉你： 创业...",
+      "primary_relation": "same_thread",
+      "published_at": "2026-05-28T08:00:37+00:00",
+      "reason": "deterministic same-thread lane",
+      "secondary_roles": [
+        "same_thread"
+      ],
+      "should_fold": false,
+      "source": "socialmedia-ai-will-financeyf5"
+    }
+  ],
+  "near_duplicate": 0,
+  "related_with_new_info": 0
+}
+```
+
+## 9. Item-Cluster Relation Quality
+
+```json
+{
+  "actions": {
+    "attach_to_cluster": 9
+  },
+  "attached_existing_clusters": 0,
+  "avg_confidence": 0.6,
+  "avg_items_per_cluster": 1.0,
+  "candidate_clusters_considered": 9,
+  "cluster_samples": [
+    {
+      "cluster_status": "active",
+      "cluster_title": "experiment: livetweeting the @AnthropicAI code with claude event! first up - @katelyn_lesse and @an...",
+      "core_facts": [
+        "experiment: livetweeting the @AnthropicAI code with claude event! first up - @katelyn_lesse and @angjiang on claude platform! 💬 7 🔄 4 ❤️ 38 👀 5049 📊 14 ⚡ Powered by xgo.ing"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_5538593657aa4724845b64f8a37be2d0"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "I'm at the Claude w/ Code event in San Francisco, and I'll be live blogging the keynote here https:/...",
+      "core_facts": [
+        "I'm at the Claude w/ Code event in San Francisco, and I'll be live blogging the keynote here simonwillison.net/2026/May/6/cod… 💬 13 🔄 18 ❤️ 232 👀 17792 📊 47 ⚡ Powered by xgo.ing"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_9c238e31fd6c41f9b024b11a2d4df94a"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "The Notion command-line interface (CLI) is a new way to work with Notion programmatically, made just...",
+      "core_facts": [
+        "The Notion command-line interface (CLI) is a new way to work with Notion programmatically, made just for developers and coding agents. Use it to sign in to your workspace, read and take action in Notion, build and deploy Workers, and extend Notion with code. To install, run curl -fsSL ntn.dev | bash. 💬 2 🔄 1 ❤️ 28 👀 5358 📊 7 ⚡ Powered by xgo.ing"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_5d3f098ec8a5416d8a8c16612cc8e2db"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "源：https://t.co/O7NnTsIIPF",
+      "core_facts": [
+        "源： x.com/rileybrown/sta… Riley Brown @rileybrown This is a huge update... On the recent update to codex, the apps you use in browser stay signed in... If you watched the latest @lennysan @danshipper podcast you know how significant this is. Im serious, this could entirely replace web browsers for me. Instead of having scattered tabs on your computer, you no…"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_e719510491d7445ead39bbf61cb3e195"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "With the new Chrome extension, Codex can quickly move through repetitive browser work, like navigati...",
+      "core_facts": [
+        "With the new Chrome extension, Codex can quickly move through repetitive browser work, like navigating structured pages and complex data entry flows. Under the hood, it writes and runs code to navigate and complete tasks. Your browser does not support the video tag. 🔗 View on Twitter 💬 21 🔄 45 ❤️ 1143 👀 124650 📊 137 ⚡ Powered by xgo.ing"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_10b4f7ff0597483dba0aa0e5f14069dc"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "It’s live!",
+      "core_facts": [
+        "It’s live! Notion Developers @NotionDevs Introducing: the Notion Developer Platform New building blocks that help you (and your coding agents) sync any data source, build any tool, and orchestrate any agent. Follow along 👇 x.com/i/broadcasts/1… K 🔗 View Quoted Tweet 💬 5 🔄 2 ❤️ 45 👀 5417 📊 10 ⚡ Powered by xgo.ing"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_78fed7cf3e8d46118a26357f73c1b4a6"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "3/2026最大创业陷阱 Anthropic引了个数据：42%的创业失败因为做了没人要的东西。AI之前的数字。他们说这个比例只会继续往上走 为什么？ 过去做prototype要几个月——这本身就...",
+      "core_facts": [
+        "3/2026最大创业陷阱 Anthropic引了个数据：42%的创业失败因为做了没人要的东西。AI之前的数字。他们说这个比例只会继续往上走 为什么？ 过去做prototype要几个月——这本身就是刹车片 现在Claude Code一个下午出原型——刹车片被拆了 能跑的prototype≠解决了真问题 它只是你找用户聊天时手里的诱饵 💬 1 🔄 0 ❤️ 0 👀 177 📊 1 ⚡ Powered by xgo.ing"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_c2a486804bfe4baebcdd5f9459432b36"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个session健忘，每次重新推导架构，结果都不一...",
+      "core_facts": [
+        "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个session健忘，每次重新推导架构，结果都不一样 三个月后你的代码库：每块单独看合理，放一起就是精分 解药：写一份CLAUDE.md——你的\"项目宪法\" 每次开session先读再干 💬 1 🔄 0 ❤️ 0 👀 930 📊 1 ⚡ Powered by xgo.ing"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_337312b433184570a7843af2113a17de"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "GenAI Summit SF 2026：湾区数万人大会！ 🔗 Will粉丝专属购票链接（可享受15%优惠）： 专属Code：WILL 专属链接： Luma：https://t.co/OoGPFp...",
+      "core_facts": [
+        "GenAI Summit SF 2026：湾区数万人大会！ 🔗 Will粉丝专属购票链接（可享受15%优惠）： 专属Code：WILL 专属链接： Luma luma.com/genaisummit26?… H Eventbrite eventbrite.com/e/198554516303… V x.com/FinanceYF5/sta… c AI Will @FinanceYF5 🚀 7月18-19，旧金山 Palace of Fine Arts OpenAI、Anthropic、Google DeepMind科学家同台。 刚融资$650M的AI labs联创田渊栋在台上。 5届峰会，79,000人社区，500+ VC、200+展商在场。 第二日世界杯决赛大屏现场直播⚽️ 🏆 GenAI Summit S…"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_c0c267cfe46d47939ba98dd7e3d0a81c"
+      ]
+    }
+  ],
+  "created_clusters": 9,
+  "effective_multi_item_cluster_count": 0,
+  "follow_up_event": {
+    "false": 9
+  },
+  "manual_review_suggestions": {
+    "high_uncertain": [],
+    "possible_miscluster": [],
+    "possible_missplit": [],
+    "top_review_items_or_clusters": []
+  },
+  "multi_item_cluster_count": 0,
+  "relations": {
+    "new_info": 8,
+    "source_material": 1
+  },
+  "reported_multi_item_cluster_count": 0,
+  "reviewed_multi_item_cluster_count": 0,
+  "same_event": {
+    "true": 9
+  },
+  "same_topic": {
+    "true": 9
+  },
+  "should_notify_count": 0,
+  "should_update_cluster_card_count": 9,
+  "suspect_multi_item_cluster_count": 0,
+  "top_clusters": [
+    {
+      "cluster_id": "cluster_ffa17f58e8e9419aa3965af27000ff29",
+      "cluster_title": "experiment: livetweeting the @AnthropicAI code with claude event! first up - @katelyn_lesse and @an...",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_f7fa8dc075d04dc9b9c13720f5aab566",
+      "cluster_title": "I'm at the Claude w/ Code event in San Francisco, and I'll be live blogging the keynote here https:/...",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_f8727ae4492a4b8382b6f9077a239d6b",
+      "cluster_title": "The Notion command-line interface (CLI) is a new way to work with Notion programmatically, made just...",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_1941333731024ee0b78152b3763fbe43",
+      "cluster_title": "源：https://t.co/O7NnTsIIPF",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_f60fba32a03b42478be8a5051a9dca0e",
+      "cluster_title": "With the new Chrome extension, Codex can quickly move through repetitive browser work, like navigati...",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_f5589d3e48084f668e3bea2f98afc85f",
+      "cluster_title": "It’s live!",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_21e5a19fef23485dbd1f386b21fdee71",
+      "cluster_title": "3/2026最大创业陷阱 Anthropic引了个数据：42%的创业失败因为做了没人要的东西。AI之前的数字。他们说这个比例只会继续往上走 为什么？ 过去做prototype要几个月——这本身就...",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_194707b881914e3dbe66cdf18ab7907e",
+      "cluster_title": "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个session健忘，每次重新推导架构，结果都不一...",
+      "item_count": 1
+    },
+    {
+      "cluster_id": "cluster_a86eb5e1e0794a69b1355063b534b209",
+      "cluster_title": "GenAI Summit SF 2026：湾区数万人大会！ 🔗 Will粉丝专属购票链接（可享受15%优惠）： 专属Code：WILL 专属链接： Luma：https://t.co/OoGPFp...",
+      "item_count": 1
+    }
+  ],
+  "uncertain_clusters": 0
+}
+```
+
+## 10. Cluster Seed Review
+
+```json
+{
+  "cluster_samples": [
+    {
+      "cluster_status": "active",
+      "cluster_title": "experiment: livetweeting the @AnthropicAI code with claude event! first up - @katelyn_lesse and @an...",
+      "core_facts": [
+        "experiment: livetweeting the @AnthropicAI code with claude event! first up - @katelyn_lesse and @angjiang on claude platform! 💬 7 🔄 4 ❤️ 38 👀 5049 📊 14 ⚡ Powered by xgo.ing"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_5538593657aa4724845b64f8a37be2d0"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "I'm at the Claude w/ Code event in San Francisco, and I'll be live blogging the keynote here https:/...",
+      "core_facts": [
+        "I'm at the Claude w/ Code event in San Francisco, and I'll be live blogging the keynote here simonwillison.net/2026/May/6/cod… 💬 13 🔄 18 ❤️ 232 👀 17792 📊 47 ⚡ Powered by xgo.ing"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_9c238e31fd6c41f9b024b11a2d4df94a"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "The Notion command-line interface (CLI) is a new way to work with Notion programmatically, made just...",
+      "core_facts": [
+        "The Notion command-line interface (CLI) is a new way to work with Notion programmatically, made just for developers and coding agents. Use it to sign in to your workspace, read and take action in Notion, build and deploy Workers, and extend Notion with code. To install, run curl -fsSL ntn.dev | bash. 💬 2 🔄 1 ❤️ 28 👀 5358 📊 7 ⚡ Powered by xgo.ing"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_5d3f098ec8a5416d8a8c16612cc8e2db"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "源：https://t.co/O7NnTsIIPF",
+      "core_facts": [
+        "源： x.com/rileybrown/sta… Riley Brown @rileybrown This is a huge update... On the recent update to codex, the apps you use in browser stay signed in... If you watched the latest @lennysan @danshipper podcast you know how significant this is. Im serious, this could entirely replace web browsers for me. Instead of having scattered tabs on your computer, you no…"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_e719510491d7445ead39bbf61cb3e195"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "With the new Chrome extension, Codex can quickly move through repetitive browser work, like navigati...",
+      "core_facts": [
+        "With the new Chrome extension, Codex can quickly move through repetitive browser work, like navigating structured pages and complex data entry flows. Under the hood, it writes and runs code to navigate and complete tasks. Your browser does not support the video tag. 🔗 View on Twitter 💬 21 🔄 45 ❤️ 1143 👀 124650 📊 137 ⚡ Powered by xgo.ing"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_10b4f7ff0597483dba0aa0e5f14069dc"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "It’s live!",
+      "core_facts": [
+        "It’s live! Notion Developers @NotionDevs Introducing: the Notion Developer Platform New building blocks that help you (and your coding agents) sync any data source, build any tool, and orchestrate any agent. Follow along 👇 x.com/i/broadcasts/1… K 🔗 View Quoted Tweet 💬 5 🔄 2 ❤️ 45 👀 5417 📊 10 ⚡ Powered by xgo.ing"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_78fed7cf3e8d46118a26357f73c1b4a6"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "3/2026最大创业陷阱 Anthropic引了个数据：42%的创业失败因为做了没人要的东西。AI之前的数字。他们说这个比例只会继续往上走 为什么？ 过去做prototype要几个月——这本身就...",
+      "core_facts": [
+        "3/2026最大创业陷阱 Anthropic引了个数据：42%的创业失败因为做了没人要的东西。AI之前的数字。他们说这个比例只会继续往上走 为什么？ 过去做prototype要几个月——这本身就是刹车片 现在Claude Code一个下午出原型——刹车片被拆了 能跑的prototype≠解决了真问题 它只是你找用户聊天时手里的诱饵 💬 1 🔄 0 ❤️ 0 👀 177 📊 1 ⚡ Powered by xgo.ing"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_c2a486804bfe4baebcdd5f9459432b36"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个session健忘，每次重新推导架构，结果都不一...",
+      "core_facts": [
+        "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个session健忘，每次重新推导架构，结果都不一样 三个月后你的代码库：每块单独看合理，放一起就是精分 解药：写一份CLAUDE.md——你的\"项目宪法\" 每次开session先读再干 💬 1 🔄 0 ❤️ 0 👀 930 📊 1 ⚡ Powered by xgo.ing"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_337312b433184570a7843af2113a17de"
+      ]
+    },
+    {
+      "cluster_status": "active",
+      "cluster_title": "GenAI Summit SF 2026：湾区数万人大会！ 🔗 Will粉丝专属购票链接（可享受15%优惠）： 专属Code：WILL 专属链接： Luma：https://t.co/OoGPFp...",
+      "core_facts": [
+        "GenAI Summit SF 2026：湾区数万人大会！ 🔗 Will粉丝专属购票链接（可享受15%优惠）： 专属Code：WILL 专属链接： Luma luma.com/genaisummit26?… H Eventbrite eventbrite.com/e/198554516303… V x.com/FinanceYF5/sta… c AI Will @FinanceYF5 🚀 7月18-19，旧金山 Palace of Fine Arts OpenAI、Anthropic、Google DeepMind科学家同台。 刚融资$650M的AI labs联创田渊栋在台上。 5届峰会，79,000人社区，500+ VC、200+展商在场。 第二日世界杯决赛大屏现场直播⚽️ 🏆 GenAI Summit S…"
+      ],
+      "item_count": 1,
+      "known_angles": [],
+      "representative_items": [
+        "item_c0c267cfe46d47939ba98dd7e3d0a81c"
+      ]
+    }
+  ],
+  "evidence_files": [
+    "cluster_seed_candidates.jsonl",
+    "cluster_seed_rejections.jsonl",
+    "clusters_final.jsonl"
+  ],
+  "multi_item_cluster_count": 0
+}
+```
+
+## 11. Budget Skip Quality
+
+```json
+{
+  "downstream_starved": false,
+  "stage_budget_profile": "phase1_3_advisory",
+  "stages": {
+    "cluster_card_patch": {
+      "budget": 14000,
+      "calls": 0,
+      "consumed_tokens": 0,
+      "remaining_budget": 14000,
+      "skipped": 9,
+      "skipped_due_to_budget": 0
+    },
+    "item_card": {
+      "budget": 68000,
+      "calls": 0,
+      "consumed_tokens": 0,
+      "remaining_budget": 68000,
+      "skipped": 44,
+      "skipped_due_to_budget": 0
+    },
+    "item_cluster_relation": {
+      "budget": 50000,
+      "calls": 0,
+      "consumed_tokens": 0,
+      "remaining_budget": 50000,
+      "skipped": 2,
+      "skipped_due_to_budget": 0
+    },
+    "item_relation": {
+      "budget": 62000,
+      "calls": 0,
+      "consumed_tokens": 0,
+      "remaining_budget": 62000,
+      "skipped": 8,
+      "skipped_due_to_budget": 0
+    },
+    "source_profile": {
+      "budget": 6000,
+      "calls": 0,
+      "consumed_tokens": 0,
+      "remaining_budget": 6000,
+      "skipped": 0,
+      "skipped_due_to_budget": 0
+    }
+  },
+  "total_token_budget": 200000
+}
+```
+
+## 12. Cost / Yield
+
+```json
+[
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 44,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 44,
+    "success": 0,
+    "task_type": "item_card",
+    "total_tokens": 0
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 8,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 8,
+    "success": 0,
+    "task_type": "item_relation",
+    "total_tokens": 0
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 2,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 2,
+    "success": 0,
+    "task_type": "item_cluster_relation",
+    "total_tokens": 0
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 9,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 9,
+    "success": 0,
+    "task_type": "cluster_card_patch",
+    "total_tokens": 0
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 0,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 0,
+    "success": 0,
+    "task_type": "cluster_card_rebuild",
+    "total_tokens": 0
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 0,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 0,
+    "success": 0,
+    "task_type": "source_review",
+    "total_tokens": 0
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 0,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 0,
+    "success": 0,
+    "task_type": "json_repair",
+    "total_tokens": 0
+  }
+]
+```
+
+## 13. Cluster Quality Samples
+
+```json
+[
+  {
+    "cluster_status": "active",
+    "cluster_title": "experiment: livetweeting the @AnthropicAI code with claude event! first up - @katelyn_lesse and @an...",
+    "core_facts": [
+      "experiment: livetweeting the @AnthropicAI code with claude event! first up - @katelyn_lesse and @angjiang on claude platform! 💬 7 🔄 4 ❤️ 38 👀 5049 📊 14 ⚡ Powered by xgo.ing"
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_5538593657aa4724845b64f8a37be2d0"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "I'm at the Claude w/ Code event in San Francisco, and I'll be live blogging the keynote here https:/...",
+    "core_facts": [
+      "I'm at the Claude w/ Code event in San Francisco, and I'll be live blogging the keynote here simonwillison.net/2026/May/6/cod… 💬 13 🔄 18 ❤️ 232 👀 17792 📊 47 ⚡ Powered by xgo.ing"
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_9c238e31fd6c41f9b024b11a2d4df94a"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "The Notion command-line interface (CLI) is a new way to work with Notion programmatically, made just...",
+    "core_facts": [
+      "The Notion command-line interface (CLI) is a new way to work with Notion programmatically, made just for developers and coding agents. Use it to sign in to your workspace, read and take action in Notion, build and deploy Workers, and extend Notion with code. To install, run curl -fsSL ntn.dev | bash. 💬 2 🔄 1 ❤️ 28 👀 5358 📊 7 ⚡ Powered by xgo.ing"
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_5d3f098ec8a5416d8a8c16612cc8e2db"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "源：https://t.co/O7NnTsIIPF",
+    "core_facts": [
+      "源： x.com/rileybrown/sta… Riley Brown @rileybrown This is a huge update... On the recent update to codex, the apps you use in browser stay signed in... If you watched the latest @lennysan @danshipper podcast you know how significant this is. Im serious, this could entirely replace web browsers for me. Instead of having scattered tabs on your computer, you no…"
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_e719510491d7445ead39bbf61cb3e195"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "With the new Chrome extension, Codex can quickly move through repetitive browser work, like navigati...",
+    "core_facts": [
+      "With the new Chrome extension, Codex can quickly move through repetitive browser work, like navigating structured pages and complex data entry flows. Under the hood, it writes and runs code to navigate and complete tasks. Your browser does not support the video tag. 🔗 View on Twitter 💬 21 🔄 45 ❤️ 1143 👀 124650 📊 137 ⚡ Powered by xgo.ing"
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_10b4f7ff0597483dba0aa0e5f14069dc"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "It’s live!",
+    "core_facts": [
+      "It’s live! Notion Developers @NotionDevs Introducing: the Notion Developer Platform New building blocks that help you (and your coding agents) sync any data source, build any tool, and orchestrate any agent. Follow along 👇 x.com/i/broadcasts/1… K 🔗 View Quoted Tweet 💬 5 🔄 2 ❤️ 45 👀 5417 📊 10 ⚡ Powered by xgo.ing"
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_78fed7cf3e8d46118a26357f73c1b4a6"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "3/2026最大创业陷阱 Anthropic引了个数据：42%的创业失败因为做了没人要的东西。AI之前的数字。他们说这个比例只会继续往上走 为什么？ 过去做prototype要几个月——这本身就...",
+    "core_facts": [
+      "3/2026最大创业陷阱 Anthropic引了个数据：42%的创业失败因为做了没人要的东西。AI之前的数字。他们说这个比例只会继续往上走 为什么？ 过去做prototype要几个月——这本身就是刹车片 现在Claude Code一个下午出原型——刹车片被拆了 能跑的prototype≠解决了真问题 它只是你找用户聊天时手里的诱饵 💬 1 🔄 0 ❤️ 0 👀 177 📊 1 ⚡ Powered by xgo.ing"
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_c2a486804bfe4baebcdd5f9459432b36"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个session健忘，每次重新推导架构，结果都不一...",
+    "core_facts": [
+      "5/一种复利的技术债，没人提醒你 Anthropic提出：Agentic Technical Debt 传统技术债线性增长 AI技术债是复利——每个session健忘，每次重新推导架构，结果都不一样 三个月后你的代码库：每块单独看合理，放一起就是精分 解药：写一份CLAUDE.md——你的\"项目宪法\" 每次开session先读再干 💬 1 🔄 0 ❤️ 0 👀 930 📊 1 ⚡ Powered by xgo.ing"
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_337312b433184570a7843af2113a17de"
+    ]
+  },
+  {
+    "cluster_status": "active",
+    "cluster_title": "GenAI Summit SF 2026：湾区数万人大会！ 🔗 Will粉丝专属购票链接（可享受15%优惠）： 专属Code：WILL 专属链接： Luma：https://t.co/OoGPFp...",
+    "core_facts": [
+      "GenAI Summit SF 2026：湾区数万人大会！ 🔗 Will粉丝专属购票链接（可享受15%优惠）： 专属Code：WILL 专属链接： Luma luma.com/genaisummit26?… H Eventbrite eventbrite.com/e/198554516303… V x.com/FinanceYF5/sta… c AI Will @FinanceYF5 🚀 7月18-19，旧金山 Palace of Fine Arts OpenAI、Anthropic、Google DeepMind科学家同台。 刚融资$650M的AI labs联创田渊栋在台上。 5届峰会，79,000人社区，500+ VC、200+展商在场。 第二日世界杯决赛大屏现场直播⚽️ 🏆 GenAI Summit S…"
+    ],
+    "item_count": 1,
+    "known_angles": [],
+    "representative_items": [
+      "item_c0c267cfe46d47939ba98dd7e3d0a81c"
+    ]
+  }
+]
+```
+
+## 14. Source Profile Results
+
+```json
+{
+  "disabled_for_llm_candidates": [],
+  "high_candidates": [],
+  "llm_total_tokens_by_source": {
+    "socialmedia-ai-will-financeyf5": 0,
+    "socialmedia-ak-akhaliq": 0,
+    "socialmedia-akshay-kothari-akothari": 0,
+    "socialmedia-latent-space-latentspacepod": 0,
+    "socialmedia-notion-notionhq": 0,
+    "socialmedia-openai-openai": 0,
+    "socialmedia-simon-willison-simonw": 0
+  },
+  "low_candidates": [],
+  "pending_reviews_created": 0,
+  "pending_reviews_created_all_types": 47,
+  "reviews_suppressed_due_to_insufficient_data": 7,
+  "sources_recomputed": 7,
+  "sources_with_insufficient_data": [
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.25,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.25,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-ai-will-financeyf5",
+      "source_item_rate": 0.25,
+      "source_material_rate": 0.25,
+      "total_items": 20,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 0.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 0.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 0.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-ak-akhaliq",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 13,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-akshay-kothari-akothari",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-latent-space-latentspacepod",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-notion-notionhq",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-openai-openai",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 3,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-simon-willison-simonw",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    }
+  ],
+  "top_sources_by_duplicate_rate": [
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.25,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.25,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-ai-will-financeyf5",
+      "source_item_rate": 0.25,
+      "source_material_rate": 0.25,
+      "total_items": 20,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 0.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 0.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 0.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-ak-akhaliq",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 13,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-akshay-kothari-akothari",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-latent-space-latentspacepod",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-notion-notionhq",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-openai-openai",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 3,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-simon-willison-simonw",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    }
+  ],
+  "top_sources_by_incremental_value_avg": [
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.25,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.25,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-ai-will-financeyf5",
+      "source_item_rate": 0.25,
+      "source_material_rate": 0.25,
+      "total_items": 20,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-akshay-kothari-akothari",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-latent-space-latentspacepod",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-notion-notionhq",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-openai-openai",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 3,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-simon-willison-simonw",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 0.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 0.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 0.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-ak-akhaliq",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 13,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    }
+  ],
+  "top_sources_by_llm_yield": [
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.25,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.25,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-ai-will-financeyf5",
+      "source_item_rate": 0.25,
+      "source_material_rate": 0.25,
+      "total_items": 20,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-akshay-kothari-akothari",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-latent-space-latentspacepod",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-notion-notionhq",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-openai-openai",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 3,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-simon-willison-simonw",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 0.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 0.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 0.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-ak-akhaliq",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 13,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    }
+  ],
+  "top_sources_by_report_value_avg": [
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.25,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.25,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-ai-will-financeyf5",
+      "source_item_rate": 0.25,
+      "source_material_rate": 0.25,
+      "total_items": 20,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-akshay-kothari-akothari",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-latent-space-latentspacepod",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-notion-notionhq",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-openai-openai",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 3,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 1.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 3.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 2.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 1.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 3.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-simon-willison-simonw",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 1,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    },
+    {
+      "created_at": "2026-06-01T02:11:03.794662+00:00",
+      "discovery_value_avg": 0.0,
+      "duplicate_noise_rate": 0.0,
+      "duplicate_rate": 0.0,
+      "fact_value_avg": 0.0,
+      "incremental_value_avg": 0.0,
+      "interpretation_value_avg": 0.0,
+      "llm_high_value_outputs": 0,
+      "llm_priority": "new_source_under_evaluation",
+      "llm_processed_items": 0,
+      "llm_total_tokens": 0,
+      "llm_yield_score": 0.0,
+      "near_duplicate_rate": 0.0,
+      "new_event_rate": 0.0,
+      "non_event_noise_rate": 0.0,
+      "priority_suggestion": "new_source_under_evaluation",
+      "report_value_avg": 0.0,
+      "representative_item_rate": 0.0,
+      "review_acceptance": 0.0,
+      "review_status": "none",
+      "source_id": "socialmedia-ak-akhaliq",
+      "source_item_rate": 0.0,
+      "source_material_rate": 0.0,
+      "total_items": 13,
+      "updated_at": "2026-06-01T02:11:03.794662+00:00"
+    }
+  ]
+}
+```
+
+## 15. Token / Latency / Cache Summary
+
+```json
+[
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 44,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 44,
+    "success": 0,
+    "task_type": "item_card",
+    "total_tokens": 0
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 8,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 8,
+    "success": 0,
+    "task_type": "item_relation",
+    "total_tokens": 0
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 2,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 2,
+    "success": 0,
+    "task_type": "item_cluster_relation",
+    "total_tokens": 0
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 9,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 9,
+    "success": 0,
+    "task_type": "cluster_card_patch",
+    "total_tokens": 0
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 0,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 0,
+    "success": 0,
+    "task_type": "cluster_card_rebuild",
+    "total_tokens": 0
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 0,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 0,
+    "success": 0,
+    "task_type": "source_review",
+    "total_tokens": 0
+  },
+  {
+    "avg_candidates_per_call": null,
+    "avg_latency_ms": 0.0,
+    "cache_hit_tokens": 0,
+    "cache_miss_tokens": 0,
+    "calls": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "llm_call_count": 0,
+    "operation_count": 0,
+    "output_tokens": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "parse_failures": 0,
+    "rate_limit_errors": 0,
+    "retry_count": 0,
+    "skipped": 0,
+    "success": 0,
+    "task_type": "json_repair",
+    "total_tokens": 0
+  }
+]
+```
+
+## 16. Concurrency Summary
+
+```json
+{
+  "actual_calls": 0,
+  "actual_tokens": 0,
+  "avg_latency_ms": 0.0,
+  "by_task": {
+    "cluster_card_patch": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 4,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "cluster_card_patch",
+      "total_tokens": 0
+    },
+    "cluster_card_rebuild": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 4,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "cluster_card_rebuild",
+      "total_tokens": 0
+    },
+    "item_card": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 4,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "item_card",
+      "total_tokens": 0
+    },
+    "item_cluster_relation": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 4,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "item_cluster_relation",
+      "total_tokens": 0
+    },
+    "item_relation": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 4,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "item_relation",
+      "total_tokens": 0
+    },
+    "json_repair": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 4,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "json_repair",
+      "total_tokens": 0
+    },
+    "source_review": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 4,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "source_review",
+      "total_tokens": 0
+    }
+  },
+  "cache_hit_rate": 0.0,
+  "cache_hit_tokens": 0,
+  "calls_per_sec": 0.0,
+  "db_lock_errors": 0,
+  "duration_seconds": 6.791,
+  "final_failures": 0,
+  "max_concurrency": 4,
+  "p50_latency_ms": 0,
+  "p95_latency_ms": 0,
+  "parse_failures": 0,
+  "rate_limit_errors": 0,
+  "repair_retry_count": 0,
+  "tokens_per_sec": 0.0
+}
+```
+
+## 17. Stage Budget Summary
+
+```json
+{
+  "downstream_starved": false,
+  "stage_budget_profile": "phase1_3_advisory",
+  "stages": {
+    "cluster_card_patch": {
+      "budget": 14000,
+      "calls": 0,
+      "consumed_tokens": 0,
+      "remaining_budget": 14000,
+      "skipped": 9,
+      "skipped_due_to_budget": 0
+    },
+    "item_card": {
+      "budget": 68000,
+      "calls": 0,
+      "consumed_tokens": 0,
+      "remaining_budget": 68000,
+      "skipped": 44,
+      "skipped_due_to_budget": 0
+    },
+    "item_cluster_relation": {
+      "budget": 50000,
+      "calls": 0,
+      "consumed_tokens": 0,
+      "remaining_budget": 50000,
+      "skipped": 2,
+      "skipped_due_to_budget": 0
+    },
+    "item_relation": {
+      "budget": 62000,
+      "calls": 0,
+      "consumed_tokens": 0,
+      "remaining_budget": 62000,
+      "skipped": 8,
+      "skipped_due_to_budget": 0
+    },
+    "source_profile": {
+      "budget": 6000,
+      "calls": 0,
+      "consumed_tokens": 0,
+      "remaining_budget": 6000,
+      "skipped": 0,
+      "skipped_due_to_budget": 0
+    }
+  },
+  "total_token_budget": 200000
+}
+```
+
+## 18. Errors / Fallbacks / Retries
+
+```json
+{
+  "db_lock_errors": 0,
+  "failed_batch_count": 4,
+  "fallback_rate": 0.0,
+  "final_failures": 0,
+  "heuristic_fallback_count": 0,
+  "item_card_count": 40,
+  "llm_card_count": 0,
+  "llm_parse_failures": 0,
+  "repair_retry_count": 0,
+  "review_queue_entries_due_to_failure": 10,
+  "single_retry_success_count": 0,
+  "skipped_due_to_max_calls": false,
+  "skipped_due_to_missing_card": 0,
+  "skipped_due_to_no_candidate": 0,
+  "skipped_due_to_token_budget": false,
+  "split_retry_success_count": 0
+}
+```
+
+## 19. Prompt Iteration Notes
+
+```json
+[
+  {
+    "changes": [
+      "event-signature hotspot keys",
+      "generic AI/template token suppression",
+      "scarcer must_run/high candidate priorities",
+      "same_product_different_event and same_thread secondary roles",
+      "cluster seed precision diagnostics",
+      "budget skip quality tiers",
+      "item-card split retry metrics"
+    ],
+    "concurrency": 4,
+    "iteration": "phase1_2f",
+    "max_calls": 0,
+    "max_items": 40,
+    "notes": "Primary relation enums remain stable; prompt versions bumped to v3 with stricter same-event rules.",
+    "sample_mode": "event_hotspots"
+  }
+]
+```
+
+## 20. Manual Review Suggestions
+
+```json
+{
+  "high_uncertain": [],
+  "possible_miscluster": [],
+  "possible_missplit": [],
+  "top_review_items_or_clusters": []
+}
+```
+
+## 21. Readiness Assessment
+
+```json
+{
+  "blockers": [
+    {
+      "name": "heuristic_fallback_rate",
+      "passed": false,
+      "reason": "heuristic emergency fallback must stay low",
+      "threshold": "< 0.1",
+      "value": 0.4
+    },
+    {
+      "name": "chinese_event_detection_rate",
+      "passed": false,
+      "reason": "Chinese event-like items must not all be rejected",
+      "threshold": ">= 0.5",
+      "value": 0.2857
+    },
+    {
+      "name": "effective_multi_item_clusters",
+      "passed": false,
+      "reason": "dry-run produced useful same-event clusters",
+      "threshold": ">= 1",
+      "value": 0
+    },
+    {
+      "name": "small_scoped_real_write_rehearsal",
+      "passed": false,
+      "reason": "production readiness requires a scoped write rehearsal",
+      "threshold": true,
+      "value": false
+    }
+  ],
+  "gates": [
+    {
+      "name": "heuristic_fallback_rate",
+      "passed": false,
+      "reason": "heuristic emergency fallback must stay low",
+      "threshold": "< 0.1",
+      "value": 0.4
+    },
+    {
+      "name": "parse_failure_fallback_rate",
+      "passed": true,
+      "reason": "parse failures must not dominate cards",
+      "threshold": "< 0.03",
+      "value": 0.0
+    },
+    {
+      "name": "budget_skip_fallback_rate",
+      "passed": true,
+      "reason": "budget fallback must not starve candidate-bearing cards",
+      "threshold": "< 0.05",
+      "value": 0.0
+    },
+    {
+      "name": "skipped_must_run_candidates",
+      "passed": true,
+      "reason": "must-run candidates are protected",
+      "threshold": 0,
+      "value": 0
+    },
+    {
+      "name": "pair_relation_conflicts",
+      "passed": true,
+      "reason": "canonical pair verdicts cannot conflict",
+      "threshold": 0,
+      "value": 0
+    },
+    {
+      "name": "db_lock_errors",
+      "passed": true,
+      "reason": "no DB lock errors",
+      "threshold": 0,
+      "value": 0
+    },
+    {
+      "name": "event_signature_valid_rate",
+      "passed": true,
+      "reason": "signatures are concrete enough",
+      "threshold": ">= 0.6",
+      "value": 1.0
+    },
+    {
+      "name": "chinese_event_detection_rate",
+      "passed": false,
+      "reason": "Chinese event-like items must not all be rejected",
+      "threshold": ">= 0.5",
+      "value": 0.2857
+    },
+    {
+      "name": "accepted_garbage_product_count",
+      "passed": true,
+      "reason": "URL/date/number/long-fragment products must be rejected",
+      "threshold": 0,
+      "value": 0
+    },
+    {
+      "name": "effective_multi_item_clusters",
+      "passed": false,
+      "reason": "dry-run produced useful same-event clusters",
+      "threshold": ">= 1",
+      "value": 0
+    },
+    {
+      "name": "suspect_multi_item_clusters",
+      "passed": true,
+      "reason": "no suspect multi-item clusters accepted",
+      "threshold": 0,
+      "value": 0
+    },
+    {
+      "name": "small_scoped_real_write_rehearsal",
+      "passed": false,
+      "reason": "production readiness requires a scoped write rehearsal",
+      "threshold": true,
+      "value": false
+    }
+  ],
+  "ready": false,
+  "verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE"
+}
+```
+
+## 22. Recommendations
+
+- Add vector indexes for item_cards and cluster_cards before larger runs.
+- Keep primary relation enum unchanged for now; it covered Phase 1.1 control flow.
+- Collect more source_signals before trusting source_profile priority suggestions.
+- Run a larger dry-run before any write-real-db semantic pass.
+
+## 10. Concurrency Summary
+
+```json
+{
+  "actual_calls": 0,
+  "actual_tokens": 0,
+  "avg_latency_ms": 0.0,
+  "by_task": {
+    "cluster_card_patch": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 4,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "cluster_card_patch",
+      "total_tokens": 0
+    },
+    "cluster_card_rebuild": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 4,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "cluster_card_rebuild",
+      "total_tokens": 0
+    },
+    "item_card": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 4,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "item_card",
+      "total_tokens": 0
+    },
+    "item_cluster_relation": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 4,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "item_cluster_relation",
+      "total_tokens": 0
+    },
+    "item_relation": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 4,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "item_relation",
+      "total_tokens": 0
+    },
+    "json_repair": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 4,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "json_repair",
+      "total_tokens": 0
+    },
+    "source_review": {
+      "avg_latency_ms": 0.0,
+      "cache_hit_tokens": 0,
+      "calls": 0,
+      "concurrency": 4,
+      "db_lock_errors": 0,
+      "failed": 0,
+      "p50_latency_ms": 0,
+      "p95_latency_ms": 0,
+      "parse_failures": 0,
+      "rate_limit_errors": 0,
+      "retry_count": 0,
+      "success": 0,
+      "task_type": "source_review",
+      "total_tokens": 0
+    }
+  },
+  "cache_hit_rate": 0.0,
+  "cache_hit_tokens": 0,
+  "calls_per_sec": 0.0,
+  "db_lock_errors": 0,
+  "duration_seconds": 6.791,
+  "final_failures": 0,
+  "max_concurrency": 4,
+  "p50_latency_ms": 0,
+  "p95_latency_ms": 0,
+  "parse_failures": 0,
+  "rate_limit_errors": 0,
+  "repair_retry_count": 0,
+  "tokens_per_sec": 0.0
+}
+```
+
+## 14. Readiness Assessment
+
+```json
+{
+  "blockers": [
+    {
+      "name": "heuristic_fallback_rate",
+      "passed": false,
+      "reason": "heuristic emergency fallback must stay low",
+      "threshold": "< 0.1",
+      "value": 0.4
+    },
+    {
+      "name": "chinese_event_detection_rate",
+      "passed": false,
+      "reason": "Chinese event-like items must not all be rejected",
+      "threshold": ">= 0.5",
+      "value": 0.2857
+    },
+    {
+      "name": "effective_multi_item_clusters",
+      "passed": false,
+      "reason": "dry-run produced useful same-event clusters",
+      "threshold": ">= 1",
+      "value": 0
+    },
+    {
+      "name": "small_scoped_real_write_rehearsal",
+      "passed": false,
+      "reason": "production readiness requires a scoped write rehearsal",
+      "threshold": true,
+      "value": false
+    }
+  ],
+  "gates": [
+    {
+      "name": "heuristic_fallback_rate",
+      "passed": false,
+      "reason": "heuristic emergency fallback must stay low",
+      "threshold": "< 0.1",
+      "value": 0.4
+    },
+    {
+      "name": "parse_failure_fallback_rate",
+      "passed": true,
+      "reason": "parse failures must not dominate cards",
+      "threshold": "< 0.03",
+      "value": 0.0
+    },
+    {
+      "name": "budget_skip_fallback_rate",
+      "passed": true,
+      "reason": "budget fallback must not starve candidate-bearing cards",
+      "threshold": "< 0.05",
+      "value": 0.0
+    },
+    {
+      "name": "skipped_must_run_candidates",
+      "passed": true,
+      "reason": "must-run candidates are protected",
+      "threshold": 0,
+      "value": 0
+    },
+    {
+      "name": "pair_relation_conflicts",
+      "passed": true,
+      "reason": "canonical pair verdicts cannot conflict",
+      "threshold": 0,
+      "value": 0
+    },
+    {
+      "name": "db_lock_errors",
+      "passed": true,
+      "reason": "no DB lock errors",
+      "threshold": 0,
+      "value": 0
+    },
+    {
+      "name": "event_signature_valid_rate",
+      "passed": true,
+      "reason": "signatures are concrete enough",
+      "threshold": ">= 0.6",
+      "value": 1.0
+    },
+    {
+      "name": "chinese_event_detection_rate",
+      "passed": false,
+      "reason": "Chinese event-like items must not all be rejected",
+      "threshold": ">= 0.5",
+      "value": 0.2857
+    },
+    {
+      "name": "accepted_garbage_product_count",
+      "passed": true,
+      "reason": "URL/date/number/long-fragment products must be rejected",
+      "threshold": 0,
+      "value": 0
+    },
+    {
+      "name": "effective_multi_item_clusters",
+      "passed": false,
+      "reason": "dry-run produced useful same-event clusters",
+      "threshold": ">= 1",
+      "value": 0
+    },
+    {
+      "name": "suspect_multi_item_clusters",
+      "passed": true,
+      "reason": "no suspect multi-item clusters accepted",
+      "threshold": 0,
+      "value": 0
+    },
+    {
+      "name": "small_scoped_real_write_rehearsal",
+      "passed": false,
+      "reason": "production readiness requires a scoped write rehearsal",
+      "threshold": true,
+      "value": false
+    }
+  ],
+  "ready": false,
+  "verdict": "NOT_READY_FOR_SCOPED_REAL_SEMANTIC_WRITE"
+}
+```

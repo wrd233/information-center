@@ -755,7 +755,8 @@ def generate_information_objects(
                 item_relation = "source_material" if item["item_id"] == representative_entry["item"]["item_id"] else "same_event_repeat"
                 relation = next((row for row in relation_rows if item["item_id"] in {row["left"]["item_id"], row["right"]["item_id"]} and row["same_event"]), None)
                 if relation:
-                    item_relation = relation["relation_type"]
+                    if item["item_id"] != representative_entry["item"]["item_id"]:
+                        item_relation = relation["relation_type"]
                 discovery_value = 1 if item["item_id"] == representative_entry["item"]["item_id"] else 0
                 fact_value = 1 if item["item_id"] == representative_entry["item"]["item_id"] else 0
                 incremental_value = 2 if item_relation in {"same_event_new_info", "related_with_new_info"} else 0

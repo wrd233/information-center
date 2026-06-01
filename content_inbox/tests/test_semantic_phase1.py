@@ -27,6 +27,7 @@ from app.semantic.signatures import extract_event_signature
 from app.semantic.source_profiles import get_profile, recompute_source_profiles
 from app.storage import InboxStore
 from scripts.evaluate_ops_quality import build_false_negative_traces, build_semantic_judge_dry_run_proposals
+from scripts.real_use_smoke import run_smoke
 
 
 def make_store(tmp_path: Path) -> InboxStore:
@@ -423,6 +424,35 @@ def test_generate_information_objects_places_semantic_judge_result_in_review_que
     assert call_log is not None
     assert call_log["status"] == "skipped"
     assert candidate["decision_source"] == "llm"
+
+
+def test_generate_information_objects_preserves_cluster_source_material(tmp_path: Path) -> None:
+    store = make_store(tmp_path)
+    left = seed_event_item(
+        store,
+        "OpenAI launches GPT-5.5 for coding agents",
+        summary="OpenAI launched GPT-5.5 for coding agents.",
+        source_id="source-left",
+        published_at="2026-05-30T10:00:00+00:00",
+        url="https://example.com/openai-gpt55-left",
+    )
+    right = seed_event_item(
+        store,
+        "OpenAI rolls out GPT 5.5 for software agents",
+        summary="OpenAI rolled out GPT 5.5 for software agents.",
+        source_id="source-right",
+        published_at="2026-05-30T10:05:00+00:00",
+        url="https://example.com/openai-gpt55-right",
+    )
+
+    result = generate_information_objects(store, "run-test", [left, right])
+
+    assert result["auto_merged"] >= 1
+    with store.connect() as conn:
+        rows = conn.execute("SELECT primary_relation FROM cluster_items ORDER BY primary_relation").fetchall()
+    relations = [row["primary_relation"] for row in rows]
+    assert relations.count("source_material") == 1
+    assert any(relation in {"same_event_repeat", "same_event_new_info"} for relation in relations)
 
 
 def test_process_item_clusters_keeps_llm_absorption_as_review_proposal(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -842,6 +872,43 @@ def test_evaluate_dry_run_writes_report_not_source_db(tmp_path: Path) -> None:
     )
     assert result["ok"] is True
     assert Path(result["report_path"]).exists()
+
+
+def test_real_use_smoke_uses_temp_db_and_generates_event_report(tmp_path: Path) -> None:
+    source_store = make_store(tmp_path)
+    left = seed_event_item(
+        source_store,
+        "OpenAI launches GPT-5.5 for coding agents",
+        summary="OpenAI launched GPT-5.5 for coding agents.",
+        source_id="source-left",
+        published_at="2026-05-30T10:00:00+00:00",
+        url="https://example.com/openai-left",
+    )
+    seed_event_item(
+        source_store,
+        "OpenAI rolls out GPT 5.5 for software agents",
+        summary="OpenAI rolled out GPT 5.5 for software agents.",
+        source_id="source-right",
+        published_at="2026-05-30T10:05:00+00:00",
+        url="https://example.com/openai-right",
+    )
+
+    result = run_smoke(
+        db_path=str(source_store.database_path),
+        output=str(tmp_path / "smoke"),
+        limit=10,
+        sample_mode="recent",
+        source_filter=None,
+        source_url_prefix=None,
+    )
+
+    assert result["ok"] is True
+    assert result["summary"]["items_sampled"] == 2
+    assert result["summary"]["multi_item_clusters"] == 1
+    report = Path(result["report_path"]).read_text(encoding="utf-8")
+    assert "输入策略: 仅消费已物化事件" in report
+    with source_store.connect() as conn:
+        assert conn.execute("SELECT COUNT(*) AS n FROM event_clusters").fetchone()["n"] == 0
     assert Path(result["summary_path"]).exists()
     with source_store.connect() as conn:
         assert conn.execute("SELECT COUNT(*) AS n FROM item_cards").fetchone()["n"] == 0
