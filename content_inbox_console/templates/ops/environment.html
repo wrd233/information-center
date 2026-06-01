@@ -7,13 +7,30 @@
 <header class="page-header">
   <div>
     <h1>环境与数据库</h1>
-    <p>确认当前工作数据库（Fresh DB）的身份和状态。Legacy DB 仅用于校验证明，不作为业务数据来源。</p>
+    <p>确认当前工作数据库的身份和状态。{% if preview_manifest %}← 当前连接 <strong>LLM Preview</strong> 环境{% endif %}</p>
   </div>
   <div class="header-actions">
     <a href="/environment" class="btn btn-ghost btn-sm">刷新</a>
     <a href="/reset" class="btn btn-secondary btn-sm">数据清理</a>
   </div>
 </header>
+
+{% if preview_manifest %}
+<div class="alert" style="background:var(--color-accent); color:var(--color-on-accent); border:none;">
+  <strong>🧪 LLM Preview 环境已激活</strong>
+  <div style="font-size:0.82rem; margin-top:0.25rem;">
+    Preview DB: <code>{{ preview_manifest.preview_db }}</code><br>
+    采样: {{ preview_manifest.sampled_items }} 条 ({{ preview_manifest.sample_mode }})<br>
+    Write mode: {{ preview_manifest.write_mode }}<br>
+    Auto-merge: 已禁用<br>
+    {% if preview_manifest.llm_enabled %}
+    LLM: {{ preview_manifest.llm_provider }}, {{ preview_manifest.llm_calls_succeeded }}/{{ preview_manifest.max_llm_calls }} 成功<br>
+    {% else %}
+    LLM: 未启用<br>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
 
 {% if environment.item_count or environment.source_count or environment.run_count %}
 <div class="alert alert-warning">

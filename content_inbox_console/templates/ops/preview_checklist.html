@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}Preview 验收清单 - 信息中心作战台{% endblock %}
+{% block page_title %}LLM Preview 验收清单{% endblock %}
+
+{% block content %}
+
+<header class="page-header">
+  <div>
+    <h1>🧪 LLM Preview 验收清单</h1>
+    <p>使用此清单检查 LLM Preview 环境是否正确搭建，LLM 产出是否可信。</p>
+  </div>
+  {% if preview_manifest %}
+  <div class="header-actions">
+    <span class="tag" style="background:var(--color-accent); color:var(--color-on-accent);">LLM Preview 已激活</span>
+  </div>
+  {% endif %}
+</header>
+
+{% if not preview_manifest %}
+<div class="alert alert-warning">
+  <strong>⚠️ 当前未检测到 LLM Preview 环境</strong>
+  <p>请先运行 build_llm_preview_env.py 构建 preview DB，然后使用 CONTENT_INBOX_DB_PATH 指向 preview DB 启动 backend。</p>
+  <pre class="text-xs" style="margin-top:0.5rem;">CONTENT_INBOX_DB_PATH=data/environments/llm_preview/content_inbox.db PYTHONPATH=. python3 -m app.server</pre>
+</div>
+{% endif %}
+
+{% if preview_manifest %}
+<!-- Preview Environment Summary -->
+<section class="card" style="margin-bottom:1rem;">
+  <div class="card-header"><strong>📋 环境信息</strong></div>
+  <div class="card-body">
+    <div class="summary-list">
+      <dt>Preview DB</dt><dd><code class="text-xs break-all">{{ preview_manifest.preview_db }}</code></dd>
+      <dt>来源 DB</dt><dd><code class="text-xs break-all">{{ preview_manifest.source_db }}</code></dd>
+      <dt>构建时间</dt><dd>{{ preview_manifest.created_at }}</dd>
+      <dt>采样模式</dt><dd>{{ preview_manifest.sample_mode }}</dd>
+      <dt>采样数量</dt><dd>{{ preview_manifest.sampled_items }} / 限制 {{ preview_manifest.limit }}</dd>
+      <dt>真实库条目数</dt><dd>{{ preview_manifest.real_db_item_count }}</dd>
+      <dt>真实库信息源数</dt><dd>{{ preview_manifest.real_db_source_count }}</dd>
+      <dt>写入模式</dt><dd><span class="status-badge success">preview_db_only（未写真实库）</span></dd>
+      <dt>自动合并</dt><dd><span class="status-badge muted">已禁用</span></dd>
+    </div>
+  </div>
+</section>
+
+<!-- LLM Status -->
+<section class="card" style="margin-bottom:1rem;">
+  <div class="card-header"><strong>🤖 LLM 状态</strong></div>
+  <div class="card-body">
+    {% if preview_manifest.llm_enabled %}
+    <div class="summary-list">
+      <dt>LLM Provider</dt><dd>{{ preview_manifest.llm_provider }}</dd>
+      <dt>最大调用数</dt><dd>{{ preview_manifest.max_llm_calls }}</dd>
+      <dt>成功调用</dt><dd><span class="status-badge success">{{ preview_manifest.llm_calls_succeeded }}</span></dd>
+      <dt>失败调用</dt><dd><span class="status-badge {{ 'danger' if preview_manifest.llm_calls_failed else 'muted' }}">{{ preview_manifest.llm_calls_failed }}</span></dd>
+      <dt>Schema 无效</dt><dd><span class="status-badge {{ 'danger' if preview_manifest.llm_calls_schema_invalid else 'muted' }}">{{ preview_manifest.llm_calls_schema_invalid }}</span></dd>
+      <dt>运行模式</dt><dd>{{ preview_manifest.llm_modes_run | join(', ') or '无' }}</dd>
+      <dt>LLM Proposals</dt>
+      <dd>
+        {% for mode, count in preview_manifest.llm_proposals.items() %}
+        <span class="tag">{{ mode }}: {{ count }}</span>
+        {% endfor %}
+        {% if not preview_manifest.llm_proposals %}无{% endif %}
+      </dd>
+    </div>
+    {% else %}
+    <p class="text-sm text-muted">LLM 未启用。设置 CONTENT_INBOX_LLM_ENABLE_LIVE=1 并重新构建 preview 环境以启用 live LLM。</p>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Pipeline Stats -->
+<section class="card" style="margin-bottom:1rem;">
+  <div class="card-header"><strong>📊 流水线统计</strong></div>
+  <div class="card-body">
+    <div class="summary-list">
+      <dt>待审核数</dt><dd><a href="/review-queue">{{ preview_manifest.review_queue_pending }}</a></dd>
+      <dt>事件数</dt><dd><a href="/events">{{ preview_manifest.event_count }}</a></dd>
+      <dt>聚合线索数</dt><dd><a href="/clusters">{{ preview_manifest.cluster_count }}</a></dd>
+      <dt>总 LLM 调用数</dt><dd>{{ preview_manifest.total_llm_calls }}</dd>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Checklist -->
+<section class="card" style="margin-bottom:1rem;">
+  <div class="card-header"><strong>✅ 验收清单</strong></div>
+  <div class="card-body">
+    <table class="data-table">
+      <thead>
+        <tr><th style="width:50px;">#</th><th>检查项</th><th>指引</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-center">1</td>
+          <td>预览环境是否正确</td>
+          <td class="text-sm text-muted">顶部应显示 "🧪 LLM Preview"；<a href="/environment">环境页</a> 应显示 preview DB 路径</td>
+        </tr>
+        <tr>
+          <td class="text-center">2</td>
+          <td>是否有重复事件</td>
+          <td class="text-sm text-muted">打开 <a href="/events">事件页</a>，检查是否有标题高度相似的事件</td>
+        </tr>
+        <tr>
+          <td class="text-center">3</td>
+          <td>是否有错误合并</td>
+          <td class="text-sm text-muted">打开事件详情，检查关联条目是否真正属于同一事件</td>
+        </tr>
+        <tr>
+          <td class="text-center">4</td>
+          <td>LLM evidence 是否可信</td>
+          <td class="text-sm text-muted">打开 <a href="/review-queue">待审核页</a>，展开 "证据" 折叠区查看每条 proposal 的证据</td>
+        </tr>
+        <tr>
+          <td class="text-center">5</td>
+          <td>review queue 是否过多</td>
+          <td class="text-sm text-muted">如果待审核数 &gt; 采样数的 50%，说明 LLM 产生了过多不确定结果</td>
+        </tr>
+        <tr>
+          <td class="text-center">6</td>
+          <td>report 是否像事件简报</td>
+          <td class="text-sm text-muted">打开 <a href="/briefings">简报页</a> 和 <a href="/reports">报告页</a>，检查内容是否可理解</td>
+        </tr>
+        <tr>
+          <td class="text-center">7</td>
+          <td>低置信度 proposal 是否合理</td>
+          <td class="text-sm text-muted">在待审核页筛选 LLM 生成，检查低置信度项是否确实难以判断</td>
+        </tr>
+        <tr>
+          <td class="text-center">8</td>
+          <td>高置信度 proposal 是否可信</td>
+          <td class="text-sm text-muted">高置信度 (≥80%) 的 proposal 应该能通过人工快速确认</td>
+        </tr>
+        <tr>
+          <td class="text-center">9</td>
+          <td>真实 DB 是否未被写入</td>
+          <td class="text-sm text-muted">检查真实 DB 文件的修改时间未变，<a href="/environment">环境页</a> 显示 write_mode=preview_db_only</td>
+        </tr>
+        <tr>
+          <td class="text-center">10</td>
+          <td>是否建议进入 scoped real-write</td>
+          <td class="text-sm text-muted">如果以上检查项大部分通过，可考虑进入小范围真实写入测试</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Decision Guidance -->
+<section class="card">
+  <div class="card-header"><strong>🎯 如何判断是否值得进入 scoped real-write</strong></div>
+  <div class="card-body">
+    <ul style="padding-left:1.2rem; line-height:1.8;">
+      <li class="text-sm"><strong>建议进入</strong>：LLM proposal 正确率 &gt; 70%，review queue 可控，event 聚类合理，briefing 可读</li>
+      <li class="text-sm"><strong>暂缓进入</strong>：LLM 大量产生不确定/低置信度结果，review queue 堆积，事件合并明显错误</li>
+      <li class="text-sm"><strong>不建议进入</strong>：LLM 调用大量失败，schema 校验大量失败，事件聚类完全不合理</li>
+    </ul>
+  </div>
+</section>
+
+{% endblock %}

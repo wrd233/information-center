@@ -6,15 +6,22 @@
   </div>
   <div class="topbar-right">
     <div class="flex items-center gap-sm">
-      {% if environment.is_fresh_database %}
+      {% if preview_manifest %}
+      <span class="status-badge" style="background:var(--color-accent); color:var(--color-on-accent);">🧪 LLM Preview</span>
+      <span class="text-xs text-muted">条目 {{ preview_manifest.sampled_items }} · LLM {{ preview_manifest.llm_calls_succeeded }}/{{ preview_manifest.max_llm_calls }}</span>
+      {% elif environment.database_label == 'llm_preview' %}
+      <span class="status-badge" style="background:var(--color-accent); color:var(--color-on-accent);">🧪 LLM Preview</span>
+      {% elif environment.is_fresh_database %}
       <span class="status-badge success text-xs">当前工作区</span>
       {% else %}
       <span class="status-badge warning text-xs">历史库</span>
       {% endif %}
+      {% if not preview_manifest %}
       {% if environment.real_runs_enabled %}
       <span class="status-badge success text-xs">写入已开启</span>
       {% else %}
       <span class="status-badge muted text-xs">写入已关闭</span>
+      {% endif %}
       {% endif %}
       <span class="text-xs text-muted">
         信息源 {{ environment.source_count or 0 }} ·

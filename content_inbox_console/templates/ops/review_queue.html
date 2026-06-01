@@ -7,31 +7,137 @@
 <header class="page-header">
   <div>
     <h1>待审核（Review Queue）</h1>
-    <p>人工判断工作台。流水线生成的候选事件和聚合线索需要在此确认或忽略。</p>
+    <p>人工判断工作台。流水线生成的候选事件和聚合线索需要在此确认或忽略。
+    {% if preview_manifest %}← 当前连接 LLM Preview 环境{% endif %}
+    </p>
   </div>
-  <form method="get" action="/review-queue" class="form-inline" style="margin:0;">
-    <select name="status" style="max-width:140px;">
-      <option value="pending" {% if status == "pending" %}selected{% endif %}>待处理</option>
-      <option value="resolved" {% if status == "resolved" %}selected{% endif %}>已处理</option>
-      <option value="dismissed" {% if status == "dismissed" %}selected{% endif %}>已忽略</option>
-    </select>
-    <button class="btn btn-secondary btn-sm">筛选</button>
-  </form>
+  <div class="flex gap-sm" style="flex-wrap:wrap; align-items:center;">
+    <form method="get" action="/review-queue" class="form-inline" style="margin:0;">
+      <select name="status" style="max-width:120px;">
+        <option value="pending" {% if status == "pending" %}selected{% endif %}>待处理</option>
+        <option value="resolved" {% if status == "resolved" %}selected{% endif %}>已处理</option>
+        <option value="dismissed" {% if status == "dismissed" %}selected{% endif %}>已忽略</option>
+      </select>
+      <select name="decision_source" style="max-width:120px;">
+        <option value="">全部来源</option>
+        <option value="llm" {% if decision_source == "llm" %}selected{% endif %}>LLM 生成</option>
+        <option value="rule" {% if decision_source == "rule" %}selected{% endif %}>规则生成</option>
+      </select>
+      <button class="btn btn-secondary btn-sm">筛选</button>
+    </form>
+  </div>
 </header>
+
+{% if review_types %}
+<div class="flex gap-sm" style="flex-wrap:wrap; margin-bottom:1rem;">
+  {% for rtype, count in review_types.items() %}
+  {% set type_label = {
+    'llm_candidate_discovery': '🔍 候选发现',
+    'llm_signature_repair': '🔧 签名修复',
+    'llm_relation_judge': '⚖️ 关系判定',
+    'llm_cluster_proposal': '📦 聚合建议',
+    'event_candidate': '📋 候选事件',
+    'event_review': '📋 事件审核',
+    'cluster_review': '📊 聚合审核',
+    'dedupe_review': '🔄 去重审核',
+    'entity_review': '🏷️ 实体审核',
+    'relation_review': '🔗 关系审核',
+    'claim_review': '💬 断言审核',
+    'uncertain_relation': '❓ 不确定关系',
+    'source_priority_suggestion': '📡 源优先级',
+  }.get(rtype, rtype) %}
+  <span class="tag" title="{{ rtype }}">{{ type_label }}: {{ count }}</span>
+  {% endfor %}
+</div>
+{% endif %}
 
 {% if reviews %}
 <div class="card-grid">
   {% for review in reviews %}
-  {% set type_cn = {'event_candidate': '候选事件审核', 'cluster_review': '聚合线索审核', 'dedupe_review': '去重审核', 'entity_review': '实体审核', 'relation_review': '关系审核', 'claim_review': '断言审核'}.get(review.review_type, review.review_type) %}
+  {% set is_llm = review.get('_is_llm', False) %}
+  {% set llm_type = review.get('_llm_proposal_type', review.review_type) %}
+  {% set type_labels = {
+    'llm_candidate_discovery': 'LLM 候选发现',
+    'llm_signature_repair': 'LLM 签名修复',
+    'llm_relation_judge': 'LLM 关系判定',
+    'llm_cluster_proposal': 'LLM 聚合建议',
+    'event_candidate': '候选事件审核',
+    'cluster_review': '聚合线索审核',
+    'dedupe_review': '去重审核',
+    'entity_review': '实体审核',
+    'relation_review': '关系审核',
+    'claim_review': '断言审核',
+    'uncertain_relation': '不确定关系',
+  } %}
+  {% set type_cn = type_labels.get(llm_type, llm_type or '未知类型') %}
   {% set status_cn = {'pending': '待处理', 'resolved': '已处理', 'dismissed': '已忽略'}.get(review.status, review.status) %}
   {% set status_cls = {'pending': 'warning', 'resolved': 'success', 'dismissed': 'muted'}.get(review.status, 'muted') %}
-  <div class="card">
+
+  <div class="card" {% if is_llm %}style="border-left:3px solid var(--color-accent);"{% endif %}>
     <div class="card-header">
-      <strong>{{ type_cn }}</strong>
+      <div>
+        <strong>{{ type_cn }}</strong>
+        {% if is_llm %}<span class="tag" style="background:var(--color-accent); color:var(--color-on-accent);">🤖 LLM</span>{% endif %}
+        {% if not is_llm %}<span class="tag">📏 规则</span>{% endif %}
+      </div>
       <span class="status-badge {{ status_cls }}">{{ status_cn }}</span>
     </div>
     <div class="card-body">
-      <p class="text-sm">{{ review.reason or '需要人工确认此候选事件是否有效。' }}</p>
+      <p class="text-sm">
+        {{ review.reason or '需要人工确认此候选事件是否有效。' }}
+      </p>
+
+      {% if review.get('_relation') %}
+      <div class="flex gap-sm" style="margin-top:0.35rem; flex-wrap:wrap;">
+        {% set rel_labels = {
+          'same_event': '🟢 同一事件',
+          'update': '🔄 更新',
+          'background': '📖 背景',
+          'related': '🔗 关联',
+          'different_event': '🔴 不同事件',
+          'uncertain': '❓ 不确定',
+          'duplicate': '📋 重复',
+          'near_duplicate': '📋 近似重复',
+          'related_with_new_info': '🆕 关联新信息',
+          'same_thread': '🧵 同线程',
+          'same_product_different_event': '📦 同产品不同事件',
+        } %}
+        <span class="tag"><strong>关系:</strong> {{ rel_labels.get(review.get('_relation'), review.get('_relation')) }}</span>
+        {% if review.get('_reason_code') %}<span class="tag text-xs">原因: {{ review.get('_reason_code') }}</span>{% endif %}
+      </div>
+      {% endif %}
+
+      {% if review.get('_confidence') is not none %}
+      <div class="flex gap-sm" style="margin-top:0.35rem; flex-wrap:wrap;">
+        {% set conf = review.get('_confidence', 0) %}
+        {% set conf_level = 'high' if conf >= 0.8 else 'medium' if conf >= 0.5 else 'low' %}
+        {% set conf_label = '高置信度' if conf_level == 'high' else '中等置信度' if conf_level == 'medium' else '低置信度' %}
+        {% set conf_color = 'var(--color-success)' if conf_level == 'high' else 'var(--color-warning)' if conf_level == 'medium' else 'var(--color-danger)' %}
+        <span class="tag" style="border:1px solid {{ conf_color }};">
+          置信度: {{ (conf * 100) | int }}% — {{ conf_label }}
+        </span>
+      </div>
+      {% endif %}
+
+      {% if review.get('_risk_flags') %}
+      <div class="flex gap-sm" style="margin-top:0.35rem; flex-wrap:wrap;">
+        {% for flag in review.get('_risk_flags', []) %}
+        <span class="tag" style="background:var(--color-danger); color:var(--color-on-danger);">⚠️ {{ flag }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if review.get('_evidence') %}
+      <details style="margin-top:0.5rem;">
+        <summary class="text-xs text-muted">证据（{{ review.get('_evidence', []) | length }} 条）</summary>
+        <ul class="text-xs text-muted" style="margin-top:0.25rem; padding-left:1.2rem;">
+          {% for ev in review.get('_evidence', []) %}
+          <li>{{ ev }}</li>
+          {% endfor %}
+        </ul>
+      </details>
+      {% endif %}
+
       <div class="flex items-center gap-sm" style="margin-top:0.5rem;">
         <span class="text-xs text-muted">关联对象：</span>
         {% if review.target_type == 'event' %}
@@ -40,14 +146,23 @@
         {% elif review.target_type == 'cluster' %}
         <a href="/clusters/{{ review.target_id }}" class="btn btn-ghost btn-sm">查看聚合线索</a>
         <code class="text-xs text-muted">{{ review.target_id[:16] }}…</code>
+        {% elif review.target_type == 'candidate_pair' and review.get('_candidate_item_id') %}
+        <a href="/items/{{ review.target_id }}" class="btn btn-ghost btn-sm">查看主条</a>
+        <a href="/items/{{ review.get('_candidate_item_id') }}" class="btn btn-ghost btn-sm">查看候选条</a>
+        <code class="text-xs text-muted">{{ review.target_id[:12] }}…</code>
         {% else %}
-        <code class="text-xs text-muted">{{ review.target_type }}: {{ review.target_id }}</code>
+        <a href="/items/{{ review.target_id }}" class="btn btn-ghost btn-sm">查看条目</a>
+        <code class="text-xs text-muted">{{ review.target_id[:16] }}…</code>
         {% endif %}
       </div>
     </div>
     <div class="card-footer">
-      <form method="post" action="/review-queue/{{ review.id }}/resolve" style="margin:0;"><button class="btn btn-primary btn-sm">确认</button></form>
-      <form method="post" action="/review-queue/{{ review.id }}/dismiss" style="margin:0;"><button class="btn btn-secondary btn-sm">忽略</button></form>
+      <form method="post" action="/review-queue/{{ review.id }}/resolve" style="margin:0;">
+        <button class="btn btn-primary btn-sm">确认</button>
+      </form>
+      <form method="post" action="/review-queue/{{ review.id }}/dismiss" style="margin:0;">
+        <button class="btn btn-secondary btn-sm">忽略</button>
+      </form>
     </div>
     <details class="debug-panel">
       <summary>原始数据</summary>
@@ -56,11 +171,24 @@
   </div>
   {% endfor %}
 </div>
+
+{% if total and total > (reviews | length) %}
+<div class="text-center" style="margin-top:1.5rem;">
+  <p class="text-sm text-muted">显示 {{ reviews | length }} / {{ total }} 条</p>
+</div>
+{% endif %}
+
 {% else %}
 <div class="empty-state">
   <div class="empty-state-icon">✓</div>
   <h3>{{ '没有待处理项' if status == 'pending' else '没有匹配的审核项' }}</h3>
-  <p>完成写入任务并运行事件/审核阶段后，这里会出现需要人工确认的候选项。</p>
+  <p>
+    {% if preview_manifest %}
+    当前 LLM Preview 环境暂无待审核项。执行 build_llm_preview_env.py 时启用 --enable-live-llm 可以生成 LLM proposal。
+    {% else %}
+    完成写入任务并运行事件/审核阶段后，这里会出现需要人工确认的候选项。
+    {% endif %}
+  </p>
 </div>
 {% endif %}
 

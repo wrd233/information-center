@@ -5,15 +5,19 @@
   </div>
 
   <div class="sidebar-env">
-    {% if environment.is_fresh_database %}
+    {% if preview_manifest %}
+    <span class="status-badge" style="background:var(--color-accent); color:var(--color-on-accent);">🧪 LLM Preview</span>
+    {% elif environment.is_fresh_database %}
     <span class="status-badge success">当前工作区</span>
     {% else %}
     <span class="status-badge warning">历史数据库</span>
     {% endif %}
+    {% if not preview_manifest %}
     {% if environment.real_runs_enabled %}
     <span class="status-badge success">写入开启</span>
     {% else %}
     <span class="status-badge muted">写入关闭</span>
+    {% endif %}
     {% endif %}
     <span class="sidebar-env-label text-xs text-muted truncate" title="{{ environment.database_path or '' }}">
       {{ environment.database_label or 'DB' }}
@@ -70,6 +74,11 @@
       <a href="/settings" class="sidebar-link {% if active_page == 'settings' %}active{% endif %}">
         <span class="nav-icon">…</span> 设置
       </a>
+      {% if preview_manifest %}
+      <a href="/preview-checklist" class="sidebar-link {% if active_page == 'preview_checklist' %}active{% endif %}">
+        <span class="nav-icon">🧪</span> Preview 验收
+      </a>
+      {% endif %}
     </div>
 
     <details class="sidebar-advanced" {% if active_page in ('items','dedupe','clusters','entities','relations','claims','topics','timeline','evidence','saved_views','information') %}open{% endif %}>

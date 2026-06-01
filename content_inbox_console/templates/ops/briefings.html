@@ -7,7 +7,9 @@
 <header class="page-header">
   <div>
     <h1>简报（Briefing）</h1>
-    <p>基于事件和待审核项自动生成的每日/每周简报。</p>
+    <p>基于事件和待审核项自动生成的每日/每周简报。
+    {% if preview_manifest %}← 来自 <strong>LLM Preview</strong> 环境 · {{ preview_manifest.event_count }} 事件{% endif %}
+    </p>
   </div>
   <form method="post" action="/briefings/daily/generate" style="margin:0;">
     <button class="btn btn-primary">生成每日简报</button>

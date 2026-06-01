@@ -625,10 +625,37 @@ def event_row(row: Any) -> dict[str, Any]:
     }
 
 
+def _read_preview_manifest(store: InboxStore) -> dict[str, Any] | None:
+    """Read preview_manifest.json from the preview DB's parent directory if it exists."""
+    manifest_path = store.database_path.parent / "preview_manifest.json"
+    if not manifest_path.is_file():
+        return None
+    try:
+        return json.loads(manifest_path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
 @router.get("/api/environment")
 def api_environment(request: Request) -> dict[str, Any]:
     store = get_ops_store(request)
-    return ok({"environment": environment_snapshot(store), "legacy_database": file_proof(legacy_db_path())})
+    result: dict[str, Any] = {
+        "environment": environment_snapshot(store),
+        "legacy_database": file_proof(legacy_db_path()),
+    }
+    manifest = _read_preview_manifest(store)
+    if manifest:
+        result["preview_manifest"] = manifest
+    return ok(result)
+
+
+@router.get("/api/environment/preview-manifest")
+def api_preview_manifest(request: Request) -> dict[str, Any]:
+    store = get_ops_store(request)
+    manifest = _read_preview_manifest(store)
+    if not manifest:
+        return fail("NO_PREVIEW_MANIFEST", "No preview manifest found for current database.")
+    return ok({"preview_manifest": manifest})
 
 
 @router.get("/api/environment/databases")
@@ -2340,11 +2367,55 @@ def api_timeline(request: Request, limit: int = 100) -> dict[str, Any]:
 
 
 @router.get("/api/review-queue")
-def api_review_queue(request: Request, status: str = "pending", limit: int = 50, offset: int = 0) -> dict[str, Any]:
+def api_review_queue(request: Request, status: str = "pending", limit: int = 50, offset: int = 0, review_type: str = "", decision_source: str = "") -> dict[str, Any]:
     store = get_ops_store(request)
     with store.connect() as conn:
-        rows = [dict(r) for r in conn.execute("SELECT * FROM review_queue WHERE status = ? ORDER BY created_at DESC LIMIT ? OFFSET ?", (status, limit, offset)).fetchall()]
-    return ok({"reviews": rows})
+        where_clauses = ["status = ?"]
+        params: list[Any] = [status]
+        if review_type:
+            where_clauses.append("review_type = ?")
+            params.append(review_type)
+        if decision_source == "llm":
+            where_clauses.append("review_type LIKE 'llm_%'")
+        elif decision_source == "rule":
+            where_clauses.append("review_type NOT LIKE 'llm_%'")
+        where = " AND ".join(where_clauses)
+        rows = [dict(r) for r in conn.execute(
+            f"SELECT * FROM review_queue WHERE {where} ORDER BY created_at DESC LIMIT ? OFFSET ?",
+            (*params, limit, offset),
+        ).fetchall()]
+        total = int(conn.execute(
+            f"SELECT COUNT(*) AS n FROM review_queue WHERE {where}", params
+        ).fetchone()["n"] or 0)
+    # Enrich with parsed suggestion_json
+    enriched_reviews = []
+    for review in rows:
+        enriched = dict(review)
+        suggestion = {}
+        try:
+            suggestion = json.loads(review.get("suggestion_json") or "{}")
+        except Exception:
+            pass
+        enriched["_suggestion"] = suggestion
+        enriched["_confidence"] = suggestion.get("confidence")
+        enriched["_relation"] = suggestion.get("relation")
+        enriched["_reason_code"] = suggestion.get("reason_code")
+        enriched["_evidence"] = suggestion.get("evidence")
+        enriched["_risk_flags"] = suggestion.get("risk_flags")
+        enriched["_candidate_item_id"] = suggestion.get("candidate_item_id")
+        enriched["_llm_call_id"] = suggestion.get("llm_call_id")
+        enriched["_is_llm"] = (review.get("review_type") or "").startswith("llm_")
+        enriched["_llm_proposal_type"] = review.get("review_type")
+        enriched_reviews.append(enriched)
+    return ok({"reviews": enriched_reviews, "total": total, "review_types": _review_type_counts(store)})
+
+
+def _review_type_counts(store: InboxStore) -> dict[str, int]:
+    with store.connect() as conn:
+        rows = conn.execute(
+            "SELECT review_type, COUNT(*) AS n FROM review_queue WHERE status = 'pending' GROUP BY review_type ORDER BY n DESC"
+        ).fetchall()
+    return {row["review_type"]: row["n"] for row in rows}
 
 
 @router.post("/api/review-queue/{review_id}/resolve")

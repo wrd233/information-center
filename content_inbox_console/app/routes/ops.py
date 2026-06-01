@@ -22,7 +22,10 @@ def render(request: Request, template: str, context: dict[str, Any]) -> HTMLResp
     context.setdefault("api_base", request.app.state.settings.api_base)
     if "environment" not in context:
         env_response = client(request).get("/api/environment")
-        context["environment"] = data(env_response, {}).get("environment", {})
+        env_data = data(env_response, {})
+        context["environment"] = env_data.get("environment", {})
+        context["legacy_database"] = env_data.get("legacy_database", {})
+        context["preview_manifest"] = env_data.get("preview_manifest")
     if "databases" not in context:
         dbs_response = client(request).get("/api/environment/databases")
         context["databases"] = data(dbs_response, {}).get("databases", [])
@@ -560,9 +563,20 @@ def saved_views(request: Request):
 
 
 @router.get("/review-queue", response_class=HTMLResponse)
-def review_queue(request: Request, status: str = "pending"):
-    response = client(request).get("/api/review-queue", {"status": status})
-    return render(request, "ops/review_queue.html", {"active_page": "review", "status": status, "reviews": data(response, {}).get("reviews", []), "error": err(response)})
+def review_queue(request: Request, status: str = "pending", decision_source: str = ""):
+    params: dict[str, Any] = {"status": status}
+    if decision_source:
+        params["decision_source"] = decision_source
+    response = client(request).get("/api/review-queue", params)
+    return render(request, "ops/review_queue.html", {
+        "active_page": "review",
+        "status": status,
+        "decision_source": decision_source,
+        "reviews": data(response, {}).get("reviews", []),
+        "total": data(response, {}).get("total", 0),
+        "review_types": data(response, {}).get("review_types", {}),
+        "error": err(response),
+    })
 
 
 @router.post("/review-queue/{review_id}/resolve")
@@ -648,3 +662,8 @@ def dashboard_runs_fragment(request: Request):
     return render(request, "ops/fragments/dashboard_recent.html", {
         "runs": data(runs_r, {}).get("runs", []),
     })
+
+
+@router.get("/preview-checklist", response_class=HTMLResponse)
+def preview_checklist(request: Request):
+    return render(request, "ops/preview_checklist.html", {"active_page": "preview_checklist"})
