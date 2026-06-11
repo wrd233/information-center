@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block title %}Inbox Loop - 信息中心作战台{% endblock %}
+{% block page_title %}Inbox Operating Loop{% endblock %}
+
+{% block content %}
+{% set scheduler = loop_status.get('scheduler') or {} %}
+{% set latest = loop_status.get('latest_run') or {} %}
+{% set protection = loop_status.get('recent_run_protection') or {} %}
+{% set confidence = (run_summary.get('summary') or {}).get('confidence') %}
+
+<header class="page-header">
+  <div>
+    <h1>Inbox Operating Loop</h1>
+    <p class="text-sm text-muted">每日与手动运行的默认入口。这里显示 run-level 状态，source 细节默认折叠。</p>
+  </div>
+  <div class="header-actions">
+    <a href="/triage{% if latest.run_id %}?run_id={{ latest.run_id }}{% endif %}" class="btn btn-secondary btn-sm">Triage</a>
+    {% if latest.run_id %}<a href="/runs/{{ latest.run_id }}" class="btn btn-ghost btn-sm">Run 详情</a>{% endif %}
+  </div>
+</header>
+
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+{% if manual_result %}
+<div class="alert alert-info">
+  <strong>手动运行结果</strong>
+  <p class="text-sm">状态：{{ manual_result.status }}{% if manual_result.run_id %} · <a href="/runs/{{ manual_result.run_id }}">{{ manual_result.run_id }}</a>{% endif %}</p>
+  {% if manual_result.recent_run %}<p class="text-sm">最近已有完整运行：<a href="/runs/{{ manual_result.recent_run.run_id }}">{{ manual_result.recent_run.run_id }}</a></p>{% endif %}
+</div>
+{% endif %}
+
+<section class="stats-grid">
+  <div class="metric-card">
+    <span class="metric-label">Scheduler</span>
+    <span class="metric-value">{{ "开启" if scheduler.enabled else "关闭" }}</span>
+    <span class="metric-sub">{{ scheduler.daily_time or '06:00' }} · {{ scheduler.timezone or 'Asia/Shanghai' }}</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">Next Run</span>
+    <span class="metric-value text-sm">{{ scheduler.next_run or '-' }}</span>
+    <span class="metric-sub">last: {{ scheduler.last_status or 'none' }}</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">Latest Full Run</span>
+    <span class="metric-value">{{ latest.status or 'none' }}</span>
+    <span class="metric-sub">{% if latest.run_id %}<a href="/runs/{{ latest.run_id }}">{{ latest.run_id }}</a>{% else %}暂无 registry_full run{% endif %}</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">Confidence</span>
+    <span class="metric-value">{{ confidence or '-' }}</span>
+    <span class="metric-sub">coverage {{ ((run_summary.get('summary') or {}).get('coverage_rate') or 0) }}</span>
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-header">
+    <strong>手动运行</strong>
+    <span class="text-xs text-muted">默认受 30 分钟 recent-run 保护</span>
+  </div>
+  <div class="card-body">
+    {% if not loop_status.real_runs_enabled %}
+    <div class="alert alert-warning">写入模式未启用。需要后端设置 <code>CONTENT_INBOX_ENABLE_REAL_RUNS=1</code> 后才能执行真实 inbox run。</div>
+    {% endif %}
+    {% if protection.would_skip_manual %}
+    <div class="alert alert-info">保护已命中：{{ protection.grace_minutes }} 分钟内已有成功 full run。需要强制运行时勾选 force。</div>
+    {% endif %}
+    {% if loop_status.active_lock and loop_status.active_lock.is_active %}
+    <div class="alert alert-warning">当前有运行锁：{{ loop_status.active_lock.run_id }}</div>
+    {% endif %}
+    <form method="post" action="/inbox-loop/run" class="form-grid">
+      <label>Max sources <input type="number" name="max_sources" value="10000" min="1"></label>
+      <label>Max items/source <input type="number" name="max_items_per_source" value="20" min="1" max="200"></label>
+      <label><input type="checkbox" name="run_synchronously" value="1"> 同步等待</label>
+      <label><input type="checkbox" name="force" value="1"> Force bypass recent-run guard</label>
+      <button class="btn btn-primary" type="submit">触发手动 Run</button>
+    </form>
+  </div>
+</section>
+
+{% if run_summary %}
+{% set summary = run_summary.get('summary') or {} %}
+<section class="card">
+  <div class="card-header">
+    <strong>Run Summary</strong>
+    <span class="status-badge {{ 'success' if latest.status in ('success','partial_success') else 'danger' if latest.status == 'failed' else 'muted' }}">{{ latest.status or 'unknown' }}</span>
+  </div>
+  <div class="card-body">
+    <div class="stats-grid">
+      <div class="metric-card"><span class="metric-label">Sources</span><span class="metric-value">{{ summary.succeeded_sources or 0 }}/{{ summary.active_sources or 0 }}</span><span class="metric-sub">failed {{ summary.failed_sources or 0 }}</span></div>
+      <div class="metric-card"><span class="metric-label">Items</span><span class="metric-value">{{ summary.new_items or 0 }}</span><span class="metric-sub">dup {{ summary.duplicate_items or 0 }} · failed {{ summary.failed_items or 0 }}</span></div>
+      <div class="metric-card"><span class="metric-label">Coverage</span><span class="metric-value">{{ summary.coverage_rate or 0 }}</span><span class="metric-sub">{{ summary.confidence or '-' }}</span></div>
+      <div class="metric-card"><span class="metric-label">Post-processing</span><span class="metric-value text-sm">{{ (summary.post_processing or {}).deterministic or '-' }}</span><span class="metric-sub">LLM {{ (summary.post_processing or {}).llm_enrichment or '-' }}</span></div>
+    </div>
+    {% if summary.confidence_reasons %}
+    <p class="text-sm text-muted">Reasons: {{ summary.confidence_reasons | join(', ') }}</p>
+    {% endif %}
+    {% if summary.failed_source_digest %}
+    <details>
+      <summary>Failed source digest</summary>
+      <table class="data-table">
+        <thead><tr><th>Source</th><th>Error</th><th>Retryable</th></tr></thead>
+        <tbody>
+        {% for source in summary.failed_source_digest %}
+        <tr><td>{{ source.source_name or source.source_id }}</td><td class="text-xs">{{ source.error_code }} {{ source.error_message }}</td><td>{{ source.retryable }}</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </details>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+<section class="card">
+  <div class="card-header"><strong>Operating View</strong></div>
+  <div class="card-body">
+    <div class="content-grid">
+      <div>
+        <h3 class="text-sm">Trusted Events</h3>
+        {% for event in (operating.get('trusted_events') or [])[:6] %}
+        <p class="text-sm"><a href="/events/{{ event.event_id }}">{{ event.event_title }}</a> <span class="tag">conf {{ event.confidence }}</span></p>
+        {% else %}<p class="text-xs text-muted">暂无可信事件。</p>{% endfor %}
+      </div>
+      <div>
+        <h3 class="text-sm">Weak Signals</h3>
+        {% for signal in (operating.get('weak_signals') or [])[:6] %}
+        <p class="text-sm">{{ signal.title }} <span class="tag">{{ signal.reason_codes | join(', ') }}</span></p>
+        {% else %}<p class="text-xs text-muted">暂无弱信号。</p>{% endfor %}
+      </div>
+    </div>
+    <details style="margin-top:1rem;">
+      <summary>Silent summary / Agent queue / Source anomalies</summary>
+      <div class="summary-list" style="margin-top:0.75rem;">
+        <dt>Silent sampled</dt><dd>{{ (operating.get('silent_summary') or {}).silent_items_sampled or 0 }}</dd>
+        <dt>Agent queue</dt><dd>{{ (operating.get('agent_queue') or []) | length }}</dd>
+        <dt>User escalations</dt><dd>{{ (operating.get('user_escalations') or []) | length }}</dd>
+        <dt>Source anomalies</dt><dd>{{ (operating.get('source_health_anomalies') or []) | length }}</dd>
+      </div>
+    </details>
+  </div>
+</section>
+
+{% if diagnostics %}
+<section class="card">
+  <div class="card-header"><strong>Diagnostics</strong><span class="text-xs text-muted">默认折叠</span></div>
+  <div class="card-body">
+    <details>
+      <summary>Source diagnostics ({{ diagnostics.source_count or 0 }})</summary>
+      <div class="table-container" style="max-height:420px;">
+        <table class="data-table">
+          <thead><tr><th>Source</th><th>Status</th><th>Fetched</th><th>New</th><th>Duplicate</th><th>Error</th></tr></thead>
+          <tbody>
+          {% for source in diagnostics.sources or [] %}
+          <tr>
+            <td>{{ source.source_name }}</td>
+            <td>{{ source.status }}</td>
+            <td>{{ source.fetched_entries_count }}</td>
+            <td>{{ source.new_items_count }}</td>
+            <td>{{ source.duplicate_items_count }}</td>
+            <td class="text-xs">{{ source.error_code or '' }} {{ source.error_message or '' }}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

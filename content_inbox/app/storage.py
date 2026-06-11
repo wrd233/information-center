@@ -321,6 +321,37 @@ class InboxStore:
         )
         conn.execute(
             """
+            CREATE TABLE IF NOT EXISTS agent_decisions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                run_id TEXT,
+                packet_id TEXT,
+                target_type TEXT NOT NULL,
+                target_id TEXT NOT NULL,
+                actor TEXT NOT NULL DEFAULT 'codex',
+                decision TEXT NOT NULL,
+                confidence REAL NOT NULL DEFAULT 0.0,
+                reason_codes_json TEXT NOT NULL DEFAULT '[]',
+                evidence_ids_json TEXT NOT NULL DEFAULT '[]',
+                policy_candidate_json TEXT NOT NULL DEFAULT '{}',
+                should_escalate_to_user INTEGER NOT NULL DEFAULT 0,
+                notes TEXT NOT NULL DEFAULT '',
+                created_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS inbox_run_locks (
+                lock_name TEXT PRIMARY KEY,
+                run_id TEXT NOT NULL,
+                owner TEXT NOT NULL,
+                acquired_at TEXT NOT NULL,
+                expires_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS dedupe_groups (
                 dedupe_group_id TEXT PRIMARY KEY,
                 primary_item_id TEXT,
@@ -567,6 +598,9 @@ class InboxStore:
             "CREATE INDEX IF NOT EXISTS idx_item_run_links_run ON item_run_links(run_id)",
             "CREATE INDEX IF NOT EXISTS idx_item_run_links_item ON item_run_links(item_id)",
             "CREATE INDEX IF NOT EXISTS idx_audit_log_action ON audit_log(action)",
+            "CREATE INDEX IF NOT EXISTS idx_agent_decisions_run ON agent_decisions(run_id)",
+            "CREATE INDEX IF NOT EXISTS idx_agent_decisions_target ON agent_decisions(target_type, target_id)",
+            "CREATE INDEX IF NOT EXISTS idx_inbox_run_locks_expires ON inbox_run_locks(expires_at)",
             "CREATE INDEX IF NOT EXISTS idx_events_status ON events(status)",
             "CREATE INDEX IF NOT EXISTS idx_event_items_item ON event_items(item_id)",
             "CREATE INDEX IF NOT EXISTS idx_item_entities_entity ON item_entities(entity_id)",
@@ -1503,6 +1537,253 @@ class InboxStore:
             ).fetchall()
         return [row_to_ingest_run_source(row) for row in rows]
 
+    def latest_full_ingest_run(
+        self,
+        *,
+        trigger_types: list[str] | None = None,
+        statuses: list[str] | None = None,
+    ) -> dict[str, Any] | None:
+        clauses = ["source_mode = 'registry_full'"]
+        params: list[Any] = []
+        if trigger_types:
+            clauses.append(f"trigger_type IN ({','.join('?' for _ in trigger_types)})")
+            params.extend(trigger_types)
+        if statuses:
+            clauses.append(f"status IN ({','.join('?' for _ in statuses)})")
+            params.extend(statuses)
+        where_sql = " AND ".join(clauses)
+        with self.connect() as conn:
+            row = conn.execute(
+                f"""
+                SELECT * FROM rss_ingest_runs
+                WHERE {where_sql}
+                ORDER BY started_at DESC
+                LIMIT 1
+                """,
+                params,
+            ).fetchone()
+        return row_to_ingest_run(row) if row else None
+
+    def list_active_rss_sources(self, *, limit: int = 10000) -> list[dict[str, Any]]:
+        sources, _stats = self.list_rss_sources({"status": "active", "limit": limit, "offset": 0})
+        return [source for source in sources if not source.get("deleted_at")]
+
+    def get_metadata_value(self, key: str) -> str | None:
+        with self.connect() as conn:
+            row = conn.execute("SELECT value FROM system_metadata WHERE key = ?", (key,)).fetchone()
+        return row["value"] if row else None
+
+    def set_metadata_value(self, key: str, value: Any) -> None:
+        with self.connect() as conn:
+            conn.execute(
+                """
+                INSERT INTO system_metadata(key, value, updated_at)
+                VALUES (?, ?, ?)
+                ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
+                """,
+                (key, json.dumps(value, ensure_ascii=False) if isinstance(value, (dict, list)) else str(value), utc_now()),
+            )
+
+    def get_metadata_json(self, key: str, default: Any = None) -> Any:
+        value = self.get_metadata_value(key)
+        if value is None:
+            return default
+        try:
+            return json.loads(value)
+        except Exception:
+            return default
+
+    def try_acquire_inbox_run_lock(
+        self,
+        *,
+        run_id: str,
+        owner: str,
+        ttl_seconds: int = 6 * 60 * 60,
+    ) -> tuple[bool, dict[str, Any] | None]:
+        now = utc_now()
+        expires_at = (datetime.now(timezone.utc) + timedelta(seconds=ttl_seconds)).isoformat()
+        with self.connect() as conn:
+            conn.execute("BEGIN IMMEDIATE")
+            row = conn.execute(
+                "SELECT * FROM inbox_run_locks WHERE lock_name = 'registry_full'"
+            ).fetchone()
+            if row and row["expires_at"] > now:
+                return False, dict(row)
+            conn.execute(
+                """
+                INSERT INTO inbox_run_locks(lock_name, run_id, owner, acquired_at, expires_at)
+                VALUES ('registry_full', ?, ?, ?, ?)
+                ON CONFLICT(lock_name) DO UPDATE SET
+                    run_id = excluded.run_id,
+                    owner = excluded.owner,
+                    acquired_at = excluded.acquired_at,
+                    expires_at = excluded.expires_at
+                """,
+                (run_id, owner, now, expires_at),
+            )
+        return True, {"lock_name": "registry_full", "run_id": run_id, "owner": owner, "acquired_at": now, "expires_at": expires_at}
+
+    def get_inbox_run_lock(self) -> dict[str, Any] | None:
+        now = utc_now()
+        with self.connect() as conn:
+            row = conn.execute(
+                "SELECT * FROM inbox_run_locks WHERE lock_name = 'registry_full'"
+            ).fetchone()
+        if not row:
+            return None
+        lock = dict(row)
+        lock["is_active"] = lock["expires_at"] > now
+        return lock
+
+    def release_inbox_run_lock(self, run_id: str) -> None:
+        with self.connect() as conn:
+            conn.execute(
+                "DELETE FROM inbox_run_locks WHERE lock_name = 'registry_full' AND run_id = ?",
+                (run_id,),
+            )
+
+    def create_agent_decision(self, decision: dict[str, Any]) -> dict[str, Any]:
+        now = utc_now()
+        with self.connect() as conn:
+            cursor = conn.execute(
+                """
+                INSERT INTO agent_decisions (
+                    run_id, packet_id, target_type, target_id, actor, decision,
+                    confidence, reason_codes_json, evidence_ids_json,
+                    policy_candidate_json, should_escalate_to_user, notes, created_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    decision.get("run_id"),
+                    decision.get("packet_id"),
+                    decision["target_type"],
+                    decision["target_id"],
+                    decision.get("actor", "codex"),
+                    decision["decision"],
+                    float(decision.get("confidence", 0.0) or 0.0),
+                    json.dumps(decision.get("reason_codes") or [], ensure_ascii=False),
+                    json.dumps(decision.get("evidence_ids") or [], ensure_ascii=False),
+                    json.dumps(decision.get("policy_candidate") or {}, ensure_ascii=False),
+                    int(bool(decision.get("should_escalate_to_user", False))),
+                    decision.get("notes") or "",
+                    now,
+                ),
+            )
+            row = conn.execute("SELECT * FROM agent_decisions WHERE id = ?", (cursor.lastrowid,)).fetchone()
+        return row_to_agent_decision(row)
+
+    def list_agent_decisions(
+        self,
+        *,
+        run_id: str | None = None,
+        target_type: str | None = None,
+        target_id: str | None = None,
+        limit: int = 100,
+        offset: int = 0,
+    ) -> tuple[list[dict[str, Any]], int]:
+        clauses: list[str] = []
+        params: list[Any] = []
+        if run_id:
+            clauses.append("run_id = ?")
+            params.append(run_id)
+        if target_type:
+            clauses.append("target_type = ?")
+            params.append(target_type)
+        if target_id:
+            clauses.append("target_id = ?")
+            params.append(target_id)
+        where_sql = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        with self.connect() as conn:
+            rows = conn.execute(
+                f"""
+                SELECT * FROM agent_decisions
+                {where_sql}
+                ORDER BY created_at DESC, id DESC
+                LIMIT ? OFFSET ?
+                """,
+                (*params, limit, offset),
+            ).fetchall()
+            total = conn.execute(
+                f"SELECT COUNT(*) AS n FROM agent_decisions {where_sql}",
+                params,
+            ).fetchone()["n"]
+        return [row_to_agent_decision(row) for row in rows], int(total or 0)
+
+    def decision_ledger(
+        self,
+        *,
+        run_id: str | None = None,
+        target_type: str | None = None,
+        target_id: str | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, Any]]:
+        decisions, _total = self.list_agent_decisions(
+            run_id=run_id,
+            target_type=target_type,
+            target_id=target_id,
+            limit=limit,
+        )
+        ledger = [
+            {
+                "ledger_type": "agent_decision",
+                "created_at": decision["created_at"],
+                "run_id": decision.get("run_id"),
+                "target_type": decision["target_type"],
+                "target_id": decision["target_id"],
+                "actor": decision["actor"],
+                "decision": decision["decision"],
+                "confidence": decision["confidence"],
+                "reason_codes": decision["reason_codes"],
+                "evidence_ids": decision["evidence_ids"],
+                "notes": decision["notes"],
+                "raw": decision,
+            }
+            for decision in decisions
+        ]
+        clauses: list[str] = []
+        params: list[Any] = []
+        if run_id:
+            clauses.append("run_id = ?")
+            params.append(run_id)
+        if target_type:
+            clauses.append("object_type = ?")
+            params.append(target_type)
+        if target_id:
+            clauses.append("object_id = ?")
+            params.append(target_id)
+        where_sql = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        with self.connect() as conn:
+            audit_rows = conn.execute(
+                f"""
+                SELECT * FROM audit_log
+                {where_sql}
+                ORDER BY created_at DESC, id DESC
+                LIMIT ?
+                """,
+                (*params, limit),
+            ).fetchall()
+        for row in audit_rows:
+            payload = row_to_audit_log(row)
+            ledger.append(
+                {
+                    "ledger_type": "audit",
+                    "created_at": payload["created_at"],
+                    "run_id": payload.get("run_id"),
+                    "target_type": payload.get("object_type"),
+                    "target_id": payload.get("object_id"),
+                    "actor": payload.get("actor") or "console",
+                    "decision": payload.get("action"),
+                    "confidence": None,
+                    "reason_codes": [],
+                    "evidence_ids": [],
+                    "notes": "",
+                    "raw": payload,
+                }
+            )
+        ledger.sort(key=lambda entry: entry.get("created_at") or "", reverse=True)
+        return ledger[:limit]
+
     def update_item_clustering(self, item_id: str, clustering: ClusteringResult) -> dict[str, Any]:
         now = utc_now()
         with self.connect() as conn:
@@ -1849,6 +2130,42 @@ def row_to_ingest_run_source(row: sqlite3.Row) -> dict[str, Any]:
         "anchor_index": row["anchor_index"],
         "warnings": json.loads(row["warnings_json"] or "[]"),
         "result": json.loads(row["result_json"] or "{}"),
+        "created_at": row["created_at"],
+    }
+
+
+def row_to_agent_decision(row: sqlite3.Row) -> dict[str, Any]:
+    return {
+        "id": row["id"],
+        "run_id": row["run_id"],
+        "packet_id": row["packet_id"],
+        "target_type": row["target_type"],
+        "target_id": row["target_id"],
+        "actor": row["actor"],
+        "decision": row["decision"],
+        "confidence": row["confidence"],
+        "reason_codes": json.loads(row["reason_codes_json"] or "[]"),
+        "evidence_ids": json.loads(row["evidence_ids_json"] or "[]"),
+        "policy_candidate": json.loads(row["policy_candidate_json"] or "{}"),
+        "should_escalate_to_user": bool(row["should_escalate_to_user"]),
+        "notes": row["notes"],
+        "created_at": row["created_at"],
+    }
+
+
+def row_to_audit_log(row: sqlite3.Row) -> dict[str, Any]:
+    return {
+        "id": row["id"],
+        "action": row["action"],
+        "operation_id": row["operation_id"],
+        "run_id": row["run_id"],
+        "source_id": row["source_id"],
+        "item_id": row["item_id"],
+        "object_type": row["object_type"],
+        "object_id": row["object_id"],
+        "before": json.loads(row["before_json"] or "{}"),
+        "after": json.loads(row["after_json"] or "{}"),
+        "actor": row["actor"],
         "created_at": row["created_at"],
     }
 

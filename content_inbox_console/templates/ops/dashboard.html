@@ -12,7 +12,7 @@
   </div>
   <div class="hero-actions">
     <a href="/sources" class="btn btn-primary">准备信息源</a>
-    <a href="/runs/new" class="btn btn-secondary">创建抓取任务</a>
+    <a href="/inbox-loop" class="btn btn-secondary">Inbox Loop</a>
     <a href="/events" class="btn btn-ghost">查看事件</a>
   </div>
 </section>
@@ -84,9 +84,34 @@
   <span class="text-xs text-muted font-semibold">快捷操作：</span>
   <a href="/sources" class="btn btn-ghost btn-sm">准备信息源</a>
   <a href="/runs/new" class="btn btn-ghost btn-sm">创建抓取任务</a>
+  <a href="/inbox-loop" class="btn btn-ghost btn-sm">Inbox Loop</a>
+  <a href="/triage" class="btn btn-ghost btn-sm">Agent Triage</a>
   <a href="/events" class="btn btn-ghost btn-sm">查看事件</a>
   <a href="/reset" class="btn btn-ghost btn-sm">数据清理</a>
 </div>
+
+{# ── Inbox Loop Status ── #}
+{% set loop_scheduler = (inbox_loop or {}).get('scheduler') or {} %}
+{% set loop_latest = (inbox_loop or {}).get('latest_run') or {} %}
+{% set loop_protection = (inbox_loop or {}).get('recent_run_protection') or {} %}
+<section class="card">
+  <div class="card-header">
+    <strong>Inbox Operating Loop</strong>
+    <a href="/inbox-loop" class="text-xs">打开 →</a>
+  </div>
+  <div class="card-body">
+    <div class="summary-list">
+      <dt>Scheduler</dt>
+      <dd>{{ "开启" if loop_scheduler.enabled else "关闭" }} · {{ loop_scheduler.daily_time or '06:00' }} {{ loop_scheduler.timezone or 'Asia/Shanghai' }}</dd>
+      <dt>Next run</dt>
+      <dd>{{ loop_scheduler.next_run or '-' }}</dd>
+      <dt>Latest full run</dt>
+      <dd>{% if loop_latest.run_id %}<a href="/runs/{{ loop_latest.run_id }}">{{ loop_latest.status }} · {{ loop_latest.run_id }}</a>{% else %}暂无{% endif %}</dd>
+      <dt>Manual guard</dt>
+      <dd>{{ "会跳过" if loop_protection.would_skip_manual else "可运行" }}{% if loop_protection.grace_minutes %} · {{ loop_protection.grace_minutes }} 分钟{% endif %}</dd>
+    </div>
+  </div>
+</section>
 
 {# ── Recent Runs + Events ── #}
 <div class="content-grid">

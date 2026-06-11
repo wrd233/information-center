@@ -30,6 +30,21 @@ class Settings:
         }
         self.request_timeout_seconds = float(os.getenv("CONTENT_INBOX_REQUEST_TIMEOUT", "20"))
         self.max_content_chars = int(os.getenv("CONTENT_INBOX_MAX_CONTENT_CHARS", "8000"))
+        self.scheduler_enabled = os.getenv("CONTENT_INBOX_SCHEDULER_ENABLED", "1") not in {
+            "0",
+            "false",
+            "False",
+            "no",
+        }
+        self.daily_run_time = os.getenv("CONTENT_INBOX_DAILY_RUN_TIME", "06:00")
+        self.daily_run_tz = os.getenv("CONTENT_INBOX_DAILY_RUN_TZ", "Asia/Shanghai")
+        self.daily_run_recover_missed = os.getenv("CONTENT_INBOX_DAILY_RUN_RECOVER_MISSED", "1") not in {
+            "0",
+            "false",
+            "False",
+            "no",
+        }
+        self.manual_run_recent_grace_minutes = int(os.getenv("CONTENT_INBOX_MANUAL_RUN_GRACE_MINUTES", "30"))
 
         self.openai_api_key = os.getenv(
             "CONTENT_INBOX_DEEPSEEK_API_KEY",

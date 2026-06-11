@@ -218,6 +218,10 @@ PYTHONPATH=. python scripts/run_rss_sources_to_content_inbox.py \
 - reset scope 包括：`clear_runs_items_keep_sources`、`clear_all_sources_and_content`、`clear_pipeline_outputs_keep_items`、`clear_outputs_keep_events`、`clear_by_run_id`、`clear_by_source_id`、`create_new_fresh_db`。
 - 指定 run 清理会保留被其他 run 共享的 items；指定 source 清理会保护其他 source 的 items。
 
+### Inbox Operating Loop
+
+`/api/inbox-loop/*` 是 daily/manual inbox operating loop API。它以 SQLite `rss_sources` registry 为唯一运行时 source truth，手动和 scheduler 共用 registry-full run kernel，默认每源使用 `until_existing` 增量，并提供 run summary/confidence、diagnostics、operating view、triage packet、decision ledger 和 context pack。Console 入口是 `/inbox-loop` 与 `/triage`。详见 `docs/operations/inbox_operating_loop.md`。
+
 ## RSS 增量同步模式
 
 从 v0.2.0 开始，`/api/rss/analyze` 支持两种同步模式：

@@ -61,6 +61,7 @@ def root() -> RedirectResponse:
 def dashboard(request: Request):
     api = client(request)
     env_r = api.get("/api/environment")
+    loop_r = api.get("/api/inbox-loop/status")
     sources_r = api.get("/api/sources", {"limit": 8})
     runs_r = api.get("/api/runs", {"limit": 8})
     events_r = api.get("/api/events", {"limit": 6})
@@ -106,8 +107,77 @@ def dashboard(request: Request):
             "reviews": reviews,
             "briefings": data(briefings_r, {}).get("briefings", []),
             "reports": data(reports_r, {}).get("reports", []),
+            "inbox_loop": data(loop_r, {}),
             "next_actions": next_actions[:4],
-            "error": err(env_r) or err(sources_r) or err(runs_r) or err(briefings_r) or err(reports_r),
+            "error": err(env_r) or err(loop_r) or err(sources_r) or err(runs_r) or err(briefings_r) or err(reports_r),
+        },
+    )
+
+
+@router.get("/inbox-loop", response_class=HTMLResponse)
+def inbox_loop(request: Request):
+    api = client(request)
+    status_r = api.get("/api/inbox-loop/status")
+    loop_status = data(status_r, {})
+    latest = loop_status.get("latest_run") or {}
+    run_id = latest.get("run_id")
+    summary_r = api.get(f"/api/inbox-loop/runs/{run_id}/summary") if run_id else {"ok": True, "data": {}}
+    diagnostics_r = api.get(f"/api/inbox-loop/runs/{run_id}/diagnostics") if run_id else {"ok": True, "data": {}}
+    operating_r = api.get(f"/api/inbox-loop/runs/{run_id}/operating-view") if run_id else {"ok": True, "data": {}}
+    return render(
+        request,
+        "ops/inbox_loop.html",
+        {
+            "active_page": "inbox_loop",
+            "loop_status": loop_status,
+            "run_summary": data(summary_r, {}),
+            "diagnostics": data(diagnostics_r, {}),
+            "operating": data(operating_r, {}),
+            "manual_result": {},
+            "error": err(status_r) or err(summary_r) or err(diagnostics_r) or err(operating_r),
+        },
+    )
+
+
+@router.post("/inbox-loop/run", response_class=HTMLResponse)
+async def inbox_loop_run(request: Request):
+    form = await form_fields(request)
+    force = str(form.get("force") or "") == "1"
+    run_sync = str(form.get("run_synchronously") or "") == "1"
+    max_sources = int(form.get("max_sources") or 10000)
+    max_items = int(form.get("max_items_per_source") or 20)
+    payload = {
+        "force": force,
+        "run_synchronously": run_sync,
+        "limits": {
+            "max_sources": max_sources,
+            "max_items_per_source": max_items,
+            "probe_limit": max_items,
+            "old_source_no_anchor_limit": max_items,
+        },
+    }
+    response = client(request).post("/api/inbox-loop/runs", payload)
+    run_id = data(response, {}).get("run_id")
+    if run_id and not run_sync:
+        return RedirectResponse(f"/runs/{run_id}", status_code=303)
+    api = client(request)
+    status_r = api.get("/api/inbox-loop/status")
+    latest = data(status_r, {}).get("latest_run") or {}
+    latest_id = run_id or latest.get("run_id")
+    summary_r = api.get(f"/api/inbox-loop/runs/{latest_id}/summary") if latest_id else {"ok": True, "data": {}}
+    diagnostics_r = api.get(f"/api/inbox-loop/runs/{latest_id}/diagnostics") if latest_id else {"ok": True, "data": {}}
+    operating_r = api.get(f"/api/inbox-loop/runs/{latest_id}/operating-view") if latest_id else {"ok": True, "data": {}}
+    return render(
+        request,
+        "ops/inbox_loop.html",
+        {
+            "active_page": "inbox_loop",
+            "loop_status": data(status_r, {}),
+            "run_summary": data(summary_r, {}),
+            "diagnostics": data(diagnostics_r, {}),
+            "operating": data(operating_r, {}),
+            "manual_result": data(response, {}),
+            "error": err(response) or err(status_r) or err(summary_r),
         },
     )
 
@@ -445,9 +515,28 @@ async def run_start(request: Request):
 def run_detail(request: Request, run_id: str):
     api = client(request)
     summary = api.get(f"/api/runs/{run_id}/summary")
+    loop_summary = api.get(f"/api/inbox-loop/runs/{run_id}/summary")
+    diagnostics = api.get(f"/api/inbox-loop/runs/{run_id}/diagnostics")
+    operating = api.get(f"/api/inbox-loop/runs/{run_id}/operating-view")
+    ledger = api.get("/api/inbox-loop/decision-ledger", {"run_id": run_id, "limit": 50})
     events = api.get(f"/api/runs/{run_id}/events")
     items = api.get(f"/api/runs/{run_id}/items")
-    return render(request, "ops/run_detail.html", {"active_page": "runs", "run_id": run_id, "summary": data(summary, {}), "events": data(events, {}).get("events", []), "items": data(items, {}).get("items", []), "error": err(summary)})
+    return render(
+        request,
+        "ops/run_detail.html",
+        {
+            "active_page": "runs",
+            "run_id": run_id,
+            "summary": data(summary, {}),
+            "loop_summary": data(loop_summary, {}),
+            "diagnostics": data(diagnostics, {}),
+            "operating": data(operating, {}),
+            "decision_ledger": data(ledger, {}),
+            "events": data(events, {}).get("events", []),
+            "items": data(items, {}).get("items", []),
+            "error": err(summary),
+        },
+    )
 
 
 @router.post("/runs/{run_id}/pipeline/{stage}")
@@ -484,7 +573,8 @@ def items(request: Request, run_id: str | None = None, keyword: str | None = Non
 @router.get("/items/{item_id}", response_class=HTMLResponse)
 def item_detail(request: Request, item_id: str):
     response = client(request).get(f"/api/items/{item_id}")
-    return render(request, "ops/item_detail.html", {"active_page": "items", "item_id": item_id, "data": data(response, {}), "error": err(response)})
+    ledger = client(request).get("/api/inbox-loop/decision-ledger", {"target_type": "item", "target_id": item_id, "limit": 30})
+    return render(request, "ops/item_detail.html", {"active_page": "items", "item_id": item_id, "data": data(response, {}), "decision_ledger": data(ledger, {}), "error": err(response) or err(ledger)})
 
 
 @router.get("/dedupe-groups", response_class=HTMLResponse)
@@ -506,7 +596,8 @@ def clusters(request: Request):
 @router.get("/clusters/{cluster_id}", response_class=HTMLResponse)
 def cluster_detail(request: Request, cluster_id: str):
     response = client(request).get(f"/api/clusters/{cluster_id}")
-    return render(request, "ops/object_detail.html", {"active_page": "clusters", "title": "Cluster Detail", "data": data(response, {}), "error": err(response)})
+    ledger = client(request).get("/api/inbox-loop/decision-ledger", {"target_type": "cluster", "target_id": cluster_id, "limit": 30})
+    return render(request, "ops/object_detail.html", {"active_page": "clusters", "title": "Cluster Detail", "data": data(response, {}), "decision_ledger": data(ledger, {}), "error": err(response) or err(ledger)})
 
 
 @router.post("/clusters/{cluster_id}/create-event")
@@ -524,7 +615,8 @@ def events(request: Request):
 @router.get("/events/{event_id}", response_class=HTMLResponse)
 def event_detail(request: Request, event_id: str):
     response = client(request).get(f"/api/events/{event_id}")
-    return render(request, "ops/object_detail.html", {"active_page": "events", "title": "Event Detail", "data": data(response, {}), "error": err(response)})
+    ledger = client(request).get("/api/inbox-loop/decision-ledger", {"target_type": "event", "target_id": event_id, "limit": 30})
+    return render(request, "ops/object_detail.html", {"active_page": "events", "title": "Event Detail", "data": data(response, {}), "decision_ledger": data(ledger, {}), "error": err(response) or err(ledger)})
 
 
 @router.get("/entities", response_class=HTMLResponse)
@@ -626,6 +718,68 @@ def agent_query(request: Request, query: str = "", format: str = "human"):
         result = data(response, {})
         error = err(response)
     return render(request, "ops/agent_query.html", {"active_page": "agent", "query": query, "format": format, "result": result, "error": error})
+
+
+@router.get("/triage", response_class=HTMLResponse)
+def triage(request: Request, run_id: str = "", goal: str = "daily_brief"):
+    api = client(request)
+    packets_r = api.get("/api/inbox-loop/triage-packets", {"run_id": run_id or None, "limit": 20})
+    ledger_r = api.get("/api/inbox-loop/decision-ledger", {"run_id": run_id or None, "limit": 50})
+    context_r = api.get("/api/context-packs/" + goal, {"run_id": run_id or None}) if goal in {"daily_brief", "review_decisions"} else {"ok": True, "data": {}}
+    return render(
+        request,
+        "ops/triage.html",
+        {
+            "active_page": "triage",
+            "run_id": run_id,
+            "goal": goal,
+            "packet": data(packets_r, {}),
+            "ledger": data(ledger_r, {}),
+            "context_pack": data(context_r, {}).get("context_pack", {}),
+            "decision_result": {},
+            "error": err(packets_r) or err(ledger_r) or err(context_r),
+        },
+    )
+
+
+@router.post("/triage/decisions", response_class=HTMLResponse)
+async def triage_decision(request: Request):
+    form = await form_fields(request)
+    reason_codes = [part.strip() for part in str(form.get("reason_codes") or "").split(",") if part.strip()]
+    evidence_ids = [part.strip() for part in str(form.get("evidence_ids") or "").split(",") if part.strip()]
+    payload = {
+        "run_id": str(form.get("run_id") or "") or None,
+        "packet_id": str(form.get("packet_id") or "") or None,
+        "target_type": str(form.get("target_type") or ""),
+        "target_id": str(form.get("target_id") or ""),
+        "decision": str(form.get("decision") or "research"),
+        "confidence": float(form.get("confidence") or 0.5),
+        "reason_codes": reason_codes,
+        "evidence_ids": evidence_ids,
+        "notes": str(form.get("notes") or ""),
+        "should_escalate_to_user": str(form.get("should_escalate_to_user") or "") == "1",
+        "actor": "console",
+    }
+    response = client(request).post("/api/inbox-loop/agent-decisions", payload)
+    api = client(request)
+    run_id = payload["run_id"] or ""
+    packets_r = api.get("/api/inbox-loop/triage-packets", {"run_id": run_id or None, "limit": 20})
+    ledger_r = api.get("/api/inbox-loop/decision-ledger", {"run_id": run_id or None, "limit": 50})
+    context_r = api.get("/api/context-packs/daily_brief", {"run_id": run_id or None})
+    return render(
+        request,
+        "ops/triage.html",
+        {
+            "active_page": "triage",
+            "run_id": run_id,
+            "goal": "daily_brief",
+            "packet": data(packets_r, {}),
+            "ledger": data(ledger_r, {}),
+            "context_pack": data(context_r, {}).get("context_pack", {}),
+            "decision_result": data(response, {}),
+            "error": err(response) or err(packets_r) or err(ledger_r),
+        },
+    )
 
 
 @router.get("/settings", response_class=HTMLResponse)

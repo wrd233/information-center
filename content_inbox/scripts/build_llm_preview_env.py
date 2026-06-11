@@ -718,12 +718,11 @@ def _reset_preview_data(store: InboxStore, sampled_items: list[dict[str, Any]]) 
     The DB file was copied from source, so it has the full schema and data.
     We clear items not in our sample, and also clear all derived pipeline tables.
     """
+    from app.dedupe import build_dedupe_key
     from app.models import NormalizedContent, ScreeningResult
 
-    sample_ids = {item["item_id"] for item in sampled_items}
-
+    # Phase 1: Clear derived/pipeline tables (must commit before inserts use separate connections)
     with store.connect() as conn:
-        # Clear derived/pipeline tables
         tables_to_clear = [
             "item_cards", "item_relations", "cluster_items", "cluster_cards",
             "cluster_relations", "event_clusters", "events", "event_items",
@@ -744,37 +743,37 @@ def _reset_preview_data(store: InboxStore, sampled_items: list[dict[str, Any]]) 
                 conn.execute(f"DELETE FROM {table}")
             except Exception:
                 pass  # table may not exist yet
-
-        # Clear inbox items that are NOT in the sample
         conn.execute("DELETE FROM inbox_items")
-        for item in sampled_items:
-            try:
-                screening = ScreeningResult.model_validate(item["screening"])
-            except Exception:
-                screening = ScreeningResult(
-                    summary=item.get("summary") or item.get("title"),
-                    category="其他",
-                    value_score=3,
-                    personal_relevance=3,
-                    suggested_action="review",
-                    reason="fallback screening for preview",
-                    screening_status="skipped",
-                )
-            normalized = NormalizedContent(
-                title=item["title"],
-                url=item.get("url"),
-                source_id=item.get("source_id"),
-                feed_url=item.get("feed_url"),
-                source_name=item.get("source_name") or "unknown",
-                source_category=item.get("source_category"),
-                content_type=item.get("content_type") or "article",
-                published_at=item.get("published_at"),
-                author=item.get("author"),
-                summary=item.get("summary"),
-                content_text=item.get("content_text"),
-                guid=item.get("guid"),
+
+    # Phase 2: Re-insert sampled items (separate connection, no lock conflict)
+    for item in sampled_items:
+        try:
+            screening = ScreeningResult.model_validate(item["screening"])
+        except Exception:
+            screening = ScreeningResult(
+                summary=item.get("summary") or item.get("title"),
+                category="其他",
+                value_score=3,
+                personal_relevance=3,
+                suggested_action="review",
+                reason="fallback screening for preview",
+                screening_status="skipped",
             )
-            store.insert_items([normalized], screening, raw=[{"source_item_id": item["item_id"]}])
+        normalized = NormalizedContent(
+            title=item["title"],
+            url=item.get("url"),
+            source_id=item.get("source_id"),
+            feed_url=item.get("feed_url"),
+            source_name=item.get("source_name") or "unknown",
+            source_category=item.get("source_category"),
+            content_type=item.get("content_type") or "article",
+            published_at=item.get("published_at"),
+            author=item.get("author"),
+            summary=item.get("summary"),
+            content_text=item.get("content_text"),
+            guid=item.get("guid"),
+        )
+        store.insert(build_dedupe_key(normalized), normalized, screening, raw={"source_item_id": item["item_id"]})
 
 
 def _render_preview_report(

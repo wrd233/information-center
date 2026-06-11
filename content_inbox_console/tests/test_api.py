@@ -28,6 +28,27 @@ def fake_response(path: str) -> dict:
         "/api/environment/databases": {"databases": [{"path": "/tmp/fresh/content_inbox.db", "label": "fresh_test", "is_current": True, "is_fresh": True, "is_legacy": False, "exists": True}]},
         "/api/sources": {"sources": [{"source_id": "source-a", "source_name": "Source A", "feed_url": "file:///feed.xml", "status": "active"}], "stats": {"total": 1, "active": 1}},
         "/api/runs": {"runs": [{"run_id": "run_1", "status": "success", "request": {"mode": "dry_run"}, "selected_source_count": 1, "new_items_count": 0, "started_at": "now"}]},
+        "/api/inbox-loop/status": {
+            "scheduler": {"enabled": True, "daily_time": "06:00", "timezone": "Asia/Shanghai", "next_run": "tomorrow", "last_status": "idle"},
+            "active_lock": None,
+            "latest_run": {"run_id": "run_1", "status": "success", "source_mode": "registry_full"},
+            "recent_run_protection": {"enabled": True, "grace_minutes": 30, "would_skip_manual": True, "recent_run": {"run_id": "run_1"}},
+            "real_runs_enabled": True,
+        },
+        "/api/inbox-loop/triage-packets": {
+            "packet_id": "triage_1",
+            "run_id": "run_1",
+            "policy": {"network": "disabled_by_default", "raw_item_scope": "bounded_evidence_only", "allowed_decisions": ["research"]},
+            "candidates": [{"target_type": "event", "target_id": "event_1", "candidate_source": "review_queue", "reason_codes": ["merge_uncertain"], "evidence_ids": ["event_1"], "preview": "Needs review"}],
+            "stats": {"candidate_count": 1, "unbounded_raw_items_exposed": False},
+        },
+        "/api/inbox-loop/decision-ledger": {
+            "decisions": [{"id": 1, "target_type": "event", "target_id": "event_1", "decision": "research", "actor": "codex"}],
+            "ledger": [{"ledger_type": "agent_decision", "created_at": "now", "target_type": "event", "target_id": "event_1", "decision": "research", "actor": "codex"}],
+            "stats": {"agent_decision_total": 1},
+        },
+        "/api/context-packs/daily_brief": {"context_pack": {"goal": "daily_brief", "run_id": "run_1", "trusted_events": [], "agent_queue": []}},
+        "/api/context-packs/review_decisions": {"context_pack": {"goal": "review_decisions", "run_id": "run_1", "trusted_events": [], "agent_queue": []}},
         "/api/events": {"events": [{"event_id": "event_1", "event_title": "Event A", "status": "needs_review"}]},
         "/api/review-queue": {"reviews": [{"id": 1, "review_type": "event_candidate", "target_type": "event", "target_id": "event_1", "status": "pending"}]},
         "/api/items": {"items": [{"item_id": "item_1", "title": "Item A", "source_name": "Source A", "published_at": "now", "primary_cluster_id": "cluster_1"}]},
@@ -55,6 +76,12 @@ def fake_response(path: str) -> dict:
     }
     if path.startswith("/api/runs/run_1/summary"):
         return {"run": {"run_id": "run_1", "status": "success", "request": {"mode": "dry_run"}, "selected_source_count": 1, "success_source_count": 1, "failure_source_count": 0, "new_items_count": 0, "duplicate_items_count": 0, "failed_items_count": 0}, "sources": [], "recent_events": [], "pipeline": {"dedupe": "pending", "semantic": "pending"}}
+    if path.startswith("/api/inbox-loop/runs/run_1/summary"):
+        return {"run": {"run_id": "run_1", "status": "success", "request": {"mode": "real_write"}, "source_mode": "registry_full"}, "summary": {"active_sources": 1, "succeeded_sources": 1, "failed_sources": 0, "coverage_rate": 1.0, "new_items": 1, "duplicate_items": 0, "processed_items": 1, "failed_items": 0, "confidence": "high", "confidence_reasons": ["source_success_rate:100%"], "post_processing": {"deterministic": "completed", "llm_enrichment": "disabled_by_default"}}, "pipeline": {"ingest": "completed", "post_processing": "completed"}}
+    if path.startswith("/api/inbox-loop/runs/run_1/diagnostics"):
+        return {"run_id": "run_1", "source_count": 1, "failures": [], "sources": [{"source_name": "Source A", "status": "success", "fetched_entries_count": 1, "new_items_count": 1, "duplicate_items_count": 0}]}
+    if path.startswith("/api/inbox-loop/runs/run_1/operating-view"):
+        return {"trusted_events": [{"event_id": "event_1", "event_title": "Event A", "confidence": 0.95}], "weak_signals": [{"title": "Weak A", "reason_codes": ["watch_topic_hit"]}], "silent_summary": {"silent_items_sampled": 1}, "agent_queue": [], "user_escalations": [], "source_health_anomalies": []}
     if path.startswith("/api/runs/run_1/events"):
         return {"events": [{"seq": 1, "event_type": "run_completed", "message": "done"}]}
     if path.startswith("/api/runs/run_1/items"):
@@ -78,6 +105,10 @@ def patch_backend(monkeypatch):
             return {"ok": True, "data": {"operation_id": "op_1", "stats": {"new": 1, "total": 1, "exists": 0, "duplicate_in_file": 0}, "sources": [{"source_name": "Source A", "feed_url": "file:///feed.xml", "status": "new"}]}, "error": None, "meta": {}}
         if path == "/api/runs/preview":
             return {"ok": True, "data": {"mode": json["mode"], "source_count": 1, "sources": [], "will_write_items": json["mode"] == "real_write", "database": fake_response("/api/environment")["environment"], "risk_level": "low"}, "error": None, "meta": {}}
+        if path == "/api/inbox-loop/runs":
+            return {"ok": True, "data": {"accepted": True, "status": "started", "run_id": "run_1"}, "error": None, "meta": {}}
+        if path == "/api/inbox-loop/agent-decisions":
+            return {"ok": True, "data": {"decision": {"target_type": json["target_type"], "target_id": json["target_id"], "decision": json["decision"], "actor": "console"}, "ledger": []}, "error": None, "meta": {}}
         return {"ok": True, "data": fake_response(path), "error": None, "meta": {}}
 
     monkeypatch.setattr(BackendClient, "request", request)
@@ -94,6 +125,7 @@ def test_core_console_pages_render(monkeypatch):
         "/sources",
         "/runs",
         "/runs/new",
+        "/inbox-loop",
         "/items",
         "/dedupe-groups",
         "/clusters",
@@ -107,6 +139,7 @@ def test_core_console_pages_render(monkeypatch):
         "/briefings",
         "/reports",
         "/agent-query",
+        "/triage",
         "/reset",
         "/evidence",
         "/saved-views",
@@ -175,6 +208,12 @@ def test_chinese_first_vocabulary(monkeypatch):
     agent = client.get("/agent-query")
     assert "智能查询" in agent.text
 
+    loop = client.get("/inbox-loop")
+    assert "Inbox Operating Loop" in loop.text
+
+    triage = client.get("/triage")
+    assert "Agent Triage" in triage.text
+
 
 def test_empty_state_guidance(monkeypatch):
     """Pages show content based on available data."""
@@ -205,6 +244,32 @@ def test_source_import_preview_and_run_preview(monkeypatch):
 
     assert source_preview.status_code == 200
     assert run_preview.status_code == 200
+
+
+def test_inbox_loop_and_triage_forms(monkeypatch):
+    """Inbox loop manual run and triage writeback forms render through backend API."""
+    patch_backend(monkeypatch)
+    client = TestClient(create_app())
+
+    loop = client.post("/inbox-loop/run", data={"run_synchronously": "1", "force": "1", "max_sources": "1", "max_items_per_source": "1"})
+    triage = client.post(
+        "/triage/decisions",
+        data={
+            "run_id": "run_1",
+            "packet_id": "triage_1",
+            "target_type": "event",
+            "target_id": "event_1",
+            "decision": "research",
+            "confidence": "0.7",
+            "reason_codes": "merge_uncertain",
+            "evidence_ids": "event_1",
+        },
+    )
+
+    assert loop.status_code == 200
+    assert "手动运行结果" in loop.text
+    assert triage.status_code == 200
+    assert "Decision saved" in triage.text
 
 
 def test_reset_and_source_actions(monkeypatch):

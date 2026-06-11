@@ -30,12 +30,12 @@
     <code class="text-xs text-muted">{{ event.event_id }}</code>
 
     <h3 style="margin-top:1rem;">关联条目（支持证据）</h3>
-    {% if data.items %}
+    {% if data['items'] %}
     <div class="table-container" style="max-height:360px;">
       <table class="data-table">
         <thead><tr><th>标题</th><th>发布时间</th></tr></thead>
         <tbody>
-        {% for item in data.items %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td class="text-xs text-muted">{{ item.published_at }}</td></tr>{% endfor %}
+        {% for item in data['items'] %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td class="text-xs text-muted">{{ item.published_at }}</td></tr>{% endfor %}
         </tbody>
       </table>
     </div>
@@ -65,18 +65,39 @@
     </div>
 
     <h3 style="margin-top:1rem;">聚合条目</h3>
-    {% if data.items %}
+    {% if data['items'] %}
     <div class="table-container" style="max-height:360px;">
       <table class="data-table">
         <thead><tr><th>标题</th><th>发布时间</th></tr></thead>
         <tbody>
-        {% for item in data.items %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td class="text-xs text-muted">{{ item.published_at }}</td></tr>{% endfor %}
+        {% for item in data['items'] %}<tr><td><a href="/items/{{ item.item_id }}">{{ item.title }}</a></td><td class="text-xs text-muted">{{ item.published_at }}</td></tr>{% endfor %}
         </tbody>
       </table>
     </div>
     {% else %}
     <p class="text-xs text-muted">暂无关联条目。</p>
     {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% if decision_ledger and decision_ledger.ledger %}
+<section class="card">
+  <div class="card-header"><strong>Decision Ledger</strong></div>
+  <div class="card-body">
+    <table class="data-table">
+      <thead><tr><th>Time</th><th>Type</th><th>Decision</th><th>Actor</th></tr></thead>
+      <tbody>
+      {% for entry in decision_ledger.ledger[:12] %}
+      <tr>
+        <td class="text-xs">{{ entry.created_at }}</td>
+        <td>{{ entry.ledger_type }}</td>
+        <td>{{ entry.decision }}</td>
+        <td>{{ entry.actor }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
   </div>
 </section>
 {% endif %}

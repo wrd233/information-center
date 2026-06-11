@@ -18,11 +18,21 @@ from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
 
 from app.config import BASE_DIR, settings
+from app.inbox_run import (
+    build_triage_packets,
+    context_pack,
+    latest_recent_full_run,
+    operating_view,
+    run_diagnostics,
+    run_summary,
+    start_inbox_run,
+)
 from app.models import ContentAnalyzeRequest
 from app.processor import build_dedupe_key, normalize_content, process_content_thread_safe
 from app.rss import parse_feed
 from app.rss_errors import classify_exception, retryable_for
 from app.rss_runner import sort_entries_for_processing
+from app.scheduler import scheduler_state
 from app.semantic.candidates import assess_candidate, deterministic_duplicate
 from app.semantic.signatures import EventSignature, extract_event_signature
 from app.storage import InboxStore
@@ -1955,6 +1965,144 @@ def api_runs(request: Request, limit: int = 50, offset: int = 0) -> dict[str, An
     store = get_ops_store(request)
     runs, total = store.list_ingest_runs(limit=limit, offset=offset)
     return ok({"runs": runs, "stats": {"total": total, "returned": len(runs)}})
+
+
+@router.get("/api/inbox-loop/status")
+def api_inbox_loop_status(request: Request) -> dict[str, Any]:
+    store = get_ops_store(request)
+    latest = store.latest_full_ingest_run(trigger_types=["manual", "scheduled"])
+    recent = latest_recent_full_run(
+        store,
+        grace_minutes=int(settings.manual_run_recent_grace_minutes),
+    )
+    return ok(
+        {
+            "scheduler": scheduler_state(store),
+            "active_lock": store.get_inbox_run_lock(),
+            "latest_run": latest,
+            "recent_run_protection": {
+                "enabled": True,
+                "grace_minutes": int(settings.manual_run_recent_grace_minutes),
+                "would_skip_manual": recent is not None,
+                "recent_run": recent,
+            },
+            "real_runs_enabled": bool(settings.enable_real_runs),
+        }
+    )
+
+
+@router.post("/api/inbox-loop/runs")
+def api_inbox_loop_run(request: Request, payload: dict[str, Any] | None = None) -> Any:
+    store = get_ops_store(request)
+    result = start_inbox_run(
+        store,
+        payload or {},
+        trigger_type="manual",
+        post_process=generate_information_objects,
+    )
+    if result.get("status") == "locked":
+        return JSONResponse(
+            status_code=409,
+            content={"ok": False, "data": result, "error": {"code": "INBOX_RUN_LOCKED", "message": "Another inbox run is active.", "details": result}, "meta": {}},
+        )
+    if result.get("status") == "real_runs_disabled":
+        return JSONResponse(
+            status_code=409,
+            content={"ok": False, "data": result, "error": {"code": "REAL_RUNS_DISABLED", "message": result.get("message", "Real runs are disabled."), "details": result}, "meta": {}},
+        )
+    return ok(result)
+
+
+@router.get("/api/inbox-loop/runs/{run_id}/summary")
+def api_inbox_loop_run_summary(request: Request, run_id: str) -> Any:
+    summary = run_summary(get_ops_store(request), run_id)
+    if not summary:
+        return fail("RUN_NOT_FOUND", "Run not found.", status_code=404)
+    return ok(summary)
+
+
+@router.get("/api/inbox-loop/runs/{run_id}/diagnostics")
+def api_inbox_loop_run_diagnostics(request: Request, run_id: str) -> Any:
+    diagnostics = run_diagnostics(get_ops_store(request), run_id)
+    if not diagnostics:
+        return fail("RUN_NOT_FOUND", "Run not found.", status_code=404)
+    return ok(diagnostics)
+
+
+@router.get("/api/inbox-loop/runs/{run_id}/operating-view")
+def api_inbox_loop_run_operating_view(request: Request, run_id: str) -> Any:
+    if not get_ops_store(request).get_ingest_run(run_id):
+        return fail("RUN_NOT_FOUND", "Run not found.", status_code=404)
+    return ok(operating_view(get_ops_store(request), run_id))
+
+
+@router.get("/api/inbox-loop/triage-packets")
+def api_inbox_loop_triage_packets(request: Request, run_id: str | None = None, limit: int = 10) -> dict[str, Any]:
+    return ok(build_triage_packets(get_ops_store(request), run_id=run_id, limit=min(max(limit, 1), 50)))
+
+
+@router.post("/api/inbox-loop/agent-decisions")
+def api_inbox_loop_agent_decision(request: Request, payload: dict[str, Any]) -> Any:
+    allowed = {"surface", "research", "silent", "noise", "merge_suggest", "do_not_merge"}
+    decision = payload.get("decision")
+    if decision not in allowed:
+        return fail("INVALID_AGENT_DECISION", "Unsupported triage decision.", details={"allowed": sorted(allowed)})
+    for field in ("target_type", "target_id"):
+        if not payload.get(field):
+            return fail("INVALID_AGENT_DECISION", f"{field} is required.")
+    store = get_ops_store(request)
+    saved = store.create_agent_decision(
+        {
+            "run_id": payload.get("run_id"),
+            "packet_id": payload.get("packet_id"),
+            "target_type": payload["target_type"],
+            "target_id": payload["target_id"],
+            "actor": payload.get("actor") or "codex",
+            "decision": decision,
+            "confidence": float(payload.get("confidence", 0.0) or 0.0),
+            "reason_codes": payload.get("reason_codes") or [],
+            "evidence_ids": payload.get("evidence_ids") or [],
+            "policy_candidate": payload.get("policy_candidate") or {},
+            "should_escalate_to_user": bool(payload.get("should_escalate_to_user", False)),
+            "notes": payload.get("notes") or "",
+        }
+    )
+    audit(store, "agent_decision_recorded", run_id=payload.get("run_id"), object_type=payload["target_type"], object_id=payload["target_id"], after=saved, actor=payload.get("actor") or "codex")
+    return ok({"decision": saved, "ledger": store.decision_ledger(run_id=payload.get("run_id"), target_type=payload["target_type"], target_id=payload["target_id"], limit=20)})
+
+
+@router.get("/api/inbox-loop/decision-ledger")
+def api_inbox_loop_decision_ledger(
+    request: Request,
+    run_id: str | None = None,
+    target_type: str | None = None,
+    target_id: str | None = None,
+    limit: int = 100,
+) -> dict[str, Any]:
+    store = get_ops_store(request)
+    decisions, total = store.list_agent_decisions(run_id=run_id, target_type=target_type, target_id=target_id, limit=min(limit, 500))
+    return ok(
+        {
+            "decisions": decisions,
+            "ledger": store.decision_ledger(run_id=run_id, target_type=target_type, target_id=target_id, limit=min(limit, 500)),
+            "stats": {"agent_decision_total": total},
+        }
+    )
+
+
+@router.get("/api/context-packs/{goal}")
+def api_context_pack(
+    request: Request,
+    goal: str,
+    run_id: str | None = None,
+    target_type: str | None = None,
+    target_id: str | None = None,
+) -> Any:
+    if goal not in {"daily_brief", "review_decisions", "research_object"}:
+        return fail("INVALID_CONTEXT_GOAL", "Unsupported context pack goal.")
+    if goal == "research_object" and not (target_type and target_id):
+        return fail("INVALID_CONTEXT_TARGET", "research_object requires target_type and target_id.")
+    return ok({"context_pack": context_pack(get_ops_store(request), goal, run_id=run_id, target_type=target_type, target_id=target_id)})
 
 
 @router.get("/api/runs/{run_id}")

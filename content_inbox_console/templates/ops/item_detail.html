@@ -30,4 +30,25 @@
   </section>
 </div>
 
+{% if decision_ledger and decision_ledger.ledger %}
+<section class="card">
+  <div class="card-header"><strong>Decision Ledger</strong></div>
+  <div class="card-body">
+    <table class="data-table">
+      <thead><tr><th>Time</th><th>Type</th><th>Decision</th><th>Actor</th></tr></thead>
+      <tbody>
+      {% for entry in decision_ledger.ledger[:12] %}
+      <tr>
+        <td class="text-xs">{{ entry.created_at }}</td>
+        <td>{{ entry.ledger_type }}</td>
+        <td>{{ entry.decision }}</td>
+        <td>{{ entry.actor }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
 {% endblock %}

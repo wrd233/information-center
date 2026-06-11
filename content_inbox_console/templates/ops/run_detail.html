@@ -86,6 +86,74 @@
   </div>
 </div>
 
+{% if loop_summary and loop_summary.summary %}
+{% set loop = loop_summary.summary %}
+<section class="card">
+  <div class="card-header">
+    <strong>Inbox Loop Summary</strong>
+    <span class="status-badge {{ 'success' if loop.confidence == 'high' else 'warning' if loop.confidence == 'medium' else 'danger' if loop.confidence in ('low','failed') else 'muted' }}">confidence {{ loop.confidence or '-' }}</span>
+  </div>
+  <div class="card-body">
+    <div class="stats-grid">
+      <div class="metric-card"><span class="metric-label">Coverage</span><span class="metric-value">{{ loop.coverage_rate or 0 }}</span><span class="metric-sub">{{ loop.succeeded_sources or 0 }}/{{ loop.active_sources or 0 }} sources</span></div>
+      <div class="metric-card"><span class="metric-label">Processed</span><span class="metric-value">{{ loop.processed_items or 0 }}</span><span class="metric-sub">new {{ loop.new_items or 0 }} · dup {{ loop.duplicate_items or 0 }}</span></div>
+      <div class="metric-card"><span class="metric-label">Failures</span><span class="metric-value">{{ loop.failed_sources or 0 }}</span><span class="metric-sub">items {{ loop.failed_items or 0 }}</span></div>
+      <div class="metric-card"><span class="metric-label">Post-processing</span><span class="metric-value text-sm">{{ (loop.post_processing or {}).deterministic or '-' }}</span><span class="metric-sub">LLM {{ (loop.post_processing or {}).llm_enrichment or '-' }}</span></div>
+    </div>
+    {% if loop.confidence_reasons %}
+    <p class="text-xs text-muted">Reasons: {{ loop.confidence_reasons | join(', ') }}</p>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% if operating %}
+<section class="card">
+  <div class="card-header">
+    <strong>Operating View</strong>
+    <a href="/triage?run_id={{ run_id }}" class="text-xs">Triage →</a>
+  </div>
+  <div class="card-body">
+    <div class="content-grid">
+      <div>
+        <h3 class="text-sm">Trusted Events</h3>
+        {% for event in (operating.trusted_events or [])[:5] %}
+        <p class="text-sm"><a href="/events/{{ event.event_id }}">{{ event.event_title }}</a> <span class="tag">conf {{ event.confidence }}</span></p>
+        {% else %}<p class="text-xs text-muted">暂无可信事件。</p>{% endfor %}
+      </div>
+      <div>
+        <h3 class="text-sm">Weak Signals</h3>
+        {% for signal in (operating.weak_signals or [])[:5] %}
+        <p class="text-sm">{{ signal.title }} <span class="tag">{{ signal.reason_codes | join(', ') }}</span></p>
+        {% else %}<p class="text-xs text-muted">暂无弱信号。</p>{% endfor %}
+      </div>
+    </div>
+    <div class="summary-list" style="margin-top:0.75rem;">
+      <dt>Silent sampled</dt><dd>{{ (operating.silent_summary or {}).silent_items_sampled or 0 }}</dd>
+      <dt>Agent queue</dt><dd>{{ (operating.agent_queue or []) | length }}</dd>
+      <dt>User escalations</dt><dd>{{ (operating.user_escalations or []) | length }}</dd>
+      <dt>Source anomalies</dt><dd>{{ (operating.source_health_anomalies or []) | length }}</dd>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if decision_ledger and decision_ledger.ledger %}
+<section class="card">
+  <div class="card-header"><strong>Decision Ledger</strong></div>
+  <div class="card-body">
+    <table class="data-table">
+      <thead><tr><th>Time</th><th>Target</th><th>Decision</th><th>Actor</th></tr></thead>
+      <tbody>
+      {% for entry in decision_ledger.ledger[:10] %}
+      <tr><td class="text-xs">{{ entry.created_at }}</td><td class="text-xs">{{ entry.target_type }}:{{ entry.target_id }}</td><td>{{ entry.decision }}</td><td>{{ entry.actor }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
 {# ── Next Steps ── #}
 {% if mode == 'dry_run' and status in ('success', 'completed') %}
 <div class="card risk-low">
@@ -197,8 +265,10 @@
 {# ── Source Progress + Event Timeline ── #}
 <div class="content-grid">
   <section class="card">
-    <div class="card-header"><strong>信息源进度</strong></div>
+    <div class="card-header"><strong>信息源进度</strong><span class="text-xs text-muted">详细 diagnostics</span></div>
     <div class="card-body">
+      <details {% if not loop_summary %}open{% endif %}>
+      <summary>展开 source diagnostics</summary>
       {% if summary.sources %}
       <div class="table-container" style="max-height:400px;">
         <table class="data-table">
@@ -230,6 +300,7 @@
       {% else %}
       <p class="text-xs text-muted">暂无信息源进度数据。</p>
       {% endif %}
+      </details>
     </div>
   </section>
 

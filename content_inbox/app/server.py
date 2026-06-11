@@ -31,13 +31,31 @@ from app.semantic.source_profiles import get_profile as semantic_get_source_prof
 from app.semantic.source_profiles import recompute_source_profiles
 from app.source_backfill import backfill_items
 from app.storage import InboxStore
+from app.ops_api import generate_information_objects
 from app.ops_api import router as ops_router
+from app.scheduler import InboxLoopScheduler
 
 
 app = FastAPI(title="content-inbox", version="0.1.0")
 store = InboxStore(settings.database_path)
 app.state.store = store
+app.state.inbox_loop_scheduler = None
 app.include_router(ops_router)
+
+
+@app.on_event("startup")
+def start_inbox_loop_scheduler() -> None:
+    scheduler_store = getattr(app.state, "store", store)
+    scheduler = InboxLoopScheduler(scheduler_store, post_process=generate_information_objects)
+    app.state.inbox_loop_scheduler = scheduler
+    scheduler.start()
+
+
+@app.on_event("shutdown")
+def stop_inbox_loop_scheduler() -> None:
+    scheduler = getattr(app.state, "inbox_loop_scheduler", None)
+    if scheduler:
+        scheduler.stop()
 
 
 def get_store() -> InboxStore:
