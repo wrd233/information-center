@@ -562,60 +562,157 @@ def run_diagnostics(store: InboxStore, run_id: str) -> dict[str, Any] | None:
     }
 
 
+def scope_metadata(run_id: str | None) -> dict[str, Any]:
+    return {
+        "type": "selected_run" if run_id else "legacy_full",
+        "run_id": run_id,
+        "label": f"Selected Run {run_id}" if run_id else "Legacy / 全库",
+        "data_policy": "registry_full_run_only" if run_id else "legacy_full_database",
+        "includes_history": not bool(run_id),
+    }
+
+
 def operating_view(store: InboxStore, run_id: str | None = None) -> dict[str, Any]:
     with store.connect() as conn:
-        trusted_events = [
-            dict(row)
-            for row in conn.execute(
-                """
-                SELECT event_id, event_title, event_summary, event_type, status, confidence, importance, primary_cluster_id, created_at
-                FROM events
-                WHERE status = 'ready' OR confidence >= 0.9
-                ORDER BY importance DESC, COALESCE(event_time, created_at) DESC
-                LIMIT ?
-                """,
-                (TRUSTED_EVENT_LIMIT,),
-            ).fetchall()
-        ]
-        weak_signals = [
-            dict(row)
-            for row in conn.execute(
-                """
-                SELECT item_id, title, source_name, source_id, published_at, screening_json, clustering_json
-                FROM inbox_items
-                WHERE deleted_at IS NULL
-                ORDER BY created_at DESC
-                LIMIT ?
-                """,
-                (WEAK_SIGNAL_LIMIT * 4,),
-            ).fetchall()
-        ]
-        agent_queue = [
-            dict(row)
-            for row in conn.execute(
-                """
-                SELECT * FROM review_queue
-                WHERE status = 'pending'
-                ORDER BY created_at DESC
-                LIMIT ?
-                """,
-                (AGENT_QUEUE_LIMIT,),
-            ).fetchall()
-        ]
-        source_health_anomalies = [
-            dict(row)
-            for row in conn.execute(
-                """
-                SELECT source_id, source_name, status, priority, last_failure_at, last_error_code,
-                    last_error_message, consecutive_failure_count, last_duration_ms
-                FROM rss_sources
-                WHERE deleted_at IS NULL
-                  AND (status IN ('broken', 'paused') OR consecutive_failure_count > 0 OR last_error_code IS NOT NULL)
-                ORDER BY consecutive_failure_count DESC, last_failure_at DESC
-                LIMIT 20
-                """
-            ).fetchall()
-        ]
+        if run_id:
+            trusted_events = [
+                dict(row)
+                for row in conn.execute(
+                    """
+                    SELECT e.event_id, e.event_title, e.event_summary, e.event_type, e.status, e.confidence,
+                        e.importance, e.primary_cluster_id, e.created_at
+                    FROM events e
+                    WHERE (e.status = 'ready' OR e.confidence >= 0.9)
+                      AND EXISTS (
+                        SELECT 1
+                        FROM event_items ei
+                        JOIN item_run_links irl ON irl.item_id = ei.item_id
+                        WHERE ei.event_id = e.event_id
+                          AND irl.run_id = ?
+                      )
+                    ORDER BY e.importance DESC, COALESCE(e.event_time, e.created_at) DESC
+                    LIMIT ?
+                    """,
+                    (run_id, TRUSTED_EVENT_LIMIT),
+                ).fetchall()
+            ]
+            weak_signals = [
+                dict(row)
+                for row in conn.execute(
+                    """
+                    SELECT DISTINCT i.item_id, i.title, i.source_name, i.source_id, i.published_at,
+                        i.screening_json, i.clustering_json, i.created_at
+                    FROM inbox_items i
+                    JOIN item_run_links irl ON irl.item_id = i.item_id
+                    WHERE i.deleted_at IS NULL
+                      AND irl.run_id = ?
+                    ORDER BY i.created_at DESC
+                    LIMIT ?
+                    """,
+                    (run_id, WEAK_SIGNAL_LIMIT * 4),
+                ).fetchall()
+            ]
+            agent_queue = [
+                dict(row)
+                for row in conn.execute(
+                    """
+                    SELECT rq.*
+                    FROM review_queue rq
+                    WHERE rq.status = 'pending'
+                      AND (
+                        (rq.target_type = 'item' AND EXISTS (
+                          SELECT 1 FROM item_run_links irl
+                          WHERE irl.item_id = rq.target_id AND irl.run_id = ?
+                        ))
+                        OR (rq.target_type = 'event' AND EXISTS (
+                          SELECT 1
+                          FROM event_items ei
+                          JOIN item_run_links irl ON irl.item_id = ei.item_id
+                          WHERE ei.event_id = rq.target_id AND irl.run_id = ?
+                        ))
+                        OR (rq.target_type = 'cluster' AND EXISTS (
+                          SELECT 1
+                          FROM cluster_items ci
+                          JOIN item_run_links irl ON irl.item_id = ci.item_id
+                          WHERE ci.cluster_id = rq.target_id AND irl.run_id = ?
+                        ))
+                      )
+                    ORDER BY rq.created_at DESC
+                    LIMIT ?
+                    """,
+                    (run_id, run_id, run_id, AGENT_QUEUE_LIMIT),
+                ).fetchall()
+            ]
+            source_health_anomalies = [
+                dict(row)
+                for row in conn.execute(
+                    """
+                    SELECT s.source_id, s.source_name, s.status, s.priority, s.last_failure_at, s.last_error_code,
+                        s.last_error_message, s.consecutive_failure_count, s.last_duration_ms
+                    FROM rss_sources s
+                    JOIN rss_ingest_run_sources rs ON rs.source_id = s.source_id
+                    WHERE s.deleted_at IS NULL
+                      AND rs.run_id = ?
+                      AND (s.status IN ('broken', 'paused') OR s.consecutive_failure_count > 0 OR s.last_error_code IS NOT NULL OR rs.status = 'failed')
+                    ORDER BY s.consecutive_failure_count DESC, s.last_failure_at DESC
+                    LIMIT 20
+                    """,
+                    (run_id,),
+                ).fetchall()
+            ]
+        else:
+            trusted_events = [
+                dict(row)
+                for row in conn.execute(
+                    """
+                    SELECT event_id, event_title, event_summary, event_type, status, confidence, importance, primary_cluster_id, created_at
+                    FROM events
+                    WHERE status = 'ready' OR confidence >= 0.9
+                    ORDER BY importance DESC, COALESCE(event_time, created_at) DESC
+                    LIMIT ?
+                    """,
+                    (TRUSTED_EVENT_LIMIT,),
+                ).fetchall()
+            ]
+            weak_signals = [
+                dict(row)
+                for row in conn.execute(
+                    """
+                    SELECT item_id, title, source_name, source_id, published_at, screening_json, clustering_json
+                    FROM inbox_items
+                    WHERE deleted_at IS NULL
+                    ORDER BY created_at DESC
+                    LIMIT ?
+                    """,
+                    (WEAK_SIGNAL_LIMIT * 4,),
+                ).fetchall()
+            ]
+            agent_queue = [
+                dict(row)
+                for row in conn.execute(
+                    """
+                    SELECT * FROM review_queue
+                    WHERE status = 'pending'
+                    ORDER BY created_at DESC
+                    LIMIT ?
+                    """,
+                    (AGENT_QUEUE_LIMIT,),
+                ).fetchall()
+            ]
+            source_health_anomalies = [
+                dict(row)
+                for row in conn.execute(
+                    """
+                    SELECT source_id, source_name, status, priority, last_failure_at, last_error_code,
+                        last_error_message, consecutive_failure_count, last_duration_ms
+                    FROM rss_sources
+                    WHERE deleted_at IS NULL
+                      AND (status IN ('broken', 'paused') OR consecutive_failure_count > 0 OR last_error_code IS NOT NULL)
+                    ORDER BY consecutive_failure_count DESC, last_failure_at DESC
+                    LIMIT 20
+                    """
+                ).fetchall()
+            ]
     weak = [weak_signal_from_item(row) for row in weak_signals]
     weak = [entry for entry in weak if entry is not None][:WEAK_SIGNAL_LIMIT]
     silent_summary = silent_summary_from_items(weak_signals)
@@ -625,6 +722,7 @@ def operating_view(store: InboxStore, run_id: str | None = None) -> dict[str, An
     ]
     return {
         "run_id": run_id,
+        "scope": scope_metadata(run_id),
         "trusted_events": trusted_events,
         "weak_signals": weak,
         "silent_summary": silent_summary,
@@ -751,6 +849,7 @@ def context_pack(
     base = {
         "goal": goal,
         "run_id": effective_run_id,
+        "scope": scope_metadata(effective_run_id),
         "latest_run_summary": summary,
         "trusted_events": view["trusted_events"],
         "weak_signals": view["weak_signals"],
@@ -760,6 +859,18 @@ def context_pack(
         "source_health_anomalies": view["source_health_anomalies"],
         "decision_ledger": ledger,
         "policy": {"raw_items": "not_included_by_default", "network": "disabled_by_default"},
+    }
+    base["object_counts"] = {
+        "trusted_events": len(base["trusted_events"]),
+        "weak_signals": len(base["weak_signals"]),
+        "agent_queue": len(base["agent_queue"]),
+        "user_escalations": len(base["user_escalations"]),
+        "source_health_anomalies": len(base["source_health_anomalies"]),
+        "decision_ledger": len(base["decision_ledger"]),
+    }
+    base["budget"] = {
+        "approx_tokens": max(1, len(json.dumps(base, ensure_ascii=False, default=str)) // 4),
+        "raw_items_included": False,
     }
     if goal == "research_object":
         base["target"] = {"target_type": target_type, "target_id": target_id}

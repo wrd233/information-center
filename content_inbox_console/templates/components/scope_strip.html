@@ -1,0 +1,6 @@
+{% if scope %}
+<div class="scope-strip scope-{{ scope.kind or 'default' }}">
+  <strong>{{ scope.label }}</strong>
+  {% if scope.detail %}<span>{{ scope.detail }}</span>{% endif %}
+</div>
+{% endif %}

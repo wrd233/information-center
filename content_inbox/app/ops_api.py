@@ -2220,7 +2220,7 @@ def api_run_pipeline_stage(request: Request, run_id: str, stage: str) -> Any:
         add_event(store, run_id, "event_completed", message="事件生成完成。", payload={"events_created_or_updated": result.get("events_created_or_updated", 0)})
         add_event(store, run_id, "review_queue_generated", message="审核队列生成完成。", payload={"review_required": result.get("review_required", 0)})
     elif stage == "briefing":
-        briefing = generate_briefing(store, "daily")
+        briefing = generate_briefing(store, "daily", run_id=run_id, scope=output_scope(run_id=run_id))
         add_event(store, run_id, "briefing_generated", message="每日简报已生成。", payload={"briefing_id": briefing["briefing_id"]})
         result = {"briefing": briefing}
     elif stage == "report":
@@ -2594,31 +2594,113 @@ def api_evidence(request: Request, object_type: str, object_id: str) -> dict[str
     return ok({"object_type": object_type, "object_id": object_id, "evidence": rows})
 
 
-def generate_briefing(store: InboxStore, briefing_type: str) -> dict[str, Any]:
+def output_scope(*, run_id: str | None = None, object_type: str | None = None, object_id: str | None = None, context_goal: str | None = None) -> dict[str, Any]:
+    if run_id:
+        return {
+            "type": "run",
+            "run_id": run_id,
+            "object_type": "run",
+            "object_id": run_id,
+            "label": f"Selected Run {run_id}",
+            "legacy": False,
+            "unbound": False,
+        }
+    if context_goal:
+        return {
+            "type": "context_pack",
+            "goal": context_goal,
+            "object_type": object_type,
+            "object_id": object_id,
+            "label": f"Context Pack {context_goal}",
+            "legacy": False,
+            "unbound": False,
+        }
+    if object_type and object_id:
+        return {
+            "type": object_type,
+            "object_type": object_type,
+            "object_id": object_id,
+            "label": f"{object_type} {object_id}",
+            "legacy": False,
+            "unbound": False,
+        }
+    return {
+        "type": "legacy_unbound",
+        "label": "Legacy / 未绑定来源",
+        "legacy": True,
+        "unbound": True,
+    }
+
+
+def parse_payload_json(value: Any) -> dict[str, Any]:
+    if isinstance(value, dict):
+        return value
+    try:
+        loaded = json.loads(value or "{}")
+        return loaded if isinstance(loaded, dict) else {}
+    except Exception:
+        return {}
+
+
+def enrich_briefing_row(row: dict[str, Any]) -> dict[str, Any]:
+    payload = parse_payload_json(row.get("payload_json"))
+    scope = payload.get("scope") or output_scope()
+    return {
+        **row,
+        "payload": payload,
+        "scope": scope,
+        "scope_label": scope.get("label", "Legacy / 未绑定来源"),
+        "is_legacy": bool(scope.get("legacy") or scope.get("unbound")),
+        "source_object_type": scope.get("object_type") or scope.get("type"),
+        "source_object_id": scope.get("object_id") or scope.get("run_id") or scope.get("goal"),
+    }
+
+
+def enrich_report_row(row: dict[str, Any]) -> dict[str, Any]:
+    payload = parse_payload_json(row.get("payload_json"))
+    scope = payload.get("scope") or output_scope(object_type=row.get("object_type"), object_id=row.get("object_id"))
+    return {
+        **row,
+        "payload": payload,
+        "scope": scope,
+        "scope_label": scope.get("label", "Legacy / 未绑定来源"),
+        "is_legacy": bool(scope.get("legacy") or scope.get("unbound")),
+        "source_object_type": scope.get("object_type") or row.get("object_type") or scope.get("type"),
+        "source_object_id": scope.get("object_id") or row.get("object_id") or scope.get("run_id") or scope.get("goal"),
+    }
+
+
+def generate_briefing(store: InboxStore, briefing_type: str, *, run_id: str | None = None, scope: dict[str, Any] | None = None) -> dict[str, Any]:
     now = utc_now()
+    scope = scope or output_scope(run_id=run_id)
+    view = operating_view(store, run_id) if run_id else None
     with store.connect() as conn:
-        events = [
-            dict(r)
-            for r in conn.execute(
-                """
-                SELECT *
-                FROM events
-                WHERE status = 'ready' OR confidence >= 0.9
-                ORDER BY importance DESC, COALESCE(event_time, created_at) DESC
-                LIMIT 10
-                """
-            ).fetchall()
-        ]
-        reviews = [dict(r) for r in conn.execute("SELECT * FROM review_queue WHERE status = 'pending' ORDER BY created_at DESC LIMIT 10").fetchall()]
+        if view is not None:
+            events = view["trusted_events"][:10]
+            reviews = view["agent_queue"][:10]
+        else:
+            events = [
+                dict(r)
+                for r in conn.execute(
+                    """
+                    SELECT *
+                    FROM events
+                    WHERE status = 'ready' OR confidence >= 0.9
+                    ORDER BY importance DESC, COALESCE(event_time, created_at) DESC
+                    LIMIT 10
+                    """
+                ).fetchall()
+            ]
+            reviews = [dict(r) for r in conn.execute("SELECT * FROM review_queue WHERE status = 'pending' ORDER BY created_at DESC LIMIT 10").fetchall()]
         type_cn = "每日" if briefing_type == "daily" else "每周"
         title = f"{type_cn}简报 {now[:10]}"
         event_lines = "\n".join(f"- {e['event_title']}（可信事件，置信度 {float(e['confidence'] or 0):.2f}）" for e in events) or "- 暂无可信事件"
         review_lines = "\n".join(f"- {r['review_type']} {r['target_type']}:{r['target_id']}" for r in reviews) or "- 暂无待审核项"
-        body = "# " + title + "\n\n## 可信事件\n" + event_lines + "\n\n## 待审核\n" + review_lines
+        body = "# " + title + f"\n\nScope: {scope.get('label')}\n\n## 可信事件\n" + event_lines + "\n\n## Agent 处理\n" + review_lines
         briefing_id = f"brief_{briefing_type}_{stable_hash(now)[:12]}"
-        conn.execute("INSERT OR REPLACE INTO briefings(briefing_id, briefing_type, title, body_markdown, payload_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)", (briefing_id, briefing_type, title, body, json.dumps({"events": events, "reviews": reviews}, ensure_ascii=False), now, now))
+        conn.execute("INSERT OR REPLACE INTO briefings(briefing_id, briefing_type, title, body_markdown, payload_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)", (briefing_id, briefing_type, title, body, json.dumps({"scope": scope, "events": events, "reviews": reviews}, ensure_ascii=False), now, now))
         row = conn.execute("SELECT * FROM briefings WHERE briefing_id = ?", (briefing_id,)).fetchone()
-    return dict(row)
+    return enrich_briefing_row(dict(row))
 
 
 @router.get("/api/briefings/daily")
@@ -2626,12 +2708,15 @@ def api_daily_briefings(request: Request) -> dict[str, Any]:
     store = get_ops_store(request)
     with store.connect() as conn:
         rows = [dict(r) for r in conn.execute("SELECT * FROM briefings WHERE briefing_type = 'daily' ORDER BY created_at DESC LIMIT 10").fetchall()]
-    return ok({"briefings": rows})
+    return ok({"briefings": [enrich_briefing_row(row) for row in rows]})
 
 
 @router.post("/api/briefings/daily/generate")
-def api_generate_daily(request: Request) -> dict[str, Any]:
-    return ok({"briefing": generate_briefing(get_ops_store(request), "daily")})
+def api_generate_daily(request: Request, payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    payload = payload or {}
+    run_id = payload.get("run_id")
+    scope = output_scope(run_id=run_id, context_goal=payload.get("context_goal"), object_type=payload.get("object_type"), object_id=payload.get("object_id"))
+    return ok({"briefing": generate_briefing(get_ops_store(request), "daily", run_id=run_id, scope=scope)})
 
 
 @router.get("/api/briefings/weekly")
@@ -2639,12 +2724,15 @@ def api_weekly_briefings(request: Request) -> dict[str, Any]:
     store = get_ops_store(request)
     with store.connect() as conn:
         rows = [dict(r) for r in conn.execute("SELECT * FROM briefings WHERE briefing_type = 'weekly' ORDER BY created_at DESC LIMIT 10").fetchall()]
-    return ok({"briefings": rows})
+    return ok({"briefings": [enrich_briefing_row(row) for row in rows]})
 
 
 @router.post("/api/briefings/weekly/generate")
-def api_generate_weekly(request: Request) -> dict[str, Any]:
-    return ok({"briefing": generate_briefing(get_ops_store(request), "weekly")})
+def api_generate_weekly(request: Request, payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    payload = payload or {}
+    run_id = payload.get("run_id")
+    scope = output_scope(run_id=run_id, context_goal=payload.get("context_goal"), object_type=payload.get("object_type"), object_id=payload.get("object_id"))
+    return ok({"briefing": generate_briefing(get_ops_store(request), "weekly", run_id=run_id, scope=scope)})
 
 
 @router.get("/api/saved-views")
@@ -2680,15 +2768,65 @@ def api_saved_view_delete(request: Request, view_id: str) -> dict[str, Any]:
 
 @router.post("/api/agent-query/preview")
 def api_agent_query(request: Request, payload: dict[str, Any]) -> dict[str, Any]:
-    items = api_items(request, keyword=payload.get("query"), limit=int(payload.get("limit", 10)))["data"]["items"]
-    compact = [{"item_id": item["item_id"], "title": item["title"], "url": item["url"], "published_at": item["published_at"]} for item in items]
-    markdown = "\n".join(f"- [{item['title']}]({item['url'] or '#'})" for item in items)
-    return ok({"query": payload.get("query"), "format": payload.get("format", "compact"), "context_pack": compact, "markdown": markdown, "json": compact, "human": markdown or "没有匹配的条目。"})
+    if payload.get("scope_type") == "legacy_full":
+        items = api_items(request, keyword=payload.get("query"), limit=int(payload.get("limit", 10)))["data"]["items"]
+        compact = [{"item_id": item["item_id"], "title": item["title"], "url": item["url"], "published_at": item["published_at"]} for item in items]
+        markdown = "\n".join(f"- [{item['title']}]({item['url'] or '#'})" for item in items)
+        return ok(
+            {
+                "query": payload.get("query"),
+                "format": payload.get("format", "compact"),
+                "scope": output_scope(),
+                "context_pack": compact,
+                "object_counts": {"legacy_items": len(compact)},
+                "budget": {"approx_tokens": max(1, len(json.dumps(compact, ensure_ascii=False)) // 4), "raw_items_included": True},
+                "markdown": markdown,
+                "json": compact,
+                "human": markdown or "没有匹配的条目。",
+            }
+        )
+
+    goal = payload.get("goal") or payload.get("context_goal") or "daily_brief"
+    run_id = payload.get("run_id")
+    target_type = payload.get("target_type")
+    target_id = payload.get("target_id")
+    pack = context_pack(get_ops_store(request), goal, run_id=run_id, target_type=target_type, target_id=target_id)
+    instructions = [
+        "只能基于给定 Context Pack 回答。",
+        "证据不足就明确说证据不足。",
+        "区分事实、推断和建议。",
+        "优先使用中文回答，产品名、模型名和 source 名可保留原文。",
+    ]
+    facts = [
+        f"可信事件 {pack.get('object_counts', {}).get('trusted_events', 0)} 个",
+        f"弱信号 {pack.get('object_counts', {}).get('weak_signals', 0)} 个",
+        f"需要处理 {pack.get('object_counts', {}).get('agent_queue', 0)} 项",
+        f"信息源异常 {pack.get('object_counts', {}).get('source_health_anomalies', 0)} 个",
+    ]
+    human = "上下文包已就绪：" + "，".join(facts) + "。此接口不调用外部 LLM。"
+    markdown = "\n".join([f"- {line}" for line in instructions]) + "\n\n" + "\n".join([f"- {line}" for line in facts])
+    return ok(
+        {
+            "query": payload.get("query"),
+            "format": payload.get("format", "human"),
+            "scope": pack.get("scope"),
+            "context_pack": pack,
+            "object_counts": pack.get("object_counts", {}),
+            "budget": pack.get("budget", {}),
+            "instructions": instructions,
+            "markdown": markdown,
+            "json": pack,
+            "human": human,
+        }
+    )
 
 
 @router.get("/api/reports")
 def api_reports(request: Request) -> dict[str, Any]:
-    return list_table(request, "reports", "reports", 50, 0)
+    store = get_ops_store(request)
+    with store.connect() as conn:
+        rows = [dict(row) for row in conn.execute("SELECT * FROM reports ORDER BY created_at DESC LIMIT 50").fetchall()]
+    return ok({"reports": [enrich_report_row(row) for row in rows]})
 
 
 @router.post("/api/reports/generate")
@@ -2697,23 +2835,31 @@ def api_report_generate(request: Request, payload: dict[str, Any]) -> dict[str, 
     now = utc_now()
     report_id = f"report_{stable_hash(now + json.dumps(payload, sort_keys=True))[:12]}"
     report_type = payload.get("report_type", "summary")
+    scope = output_scope(run_id=payload.get("run_id") or (payload.get("object_id") if payload.get("object_type") == "run" else None), context_goal=payload.get("context_goal"), object_type=payload.get("object_type"), object_id=payload.get("object_id"))
     type_cn = {"summary": "总体摘要", "source_health": "信息源健康度", "event": "事件报告", "run": "运行报告"}.get(report_type, report_type)
     title = f"{type_cn}"
+    scoped_run_id = scope.get("run_id")
     with store.connect() as conn:
-        trusted_events = [
-            dict(r)
-            for r in conn.execute(
-                """
-                SELECT event_id, event_title, event_type, status, confidence, importance, event_time, primary_cluster_id
-                FROM events
-                WHERE status = 'ready' OR confidence >= 0.9
-                ORDER BY importance DESC, COALESCE(event_time, created_at) DESC
-                LIMIT 10
-                """
-            ).fetchall()
-        ]
-        pending_reviews = int(conn.execute("SELECT COUNT(*) AS n FROM review_queue WHERE status = 'pending'").fetchone()["n"] or 0)
-        event_total = int(conn.execute("SELECT COUNT(*) AS n FROM events").fetchone()["n"] or 0)
+        if scoped_run_id:
+            view = operating_view(store, scoped_run_id)
+            trusted_events = view["trusted_events"][:10]
+            pending_reviews = len(view["agent_queue"])
+            event_total = len(view["trusted_events"])
+        else:
+            trusted_events = [
+                dict(r)
+                for r in conn.execute(
+                    """
+                    SELECT event_id, event_title, event_type, status, confidence, importance, event_time, primary_cluster_id
+                    FROM events
+                    WHERE status = 'ready' OR confidence >= 0.9
+                    ORDER BY importance DESC, COALESCE(event_time, created_at) DESC
+                    LIMIT 10
+                    """
+                ).fetchall()
+            ]
+            pending_reviews = int(conn.execute("SELECT COUNT(*) AS n FROM review_queue WHERE status = 'pending'").fetchone()["n"] or 0)
+            event_total = int(conn.execute("SELECT COUNT(*) AS n FROM events").fetchone()["n"] or 0)
     event_lines = "\n".join(
         f"- {event['event_title']}：{event['event_type']}，置信度 {float(event['confidence'] or 0):.2f}，cluster {event['primary_cluster_id'] or 'none'}"
         for event in trusted_events
@@ -2721,7 +2867,8 @@ def api_report_generate(request: Request, payload: dict[str, Any]) -> dict[str, 
     body = (
         f"# {title}\n\n"
         f"生成时间: {now}\n\n"
-        f"关联对象: {payload.get('object_type', 'environment')} {payload.get('object_id', '')}\n\n"
+        f"Scope: {scope.get('label')}\n\n"
+        f"关联对象: {scope.get('object_type', payload.get('object_type', 'environment'))} {scope.get('object_id', payload.get('object_id', ''))}\n\n"
         "## 可信事件\n"
         f"{event_lines}\n\n"
         "## 质量概览\n"
@@ -2731,7 +2878,8 @@ def api_report_generate(request: Request, payload: dict[str, Any]) -> dict[str, 
         "- 输入策略: 仅消费已物化事件，不直接消费 raw item 或 weak candidate。\n"
     )
     with store.connect() as conn:
-        conn.execute("INSERT OR REPLACE INTO reports(report_id, report_type, object_type, object_id, title, body_markdown, payload_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (report_id, report_type, payload.get("object_type"), payload.get("object_id"), title, body, json.dumps(payload, ensure_ascii=False), now, now))
+        output_payload = {**payload, "scope": scope}
+        conn.execute("INSERT OR REPLACE INTO reports(report_id, report_type, object_type, object_id, title, body_markdown, payload_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (report_id, report_type, scope.get("object_type") or payload.get("object_type"), scope.get("object_id") or payload.get("object_id"), title, body, json.dumps(output_payload, ensure_ascii=False), now, now))
     return ok({"report_id": report_id, "title": title, "content": body})
 
 
@@ -2742,4 +2890,4 @@ def api_report(request: Request, report_id: str) -> Any:
         row = conn.execute("SELECT * FROM reports WHERE report_id = ?", (report_id,)).fetchone()
     if not row:
         return fail("REPORT_NOT_FOUND", "Report not found.", status_code=404)
-    return ok({"report": dict(row)})
+    return ok({"report": enrich_report_row(dict(row))})

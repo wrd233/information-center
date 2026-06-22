@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}信息源健康 - 信息中心作战台{% endblock %}
+{% block page_title %}信息源健康{% endblock %}
+
+{% block content %}
+{% set summary = run_summary.get('summary') or {} %}
+{% set sources = diagnostics.get('sources') or [] %}
+{% set failures = diagnostics.get('failures') or [] %}
+{% set anomalies = (operating.get('source_health_anomalies') or []) %}
+
+<header class="page-header">
+  <div>
+    <h1>信息源健康</h1>
+    <p class="text-sm text-muted">基于 latest 或 selected registry_full run 的 source 成功率、失败摘要和异常列表。</p>
+  </div>
+  <div class="header-actions">
+    <a href="/sources" class="btn btn-secondary btn-sm">管理信息源</a>
+    <a href="/inbox-loop" class="btn btn-ghost btn-sm">Inbox Loop</a>
+  </div>
+</header>
+
+{% include "components/scope_strip.html" %}
+
+{% if not run_id %}
+<div class="empty-state">
+  <h3>暂无运行数据</h3>
+  <p>信息源健康默认绑定 Inbox Run。先完成一次 registry_full run。</p>
+  <a href="/inbox-loop" class="btn btn-primary btn-sm">进入 Inbox Loop</a>
+</div>
+{% else %}
+<section class="stats-grid">
+  <div class="metric-card">
+    <span class="metric-label">活跃信息源</span>
+    <span class="metric-value">{{ summary.active_sources or sources | length }}</span>
+    <span class="metric-sub">本次 run 范围</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">成功</span>
+    <span class="metric-value">{{ summary.succeeded_sources or 0 }}</span>
+    <span class="metric-sub">失败 {{ summary.failed_sources or failures | length }}</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">覆盖率</span>
+    <span class="metric-value">{{ summary.coverage_rate or 0 }}</span>
+    <span class="metric-sub">置信度 {{ summary.confidence or '-' }}</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">异常</span>
+    <span class="metric-value">{{ anomalies | length }}</span>
+    <span class="metric-sub">失败、暂停或连续错误</span>
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-header">
+    <strong>异常摘要</strong>
+    <span class="text-xs text-muted">默认展开，只含当前 scope</span>
+  </div>
+  <div class="card-body">
+    {% if anomalies %}
+    <table class="data-table">
+      <thead><tr><th>信息源</th><th>状态</th><th>优先级</th><th>最后失败</th><th>错误</th><th>连续失败</th></tr></thead>
+      <tbody>
+      {% for source in anomalies %}
+      <tr>
+        <td>{{ source.source_name or source.source_id }}</td>
+        <td>{{ source.status or '-' }}</td>
+        <td>{{ source.priority or '-' }}</td>
+        <td class="text-xs">{{ source.last_failure_at or '-' }}</td>
+        <td class="text-xs">{{ source.last_error_code or '' }} {{ source.last_error_message or '' }}</td>
+        <td>{{ source.consecutive_failure_count or 0 }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="text-xs text-muted">当前 scope 没有异常信息源。</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-header">
+    <strong>运行内信息源明细</strong>
+    <span class="text-xs text-muted">{{ sources | length }} 个 source</span>
+  </div>
+  <div class="card-body">
+    {% if sources %}
+    <div class="table-container">
+      <table class="data-table">
+        <thead><tr><th>信息源</th><th>状态</th><th>抓取</th><th>新增</th><th>重复</th><th>耗时</th><th>错误</th></tr></thead>
+        <tbody>
+        {% for source in sources %}
+        <tr>
+          <td>{{ source.source_name or source.source_id }}</td>
+          <td>
+            {% if source.status == 'success' %}<span class="status-badge success">成功</span>
+            {% elif source.status == 'failed' %}<span class="status-badge danger">失败</span>
+            {% else %}<span class="status-badge muted">{{ source.status or '-' }}</span>{% endif %}
+          </td>
+          <td>{{ source.fetched_entries_count or 0 }}</td>
+          <td>{{ source.new_items_count or 0 }}</td>
+          <td>{{ source.duplicate_items_count or 0 }}</td>
+          <td class="text-xs">{{ source.duration_ms or source.last_duration_ms or '-' }}</td>
+          <td class="text-xs">{{ source.error_code or source.last_error_code or '' }} {{ source.error_message or source.last_error_message or '' }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-xs text-muted">没有 source diagnostics。</p>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

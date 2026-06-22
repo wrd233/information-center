@@ -1,6 +1,6 @@
 # content_inbox_console — 信息中心作战台
 
-`content_inbox_console` 是 `content_inbox` 的 API 驱动前端作战台。采用低心智负担、中文优先、任务流驱动的设计，帮助用户完成从信息源管理到简报输出的完整流程。
+`content_inbox_console` 是 `content_inbox` 的 API 驱动前端作战台。采用低心智负担、中文优先、Inbox Operating Loop 驱动的设计，帮助用户从 latest/selected registry_full Inbox Run 消费今日情报、Agent 处理、信息源健康和输出记录。
 
 ## 技术栈
 
@@ -37,11 +37,11 @@ uvicorn app.main:app --host 127.0.0.1 --port 8788 --reload
 
 | 分组 | 页面 | 说明 |
 |------|------|------|
-| **作战首页** | /dashboard | 系统状态 + 下一步建议 + 最近任务 |
-| **开始使用** | /sources, /runs/new, /runs | 信息源管理 → 创建任务 → 任务历史 |
-| **信息消费** | /events, /review-queue, /briefings, /reports, /agent-query | 事件、审核、简报、报告、智能查询 |
+| **作战首页** | /dashboard | latest Inbox Run 状态 + 下一步建议 |
+| **Inbox Operating Loop** | /inbox-loop, /today-intel, /agent-processing, /runs, /source-health, /outputs | Inbox Loop、今日情报、Agent 处理、运行记录、信息源健康、输出记录 |
+| **准备与上下文** | /sources, /runs/new, /context-query | 信息源、创建运行、上下文包查询 |
 | **维护** | /reset, /environment, /settings | 数据清理、环境管理、设置 |
-| **高级调试** (折叠) | /items, /dedupe-groups, /clusters, /entities, /relations, /claims, /topics, /timeline, /evidence, /saved-views | 原始数据对象调试视图 |
+| **高级调试 / Legacy / 历史数据** (折叠) | /events, /review-queue, /briefings, /reports, /agent-query, /items, /dedupe-groups, /clusters, /entities, /relations, /claims, /topics, /timeline, /evidence, /saved-views | 旧全库/Legacy 数据对象调试视图 |
 
 ### 中文词汇表
 
@@ -52,26 +52,27 @@ uvicorn app.main:app --host 127.0.0.1 --port 8788 --reload
 | dry-run | 预演模式 |
 | real-write | 写入模式 |
 | Item | 原始信息 |
-| Event | 事件 |
+| Event | 可信事件 |
+| Weak Signal | 弱信号 |
 | Cluster | 聚合线索 |
-| Review Queue | 待审核 |
-| Briefing | 简报 |
-| Report | 报告 |
-| Agent Query | 智能查询 |
+| Review Queue | Legacy 待审核队列 |
+| Agent Packet | Agent 处理包 |
+| Decision Ledger | Agent 决策账本 |
+| Briefing / Report | 输出记录 |
+| Agent Query | 上下文包查询；旧全库查询为 Legacy/Debug |
 | Fresh DB | 当前工作区 |
 | Legacy DB | 历史数据库 |
 
 ## 主流程
 
-1. **作战首页** (/dashboard): 确认环境安全，查看下一步建议
-2. **准备信息源** (/sources): 导入 OPML 或手动新增 RSS 地址
-3. **创建任务** (/runs/new): 按步骤选择模式、信息源、时间范围、规模限制
-4. **预览任务** (/runs/preview): 确认影响范围后启动
-5. **任务驾驶舱** (/runs/{id}): 观察进度、运行流水线、查看事件时间线
-6. **处理事件** (/events): 查看结构化事件
-7. **人工审核** (/review-queue): 确认或忽略候选事件
-8. **生成输出** (/briefings, /reports): 生成简报和报告
-9. **数据清理** (/reset): 按范围清空数据，Preview → 确认 → Commit
+1. **Inbox Loop** (/inbox-loop): 触发或查看 latest registry_full Inbox Run
+2. **今日情报** (/today-intel): 分开展示可信事件、弱信号、需要你裁决、静默处理摘要和信息源异常
+3. **Agent 处理** (/agent-processing): 查看 Agent Packet、待 Agent 处理、Decision Ledger 和需要你裁决
+4. **运行记录** (/runs, /runs/{id}): 查看 run 记录、运行详情和带 scope 的输出触发入口
+5. **信息源健康** (/source-health): 查看 selected run 的 source 成功率和异常摘要
+6. **输出记录** (/outputs): 查看绑定 run/object/context scope 的简报和报告；历史未绑定输出标记 Legacy
+7. **上下文包查询** (/context-query): 默认基于 selected Context Pack 组装回答上下文，不查全库
+8. **高级调试 / Legacy**: 旧事件、旧待审核、旧简报、旧报告、旧全库查询和 raw objects 默认折叠
 
 ## 视觉设计
 

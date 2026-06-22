@@ -7,10 +7,12 @@
 <header class="page-header">
   <div>
     <h1>{{ title }}</h1>
-    <p class="text-sm text-muted">高级调试视图。这里是后台数据对象的原始列表，普通使用流程不需要访问此页面。</p>
+    <p class="text-sm text-muted">高级调试 / Legacy 视图。这里是后台数据对象的原始列表，不是默认 Inbox Operating Loop 入口。</p>
   </div>
   <a href="/dashboard" class="btn btn-ghost btn-sm">← 返回作战首页</a>
 </header>
+
+{% include "components/scope_strip.html" %}
 
 {% if items %}
 <div class="card-grid">

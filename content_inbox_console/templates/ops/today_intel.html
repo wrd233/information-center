@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% block title %}今日情报 - 信息中心作战台{% endblock %}
+{% block page_title %}今日情报{% endblock %}
+
+{% block content %}
+{% set summary = run_summary.get('summary') or {} %}
+{% set trusted_events = operating.get('trusted_events') or [] %}
+{% set weak_signals = operating.get('weak_signals') or [] %}
+{% set user_escalations = operating.get('user_escalations') or [] %}
+{% set agent_queue = operating.get('agent_queue') or [] %}
+{% set anomalies = operating.get('source_health_anomalies') or [] %}
+{% set silent = operating.get('silent_summary') or {} %}
+
+<header class="page-header">
+  <div>
+    <h1>今日情报</h1>
+    <p class="text-sm text-muted">默认只消费 latest 或 selected registry_full Inbox Run。可信事件和弱信号分开展示。</p>
+  </div>
+  <div class="header-actions">
+    <a href="/agent-processing{% if run_id %}?run_id={{ run_id }}{% endif %}" class="btn btn-secondary btn-sm">Agent 处理</a>
+    <a href="/context-query{% if run_id %}?run_id={{ run_id }}{% endif %}" class="btn btn-ghost btn-sm">上下文包查询</a>
+  </div>
+</header>
+
+{% include "components/scope_strip.html" %}
+
+{% if not run_id %}
+<div class="empty-state">
+  <h3>暂无 Inbox Run</h3>
+  <p>先进入 Inbox Loop 触发一次 registry_full run，今日情报才会有稳定数据范围。</p>
+  <a href="/inbox-loop" class="btn btn-primary btn-sm">进入 Inbox Loop</a>
+</div>
+{% else %}
+<section class="stats-grid">
+  <div class="metric-card">
+    <span class="metric-label">可信事件</span>
+    <span class="metric-value">{{ trusted_events | length }}</span>
+    <span class="metric-sub">Event = Trusted Event</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">弱信号</span>
+    <span class="metric-value">{{ weak_signals | length }}</span>
+    <span class="metric-sub">不混入可信事件</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">需要你裁决</span>
+    <span class="metric-value">{{ user_escalations | length }}</span>
+    <span class="metric-sub">来自 Agent Queue</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">运行置信度</span>
+    <span class="metric-value">{{ summary.confidence or '-' }}</span>
+    <span class="metric-sub">覆盖率 {{ summary.coverage_rate or 0 }}</span>
+  </div>
+</section>
+
+<div class="content-grid">
+  <section class="card">
+    <div class="card-header">
+      <strong>可信事件</strong>
+      <span class="text-xs text-muted">只显示已达 trusted 条件的事件</span>
+    </div>
+    <div class="card-body">
+      {% if trusted_events %}
+      <div class="object-list compact">
+        {% for event in trusted_events %}
+        <div class="list-row">
+          <div>
+            <a href="/events/{{ event.event_id }}" class="font-semibold text-sm">{{ event.event_title or event.event_id }}</a>
+            <p class="text-xs text-muted">{{ event.event_summary or '暂无摘要' }}</p>
+          </div>
+          <span class="tag">置信度 {{ event.confidence }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-xs text-muted">当前 run 没有可信事件。</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header">
+      <strong>弱信号</strong>
+      <span class="text-xs text-muted">线索、观察和可能值得后续研究的对象</span>
+    </div>
+    <div class="card-body">
+      {% if weak_signals %}
+      <div class="object-list compact">
+        {% for signal in weak_signals %}
+        <div class="list-row">
+          <div>
+            <a href="/items/{{ signal.target_id }}" class="font-semibold text-sm">{{ signal.title or signal.target_id }}</a>
+            <p class="text-xs text-muted">{{ signal.source_name or '-' }} · {{ signal.published_at or '-' }}</p>
+          </div>
+          <span class="tag">{{ signal.reason_codes | join(', ') }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-xs text-muted">当前 run 没有弱信号。</p>
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+<div class="content-grid">
+  <section class="card">
+    <div class="card-header">
+      <strong>需要你裁决</strong>
+      <a href="/agent-processing{% if run_id %}?run_id={{ run_id }}{% endif %}" class="text-xs">进入 Agent 处理</a>
+    </div>
+    <div class="card-body">
+      {% if user_escalations %}
+      <table class="data-table">
+        <thead><tr><th>对象</th><th>原因</th><th></th></tr></thead>
+        <tbody>
+        {% for item in user_escalations %}
+        <tr>
+          <td class="text-xs">{{ item.target_type }}:{{ item.target_id }}</td>
+          <td>{{ item.reason or item.review_type }}</td>
+          <td><a class="btn btn-ghost btn-sm" href="/agent-processing?run_id={{ run_id }}">处理</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="text-xs text-muted">没有需要你裁决的事项。</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header">
+      <strong>静默处理摘要</strong>
+      <span class="text-xs text-muted">Agent 默认不打扰的内容</span>
+    </div>
+    <div class="card-body">
+      <div class="summary-list">
+        <dt>静默样本</dt>
+        <dd>{{ silent.silent_items_sampled or 0 }}</dd>
+        <dt>待 Agent 处理</dt>
+        <dd>{{ agent_queue | length }}</dd>
+      </div>
+      {% if silent.samples %}
+      <details>
+        <summary>查看样本</summary>
+        <ul class="text-xs text-muted">
+          {% for item in silent.samples %}
+          <li>{{ item.title }} · {{ item.reason }}</li>
+          {% endfor %}
+        </ul>
+      </details>
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+<section class="card">
+  <div class="card-header">
+    <strong>信息源异常摘要</strong>
+    <a href="/source-health{% if run_id %}?run_id={{ run_id }}{% endif %}" class="text-xs">查看健康详情</a>
+  </div>
+  <div class="card-body">
+    {% if anomalies %}
+    <table class="data-table">
+      <thead><tr><th>信息源</th><th>状态</th><th>错误</th><th>连续失败</th></tr></thead>
+      <tbody>
+      {% for source in anomalies %}
+      <tr>
+        <td>{{ source.source_name or source.source_id }}</td>
+        <td>{{ source.status or '-' }}</td>
+        <td class="text-xs">{{ source.last_error_code or '' }} {{ source.last_error_message or '' }}</td>
+        <td>{{ source.consecutive_failure_count or 0 }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="text-xs text-muted">当前 run 没有信息源异常。</p>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

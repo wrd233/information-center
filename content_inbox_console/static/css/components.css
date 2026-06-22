@@ -158,9 +158,37 @@
 .alert p { margin: 0; font-size: var(--text-sm); }
 .alert-meta { display: block; font-size: var(--text-xs); color: inherit; opacity: 0.7; margin-top: 0.25rem; }
 .alert-error { color: #7f1d1d; background: var(--console-danger-bg); border-left-color: var(--console-danger); }
+.alert-danger { color: #7f1d1d; background: var(--console-danger-bg); border-left-color: var(--console-danger); }
 .alert-warning { color: #5f3b00; background: var(--console-warn-bg); border-left-color: var(--console-warn-border); }
 .alert-success { color: #1a4d24; background: var(--console-ok-bg); border-left-color: var(--console-ok); }
 .alert-info { color: var(--console-info); background: var(--console-info-bg); border-left-color: var(--console-info); }
+
+/* ═══ Scope Strip ═══ */
+.scope-strip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  padding: var(--space-sm) var(--space-md);
+  margin: 0 0 var(--space-lg);
+  border: 1px solid var(--console-line);
+  border-left: 4px solid var(--console-accent);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--console-ink);
+  font-size: var(--text-sm);
+}
+.scope-strip strong {
+  font-weight: 700;
+}
+.scope-strip span {
+  color: var(--console-muted);
+  overflow-wrap: anywhere;
+}
+.scope-strip.scope-legacy {
+  border-left-color: var(--console-warn-border);
+  background: var(--console-warn-bg);
+}
 
 /* ═══ Empty State ═══ */
 .empty-state {
@@ -185,6 +213,25 @@
   font-size: var(--text-sm);
   max-width: 42ch;
   margin: 0 auto var(--space-lg);
+}
+
+/* ═══ Compact Object Rows ═══ */
+.list-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--console-line);
+}
+.list-row:last-child {
+  border-bottom: 0;
+}
+.list-row > div {
+  min-width: 0;
+}
+.list-row p {
+  margin: 0.15rem 0 0;
 }
 
 /* ═══ Buttons ═══ */

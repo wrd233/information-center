@@ -1,20 +1,33 @@
 {% extends "base.html" %}
-{% block title %}简报 - 信息中心作战台{% endblock %}
-{% block page_title %}简报{% endblock %}
+{% block title %}旧简报 - 信息中心作战台{% endblock %}
+{% block page_title %}旧简报{% endblock %}
 
 {% block content %}
 
 <header class="page-header">
   <div>
-    <h1>简报（Briefing）</h1>
-    <p>基于事件和待审核项自动生成的每日/每周简报。
+    <h1>旧简报（Legacy）</h1>
+    <p>这里保留历史简报列表。新输出默认在“输出记录”中按 run/object/context scope 查看。
     {% if preview_manifest %}← 来自 <strong>LLM Preview</strong> 环境 · {{ preview_manifest.event_count }} 事件{% endif %}
     </p>
   </div>
-  <form method="post" action="/briefings/daily/generate" style="margin:0;">
-    <button class="btn btn-primary">生成每日简报</button>
-  </form>
+  <a href="/outputs" class="btn btn-secondary btn-sm">输出记录</a>
 </header>
+
+{% include "components/scope_strip.html" %}
+
+<details class="card">
+  <summary class="font-semibold">Legacy 生成入口</summary>
+  <div class="card-body" style="margin-top:1rem;">
+    <div class="alert alert-warning">
+      <strong>未绑定 scope 的生成会标记为 Legacy</strong>
+      <p>推荐从运行详情、可信事件或 Context Pack 页面触发输出。</p>
+    </div>
+    <form method="post" action="/briefings/daily/generate" style="margin:0;">
+      <button class="btn btn-secondary">生成 Legacy 每日简报</button>
+    </form>
+  </div>
+</details>
 
 {% if briefings %}
 <div class="card-grid">
@@ -22,9 +35,10 @@
   <div class="card">
     <div class="card-header">
       <strong>{{ briefing.title }}</strong>
-      <span class="text-xs text-muted">{{ briefing.created_at }}</span>
+      <span class="status-badge {{ 'warning' if briefing.is_legacy else 'success' }}">{{ 'Legacy' if briefing.is_legacy else '已绑定' }}</span>
     </div>
     <div class="card-body">
+      <p class="text-xs text-muted">来源 scope：{{ briefing.scope_label or 'Legacy / 未绑定来源' }} · 生成时间：{{ briefing.created_at }}</p>
       <pre style="max-height:320px; overflow:auto; font-size:0.82rem; line-height:1.55;">{{ briefing.body_markdown }}</pre>
     </div>
   </div>

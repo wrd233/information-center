@@ -32,40 +32,37 @@
     </div>
 
     <div class="sidebar-section">
-      <span class="sidebar-section-title">开始使用</span>
-      <a href="/sources" class="sidebar-link {% if active_page == 'sources' %}active{% endif %}">
-        <span class="nav-icon">⊞</span> 信息源
-      </a>
-      <a href="/runs/new" class="sidebar-link {% if active_page == 'runs' %}active{% endif %}">
-        <span class="nav-icon">▶</span> 创建任务
-      </a>
-      <a href="/runs" class="sidebar-link {% if active_page == 'runs' %}active{% endif %}">
-        <span class="nav-icon">☰</span> 任务历史
-      </a>
+      <span class="sidebar-section-title">Inbox Operating Loop</span>
       <a href="/inbox-loop" class="sidebar-link {% if active_page == 'inbox_loop' %}active{% endif %}">
         <span class="nav-icon">◎</span> Inbox Loop
+      </a>
+      <a href="/today-intel" class="sidebar-link {% if active_page == 'today_intel' %}active{% endif %}">
+        <span class="nav-icon">◆</span> 今日情报
+      </a>
+      <a href="/agent-processing" class="sidebar-link {% if active_page == 'agent_processing' %}active{% endif %}">
+        <span class="nav-icon">◇</span> Agent 处理
+      </a>
+      <a href="/runs" class="sidebar-link {% if active_page == 'runs' %}active{% endif %}">
+        <span class="nav-icon">☰</span> 运行记录
+      </a>
+      <a href="/source-health" class="sidebar-link {% if active_page == 'source_health' %}active{% endif %}">
+        <span class="nav-icon">⊕</span> 信息源健康
+      </a>
+      <a href="/outputs" class="sidebar-link {% if active_page == 'outputs' %}active{% endif %}">
+        <span class="nav-icon">□</span> 输出记录
       </a>
     </div>
 
     <div class="sidebar-section">
-      <span class="sidebar-section-title">信息消费</span>
-      <a href="/events" class="sidebar-link {% if active_page == 'events' %}active{% endif %}">
-        <span class="nav-icon">◆</span> 事件
+      <span class="sidebar-section-title">准备与上下文</span>
+      <a href="/sources" class="sidebar-link {% if active_page == 'sources' %}active{% endif %}">
+        <span class="nav-icon">⊞</span> 信息源
       </a>
-      <a href="/review-queue" class="sidebar-link {% if active_page == 'review' %}active{% endif %}">
-        <span class="nav-icon">✓</span> 待审核
+      <a href="/runs/new" class="sidebar-link {% if active_page == 'runs_new' %}active{% endif %}">
+        <span class="nav-icon">▶</span> 创建运行
       </a>
-      <a href="/briefings" class="sidebar-link {% if active_page == 'briefings' %}active{% endif %}">
-        <span class="nav-icon">📋</span> 简报
-      </a>
-      <a href="/reports" class="sidebar-link {% if active_page == 'reports' %}active{% endif %}">
-        <span class="nav-icon">📄</span> 报告
-      </a>
-      <a href="/agent-query" class="sidebar-link {% if active_page == 'agent' %}active{% endif %}">
-        <span class="nav-icon">⚡</span> 智能查询
-      </a>
-      <a href="/triage" class="sidebar-link {% if active_page == 'triage' %}active{% endif %}">
-        <span class="nav-icon">◇</span> Agent Triage
+      <a href="/context-query" class="sidebar-link {% if active_page == 'context_query' %}active{% endif %}">
+        <span class="nav-icon">?</span> 上下文包查询
       </a>
     </div>
 
@@ -82,14 +79,19 @@
       </a>
       {% if preview_manifest %}
       <a href="/preview-checklist" class="sidebar-link {% if active_page == 'preview_checklist' %}active{% endif %}">
-        <span class="nav-icon">🧪</span> Preview 验收
+        <span class="nav-icon">P</span> Preview 验收
       </a>
       {% endif %}
     </div>
 
-    <details class="sidebar-advanced" {% if active_page in ('items','dedupe','clusters','entities','relations','claims','topics','timeline','evidence','saved_views','information') %}open{% endif %}>
-      <summary>高级调试</summary>
-      <a href="/items" class="sidebar-link {% if active_page == 'items' %}active{% endif %}">原始信息</a>
+    <details class="sidebar-advanced" {% if active_page in ('legacy_events','legacy_review','legacy_briefings','legacy_reports','legacy_agent_query','items','dedupe','clusters','entities','relations','claims','topics','timeline','evidence','saved_views','information') %}open{% endif %}>
+      <summary>高级调试 / Legacy / 历史数据</summary>
+      <a href="/events" class="sidebar-link {% if active_page == 'legacy_events' %}active{% endif %}">旧事件（Legacy）</a>
+      <a href="/review-queue" class="sidebar-link {% if active_page == 'legacy_review' %}active{% endif %}">旧待审核队列（Debug）</a>
+      <a href="/briefings" class="sidebar-link {% if active_page == 'legacy_briefings' %}active{% endif %}">旧简报（Legacy）</a>
+      <a href="/reports" class="sidebar-link {% if active_page == 'legacy_reports' %}active{% endif %}">旧报告（Legacy）</a>
+      <a href="/agent-query" class="sidebar-link {% if active_page == 'legacy_agent_query' %}active{% endif %}">旧全库查询（Debug）</a>
+      <a href="/items" class="sidebar-link {% if active_page == 'items' %}active{% endif %}">原始信息（Legacy）</a>
       <a href="/dedupe-groups" class="sidebar-link {% if active_page == 'dedupe' %}active{% endif %}">去重组</a>
       <a href="/clusters" class="sidebar-link {% if active_page == 'clusters' %}active{% endif %}">聚合线索</a>
       <a href="/entities" class="sidebar-link {% if active_page == 'entities' %}active{% endif %}">实体</a>

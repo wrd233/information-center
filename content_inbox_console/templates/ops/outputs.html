@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}输出记录 - 信息中心作战台{% endblock %}
+{% block page_title %}输出记录{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1>输出记录</h1>
+    <p class="text-sm text-muted">简报和报告不再是泛生成入口。默认只突出当前 run 绑定的输出；未绑定历史输出折叠为 Legacy。</p>
+  </div>
+  <div class="header-actions">
+    <a href="/today-intel{% if run_id %}?run_id={{ run_id }}{% endif %}" class="btn btn-secondary btn-sm">今日情报</a>
+    <a href="/context-query{% if run_id %}?run_id={{ run_id }}{% endif %}" class="btn btn-ghost btn-sm">上下文包查询</a>
+  </div>
+</header>
+
+{% include "components/scope_strip.html" %}
+
+<section class="card">
+  <div class="card-header">
+    <strong>当前 scope 输出</strong>
+    <span class="text-xs text-muted">{{ current_outputs | length }} 条</span>
+  </div>
+  <div class="card-body">
+    {% if current_outputs %}
+    <table class="data-table">
+      <thead><tr><th>类型</th><th>标题</th><th>来源 scope</th><th>生成时间</th><th>标记</th></tr></thead>
+      <tbody>
+      {% for output in current_outputs %}
+      <tr>
+        <td>{{ output.type_label }}</td>
+        <td>{{ output.title or output.briefing_id or output.report_id }}</td>
+        <td class="text-xs">{{ output.scope_label }}{% if output.source_object_id %} · {{ output.source_object_id }}{% endif %}</td>
+        <td class="text-xs">{{ output.created_at or '-' }}</td>
+        <td>{% if output.is_legacy %}<span class="status-badge warning">Legacy</span>{% else %}<span class="status-badge success">已绑定</span>{% endif %}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="text-xs text-muted">当前 run 还没有绑定输出。请从运行详情、可信事件或 Context Pack 页面触发生成。</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-header">
+    <strong>生成入口</strong>
+    <span class="text-xs text-muted">必须从明确 scope 触发</span>
+  </div>
+  <div class="card-body">
+    <div class="action-card">
+      <div class="action-card-body">
+        <strong>从运行详情生成</strong>
+        <p>运行报告和简报会绑定到 selected run。</p>
+      </div>
+      {% if run_id %}<a href="/runs/{{ run_id }}" class="btn btn-primary btn-sm">打开运行</a>{% else %}<a href="/inbox-loop" class="btn btn-primary btn-sm">选择运行</a>{% endif %}
+    </div>
+    <div class="action-card">
+      <div class="action-card-body">
+        <strong>从 Context Pack 生成</strong>
+        <p>用于 daily_brief、review_decisions 或研究对象上下文。</p>
+      </div>
+      <a href="/context-query{% if run_id %}?run_id={{ run_id }}{% endif %}" class="btn btn-secondary btn-sm">打开上下文包</a>
+    </div>
+  </div>
+</section>
+
+<details class="card">
+  <summary class="font-semibold">Legacy / 未绑定来源输出（{{ legacy_outputs | length }}）</summary>
+  <div class="card-body" style="margin-top:1rem;">
+    <div class="alert alert-warning">
+      <strong>这些输出不作为默认可信输出</strong>
+      <p>它们可能来自旧全库简报、旧报告或未记录 scope 的历史生成结果。</p>
+    </div>
+    {% if legacy_outputs %}
+    <table class="data-table">
+      <thead><tr><th>类型</th><th>标题</th><th>来源 scope</th><th>生成时间</th><th>标记</th></tr></thead>
+      <tbody>
+      {% for output in legacy_outputs %}
+      <tr>
+        <td>{{ output.type_label }}</td>
+        <td>{{ output.title or output.briefing_id or output.report_id }}</td>
+        <td class="text-xs">{{ output.scope_label or 'Legacy / 未绑定来源' }}</td>
+        <td class="text-xs">{{ output.created_at or '-' }}</td>
+        <td><span class="status-badge warning">{{ 'Legacy' if output.is_legacy else '其他 scope' }}</span></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="text-xs text-muted">没有 Legacy 输出。</p>
+    {% endif %}
+  </div>
+</details>
+
+{% endblock %}

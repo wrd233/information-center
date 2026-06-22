@@ -3,60 +3,60 @@
 {% block page_title %}作战首页{% endblock %}
 
 {% block content %}
+{% set loop_scheduler = (inbox_loop or {}).get('scheduler') or {} %}
+{% set loop_latest = (inbox_loop or {}).get('latest_run') or {} %}
+{% set loop_protection = (inbox_loop or {}).get('recent_run_protection') or {} %}
+{% set anomalies = (operating or {}).get('source_health_anomalies') or [] %}
 
-{# ── Hero Section ── #}
 <section class="hero-panel">
   <div>
-    <h1>信息中心作战台</h1>
-    <p>从信息源到简报的完整工作流。确认环境安全，按下一步引导完成预演、写入、处理和输出。</p>
+    <h1>Inbox Operating Loop</h1>
+    <p>默认从 latest registry_full Inbox Run 消费今日情报、Agent 处理、信息源健康和输出记录。</p>
   </div>
   <div class="hero-actions">
-    <a href="/sources" class="btn btn-primary">准备信息源</a>
-    <a href="/inbox-loop" class="btn btn-secondary">Inbox Loop</a>
-    <a href="/events" class="btn btn-ghost">查看事件</a>
+    <a href="/inbox-loop" class="btn btn-primary">Inbox Loop</a>
+    <a href="/today-intel{% if loop_latest.run_id %}?run_id={{ loop_latest.run_id }}{% endif %}" class="btn btn-secondary">今日情报</a>
+    <a href="/agent-processing{% if loop_latest.run_id %}?run_id={{ loop_latest.run_id }}{% endif %}" class="btn btn-ghost">Agent 处理</a>
   </div>
 </section>
 
-{# ── System Status ── #}
+{% include "components/scope_strip.html" %}
+
 <section class="stats-grid">
   <div class="metric-card">
     <span class="metric-label">环境状态</span>
-    <span class="metric-value">{{ "安全" if environment.is_fresh_database and not environment.legacy_business_fallback else "⚠ 需确认" }}</span>
-    <span class="metric-sub">
-      {% if environment.is_fresh_database %}当前工作区 · Legacy DB 不受影响{% else %}非 Fresh DB · 危险操作已禁用{% endif %}
-    </span>
+    <span class="metric-value">{{ "安全" if environment.is_fresh_database and not environment.legacy_business_fallback else "需确认" }}</span>
+    <span class="metric-sub">{% if environment.is_fresh_database %}当前工作区 · Legacy DB 不受影响{% else %}非 Fresh DB · 危险操作已禁用{% endif %}</span>
   </div>
   <div class="metric-card">
-    <span class="metric-label">信息源（Source）</span>
-    <span class="metric-value">{{ environment.source_count or 0 }}</span>
-    <span class="metric-sub">活跃 {{ source_stats.active or 0 }} 个</span>
+    <span class="metric-label">Latest Run</span>
+    <span class="metric-value text-sm">{{ loop_latest.status or 'none' }}</span>
+    <span class="metric-sub">{% if loop_latest.run_id %}{{ loop_latest.run_id }}{% else %}暂无 registry_full run{% endif %}</span>
   </div>
   <div class="metric-card">
-    <span class="metric-label">原始信息（Item）</span>
-    <span class="metric-value">{{ environment.item_count or 0 }}</span>
-    <span class="metric-sub">当前数据库中的信息条目</span>
+    <span class="metric-label">可信事件</span>
+    <span class="metric-value">{{ trusted_events | length }}</span>
+    <span class="metric-sub">事件 = trusted event</span>
   </div>
   <div class="metric-card">
-    <span class="metric-label">抓取任务（Run）</span>
-    <span class="metric-value">{{ environment.run_count or 0 }}</span>
-    <span class="metric-sub">写入模式: {{ "已启用" if environment.real_runs_enabled else "未启用" }}</span>
+    <span class="metric-label">弱信号</span>
+    <span class="metric-value">{{ weak_signals | length }}</span>
+    <span class="metric-sub">单独展示，不混入事件</span>
   </div>
 </section>
 
-{# ── real-write Warning ── #}
 {% if not environment.real_runs_enabled %}
 <div class="alert alert-warning">
-  <strong>写入模式（real-write）未启用</strong>
-  <p>前端无法绕过后端安全 gate。需要在后端设置 <code>CONTENT_INBOX_ENABLE_REAL_RUNS=1</code> 并重启服务，才能执行写入任务。当前请使用预演模式（dry-run）验证抓取范围。</p>
+  <strong>写入模式未启用</strong>
+  <p>前端无法绕过后端安全 gate。需要后端设置 <code>CONTENT_INBOX_ENABLE_REAL_RUNS=1</code> 后才能执行真实 Inbox Run。</p>
 </div>
 {% endif %}
 
-{# ── Next Actions ── #}
 {% if next_actions %}
 <section class="card">
   <div class="card-header">
     <strong>下一步建议</strong>
-    <span class="text-xs text-muted">根据当前系统状态自动推荐</span>
+    <span class="text-xs text-muted">围绕 Inbox Operating Loop 自动推荐</span>
   </div>
   <div class="card-body">
     {% for action in next_actions %}
@@ -70,188 +70,134 @@
     {% endfor %}
   </div>
 </section>
-{% else %}
-<div class="empty-state">
-  <div class="empty-state-icon">✓</div>
-  <h3>一切就绪</h3>
-  <p>当前没有明显阻塞项。可以查看事件、生成简报，或进入数据清理重新开始。</p>
-  <a href="/events" class="btn btn-primary">查看事件</a>
-</div>
 {% endif %}
 
-{# ── Quick Actions ── #}
 <div class="quick-actions">
-  <span class="text-xs text-muted font-semibold">快捷操作：</span>
-  <a href="/sources" class="btn btn-ghost btn-sm">准备信息源</a>
-  <a href="/runs/new" class="btn btn-ghost btn-sm">创建抓取任务</a>
+  <span class="text-xs text-muted font-semibold">主流程：</span>
   <a href="/inbox-loop" class="btn btn-ghost btn-sm">Inbox Loop</a>
-  <a href="/triage" class="btn btn-ghost btn-sm">Agent Triage</a>
-  <a href="/events" class="btn btn-ghost btn-sm">查看事件</a>
-  <a href="/reset" class="btn btn-ghost btn-sm">数据清理</a>
+  <a href="/today-intel{% if loop_latest.run_id %}?run_id={{ loop_latest.run_id }}{% endif %}" class="btn btn-ghost btn-sm">今日情报</a>
+  <a href="/agent-processing{% if loop_latest.run_id %}?run_id={{ loop_latest.run_id }}{% endif %}" class="btn btn-ghost btn-sm">Agent 处理</a>
+  <a href="/runs" class="btn btn-ghost btn-sm">运行记录</a>
+  <a href="/source-health{% if loop_latest.run_id %}?run_id={{ loop_latest.run_id }}{% endif %}" class="btn btn-ghost btn-sm">信息源健康</a>
+  <a href="/outputs{% if loop_latest.run_id %}?run_id={{ loop_latest.run_id }}{% endif %}" class="btn btn-ghost btn-sm">输出记录</a>
 </div>
 
-{# ── Inbox Loop Status ── #}
-{% set loop_scheduler = (inbox_loop or {}).get('scheduler') or {} %}
-{% set loop_latest = (inbox_loop or {}).get('latest_run') or {} %}
-{% set loop_protection = (inbox_loop or {}).get('recent_run_protection') or {} %}
 <section class="card">
   <div class="card-header">
-    <strong>Inbox Operating Loop</strong>
-    <a href="/inbox-loop" class="text-xs">打开 →</a>
+    <strong>Inbox Loop 状态</strong>
+    <a href="/inbox-loop" class="text-xs">打开</a>
   </div>
   <div class="card-body">
     <div class="summary-list">
-      <dt>Scheduler</dt>
+      <dt>调度器</dt>
       <dd>{{ "开启" if loop_scheduler.enabled else "关闭" }} · {{ loop_scheduler.daily_time or '06:00' }} {{ loop_scheduler.timezone or 'Asia/Shanghai' }}</dd>
-      <dt>Next run</dt>
+      <dt>下次运行</dt>
       <dd>{{ loop_scheduler.next_run or '-' }}</dd>
-      <dt>Latest full run</dt>
+      <dt>Latest registry_full run</dt>
       <dd>{% if loop_latest.run_id %}<a href="/runs/{{ loop_latest.run_id }}">{{ loop_latest.status }} · {{ loop_latest.run_id }}</a>{% else %}暂无{% endif %}</dd>
-      <dt>Manual guard</dt>
+      <dt>手动运行保护</dt>
       <dd>{{ "会跳过" if loop_protection.would_skip_manual else "可运行" }}{% if loop_protection.grace_minutes %} · {{ loop_protection.grace_minutes }} 分钟{% endif %}</dd>
     </div>
   </div>
 </section>
 
-{# ── Recent Runs + Events ── #}
 <div class="content-grid">
   <section class="card">
     <div class="card-header">
-      <strong>最近任务</strong>
-      <a href="/runs" class="text-xs">查看全部 →</a>
+      <strong>今日情报摘要</strong>
+      <a href="/today-intel{% if loop_latest.run_id %}?run_id={{ loop_latest.run_id }}{% endif %}" class="text-xs">查看</a>
     </div>
     <div class="card-body">
-      {% if runs %}
-      <table class="data-table">
-        <thead><tr><th>任务 ID</th><th>状态</th><th>模式</th><th>写入</th><th>时间</th><th></th></tr></thead>
-        <tbody>
-        {% for run in runs[:8] %}
-        <tr>
-          <td><a href="/runs/{{ run.run_id }}" class="text-mono text-xs">{{ run.run_id[:12] }}…</a></td>
-          <td>
-            {% if run.status == 'success' or run.status == 'completed' %}
-            <span class="status-badge success">完成</span>
-            {% elif run.status == 'running' %}
-            <span class="status-badge info">运行中</span>
-            {% elif run.status == 'failed' %}
-            <span class="status-badge danger">失败</span>
-            {% elif run.status == 'cancelled' %}
-            <span class="status-badge muted">已取消</span>
-            {% else %}
-            <span class="status-badge muted">{{ run.status }}</span>
-            {% endif %}
-          </td>
-          <td>
-            {% if run.request.mode == 'dry_run' %}
-            <span class="tag">预演</span>
-            {% else %}
-            <span class="tag" style="background:rgba(197,106,44,0.12);color:var(--console-accent-2);">写入</span>
-            {% endif %}
-          </td>
-          <td class="text-xs">{{ run.new_items_count or 0 }}</td>
-          <td class="text-xs text-muted">{{ run.started_at or '-' }}</td>
-          <td><a href="/runs/{{ run.run_id }}" class="btn btn-ghost btn-sm">详情</a></td>
-        </tr>
+      {% if trusted_events %}
+      <div class="object-list compact">
+        {% for event in trusted_events[:4] %}
+        <div class="list-row">
+          <div>
+            <a href="/events/{{ event.event_id }}" class="font-semibold text-sm">{{ event.event_title or event.event_id }}</a>
+            <p class="text-xs text-muted">{{ event.event_summary or '暂无摘要' }}</p>
+          </div>
+          <span class="tag">可信事件</span>
+        </div>
         {% endfor %}
-        </tbody>
-      </table>
-      {% else %}
-      <div class="empty-state">
-        <h3>暂无任务</h3>
-        <p>先导入信息源，再创建预演任务（dry-run）验证抓取范围。</p>
-        <a href="/runs/new" class="btn btn-primary btn-sm">创建第一个任务</a>
       </div>
+      {% else %}
+      <p class="text-xs text-muted">当前 latest run 没有可信事件。</p>
+      {% endif %}
+      {% if weak_signals %}
+      <details style="margin-top:0.75rem;">
+        <summary>弱信号（{{ weak_signals | length }}）</summary>
+        <ul class="text-xs text-muted">
+          {% for signal in weak_signals[:5] %}
+          <li>{{ signal.title }} · {{ signal.reason_codes | join(', ') }}</li>
+          {% endfor %}
+        </ul>
+      </details>
       {% endif %}
     </div>
   </section>
 
   <section class="card">
     <div class="card-header">
-      <strong>最近事件与待审核</strong>
-      <div class="flex gap-sm">
-        <a href="/events" class="text-xs">事件 →</a>
-        <a href="/review-queue" class="text-xs">待审核 →</a>
-      </div>
+      <strong>Agent 与健康</strong>
+      <a href="/agent-processing{% if loop_latest.run_id %}?run_id={{ loop_latest.run_id }}{% endif %}" class="text-xs">处理</a>
     </div>
     <div class="card-body">
-      {% if events %}
-      <div class="object-list compact">
-        {% for event in events[:4] %}
-        <div class="card" style="margin-bottom:0.35rem;">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
-            <div>
-              <a href="/events/{{ event.event_id }}" class="font-semibold text-sm">{{ event.event_title or event.event_id[:12] }}</a>
-              <p class="text-xs text-muted" style="margin:0;">{{ event.event_summary or '暂无摘要' }}</p>
-            </div>
-            <span class="status-badge {{ 'success' if event.status == 'active' else 'muted' }}">{{ event.status or 'unknown' }}</span>
-          </div>
-        </div>
-        {% endfor %}
+      <div class="summary-list">
+        <dt>待 Agent 处理</dt><dd>{{ agent_queue | length }}</dd>
+        <dt>需要你裁决</dt><dd>{{ user_escalations | length }}</dd>
+        <dt>信息源异常</dt><dd>{{ anomalies | length }}</dd>
       </div>
-      {% else %}
-      <p class="text-xs text-muted">暂无事件。写入任务后运行流水线可生成候选事件。</p>
-      {% endif %}
-
-      {% if reviews %}
-      <div style="margin-top:0.75rem;">
-        <span class="text-xs font-semibold">待审核项（{{ reviews|length }}）</span>
-        <table class="data-table" style="margin-top:0.25rem;">
-          <tbody>
-          {% for review in reviews[:3] %}
-          <tr>
-            <td class="text-xs">{{ review.review_type }}</td>
-            <td class="text-xs text-muted">{{ review.target_type }}:{{ review.target_id[:12] if review.target_id else '-' }}</td>
-            <td><a href="/review-queue" class="btn btn-ghost btn-sm">处理</a></td>
-          </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% endif %}
-
-      {% if not events and not reviews %}
-      <div class="empty-state" style="padding:1.5rem;">
-        <p class="text-xs text-muted">暂无事件和待审核项。运行流水线后这里会出现内容。</p>
+      {% if user_escalations %}
+      <div class="alert alert-warning" style="margin-top:0.75rem;">
+        <strong>有事项需要你裁决</strong>
+        <p>进入 Agent 处理页查看 bounded evidence 和建议 decision。</p>
       </div>
       {% endif %}
     </div>
   </section>
 </div>
 
-{# ── Outputs + Environment ── #}
 <div class="content-grid">
   <section class="card">
     <div class="card-header">
-      <strong>最近输出</strong>
+      <strong>最近运行记录</strong>
+      <a href="/runs" class="text-xs">查看全部</a>
     </div>
     <div class="card-body">
-      <div class="summary-list">
-        <dt>简报</dt>
-        <dd>{{ briefings[0].title if briefings else '暂无' }}{% if briefings %} <a href="/briefings" class="text-xs">查看 →</a>{% endif %}</dd>
-        <dt>报告</dt>
-        <dd>{{ reports[0].title if reports else '暂无' }}{% if reports %} <a href="/reports" class="text-xs">查看 →</a>{% endif %}</dd>
-      </div>
+      {% if runs %}
+      <table class="data-table">
+        <thead><tr><th>Run ID</th><th>状态</th><th>范围</th><th>新增</th><th>开始时间</th></tr></thead>
+        <tbody>
+        {% for run in runs[:6] %}
+        <tr>
+          <td><a href="/runs/{{ run.run_id }}" class="text-mono text-xs">{{ run.run_id[:16] }}...</a></td>
+          <td>{{ run.status }}</td>
+          <td class="text-xs">{{ run.source_mode or run.request.mode or '-' }}</td>
+          <td>{{ run.new_items_count or 0 }}</td>
+          <td class="text-xs text-muted">{{ run.started_at or '-' }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="text-xs text-muted">暂无运行记录。</p>
+      {% endif %}
     </div>
   </section>
 
   <section class="card">
     <div class="card-header">
-      <strong>环境提示</strong>
+      <strong>输出记录</strong>
+      <a href="/outputs{% if loop_latest.run_id %}?run_id={{ loop_latest.run_id }}{% endif %}" class="text-xs">查看</a>
     </div>
     <div class="card-body">
       <div class="summary-list">
-        <dt>API 地址</dt>
-        <dd><code class="text-xs">{{ api_base }}</code></dd>
-        <dt>数据库</dt>
-        <dd><code class="text-xs break-all">{{ environment.database_path or '-' }}</code></dd>
-        <dt>数据库 ID</dt>
-        <dd><code class="text-xs">{{ environment.database_id or '-' }}</code></dd>
+        <dt>简报</dt>
+        <dd>{{ briefings[0].title if briefings else '暂无' }}</dd>
+        <dt>报告</dt>
+        <dd>{{ reports[0].title if reports else '暂无' }}</dd>
       </div>
-      <div style="margin-top:0.75rem;">
-        <a href="/environment" class="text-xs">环境管理 →</a>
-        <span class="text-xs text-muted" style="margin-left:0.75rem;">·</span>
-        <a href="/reset" class="text-xs" style="margin-left:0.75rem;">数据清理 →</a>
-      </div>
+      <p class="text-xs text-muted" style="margin-top:0.75rem;">未绑定 scope 的历史输出会在输出记录页折叠为 Legacy。</p>
     </div>
   </section>
 </div>

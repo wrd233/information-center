@@ -1,19 +1,27 @@
 {% extends "base.html" %}
-{% block title %}智能查询 - 信息中心作战台{% endblock %}
-{% block page_title %}智能查询{% endblock %}
+{% block title %}旧全库查询 - 信息中心作战台{% endblock %}
+{% block page_title %}旧全库查询{% endblock %}
 
 {% block content %}
 
 <header class="page-header">
   <div>
-    <h1>智能查询（Agent Query）</h1>
-    <p>输入自然语言问题，预览将提供给 AI Agent 的上下文内容。不执行外部 LLM 调用，仅组装相关信息。</p>
+    <h1>旧全库查询（Legacy / Debug）</h1>
+    <p>这是历史 items 全库查询预览，可能包含 legacy 内容。默认查询入口已改为“上下文包查询”。</p>
   </div>
+  <a href="/context-query" class="btn btn-secondary btn-sm">上下文包查询</a>
 </header>
+
+{% include "components/scope_strip.html" %}
+
+<div class="alert alert-warning">
+  <strong>Legacy/Debug 查询</strong>
+  <p>此页面显式走全库 items 检索，只用于调试旧数据范围。</p>
+</div>
 
 {# ── Example Queries ── #}
 <div class="card">
-  <div class="card-header"><strong>示例问题</strong></div>
+  <div class="card-header"><strong>示例关键词</strong></div>
   <div class="card-body">
     <div class="example-queries">
       <span class="example-query" onclick="document.querySelector('input[name=query]').value=this.textContent">今天有哪些重要事件？</span>
@@ -30,7 +38,7 @@
   <div class="card-body">
     <form method="get" action="/agent-query">
       <div class="form-group">
-        <label class="form-label">查询内容</label>
+        <label class="form-label">全库查询内容</label>
         <input name="query" value="{{ query }}" placeholder="输入问题，例如：最近一周 AI 领域发生了什么？" style="font-size:1rem;">
       </div>
       <div class="form-inline" style="margin-top:0.5rem;">
@@ -43,7 +51,7 @@
             <option value="json" {% if format == 'json' %}selected{% endif %}>JSON</option>
           </select>
         </div>
-        <button type="submit" class="btn btn-primary">查询预览</button>
+        <button type="submit" class="btn btn-secondary">Legacy 查询预览</button>
       </div>
     </form>
   </div>
@@ -53,7 +61,7 @@
 {% if result %}
 <div class="content-grid">
   <section class="card">
-    <div class="card-header"><strong>查询结果</strong></div>
+    <div class="card-header"><strong>Legacy 查询结果</strong></div>
     <div class="card-body">
       <pre style="max-height:500px; overflow:auto; font-size:0.85rem; line-height:1.6;">{{ result.human if format == 'human' else result.markdown }}</pre>
     </div>

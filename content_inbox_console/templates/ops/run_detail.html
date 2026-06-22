@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% block title %}任务详情 - 信息中心作战台{% endblock %}
-{% block page_title %}任务驾驶舱{% endblock %}
+{% block title %}运行详情 - 信息中心作战台{% endblock %}
+{% block page_title %}运行详情{% endblock %}
 
 {% block content %}
 {% set mode = summary.run.request.mode if summary.run and summary.run.request else 'unknown' %}
@@ -9,7 +9,7 @@
 {# ── Status Header ── #}
 <header class="page-header">
   <div>
-    <h1>任务驾驶舱</h1>
+    <h1>运行详情</h1>
     <p>
       <code class="text-sm">{{ run_id }}</code>
       <span class="text-muted" style="margin:0 0.4rem;">·</span>
@@ -35,7 +35,7 @@
   <div class="header-actions">
     {% if status in ('running', 'pending', 'started') %}
     <form method="post" action="/runs/{{ run_id }}/cancel" style="margin:0;">
-      <button class="btn btn-danger btn-sm">取消任务</button>
+      <button class="btn btn-danger btn-sm">取消运行</button>
     </form>
     {% endif %}
     <form method="post" action="/runs/{{ run_id }}/briefing" style="margin:0;">
@@ -44,21 +44,23 @@
     <form method="post" action="/runs/{{ run_id }}/report" style="margin:0;">
       <button class="btn btn-secondary btn-sm">生成报告</button>
     </form>
-    <a href="/reset" class="btn btn-ghost btn-sm">清理此任务</a>
+    <a href="/reset" class="btn btn-ghost btn-sm">清理此运行</a>
   </div>
 </header>
+
+{% include "components/scope_strip.html" %}
 
 {# ── Mode Banner ── #}
 {% if mode == 'dry_run' %}
 <div class="alert alert-info">
   <strong>预演模式（dry-run）— 不写入数据</strong>
-  <p>本条目的写入计数为 0 是预期行为，不代表抓取失败。确认信息源和时间范围后，可创建写入模式任务（real-write）。</p>
-  <a href="/runs/new" class="btn btn-primary btn-sm" style="margin-top:0.35rem;">创建写入模式任务</a>
+  <p>本运行的写入计数为 0 是预期行为，不代表抓取失败。确认信息源和时间范围后，可创建写入模式 run。</p>
+  <a href="/runs/new" class="btn btn-primary btn-sm" style="margin-top:0.35rem;">创建写入运行</a>
 </div>
 {% else %}
 <div class="alert alert-success">
   <strong>写入模式（real-write）— 已进入写库路径</strong>
-  <p>下方条目是本次任务写入的内容。建议继续运行信息处理流程，然后处理待审核项。</p>
+  <p>下方条目是本次 run 写入的内容。建议继续查看今日情报和 Agent 处理。</p>
 </div>
 {% endif %}
 
@@ -90,15 +92,15 @@
 {% set loop = loop_summary.summary %}
 <section class="card">
   <div class="card-header">
-    <strong>Inbox Loop Summary</strong>
+    <strong>Inbox Loop 摘要</strong>
     <span class="status-badge {{ 'success' if loop.confidence == 'high' else 'warning' if loop.confidence == 'medium' else 'danger' if loop.confidence in ('low','failed') else 'muted' }}">confidence {{ loop.confidence or '-' }}</span>
   </div>
   <div class="card-body">
     <div class="stats-grid">
-      <div class="metric-card"><span class="metric-label">Coverage</span><span class="metric-value">{{ loop.coverage_rate or 0 }}</span><span class="metric-sub">{{ loop.succeeded_sources or 0 }}/{{ loop.active_sources or 0 }} sources</span></div>
-      <div class="metric-card"><span class="metric-label">Processed</span><span class="metric-value">{{ loop.processed_items or 0 }}</span><span class="metric-sub">new {{ loop.new_items or 0 }} · dup {{ loop.duplicate_items or 0 }}</span></div>
-      <div class="metric-card"><span class="metric-label">Failures</span><span class="metric-value">{{ loop.failed_sources or 0 }}</span><span class="metric-sub">items {{ loop.failed_items or 0 }}</span></div>
-      <div class="metric-card"><span class="metric-label">Post-processing</span><span class="metric-value text-sm">{{ (loop.post_processing or {}).deterministic or '-' }}</span><span class="metric-sub">LLM {{ (loop.post_processing or {}).llm_enrichment or '-' }}</span></div>
+      <div class="metric-card"><span class="metric-label">覆盖率</span><span class="metric-value">{{ loop.coverage_rate or 0 }}</span><span class="metric-sub">{{ loop.succeeded_sources or 0 }}/{{ loop.active_sources or 0 }} sources</span></div>
+      <div class="metric-card"><span class="metric-label">处理条目</span><span class="metric-value">{{ loop.processed_items or 0 }}</span><span class="metric-sub">new {{ loop.new_items or 0 }} · dup {{ loop.duplicate_items or 0 }}</span></div>
+      <div class="metric-card"><span class="metric-label">失败</span><span class="metric-value">{{ loop.failed_sources or 0 }}</span><span class="metric-sub">items {{ loop.failed_items or 0 }}</span></div>
+      <div class="metric-card"><span class="metric-label">后处理</span><span class="metric-value text-sm">{{ (loop.post_processing or {}).deterministic or '-' }}</span><span class="metric-sub">LLM {{ (loop.post_processing or {}).llm_enrichment or '-' }}</span></div>
     </div>
     {% if loop.confidence_reasons %}
     <p class="text-xs text-muted">Reasons: {{ loop.confidence_reasons | join(', ') }}</p>
@@ -110,29 +112,29 @@
 {% if operating %}
 <section class="card">
   <div class="card-header">
-    <strong>Operating View</strong>
-    <a href="/triage?run_id={{ run_id }}" class="text-xs">Triage →</a>
+    <strong>运行视图</strong>
+    <a href="/agent-processing?run_id={{ run_id }}" class="text-xs">Agent 处理</a>
   </div>
   <div class="card-body">
     <div class="content-grid">
       <div>
-        <h3 class="text-sm">Trusted Events</h3>
+        <h3 class="text-sm">可信事件</h3>
         {% for event in (operating.trusted_events or [])[:5] %}
         <p class="text-sm"><a href="/events/{{ event.event_id }}">{{ event.event_title }}</a> <span class="tag">conf {{ event.confidence }}</span></p>
         {% else %}<p class="text-xs text-muted">暂无可信事件。</p>{% endfor %}
       </div>
       <div>
-        <h3 class="text-sm">Weak Signals</h3>
+        <h3 class="text-sm">弱信号</h3>
         {% for signal in (operating.weak_signals or [])[:5] %}
         <p class="text-sm">{{ signal.title }} <span class="tag">{{ signal.reason_codes | join(', ') }}</span></p>
         {% else %}<p class="text-xs text-muted">暂无弱信号。</p>{% endfor %}
       </div>
     </div>
     <div class="summary-list" style="margin-top:0.75rem;">
-      <dt>Silent sampled</dt><dd>{{ (operating.silent_summary or {}).silent_items_sampled or 0 }}</dd>
-      <dt>Agent queue</dt><dd>{{ (operating.agent_queue or []) | length }}</dd>
-      <dt>User escalations</dt><dd>{{ (operating.user_escalations or []) | length }}</dd>
-      <dt>Source anomalies</dt><dd>{{ (operating.source_health_anomalies or []) | length }}</dd>
+      <dt>静默样本</dt><dd>{{ (operating.silent_summary or {}).silent_items_sampled or 0 }}</dd>
+      <dt>Agent 队列</dt><dd>{{ (operating.agent_queue or []) | length }}</dd>
+      <dt>需要你裁决</dt><dd>{{ (operating.user_escalations or []) | length }}</dd>
+      <dt>信息源异常</dt><dd>{{ (operating.source_health_anomalies or []) | length }}</dd>
     </div>
   </div>
 </section>
@@ -140,7 +142,7 @@
 
 {% if decision_ledger and decision_ledger.ledger %}
 <section class="card">
-  <div class="card-header"><strong>Decision Ledger</strong></div>
+  <div class="card-header"><strong>Decision Ledger（已处理）</strong></div>
   <div class="card-body">
     <table class="data-table">
       <thead><tr><th>Time</th><th>Target</th><th>Decision</th><th>Actor</th></tr></thead>
@@ -184,10 +186,10 @@
     {% if pipeline.get('event') == 'completed' %}
     <div class="action-card">
       <div class="action-card-body">
-        <strong>处理待审核项</strong>
-        <p>流水线已生成候选事件和待审核项，建议人工确认。</p>
+        <strong>进入 Agent 处理</strong>
+        <p>流水线已生成候选事件和待处理项，建议通过 Agent Packet 写入 decision ledger。</p>
       </div>
-      <a href="/review-queue" class="btn btn-primary btn-sm">去待审核</a>
+      <a href="/agent-processing?run_id={{ run_id }}" class="btn btn-primary btn-sm">Agent 处理</a>
     </div>
     {% endif %}
     <div class="action-card">

@@ -201,7 +201,12 @@ def test_pipeline_stage_briefing_and_report(tmp_path: Path) -> None:
     assert dedupe["data"]["pipeline"]["dedupe"] == "completed"
     assert semantic["data"]["pipeline"]["semantic"] == "completed"
     assert briefing["data"]["pipeline"]["briefing"] == "completed"
+    assert briefing["data"]["result"]["briefing"]["scope"]["run_id"] == run_id
+    assert briefing["data"]["result"]["briefing"]["is_legacy"] is False
     assert report["data"]["pipeline"]["report"] == "completed"
+    reports = client.get("/api/reports").json()["data"]["reports"]
+    assert reports[0]["scope"]["run_id"] == run_id
+    assert reports[0]["is_legacy"] is False
 
 
 def test_operational_event_pipeline_rejects_digest_without_event(tmp_path: Path) -> None:

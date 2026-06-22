@@ -52,6 +52,53 @@ async def form_fields(request: Request) -> dict[str, str]:
     return {key: ",".join(values) if key == "source_ids" else (values[-1] if values else "") for key, values in parsed.items()}
 
 
+def clean_params(params: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in params.items() if value not in (None, "")}
+
+
+def scope_for_run(run_id: str | None, *, selected: bool = False, context_goal: str | None = None, legacy: bool = False) -> dict[str, Any]:
+    if legacy:
+        return {
+            "label": "Scope: Legacy / 全库",
+            "detail": "可能包含历史遗留内容，不是默认 Inbox Operating Loop 数据。",
+            "kind": "legacy",
+            "run_id": "",
+        }
+    if context_goal:
+        return {
+            "label": f"Scope: Context Pack {context_goal}",
+            "detail": f"基于 {run_id or 'latest registry_full run'} 的上下文包。",
+            "kind": "context_pack",
+            "run_id": run_id or "",
+        }
+    if run_id:
+        return {
+            "label": f"Scope: {'Selected Run' if selected else 'Latest Inbox Run'}",
+            "detail": run_id,
+            "kind": "selected_run" if selected else "latest_run",
+            "run_id": run_id,
+        }
+    return {
+        "label": "Scope: Latest Inbox Run",
+        "detail": "暂无 registry_full Inbox Run。",
+        "kind": "empty",
+        "run_id": "",
+    }
+
+
+def selected_inbox_run(api: BackendClient, run_id: str = "") -> tuple[dict[str, Any], str, dict[str, Any]]:
+    status_r = api.get("/api/inbox-loop/status")
+    loop_status = data(status_r, {})
+    latest = loop_status.get("latest_run") or {}
+    selected = run_id or latest.get("run_id") or ""
+    return loop_status, selected, scope_for_run(selected, selected=bool(run_id))
+
+
+def output_scope_matches(output: dict[str, Any], run_id: str) -> bool:
+    scope = output.get("scope") or {}
+    return bool(run_id and (scope.get("run_id") == run_id or output.get("object_id") == run_id))
+
+
 @router.get("/", response_class=HTMLResponse)
 def root() -> RedirectResponse:
     return RedirectResponse("/dashboard", status_code=302)
@@ -64,34 +111,34 @@ def dashboard(request: Request):
     loop_r = api.get("/api/inbox-loop/status")
     sources_r = api.get("/api/sources", {"limit": 8})
     runs_r = api.get("/api/runs", {"limit": 8})
-    events_r = api.get("/api/events", {"limit": 6})
-    reviews_r = api.get("/api/review-queue", {"limit": 6})
     briefings_r = api.get("/api/briefings/daily")
     reports_r = api.get("/api/reports")
     env = data(env_r, {}).get("environment", {})
     sources = data(sources_r, {}).get("sources", [])
     runs = data(runs_r, {}).get("runs", [])
-    events = data(events_r, {}).get("events", [])
-    reviews = data(reviews_r, {}).get("reviews", [])
+    loop_status = data(loop_r, {})
+    latest_run = (loop_status.get("latest_run") or {}).get("run_id") or ""
+    operating_r = api.get(f"/api/inbox-loop/runs/{latest_run}/operating-view") if latest_run else {"ok": True, "data": {}}
+    operating = data(operating_r, {})
+    trusted_events = operating.get("trusted_events", [])
+    weak_signals = operating.get("weak_signals", [])
+    agent_queue = operating.get("agent_queue", [])
+    user_escalations = operating.get("user_escalations", [])
     next_actions: list[dict[str, str]] = []
-    last_run = runs[0] if runs else None
-    last_mode = ((last_run or {}).get("request") or {}).get("mode")
     if not env.get("is_fresh_database"):
         next_actions.append({"label": "先确认环境", "href": "/environment", "text": "当前不是 Fresh DB，危险操作已禁用。"})
     elif not sources:
-        next_actions.append({"label": "导入 source", "href": "/sources", "text": "当前没有 source，从这里开始准备信息入口。"})
-    elif not runs:
-        next_actions.append({"label": "创建 dry-run", "href": "/runs/new", "text": "已有 source，先 dry-run 验证抓取范围，不写库。"})
-    elif last_mode == "dry_run" and last_run.get("status") in {"success", "completed"}:
-        next_actions.append({"label": "执行 real-write", "href": "/runs/new", "text": "dry-run 已完成，确认后可用相同 source 范围写入。"})
-    elif last_mode == "real_write" and events:
-        next_actions.append({"label": "处理 review queue", "href": "/review-queue", "text": "已有 event/review，建议人工确认候选事件。"})
-    elif last_mode == "real_write":
-        next_actions.append({"label": "执行 pipeline", "href": f"/runs/{last_run['run_id']}", "text": "real-write 完成后继续 dedupe/semantic/events。"})
-    if reviews:
-        next_actions.append({"label": "进入待审核", "href": "/review-queue", "text": f"当前有 {len(reviews)} 条待处理 review。"})
-    if events and not data(briefings_r, {}).get("briefings", []):
-        next_actions.append({"label": "生成 briefing", "href": "/briefings", "text": "已有 event，可以生成每日简报。"})
+        next_actions.append({"label": "准备信息源", "href": "/sources", "text": "当前没有活跃信息源，先建立 daily/manual loop 的输入。"})
+    elif not latest_run:
+        next_actions.append({"label": "运行 Inbox Loop", "href": "/inbox-loop", "text": "还没有 registry_full run，先生成今日默认数据范围。"})
+    else:
+        next_actions.append({"label": "查看今日情报", "href": f"/today-intel?run_id={latest_run}", "text": "从 latest registry_full run 消费可信事件、弱信号和异常摘要。"})
+    if user_escalations:
+        next_actions.append({"label": "需要你裁决", "href": f"/agent-processing?run_id={latest_run}", "text": f"有 {len(user_escalations)} 项需要人类裁决。"})
+    elif agent_queue:
+        next_actions.append({"label": "Agent 处理", "href": f"/agent-processing?run_id={latest_run}", "text": f"有 {len(agent_queue)} 项待 Agent 初筛或写入 decision ledger。"})
+    if trusted_events and not [item for item in data(briefings_r, {}).get("briefings", []) if output_scope_matches(item, latest_run)]:
+        next_actions.append({"label": "查看输出记录", "href": f"/outputs?run_id={latest_run}", "text": "可信事件已有，可从 run/context 页面触发带 scope 的输出。"})
     return render(
         request,
         "ops/dashboard.html",
@@ -102,14 +149,18 @@ def dashboard(request: Request):
             "sources": sources,
             "source_stats": data(sources_r, {}).get("stats", {}),
             "runs": runs,
-            "last_run": last_run,
-            "events": events,
-            "reviews": reviews,
+            "last_run": runs[0] if runs else None,
+            "trusted_events": trusted_events,
+            "weak_signals": weak_signals,
+            "agent_queue": agent_queue,
+            "user_escalations": user_escalations,
             "briefings": data(briefings_r, {}).get("briefings", []),
             "reports": data(reports_r, {}).get("reports", []),
-            "inbox_loop": data(loop_r, {}),
+            "inbox_loop": loop_status,
+            "scope": scope_for_run(latest_run),
+            "operating": operating,
             "next_actions": next_actions[:4],
-            "error": err(env_r) or err(loop_r) or err(sources_r) or err(runs_r) or err(briefings_r) or err(reports_r),
+            "error": err(env_r) or err(loop_r) or err(sources_r) or err(runs_r) or err(operating_r) or err(briefings_r) or err(reports_r),
         },
     )
 
@@ -133,6 +184,7 @@ def inbox_loop(request: Request):
             "run_summary": data(summary_r, {}),
             "diagnostics": data(diagnostics_r, {}),
             "operating": data(operating_r, {}),
+            "scope": scope_for_run(run_id),
             "manual_result": {},
             "error": err(status_r) or err(summary_r) or err(diagnostics_r) or err(operating_r),
         },
@@ -176,8 +228,156 @@ async def inbox_loop_run(request: Request):
             "run_summary": data(summary_r, {}),
             "diagnostics": data(diagnostics_r, {}),
             "operating": data(operating_r, {}),
+            "scope": scope_for_run(latest_id, selected=bool(run_id)),
             "manual_result": data(response, {}),
             "error": err(response) or err(status_r) or err(summary_r),
+        },
+    )
+
+
+@router.get("/today-intel", response_class=HTMLResponse)
+def today_intel(request: Request, run_id: str = ""):
+    api = client(request)
+    loop_status, selected_run, scope = selected_inbox_run(api, run_id)
+    summary_r = api.get(f"/api/inbox-loop/runs/{selected_run}/summary") if selected_run else {"ok": True, "data": {}}
+    operating_r = api.get(f"/api/inbox-loop/runs/{selected_run}/operating-view") if selected_run else {"ok": True, "data": {}}
+    return render(
+        request,
+        "ops/today_intel.html",
+        {
+            "active_page": "today_intel",
+            "loop_status": loop_status,
+            "run_id": selected_run,
+            "scope": scope,
+            "run_summary": data(summary_r, {}),
+            "operating": data(operating_r, {}),
+            "error": err(summary_r) or err(operating_r),
+        },
+    )
+
+
+@router.get("/agent-processing", response_class=HTMLResponse)
+@router.get("/triage", response_class=HTMLResponse)
+def agent_processing(request: Request, run_id: str = "", goal: str = "review_decisions"):
+    api = client(request)
+    loop_status, selected_run, scope = selected_inbox_run(api, run_id)
+    packets_r = api.get("/api/inbox-loop/triage-packets", clean_params({"run_id": selected_run, "limit": 20}))
+    ledger_r = api.get("/api/inbox-loop/decision-ledger", clean_params({"run_id": selected_run, "limit": 50}))
+    operating_r = api.get(f"/api/inbox-loop/runs/{selected_run}/operating-view") if selected_run else {"ok": True, "data": {}}
+    context_r = api.get("/api/context-packs/" + goal, clean_params({"run_id": selected_run})) if goal in {"daily_brief", "review_decisions"} else {"ok": True, "data": {}}
+    return render(
+        request,
+        "ops/triage.html",
+        {
+            "active_page": "agent_processing",
+            "loop_status": loop_status,
+            "run_id": selected_run,
+            "goal": goal,
+            "scope": scope,
+            "packet": data(packets_r, {}),
+            "ledger": data(ledger_r, {}),
+            "operating": data(operating_r, {}),
+            "context_pack": data(context_r, {}).get("context_pack", {}),
+            "decision_result": {},
+            "error": err(packets_r) or err(ledger_r) or err(operating_r) or err(context_r),
+        },
+    )
+
+
+@router.get("/source-health", response_class=HTMLResponse)
+def source_health(request: Request, run_id: str = ""):
+    api = client(request)
+    loop_status, selected_run, scope = selected_inbox_run(api, run_id)
+    summary_r = api.get(f"/api/inbox-loop/runs/{selected_run}/summary") if selected_run else {"ok": True, "data": {}}
+    diagnostics_r = api.get(f"/api/inbox-loop/runs/{selected_run}/diagnostics") if selected_run else {"ok": True, "data": {}}
+    operating_r = api.get(f"/api/inbox-loop/runs/{selected_run}/operating-view") if selected_run else {"ok": True, "data": {}}
+    return render(
+        request,
+        "ops/source_health.html",
+        {
+            "active_page": "source_health",
+            "loop_status": loop_status,
+            "run_id": selected_run,
+            "scope": scope,
+            "run_summary": data(summary_r, {}),
+            "diagnostics": data(diagnostics_r, {}),
+            "operating": data(operating_r, {}),
+            "error": err(summary_r) or err(diagnostics_r) or err(operating_r),
+        },
+    )
+
+
+@router.get("/outputs", response_class=HTMLResponse)
+def outputs(request: Request, run_id: str = ""):
+    api = client(request)
+    loop_status, selected_run, scope = selected_inbox_run(api, run_id)
+    briefings_r = api.get("/api/briefings/daily")
+    reports_r = api.get("/api/reports")
+    briefings = data(briefings_r, {}).get("briefings", [])
+    reports = data(reports_r, {}).get("reports", [])
+    current_outputs = [
+        {"type_label": "简报", **item} for item in briefings if output_scope_matches(item, selected_run)
+    ] + [
+        {"type_label": "报告", **item} for item in reports if output_scope_matches(item, selected_run)
+    ]
+    legacy_outputs = [
+        {"type_label": "简报", **item} for item in briefings if not output_scope_matches(item, selected_run)
+    ] + [
+        {"type_label": "报告", **item} for item in reports if not output_scope_matches(item, selected_run)
+    ]
+    return render(
+        request,
+        "ops/outputs.html",
+        {
+            "active_page": "outputs",
+            "loop_status": loop_status,
+            "run_id": selected_run,
+            "scope": scope,
+            "current_outputs": current_outputs,
+            "legacy_outputs": legacy_outputs,
+            "error": err(briefings_r) or err(reports_r),
+        },
+    )
+
+
+@router.get("/context-query", response_class=HTMLResponse)
+def context_query(request: Request, query: str = "", run_id: str = "", goal: str = "daily_brief", format: str = "human", target_type: str = "", target_id: str = ""):
+    api = client(request)
+    _loop_status, selected_run, _scope = selected_inbox_run(api, run_id)
+    params = clean_params({"run_id": selected_run, "target_type": target_type, "target_id": target_id})
+    context_r = api.get("/api/context-packs/" + goal, params) if goal in {"daily_brief", "review_decisions", "research_object"} else {"ok": True, "data": {}}
+    result = {}
+    error = err(context_r)
+    if query:
+        response = api.post(
+            "/api/agent-query/preview",
+            {
+                "query": query,
+                "format": format,
+                "goal": goal,
+                "run_id": selected_run,
+                "target_type": target_type or None,
+                "target_id": target_id or None,
+            },
+        )
+        result = data(response, {})
+        error = error or err(response)
+    context_pack = data(context_r, {}).get("context_pack", {})
+    return render(
+        request,
+        "ops/context_query.html",
+        {
+            "active_page": "context_query",
+            "query": query,
+            "format": format,
+            "goal": goal,
+            "run_id": selected_run,
+            "target_type": target_type,
+            "target_id": target_id,
+            "scope": scope_for_run(selected_run, context_goal=goal),
+            "context_pack": context_pack,
+            "result": result,
+            "error": error,
         },
     )
 
@@ -442,7 +642,7 @@ def source_restore(request: Request, source_id: str):
 @router.get("/runs", response_class=HTMLResponse)
 def runs(request: Request):
     response = client(request).get("/api/runs", {"limit": 100})
-    return render(request, "ops/runs.html", {"active_page": "runs", "runs": data(response, {}).get("runs", []), "error": err(response)})
+    return render(request, "ops/runs.html", {"active_page": "runs", "scope": {"label": "Scope: Run Registry", "detail": "所有运行记录；registry_full run 是 Inbox Loop 默认数据范围。", "kind": "run_registry"}, "runs": data(response, {}).get("runs", []), "error": err(response)})
 
 
 @router.get("/runs/new", response_class=HTMLResponse)
@@ -450,7 +650,7 @@ def run_wizard(request: Request):
     api = client(request)
     env = data(api.get("/api/environment"), {}).get("environment", {})
     sources = data(api.get("/api/sources", {"status": "active", "limit": 500}), {}).get("sources", [])
-    return render(request, "ops/run_wizard.html", {"active_page": "runs", "environment": env, "sources": sources})
+    return render(request, "ops/run_wizard.html", {"active_page": "runs_new", "environment": env, "sources": sources})
 
 
 def run_form_payload(
@@ -496,7 +696,7 @@ async def run_preview(request: Request):
     run_timeout_minutes = int(form.get("run_timeout_minutes") or 30)
     payload = run_form_payload(source_ids, scope_type, mode, published_from, published_to, max_sources, max_items_per_source, max_total_items, source_timeout_seconds, run_timeout_minutes)
     response = client(request).post("/api/runs/preview", payload)
-    return render(request, "ops/run_preview.html", {"active_page": "runs", "preview": data(response, {}), "payload": json.dumps(payload), "error": err(response)})
+    return render(request, "ops/run_preview.html", {"active_page": "runs_new", "preview": data(response, {}), "payload": json.dumps(payload), "error": err(response)})
 
 
 @router.post("/runs/start", response_class=HTMLResponse)
@@ -508,7 +708,7 @@ async def run_start(request: Request):
     run_id = data(response, {}).get("run_id")
     if run_id:
         return RedirectResponse(f"/runs/{run_id}", status_code=303)
-    return render(request, "ops/run_preview.html", {"active_page": "runs", "preview": {}, "payload": payload_json, "error": err(response)})
+    return render(request, "ops/run_preview.html", {"active_page": "runs_new", "preview": {}, "payload": payload_json, "error": err(response)})
 
 
 @router.get("/runs/{run_id}", response_class=HTMLResponse)
@@ -527,6 +727,7 @@ def run_detail(request: Request, run_id: str):
         {
             "active_page": "runs",
             "run_id": run_id,
+            "scope": scope_for_run(run_id, selected=True),
             "summary": data(summary, {}),
             "loop_summary": data(loop_summary, {}),
             "diagnostics": data(diagnostics, {}),
@@ -567,7 +768,7 @@ def run_cancel(request: Request, run_id: str):
 @router.get("/items", response_class=HTMLResponse)
 def items(request: Request, run_id: str | None = None, keyword: str | None = None):
     response = client(request).get("/api/items", {"run_id": run_id, "keyword": keyword, "limit": 100})
-    return render(request, "ops/items.html", {"active_page": "items", "items": data(response, {}).get("items", []), "run_id": run_id or "", "keyword": keyword or "", "error": err(response)})
+    return render(request, "ops/items.html", {"active_page": "items", "scope": scope_for_run(run_id, selected=bool(run_id)) if run_id else scope_for_run(None, legacy=True), "items": data(response, {}).get("items", []), "run_id": run_id or "", "keyword": keyword or "", "error": err(response)})
 
 
 @router.get("/items/{item_id}", response_class=HTMLResponse)
@@ -580,17 +781,17 @@ def item_detail(request: Request, item_id: str):
 @router.get("/dedupe-groups", response_class=HTMLResponse)
 def dedupe_groups(request: Request):
     response = client(request).get("/api/dedupe-groups")
-    return render(request, "ops/simple_list.html", {"active_page": "dedupe", "title": "Dedupe Groups", "items": data(response, {}).get("dedupe_groups", []), "error": err(response)})
+    return render(request, "ops/simple_list.html", {"active_page": "dedupe", "title": "去重组", "items": data(response, {}).get("dedupe_groups", []), "scope": scope_for_run(None, legacy=True), "error": err(response)})
 
 
 def simple_page(request: Request, active: str, title: str, api_path: str, key: str):
     response = client(request).get(api_path)
-    return render(request, "ops/simple_list.html", {"active_page": active, "title": title, "items": data(response, {}).get(key, []), "error": err(response)})
+    return render(request, "ops/simple_list.html", {"active_page": active, "title": title, "items": data(response, {}).get(key, []), "scope": scope_for_run(None, legacy=True), "error": err(response)})
 
 
 @router.get("/clusters", response_class=HTMLResponse)
 def clusters(request: Request):
-    return simple_page(request, "clusters", "Clusters", "/api/clusters", "clusters")
+    return simple_page(request, "clusters", "聚合线索", "/api/clusters", "clusters")
 
 
 @router.get("/clusters/{cluster_id}", response_class=HTMLResponse)
@@ -609,7 +810,7 @@ def cluster_create_event(request: Request, cluster_id: str):
 @router.get("/events", response_class=HTMLResponse)
 def events(request: Request):
     response = client(request).get("/api/events")
-    return render(request, "ops/events.html", {"active_page": "events", "items": data(response, {}).get("events", []), "error": err(response)})
+    return render(request, "ops/events.html", {"active_page": "legacy_events", "scope": scope_for_run(None, legacy=True), "items": data(response, {}).get("events", []), "error": err(response)})
 
 
 @router.get("/events/{event_id}", response_class=HTMLResponse)
@@ -621,37 +822,37 @@ def event_detail(request: Request, event_id: str):
 
 @router.get("/entities", response_class=HTMLResponse)
 def entities(request: Request):
-    return simple_page(request, "entities", "Entities", "/api/entities", "entities")
+    return simple_page(request, "entities", "实体", "/api/entities", "entities")
 
 
 @router.get("/relations", response_class=HTMLResponse)
 def relations(request: Request):
-    return simple_page(request, "relations", "Relations", "/api/relations", "relations")
+    return simple_page(request, "relations", "关系", "/api/relations", "relations")
 
 
 @router.get("/claims", response_class=HTMLResponse)
 def claims(request: Request):
-    return simple_page(request, "claims", "Claims", "/api/claims", "claims")
+    return simple_page(request, "claims", "断言", "/api/claims", "claims")
 
 
 @router.get("/topics", response_class=HTMLResponse)
 def topics(request: Request):
-    return simple_page(request, "topics", "Topics", "/api/topics", "topics")
+    return simple_page(request, "topics", "主题", "/api/topics", "topics")
 
 
 @router.get("/timeline", response_class=HTMLResponse)
 def timeline(request: Request):
-    return simple_page(request, "timeline", "Timeline", "/api/timeline", "timeline")
+    return simple_page(request, "timeline", "时间线", "/api/timeline", "timeline")
 
 
 @router.get("/evidence", response_class=HTMLResponse)
 def evidence(request: Request):
-    return simple_page(request, "evidence", "Evidence", "/api/evidence", "evidence")
+    return simple_page(request, "evidence", "证据", "/api/evidence", "evidence")
 
 
 @router.get("/saved-views", response_class=HTMLResponse)
 def saved_views(request: Request):
-    return simple_page(request, "saved_views", "Saved Views", "/api/saved-views", "saved_views")
+    return simple_page(request, "saved_views", "视图", "/api/saved-views", "saved_views")
 
 
 @router.get("/review-queue", response_class=HTMLResponse)
@@ -661,7 +862,8 @@ def review_queue(request: Request, status: str = "pending", decision_source: str
         params["decision_source"] = decision_source
     response = client(request).get("/api/review-queue", params)
     return render(request, "ops/review_queue.html", {
-        "active_page": "review",
+        "active_page": "legacy_review",
+        "scope": scope_for_run(None, legacy=True),
         "status": status,
         "decision_source": decision_source,
         "reviews": data(response, {}).get("reviews", []),
@@ -686,7 +888,7 @@ def review_dismiss(request: Request, review_id: int):
 @router.get("/briefings", response_class=HTMLResponse)
 def briefings(request: Request):
     response = client(request).get("/api/briefings/daily")
-    return render(request, "ops/briefings.html", {"active_page": "briefings", "briefings": data(response, {}).get("briefings", []), "error": err(response)})
+    return render(request, "ops/briefings.html", {"active_page": "legacy_briefings", "scope": scope_for_run(None, legacy=True), "briefings": data(response, {}).get("briefings", []), "error": err(response)})
 
 
 @router.post("/briefings/daily/generate")
@@ -698,7 +900,7 @@ def briefing_generate(request: Request):
 @router.get("/reports", response_class=HTMLResponse)
 def reports(request: Request):
     response = client(request).get("/api/reports")
-    return render(request, "ops/reports.html", {"active_page": "reports", "reports": data(response, {}).get("reports", []), "error": err(response)})
+    return render(request, "ops/reports.html", {"active_page": "legacy_reports", "scope": scope_for_run(None, legacy=True), "reports": data(response, {}).get("reports", []), "error": err(response)})
 
 
 @router.post("/reports/generate")
@@ -714,35 +916,14 @@ def agent_query(request: Request, query: str = "", format: str = "human"):
     result = {}
     error = None
     if query:
-        response = client(request).post("/api/agent-query/preview", {"query": query, "format": format})
+        response = client(request).post("/api/agent-query/preview", {"query": query, "format": format, "scope_type": "legacy_full"})
         result = data(response, {})
         error = err(response)
-    return render(request, "ops/agent_query.html", {"active_page": "agent", "query": query, "format": format, "result": result, "error": error})
-
-
-@router.get("/triage", response_class=HTMLResponse)
-def triage(request: Request, run_id: str = "", goal: str = "daily_brief"):
-    api = client(request)
-    packets_r = api.get("/api/inbox-loop/triage-packets", {"run_id": run_id or None, "limit": 20})
-    ledger_r = api.get("/api/inbox-loop/decision-ledger", {"run_id": run_id or None, "limit": 50})
-    context_r = api.get("/api/context-packs/" + goal, {"run_id": run_id or None}) if goal in {"daily_brief", "review_decisions"} else {"ok": True, "data": {}}
-    return render(
-        request,
-        "ops/triage.html",
-        {
-            "active_page": "triage",
-            "run_id": run_id,
-            "goal": goal,
-            "packet": data(packets_r, {}),
-            "ledger": data(ledger_r, {}),
-            "context_pack": data(context_r, {}).get("context_pack", {}),
-            "decision_result": {},
-            "error": err(packets_r) or err(ledger_r) or err(context_r),
-        },
-    )
+    return render(request, "ops/agent_query.html", {"active_page": "legacy_agent_query", "scope": scope_for_run(None, legacy=True), "query": query, "format": format, "result": result, "error": error})
 
 
 @router.post("/triage/decisions", response_class=HTMLResponse)
+@router.post("/agent-processing/decisions", response_class=HTMLResponse)
 async def triage_decision(request: Request):
     form = await form_fields(request)
     reason_codes = [part.strip() for part in str(form.get("reason_codes") or "").split(",") if part.strip()]
@@ -765,19 +946,22 @@ async def triage_decision(request: Request):
     run_id = payload["run_id"] or ""
     packets_r = api.get("/api/inbox-loop/triage-packets", {"run_id": run_id or None, "limit": 20})
     ledger_r = api.get("/api/inbox-loop/decision-ledger", {"run_id": run_id or None, "limit": 50})
-    context_r = api.get("/api/context-packs/daily_brief", {"run_id": run_id or None})
+    operating_r = api.get(f"/api/inbox-loop/runs/{run_id}/operating-view") if run_id else {"ok": True, "data": {}}
+    context_r = api.get("/api/context-packs/review_decisions", {"run_id": run_id or None})
     return render(
         request,
         "ops/triage.html",
         {
-            "active_page": "triage",
+            "active_page": "agent_processing",
             "run_id": run_id,
-            "goal": "daily_brief",
+            "goal": "review_decisions",
+            "scope": scope_for_run(run_id, selected=True),
             "packet": data(packets_r, {}),
             "ledger": data(ledger_r, {}),
+            "operating": data(operating_r, {}),
             "context_pack": data(context_r, {}).get("context_pack", {}),
             "decision_result": data(response, {}),
-            "error": err(response) or err(packets_r) or err(ledger_r),
+            "error": err(response) or err(packets_r) or err(ledger_r) or err(operating_r),
         },
     )
 

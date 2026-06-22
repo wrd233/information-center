@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-{% block title %}待审核 - 信息中心作战台{% endblock %}
-{% block page_title %}待审核{% endblock %}
+{% block title %}旧待审核队列 - 信息中心作战台{% endblock %}
+{% block page_title %}旧待审核队列{% endblock %}
 
 {% block content %}
 
 <header class="page-header">
   <div>
-    <h1>待审核（Review Queue）</h1>
-    <p>人工判断工作台。流水线生成的候选事件和聚合线索需要在此确认或忽略。
+    <h1>旧待审核队列（Legacy / Debug）</h1>
+    <p>这是 review_queue 全量调试视图。默认处理入口已改为 Agent 处理，只展示 selected Inbox Run 的 bounded packet 和 decision ledger。
     {% if preview_manifest %}← 当前连接 LLM Preview 环境{% endif %}
     </p>
   </div>
@@ -27,6 +27,13 @@
     </form>
   </div>
 </header>
+
+{% include "components/scope_strip.html" %}
+
+<div class="alert alert-warning">
+  <strong>Legacy/Debug 视图</strong>
+  <p>这里可能包含历史遗留内容或非 latest run 对象，不作为 Inbox Operating Loop 的默认裁决页面。</p>
+</div>
 
 {% if review_types %}
 <div class="flex gap-sm" style="flex-wrap:wrap; margin-bottom:1rem;">

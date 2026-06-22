@@ -154,6 +154,21 @@ def test_triage_packet_decision_ledger_and_context_pack(tmp_path: Path) -> None:
     with store.connect() as conn:
         conn.execute(
             """
+            INSERT INTO events(event_id, event_title, event_summary, event_type, event_time, status, importance, confidence, primary_cluster_id, evidence_json, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            ("event-x", "Event X", "Scoped event", "unknown", now, "ready", 3, 0.95, None, "{}", now, now),
+        )
+        conn.execute(
+            "INSERT INTO event_items(event_id, item_id, role, created_at) VALUES (?, ?, ?, ?)",
+            ("event-x", "item-x", "supporting", now),
+        )
+        conn.execute(
+            "INSERT INTO item_run_links(run_id, source_id, item_id, status, operation_id, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+            ("inbox_manual_test", "source-x", "item-x", "inserted", None, now),
+        )
+        conn.execute(
+            """
             INSERT INTO review_queue(review_type, target_type, target_id, status, suggestion_json, reason, created_at, updated_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
@@ -182,5 +197,8 @@ def test_triage_packet_decision_ledger_and_context_pack(tmp_path: Path) -> None:
     assert decision["data"]["decision"]["decision"] == "research"
     assert ledger["decisions"][0]["target_id"] == "event-x"
     assert context["goal"] == "daily_brief"
+    assert context["scope"]["run_id"] == "inbox_manual_test"
+    assert context["scope"]["includes_history"] is False
+    assert "object_counts" in context
+    assert context["budget"]["raw_items_included"] is False
     assert context["agent_queue"]
-

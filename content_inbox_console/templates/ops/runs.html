@@ -1,22 +1,24 @@
 {% extends "base.html" %}
-{% block title %}任务历史 - 信息中心作战台{% endblock %}
-{% block page_title %}任务历史{% endblock %}
+{% block title %}运行记录 - 信息中心作战台{% endblock %}
+{% block page_title %}运行记录{% endblock %}
 
 {% block content %}
 
 <header class="page-header">
   <div>
-    <h1>抓取任务历史</h1>
-    <p class="text-sm text-muted">所有已执行和正在执行的任务记录。</p>
+    <h1>运行记录</h1>
+    <p class="text-sm text-muted">所有已执行和正在执行的 run。registry_full run 是默认 Inbox Operating Loop 数据范围。</p>
   </div>
-  <a href="/runs/new" class="btn btn-primary">创建新任务</a>
+  <a href="/runs/new" class="btn btn-primary">创建运行</a>
 </header>
+
+{% include "components/scope_strip.html" %}
 
 {% if runs %}
 <div class="table-container">
   <table class="data-table">
     <thead><tr>
-      <th>任务 ID</th><th>状态</th><th>模式</th><th>信息源数</th><th>新增条目</th><th>开始时间</th><th></th>
+      <th>Run ID</th><th>状态</th><th>范围</th><th>信息源数</th><th>新增条目</th><th>开始时间</th><th></th>
     </tr></thead>
     <tbody>
     {% for run in runs %}
@@ -30,7 +32,9 @@
         {% else %}<span class="status-badge muted">{{ run.status }}</span>{% endif %}
       </td>
       <td>
-        {% if run.request.mode == 'dry_run' %}<span class="tag">预演</span>{% else %}<span class="tag" style="background:rgba(197,106,44,0.12);color:var(--console-accent-2);">写入</span>{% endif %}
+        {% if run.source_mode == 'registry_full' %}<span class="tag">registry_full</span>
+        {% elif run.request.mode == 'dry_run' %}<span class="tag">预演</span>
+        {% else %}<span class="tag" style="background:rgba(197,106,44,0.12);color:var(--console-accent-2);">写入</span>{% endif %}
       </td>
       <td class="text-xs">{{ run.selected_source_count }}</td>
       <td class="text-xs">{{ run.new_items_count }}</td>

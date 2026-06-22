@@ -1,21 +1,28 @@
 {% extends "base.html" %}
-{% block title %}报告 - 信息中心作战台{% endblock %}
-{% block page_title %}报告{% endblock %}
+{% block title %}旧报告 - 信息中心作战台{% endblock %}
+{% block page_title %}旧报告{% endblock %}
 
 {% block content %}
 
 <header class="page-header">
   <div>
-    <h1>报告（Report）</h1>
-    <p>生成和查看信息源健康度、事件摘要和运行总结报告。
+    <h1>旧报告（Legacy）</h1>
+    <p>这里保留历史报告和调试生成入口。新报告应从运行、事件或 Context Pack 触发，并在输出记录中显示 scope。
     {% if preview_manifest %}← 来自 <strong>LLM Preview</strong> 环境{% endif %}
     </p>
   </div>
+  <a href="/outputs" class="btn btn-secondary btn-sm">输出记录</a>
 </header>
 
+{% include "components/scope_strip.html" %}
+
 <section class="card">
-  <div class="card-header"><strong>生成新报告</strong></div>
+  <div class="card-header"><strong>Legacy/Debug 生成</strong></div>
   <div class="card-body">
+    <div class="alert alert-warning">
+      <strong>未绑定对象的报告会标记为 Legacy</strong>
+      <p>推荐从运行详情或 Context Pack 触发带 scope 的输出。</p>
+    </div>
     <form method="post" action="/reports/generate" class="form-inline">
       <div class="form-group" style="flex:1; min-width:180px;">
         <label class="form-label text-xs">报告类型</label>
@@ -26,7 +33,7 @@
         </select>
         <span class="form-help">总体摘要汇总系统状态，信息源健康度分析各源可用性，事件报告详述特定事件</span>
       </div>
-      <button type="submit" class="btn btn-primary">生成报告</button>
+      <button type="submit" class="btn btn-secondary">生成 Legacy 报告</button>
     </form>
   </div>
 </section>
@@ -37,7 +44,7 @@
   <div class="card">
     <div class="card-header">
       <strong>{{ report.title or '报告' }}</strong>
-      <span class="tag">{{ {'summary': '总体摘要', 'source_health': '信息源健康度', 'event': '事件报告', 'run': '运行报告'}.get(report.report_type, report.report_type or '') }}</span>
+      <span class="status-badge {{ 'warning' if report.is_legacy else 'success' }}">{{ 'Legacy' if report.is_legacy else '已绑定' }}</span>
     </div>
     <div class="card-body">
       {% if report.body_markdown %}
@@ -46,7 +53,7 @@
       <p class="text-sm text-muted">报告内容为空</p>
       {% endif %}
       <div class="text-xs text-muted" style="margin-top:0.5rem;">
-        生成时间：{{ report.created_at or '' }}
+        类型：{{ {'summary': '总体摘要', 'source_health': '信息源健康度', 'event': '事件报告', 'run': '运行报告'}.get(report.report_type, report.report_type or '') }} · 来源 scope：{{ report.scope_label or 'Legacy / 未绑定来源' }} · 生成时间：{{ report.created_at or '' }}
       </div>
     </div>
     <details class="debug-panel">

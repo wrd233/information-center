@@ -47,8 +47,36 @@ def fake_response(path: str) -> dict:
             "ledger": [{"ledger_type": "agent_decision", "created_at": "now", "target_type": "event", "target_id": "event_1", "decision": "research", "actor": "codex"}],
             "stats": {"agent_decision_total": 1},
         },
-        "/api/context-packs/daily_brief": {"context_pack": {"goal": "daily_brief", "run_id": "run_1", "trusted_events": [], "agent_queue": []}},
-        "/api/context-packs/review_decisions": {"context_pack": {"goal": "review_decisions", "run_id": "run_1", "trusted_events": [], "agent_queue": []}},
+        "/api/context-packs/daily_brief": {
+            "context_pack": {
+                "goal": "daily_brief",
+                "run_id": "run_1",
+                "scope": {"label": "Selected Run run_1", "run_id": "run_1", "includes_history": False},
+                "trusted_events": [{"event_id": "event_1", "event_title": "Event A"}],
+                "weak_signals": [{"target_id": "item_1", "title": "Weak A"}],
+                "agent_queue": [],
+                "user_escalations": [],
+                "source_health_anomalies": [],
+                "decision_ledger": [],
+                "object_counts": {"trusted_events": 1, "weak_signals": 1, "agent_queue": 0, "user_escalations": 0, "source_health_anomalies": 0, "decision_ledger": 0},
+                "budget": {"approx_tokens": 120, "raw_items_included": False},
+            }
+        },
+        "/api/context-packs/review_decisions": {
+            "context_pack": {
+                "goal": "review_decisions",
+                "run_id": "run_1",
+                "scope": {"label": "Selected Run run_1", "run_id": "run_1", "includes_history": False},
+                "trusted_events": [{"event_id": "event_1", "event_title": "Event A"}],
+                "weak_signals": [],
+                "agent_queue": [{"target_type": "event", "target_id": "event_1"}],
+                "user_escalations": [{"target_type": "event", "target_id": "event_1", "reason": "manual decision"}],
+                "source_health_anomalies": [],
+                "decision_ledger": [],
+                "object_counts": {"trusted_events": 1, "weak_signals": 0, "agent_queue": 1, "user_escalations": 1, "source_health_anomalies": 0, "decision_ledger": 0},
+                "budget": {"approx_tokens": 160, "raw_items_included": False},
+            }
+        },
         "/api/events": {"events": [{"event_id": "event_1", "event_title": "Event A", "status": "needs_review"}]},
         "/api/review-queue": {"reviews": [{"id": 1, "review_type": "event_candidate", "target_type": "event", "target_id": "event_1", "status": "pending"}]},
         "/api/items": {"items": [{"item_id": "item_1", "title": "Item A", "source_name": "Source A", "published_at": "now", "primary_cluster_id": "cluster_1"}]},
@@ -59,8 +87,18 @@ def fake_response(path: str) -> dict:
         "/api/topics": {"topics": []},
         "/api/timeline": {"timeline": []},
         "/api/dedupe-groups": {"dedupe_groups": []},
-        "/api/briefings/daily": {"briefings": []},
-        "/api/reports": {"reports": []},
+        "/api/briefings/daily": {
+            "briefings": [
+                {"briefing_id": "brief_1", "briefing_type": "daily", "title": "每日简报", "body_markdown": "# 简报", "created_at": "now", "scope_label": "Selected Run run_1", "scope": {"run_id": "run_1", "label": "Selected Run run_1"}, "is_legacy": False},
+                {"briefing_id": "brief_old", "briefing_type": "daily", "title": "旧简报", "body_markdown": "# 旧", "created_at": "old", "scope_label": "Legacy / 未绑定来源", "scope": {"legacy": True, "label": "Legacy / 未绑定来源"}, "is_legacy": True},
+            ]
+        },
+        "/api/reports": {
+            "reports": [
+                {"report_id": "report_1", "report_type": "run", "object_type": "run", "object_id": "run_1", "title": "运行报告", "body_markdown": "# 报告", "created_at": "now", "scope_label": "Selected Run run_1", "scope": {"run_id": "run_1", "label": "Selected Run run_1"}, "is_legacy": False},
+                {"report_id": "report_old", "report_type": "summary", "object_type": None, "object_id": None, "title": "旧报告", "body_markdown": "# 旧", "created_at": "old", "scope_label": "Legacy / 未绑定来源", "scope": {"legacy": True, "label": "Legacy / 未绑定来源"}, "is_legacy": True},
+            ]
+        },
         "/api/evidence": {"evidence": []},
         "/api/saved-views": {"saved_views": []},
         "/api/environment/reset-options": {
@@ -81,7 +119,16 @@ def fake_response(path: str) -> dict:
     if path.startswith("/api/inbox-loop/runs/run_1/diagnostics"):
         return {"run_id": "run_1", "source_count": 1, "failures": [], "sources": [{"source_name": "Source A", "status": "success", "fetched_entries_count": 1, "new_items_count": 1, "duplicate_items_count": 0}]}
     if path.startswith("/api/inbox-loop/runs/run_1/operating-view"):
-        return {"trusted_events": [{"event_id": "event_1", "event_title": "Event A", "confidence": 0.95}], "weak_signals": [{"title": "Weak A", "reason_codes": ["watch_topic_hit"]}], "silent_summary": {"silent_items_sampled": 1}, "agent_queue": [], "user_escalations": [], "source_health_anomalies": []}
+        return {
+            "run_id": "run_1",
+            "scope": {"label": "Selected Run run_1", "run_id": "run_1", "includes_history": False},
+            "trusted_events": [{"event_id": "event_1", "event_title": "Event A", "event_summary": "Trusted summary", "confidence": 0.95}],
+            "weak_signals": [{"target_id": "item_1", "title": "Weak A", "source_name": "Source A", "reason_codes": ["watch_topic_hit"]}],
+            "silent_summary": {"silent_items_sampled": 1, "samples": [{"title": "Silent A", "reason": "skim"}]},
+            "agent_queue": [{"target_type": "event", "target_id": "event_1", "status": "pending", "review_type": "merge_uncertain", "reason": "Needs agent"}],
+            "user_escalations": [{"target_type": "event", "target_id": "event_1", "status": "pending", "review_type": "manual_review", "reason": "manual decision"}],
+            "source_health_anomalies": [{"source_id": "source-a", "source_name": "Source A", "status": "broken", "last_error_code": "FETCH_FAILED", "consecutive_failure_count": 1}],
+        }
     if path.startswith("/api/runs/run_1/events"):
         return {"events": [{"seq": 1, "event_type": "run_completed", "message": "done"}]}
     if path.startswith("/api/runs/run_1/items"):
@@ -109,6 +156,22 @@ def patch_backend(monkeypatch):
             return {"ok": True, "data": {"accepted": True, "status": "started", "run_id": "run_1"}, "error": None, "meta": {}}
         if path == "/api/inbox-loop/agent-decisions":
             return {"ok": True, "data": {"decision": {"target_type": json["target_type"], "target_id": json["target_id"], "decision": json["decision"], "actor": "console"}, "ledger": []}, "error": None, "meta": {}}
+        if path == "/api/agent-query/preview":
+            return {
+                "ok": True,
+                "data": {
+                    "query": json.get("query"),
+                    "format": json.get("format", "human"),
+                    "scope": {"label": "Selected Run run_1", "run_id": "run_1", "includes_history": False},
+                    "context_pack": fake_response("/api/context-packs/daily_brief")["context_pack"],
+                    "object_counts": {"trusted_events": 1, "weak_signals": 1, "agent_queue": 0, "user_escalations": 0, "source_health_anomalies": 0, "decision_ledger": 0},
+                    "budget": {"approx_tokens": 120, "raw_items_included": False},
+                    "human": "上下文包已就绪。",
+                    "markdown": "- 只能基于给定 Context Pack 回答。",
+                },
+                "error": None,
+                "meta": {},
+            }
         return {"ok": True, "data": fake_response(path), "error": None, "meta": {}}
 
     monkeypatch.setattr(BackendClient, "request", request)
@@ -126,6 +189,11 @@ def test_core_console_pages_render(monkeypatch):
         "/runs",
         "/runs/new",
         "/inbox-loop",
+        "/today-intel",
+        "/agent-processing",
+        "/source-health",
+        "/outputs",
+        "/context-query",
         "/items",
         "/dedupe-groups",
         "/clusters",
@@ -178,7 +246,7 @@ def test_chinese_first_vocabulary(monkeypatch):
 
     # Runs
     runs = client.get("/runs")
-    assert "任务历史" in runs.text
+    assert "运行记录" in runs.text
 
     runs_new = client.get("/runs/new")
     assert "创建抓取任务" in runs_new.text
@@ -190,29 +258,42 @@ def test_chinese_first_vocabulary(monkeypatch):
 
     # Events
     events = client.get("/events")
-    assert "事件" in events.text
+    assert "旧事件" in events.text
+    assert "Scope: Legacy / 全库" in events.text
 
     # Review
     review = client.get("/review-queue")
-    assert "待审核" in review.text
+    assert "旧待审核队列" in review.text
+    assert "Scope: Legacy / 全库" in review.text
 
     # Briefings
     briefings = client.get("/briefings")
-    assert "简报" in briefings.text
+    assert "旧简报" in briefings.text
+    assert "Legacy / 未绑定来源" in briefings.text
 
     # Reports
     reports = client.get("/reports")
-    assert "报告" in reports.text
+    assert "旧报告" in reports.text
+    assert "Legacy / 未绑定来源" in reports.text
 
     # Agent query
     agent = client.get("/agent-query")
-    assert "智能查询" in agent.text
+    assert "旧全库查询" in agent.text
 
     loop = client.get("/inbox-loop")
-    assert "Inbox Operating Loop" in loop.text
+    assert "Inbox Loop" in loop.text
 
-    triage = client.get("/triage")
-    assert "Agent Triage" in triage.text
+    today = client.get("/today-intel")
+    assert "今日情报" in today.text
+
+    triage = client.get("/agent-processing")
+    assert "Agent 处理" in triage.text
+
+    outputs = client.get("/outputs")
+    assert "输出记录" in outputs.text
+
+    context_query = client.get("/context-query")
+    assert "上下文包查询" in context_query.text
 
 
 def test_empty_state_guidance(monkeypatch):
@@ -325,7 +406,75 @@ def test_navigation_sidebar_groups(monkeypatch):
     client = TestClient(create_app())
 
     response = client.get("/dashboard")
-    assert "开始使用" in response.text
-    assert "信息消费" in response.text
+    assert "Inbox Operating Loop" in response.text
+    assert "今日情报" in response.text
+    assert "Agent 处理" in response.text
+    assert "运行记录" in response.text
+    assert "信息源健康" in response.text
+    assert "输出记录" in response.text
+    assert "信息消费" not in response.text
     assert "维护" in response.text
-    assert "高级调试" in response.text
+    assert "高级调试 / Legacy / 历史数据" in response.text
+    assert "旧全库查询" in response.text
+
+
+def test_today_intel_uses_latest_run_scope(monkeypatch):
+    """Today intel defaults to latest/selected Inbox Run and separates trusted events from weak signals."""
+    patch_backend(monkeypatch)
+    client = TestClient(create_app())
+
+    response = client.get("/today-intel")
+
+    assert response.status_code == 200
+    assert "Scope: Latest Inbox Run" in response.text
+    assert "Event A" in response.text
+    assert "Weak A" in response.text
+    assert "可信事件" in response.text
+    assert "弱信号" in response.text
+    assert "需要你裁决" in response.text
+
+
+def test_agent_processing_shows_packet_and_ledger(monkeypatch):
+    """Agent processing replaces review queue as the scoped default workbench."""
+    patch_backend(monkeypatch)
+    client = TestClient(create_app())
+
+    response = client.get("/agent-processing")
+
+    assert response.status_code == 200
+    assert "Scope: Latest Inbox Run" in response.text
+    assert "Agent Packet" in response.text
+    assert "待 Agent 处理" in response.text
+    assert "Decision Ledger" in response.text
+    assert "需要你裁决" in response.text
+    assert "bounded_evidence_only" in response.text
+
+
+def test_outputs_show_scope_and_legacy_markers(monkeypatch):
+    """Output records show source scope and fold legacy/unbound outputs."""
+    patch_backend(monkeypatch)
+    client = TestClient(create_app())
+
+    response = client.get("/outputs")
+
+    assert response.status_code == 200
+    assert "Scope: Latest Inbox Run" in response.text
+    assert "当前 scope 输出" in response.text
+    assert "Selected Run run_1" in response.text
+    assert "Legacy / 未绑定来源输出" in response.text
+    assert "旧简报" in response.text
+    assert "旧报告" in response.text
+
+
+def test_context_query_defaults_to_context_pack(monkeypatch):
+    """Context query defaults to selected context pack, not full-database item search."""
+    patch_backend(monkeypatch)
+    client = TestClient(create_app())
+
+    response = client.get("/context-query?query=今天有哪些可信事件")
+
+    assert response.status_code == 200
+    assert "Scope: Context Pack daily_brief" in response.text
+    assert "只能基于给定 Context Pack 回答" in response.text
+    assert "raw items 不包含" in response.text
+    assert "上下文包已就绪" in response.text

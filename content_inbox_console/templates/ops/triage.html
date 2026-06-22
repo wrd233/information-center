@@ -1,17 +1,24 @@
 {% extends "base.html" %}
-{% block title %}Triage - 信息中心作战台{% endblock %}
-{% block page_title %}Agent Triage{% endblock %}
+{% block title %}Agent 处理 - 信息中心作战台{% endblock %}
+{% block page_title %}Agent 处理{% endblock %}
 
 {% block content %}
+{% set candidates = packet.get('candidates') or [] %}
+{% set decisions = ledger.get('ledger') or [] %}
+{% set user_escalations = operating.get('user_escalations') or [] %}
+
 <header class="page-header">
   <div>
-    <h1>Agent Triage</h1>
-    <p class="text-sm text-muted">面向 Codex/Agent 的受控 packet。默认不联网，不暴露全量 raw item。</p>
+    <h1>Agent 处理</h1>
+    <p class="text-sm text-muted">原“待审核”已收敛为 Agent Packet、Decision Ledger 和需要你裁决的事项。默认不联网，不暴露全量 raw item。</p>
   </div>
   <div class="header-actions">
-    <a href="/inbox-loop" class="btn btn-ghost btn-sm">Inbox Loop</a>
+    <a href="/today-intel{% if run_id %}?run_id={{ run_id }}{% endif %}" class="btn btn-secondary btn-sm">今日情报</a>
+    <a href="/review-queue" class="btn btn-ghost btn-sm">Legacy 待审核</a>
   </div>
 </header>
+
+{% include "components/scope_strip.html" %}
 
 {% if error %}
 <div class="alert alert-danger">{{ error }}</div>
@@ -20,58 +27,106 @@
 <div class="alert alert-success">Decision saved: {{ (decision_result.decision or {}).decision }} · {{ (decision_result.decision or {}).target_type }}:{{ (decision_result.decision or {}).target_id }}</div>
 {% endif %}
 
+<section class="stats-grid">
+  <div class="metric-card">
+    <span class="metric-label">Agent Packet</span>
+    <span class="metric-value text-sm">{{ packet.packet_id or '-' }}</span>
+    <span class="metric-sub">Run {{ packet.run_id or run_id or '-' }}</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">待 Agent 处理</span>
+    <span class="metric-value">{{ candidates | length }}</span>
+    <span class="metric-sub">bounded evidence only</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">已处理 Decision Ledger</span>
+    <span class="metric-value">{{ decisions | length }}</span>
+    <span class="metric-sub">当前 scope</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">需要你裁决</span>
+    <span class="metric-value">{{ user_escalations | length }}</span>
+    <span class="metric-sub">user escalation</span>
+  </div>
+</section>
+
 <section class="card">
-  <div class="card-header"><strong>Packet</strong><span class="text-xs text-muted">{{ packet.packet_id or '-' }}</span></div>
+  <div class="card-header">
+    <strong>Agent Packet</strong>
+    <span class="text-xs text-muted">Agent Triage · 受控上下文</span>
+  </div>
   <div class="card-body">
-    <form method="get" action="/triage" class="form-grid">
-      <label>Run ID <input name="run_id" value="{{ run_id }}" placeholder="optional"></label>
-      <label>Context goal
+    <form method="get" action="/agent-processing" class="form-grid">
+      <label>Run ID
+        <input name="run_id" value="{{ run_id }}" placeholder="默认 latest registry_full run">
+      </label>
+      <label>Context Pack
         <select name="goal">
-          <option value="daily_brief" {% if goal == 'daily_brief' %}selected{% endif %}>daily_brief</option>
-          <option value="review_decisions" {% if goal == 'review_decisions' %}selected{% endif %}>review_decisions</option>
+          <option value="review_decisions" {% if goal == 'review_decisions' %}selected{% endif %}>review_decisions · 裁决上下文</option>
+          <option value="daily_brief" {% if goal == 'daily_brief' %}selected{% endif %}>daily_brief · 今日简报</option>
         </select>
       </label>
       <button class="btn btn-secondary" type="submit">刷新 Packet</button>
     </form>
     <div class="summary-list" style="margin-top:0.75rem;">
-      <dt>Network</dt><dd>{{ (packet.policy or {}).network or '-' }}</dd>
-      <dt>Raw item scope</dt><dd>{{ (packet.policy or {}).raw_item_scope or '-' }}</dd>
-      <dt>Candidates</dt><dd>{{ (packet.candidates or []) | length }}</dd>
+      <dt>网络</dt><dd>{{ (packet.policy or {}).network or 'disabled_by_default' }}</dd>
+      <dt>Raw item 范围</dt><dd>{{ (packet.policy or {}).raw_item_scope or 'bounded_evidence_only' }}</dd>
+      <dt>允许决策</dt><dd>{{ ((packet.policy or {}).allowed_decisions or []) | join(', ') }}</dd>
     </div>
   </div>
 </section>
 
+{% if user_escalations %}
 <section class="card">
-  <div class="card-header"><strong>Candidates</strong></div>
+  <div class="card-header"><strong>需要你裁决</strong></div>
   <div class="card-body">
-    {% if packet.candidates %}
+    <table class="data-table">
+      <thead><tr><th>对象</th><th>原因</th><th>状态</th></tr></thead>
+      <tbody>
+      {% for item in user_escalations %}
+      <tr>
+        <td class="text-xs">{{ item.target_type }}:{{ item.target_id }}</td>
+        <td>{{ item.reason or item.review_type }}</td>
+        <td><span class="status-badge warning">{{ item.status }}</span></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+<section class="card">
+  <div class="card-header"><strong>待 Agent 处理</strong></div>
+  <div class="card-body">
+    {% if candidates %}
     <div class="table-container">
       <table class="data-table">
-        <thead><tr><th>Target</th><th>Source</th><th>Reasons</th><th>Preview</th><th>Decision</th></tr></thead>
+        <thead><tr><th>对象</th><th>来源</th><th>原因</th><th>预览</th><th>Decision</th></tr></thead>
         <tbody>
-        {% for candidate in packet.candidates %}
+        {% for candidate in candidates %}
         <tr>
           <td class="text-xs">{{ candidate.target_type }}:{{ candidate.target_id }}</td>
-          <td>{{ candidate.candidate_source }}</td>
+          <td>{{ {'review_queue': 'Agent 队列', 'weak_signal': '弱信号'}.get(candidate.candidate_source, candidate.candidate_source) }}</td>
           <td class="text-xs">{{ candidate.reason_codes | join(', ') }}</td>
           <td class="text-sm">{{ candidate.preview }}</td>
           <td>
-            <form method="post" action="/triage/decisions" class="inline-form">
+            <form method="post" action="/agent-processing/decisions" class="inline-form">
               <input type="hidden" name="run_id" value="{{ packet.run_id or run_id }}">
               <input type="hidden" name="packet_id" value="{{ packet.packet_id }}">
               <input type="hidden" name="target_type" value="{{ candidate.target_type }}">
               <input type="hidden" name="target_id" value="{{ candidate.target_id }}">
               <input type="hidden" name="reason_codes" value="{{ candidate.reason_codes | join(',') }}">
               <input type="hidden" name="evidence_ids" value="{{ candidate.evidence_ids | join(',') }}">
-              <select name="decision">
-                <option value="research">research</option>
-                <option value="surface">surface</option>
-                <option value="silent">silent</option>
-                <option value="noise">noise</option>
-                <option value="merge_suggest">merge_suggest</option>
-                <option value="do_not_merge">do_not_merge</option>
+              <select name="decision" aria-label="Agent decision">
+                <option value="research">research · 继续研究</option>
+                <option value="surface">surface · 浮出给用户</option>
+                <option value="silent">silent · 静默处理</option>
+                <option value="noise">noise · 噪音</option>
+                <option value="merge_suggest">merge_suggest · 建议合并</option>
+                <option value="do_not_merge">do_not_merge · 不合并</option>
               </select>
-              <input type="number" name="confidence" value="0.6" min="0" max="1" step="0.05" style="width:5rem;">
+              <input type="number" name="confidence" value="0.6" min="0" max="1" step="0.05" aria-label="confidence" style="width:5rem;">
               <button class="btn btn-primary btn-sm" type="submit">提交</button>
             </form>
           </td>
@@ -81,19 +136,19 @@
       </table>
     </div>
     {% else %}
-    <p class="text-xs text-muted">暂无 triage candidate。</p>
+    <p class="text-xs text-muted">当前 scope 没有待 Agent 处理项。</p>
     {% endif %}
   </div>
 </section>
 
 <section class="card">
-  <div class="card-header"><strong>Decision Ledger</strong></div>
+  <div class="card-header"><strong>已处理 Decision Ledger</strong></div>
   <div class="card-body">
-    {% if ledger.ledger %}
+    {% if decisions %}
     <table class="data-table">
-      <thead><tr><th>Time</th><th>Type</th><th>Target</th><th>Decision</th><th>Actor</th></tr></thead>
+      <thead><tr><th>时间</th><th>类型</th><th>对象</th><th>Decision</th><th>Actor</th></tr></thead>
       <tbody>
-      {% for entry in ledger.ledger[:20] %}
+      {% for entry in decisions[:20] %}
       <tr>
         <td class="text-xs">{{ entry.created_at }}</td>
         <td>{{ entry.ledger_type }}</td>
@@ -105,19 +160,27 @@
       </tbody>
     </table>
     {% else %}
-    <p class="text-xs text-muted">暂无 decision ledger。</p>
+    <p class="text-xs text-muted">当前 scope 暂无 decision ledger。</p>
     {% endif %}
   </div>
 </section>
 
 <section class="card">
-  <div class="card-header"><strong>Context Pack</strong><span class="text-xs text-muted">{{ goal }}</span></div>
+  <div class="card-header">
+    <strong>Context Pack</strong>
+    <span class="text-xs text-muted">{{ goal }}</span>
+  </div>
   <div class="card-body">
-    <details open>
+    <details>
       <summary>JSON</summary>
       <pre class="code-block">{{ context_pack | tojson(indent=2) }}</pre>
     </details>
   </div>
 </section>
+
+<details class="debug-panel">
+  <summary>Legacy/Debug 说明</summary>
+  <p class="text-sm text-muted">旧 review_queue 全量视图仍保留在高级调试区。默认 Agent 处理页只绑定 latest/selected Inbox Run。</p>
+</details>
 
 {% endblock %}

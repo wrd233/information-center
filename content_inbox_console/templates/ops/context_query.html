@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}上下文包查询 - 信息中心作战台{% endblock %}
+{% block page_title %}上下文包查询{% endblock %}
+
+{% block content %}
+{% set counts = context_pack.get('object_counts') or {} %}
+{% set budget = context_pack.get('budget') or {} %}
+
+<header class="page-header">
+  <div>
+    <h1>上下文包查询</h1>
+    <p class="text-sm text-muted">默认只基于 selected Context Pack 组装回答上下文，不查全库，不调用外部 LLM。</p>
+  </div>
+  <div class="header-actions">
+    <a href="/agent-processing{% if run_id %}?run_id={{ run_id }}{% endif %}" class="btn btn-secondary btn-sm">Agent 处理</a>
+    <a href="/agent-query" class="btn btn-ghost btn-sm">Legacy 全库查询</a>
+  </div>
+</header>
+
+{% include "components/scope_strip.html" %}
+
+<section class="stats-grid">
+  <div class="metric-card">
+    <span class="metric-label">可信事件</span>
+    <span class="metric-value">{{ counts.trusted_events or 0 }}</span>
+    <span class="metric-sub">Context Pack 内</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">弱信号</span>
+    <span class="metric-value">{{ counts.weak_signals or 0 }}</span>
+    <span class="metric-sub">单独计数</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">对象规模</span>
+    <span class="metric-value">{{ (counts.agent_queue or 0) + (counts.user_escalations or 0) + (counts.source_health_anomalies or 0) }}</span>
+    <span class="metric-sub">Agent/异常/裁决</span>
+  </div>
+  <div class="metric-card">
+    <span class="metric-label">预算估算</span>
+    <span class="metric-value">{{ budget.approx_tokens or 0 }}</span>
+    <span class="metric-sub">approx tokens · raw items {{ '包含' if budget.raw_items_included else '不包含' }}</span>
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-header">
+    <strong>提问范围</strong>
+    <span class="text-xs text-muted">证据不足就回答证据不足</span>
+  </div>
+  <div class="card-body">
+    <form method="get" action="/context-query">
+      <input type="hidden" name="run_id" value="{{ run_id }}">
+      <div class="form-grid">
+        <label>Context Pack（上下文包）
+          <select name="goal">
+            <option value="daily_brief" {% if goal == 'daily_brief' %}selected{% endif %}>daily_brief · 今日简报</option>
+            <option value="review_decisions" {% if goal == 'review_decisions' %}selected{% endif %}>review_decisions · Agent 裁决</option>
+            <option value="research_object" {% if goal == 'research_object' %}selected{% endif %}>research_object · 对象研究</option>
+          </select>
+        </label>
+        <label>输出格式
+          <select name="format">
+            <option value="human" {% if format == 'human' %}selected{% endif %}>中文摘要</option>
+            <option value="markdown" {% if format == 'markdown' %}selected{% endif %}>Markdown</option>
+            <option value="json" {% if format == 'json' %}selected{% endif %}>JSON</option>
+          </select>
+        </label>
+        <label>目标类型
+          <input name="target_type" value="{{ target_type }}" placeholder="event / item / source">
+        </label>
+        <label>目标 ID
+          <input name="target_id" value="{{ target_id }}" placeholder="research_object 时填写">
+        </label>
+      </div>
+      <div class="form-group" style="margin-top:1rem;">
+        <label class="form-label">问题</label>
+        <input name="query" value="{{ query }}" placeholder="例如：今天哪些可信事件值得写进简报？">
+      </div>
+      <button class="btn btn-primary" type="submit">基于 Context Pack 预览</button>
+    </form>
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-header">
+    <strong>回答约束</strong>
+    <span class="text-xs text-muted">页面提示词</span>
+  </div>
+  <div class="card-body">
+    <ul class="text-sm text-muted">
+      <li>只能基于给定 Context Pack 回答。</li>
+      <li>证据不足就说证据不足。</li>
+      <li>区分事实、推断、建议。</li>
+      <li>优先中文回答；产品名、模型名和 source 名可保留原文。</li>
+    </ul>
+  </div>
+</section>
+
+{% if result %}
+<div class="content-grid">
+  <section class="card">
+    <div class="card-header"><strong>预览结果</strong></div>
+    <div class="card-body">
+      <pre style="max-height:420px; overflow:auto; font-size:0.85rem; line-height:1.6;">{{ result.human if format == 'human' else result.markdown }}</pre>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-header"><strong>Context Pack 摘要</strong></div>
+    <div class="card-body">
+      <div class="summary-list">
+        <dt>Run</dt><dd>{{ result.context_pack.run_id or run_id or '-' }}</dd>
+        <dt>Scope</dt><dd>{{ (result.scope or {}).label or scope.label }}</dd>
+        <dt>Approx tokens</dt><dd>{{ (result.budget or {}).approx_tokens or 0 }}</dd>
+        <dt>历史数据</dt><dd>{{ '包含' if (result.scope or {}).includes_history else '不包含' }}</dd>
+      </div>
+    </div>
+  </section>
+</div>
+{% endif %}
+
+<details class="debug-panel">
+  <summary>Context Pack JSON</summary>
+  <pre>{{ context_pack | tojson(indent=2) }}</pre>
+</details>
+
+{% endblock %}

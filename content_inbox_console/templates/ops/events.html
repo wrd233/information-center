@@ -1,17 +1,22 @@
 {% extends "base.html" %}
-{% block title %}事件 - 信息中心作战台{% endblock %}
-{% block page_title %}事件{% endblock %}
+{% block title %}旧事件 - 信息中心作战台{% endblock %}
+{% block page_title %}旧事件{% endblock %}
 
 {% block content %}
 
 <header class="page-header">
   <div>
-    <h1>事件（Event）</h1>
-    <p>从信息流中聚合提取的结构化事件。每个事件关联多条原始信息，可进一步生成简报和报告。
+    <h1>旧事件（Legacy / 全库）</h1>
+    <p>这是历史全库事件视图，不是默认“今日情报”。新流程中事件只指可信事件，弱信号单独展示。
     {% if preview_manifest %}← <strong>LLM Preview</strong> 环境 · {{ preview_manifest.event_count }} 事件{% endif %}
     </p>
   </div>
+  <div class="header-actions">
+    <a href="/today-intel" class="btn btn-secondary btn-sm">今日情报</a>
+  </div>
 </header>
+
+{% include "components/scope_strip.html" %}
 
 {% if items %}
 <div class="card-grid">
