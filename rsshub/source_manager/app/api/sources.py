@@ -4,9 +4,10 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from app.api.deps import check_service, fetch_service, rating_service, source_service
+from app.api.deps import batch_run_service, check_service, fetch_service, rating_service, source_service
 from app.models.schemas import (
     BatchRunRequest,
+    BatchRunCreateResponse,
     BatchUpdateRequest,
     FetchRequest,
     RatingAdjustmentRequest,
@@ -17,6 +18,7 @@ from app.models.schemas import (
     SourceUpdate,
 )
 from app.services.check_service import CheckService
+from app.services.batch_run_service import BatchRunService
 from app.services.fetch_service import FetchService
 from app.services.rating_service import RatingService
 from app.services.source_service import SourceService
@@ -74,30 +76,17 @@ def batch_update_sources(
 @router.post("/check-batch")
 def check_batch(
     payload: BatchRunRequest,
-    service: Annotated[CheckService, Depends(check_service)],
-) -> dict:
-    statuses = payload.statuses or ["active", "broken"]
-    if payload.include_paused and "paused" not in statuses:
-        statuses.append("paused")
-    return service.check_batch(statuses=statuses, source_ids=payload.source_ids)
+    service: Annotated[BatchRunService, Depends(batch_run_service)],
+) -> BatchRunCreateResponse:
+    return BatchRunCreateResponse(**service.create_run("check", payload))
 
 
 @router.post("/fetch-batch")
 def fetch_batch(
     payload: BatchRunRequest,
-    service: Annotated[FetchService, Depends(fetch_service)],
-) -> dict:
-    statuses = payload.statuses or ["active"]
-    if payload.include_broken and "broken" not in statuses:
-        statuses.append("broken")
-    if payload.include_paused and "paused" not in statuses:
-        statuses.append("paused")
-    return service.fetch_batch(
-        statuses=statuses,
-        source_ids=payload.source_ids,
-        include_raw=payload.include_raw,
-        max_concurrent_sources=payload.max_concurrent_sources,
-    )
+    service: Annotated[BatchRunService, Depends(batch_run_service)],
+) -> BatchRunCreateResponse:
+    return BatchRunCreateResponse(**service.create_run("fetch", payload))
 
 
 @router.get("/{source_id}", response_model=SourceDetailResponse)
@@ -161,4 +150,3 @@ def adjust_rating(
     if not result:
         raise HTTPException(status_code=404, detail="source not found")
     return result
-

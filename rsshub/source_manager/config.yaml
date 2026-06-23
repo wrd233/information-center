@@ -17,6 +17,32 @@ batch_fetch:
   default_max_concurrent_sources: 7
   hard_limit: 10
 
+timeouts:
+  default:
+    connect_seconds: 3
+    read_seconds: 8
+    total_seconds: 12
+  rsshub:
+    connect_seconds: 3
+    read_seconds: 10
+    total_seconds: 15
+  native:
+    connect_seconds: 3
+    read_seconds: 8
+    total_seconds: 12
+  wechat:
+    connect_seconds: 3
+    read_seconds: 15
+    total_seconds: 20
+
+concurrency:
+  default_max_concurrent_sources: 10
+  hard_limit: 20
+  adapters:
+    rsshub: 7
+    native: 10
+    wechat: 2
+
 adapters:
   rsshub_local:
     type: rsshub
@@ -52,4 +78,3 @@ categories:
   - B站
   - GitHub
   - 其他
-

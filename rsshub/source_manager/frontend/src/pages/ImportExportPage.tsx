@@ -40,6 +40,11 @@ export function ImportExportPage() {
     await loadHistory();
   }
 
+  async function checkCreated() {
+    const result = await api.batchCheck({ source_ids: createdIds });
+    setMessage(`batch check started: ${result.batch_run_id}`);
+  }
+
   return (
     <div className="page-stack">
       <section className="panel import-grid">
@@ -61,7 +66,7 @@ export function ImportExportPage() {
         <div className="toolbar wide">
           <button disabled={!content} onClick={doPreview}><Upload size={16} aria-hidden="true" />Preview</button>
           <button disabled={!preview} onClick={doCommit}><CheckCircle size={16} aria-hidden="true" />Commit</button>
-          <button disabled={createdIds.length === 0} onClick={() => api.batchCheck(createdIds)}><CheckCircle size={16} aria-hidden="true" />Check</button>
+          <button disabled={createdIds.length === 0} onClick={checkCreated}><CheckCircle size={16} aria-hidden="true" />Check</button>
         </div>
       </section>
       {message && <div className="notice">{message}</div>}
@@ -88,4 +93,3 @@ export function ImportExportPage() {
     </div>
   );
 }
-

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import threading
+from contextlib import contextmanager
 from typing import Any
 
 from app.adapters.native import NativeAdapter
@@ -8,7 +10,7 @@ from app.adapters.wechat import WechatAdapter
 from app.config import AppConfig, settings
 from app.models.schemas import SourceCreate, SourceResponse, SourceUpdate
 from app.storage.db import Database
-from app.storage.repositories import EntryRepository, RunRepository, SourceRepository
+from app.storage.repositories import BatchRunRepository, EntryRepository, RunRepository, SourceRepository
 from app.utils.url_normalize import normalize_url
 
 
@@ -19,6 +21,21 @@ class SourceService:
         self.sources = SourceRepository(self.db)
         self.entries = EntryRepository(self.db)
         self.runs = RunRepository(self.db)
+        self.batch_runs = BatchRunRepository(self.db)
+        self._source_locks: dict[str, threading.Lock] = {}
+        self._source_locks_guard = threading.Lock()
+
+    @contextmanager
+    def source_operation(self, source_id: str):
+        with self._source_locks_guard:
+            self._source_locks.setdefault(source_id, threading.Lock())
+            lock = self._source_locks[source_id]
+        acquired = lock.acquire(blocking=False)
+        try:
+            yield acquired
+        finally:
+            if acquired:
+                lock.release()
 
     def adapter_for(self, source: dict[str, Any]):
         source_type = source.get("source_type")
@@ -115,4 +132,3 @@ class SourceService:
             if updated:
                 results.append(self.as_response(updated))
         return results
-

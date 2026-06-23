@@ -1,10 +1,15 @@
 import { Activity, Edit3, Eye, Pause, Play, RefreshCw, Trash2 } from "lucide-react";
+import { useEffect, useRef } from "react";
 import type { Source } from "../api/types";
 
 interface Props {
   sources: Source[];
   selected: Set<string>;
+  allVisibleSelected: boolean;
+  partiallySelected: boolean;
+  runningBySource: Record<string, "check" | "fetch" | undefined>;
   onSelect: (id: string, selected: boolean) => void;
+  onSelectVisible: (selected: boolean) => void;
   onOpen: (source: Source) => void;
   onEdit: (source: Source) => void;
   onCheck: (source: Source) => void;
@@ -13,13 +18,39 @@ interface Props {
   onDelete: (source: Source) => void;
 }
 
-export function SourceTable({ sources, selected, onSelect, onOpen, onEdit, onCheck, onFetch, onStatus, onDelete }: Props) {
+export function SourceTable({
+  sources,
+  selected,
+  allVisibleSelected,
+  partiallySelected,
+  runningBySource,
+  onSelect,
+  onSelectVisible,
+  onOpen,
+  onEdit,
+  onCheck,
+  onFetch,
+  onStatus,
+  onDelete
+}: Props) {
+  const headerCheckbox = useRef<HTMLInputElement | null>(null);
+  useEffect(() => {
+    if (headerCheckbox.current) headerCheckbox.current.indeterminate = partiallySelected;
+  }, [partiallySelected]);
   return (
     <div className="table-wrap">
       <table>
         <thead>
           <tr>
-            <th><span className="visually-hidden">select</span></th>
+            <th>
+              <input
+                ref={headerCheckbox}
+                type="checkbox"
+                aria-label="select visible sources"
+                checked={allVisibleSelected}
+                onChange={(event) => onSelectVisible(event.target.checked)}
+              />
+            </th>
             <th>名称</th>
             <th>类型</th>
             <th>分类</th>
@@ -33,8 +64,10 @@ export function SourceTable({ sources, selected, onSelect, onOpen, onEdit, onChe
           </tr>
         </thead>
         <tbody>
-          {sources.map((source) => (
-            <tr key={source.source_id}>
+          {sources.map((source) => {
+            const running = runningBySource[source.source_id];
+            return (
+            <tr key={source.source_id} className={running ? "row-running" : undefined}>
               <td>
                 <input
                   type="checkbox"
@@ -46,6 +79,7 @@ export function SourceTable({ sources, selected, onSelect, onOpen, onEdit, onChe
               <td>
                 <button className="link-button" onClick={() => onOpen(source)}>{source.display_name}</button>
                 <small>{source.resolved_feed_url || source.feed_url || source.route_path}</small>
+                {running && <small className="row-progress">{running === "check" ? "检查中" : "抓取中"}</small>}
               </td>
               <td>{source.source_type}</td>
               <td>{source.category}</td>
@@ -57,21 +91,25 @@ export function SourceTable({ sources, selected, onSelect, onOpen, onEdit, onChe
               <td>{source.last_fetch_new_count}</td>
               <td>
                 <div className="row-actions">
-                  <button aria-label="view" title="View" onClick={() => onOpen(source)}><Eye size={15} /></button>
-                  <button aria-label="edit" title="Edit" onClick={() => onEdit(source)}><Edit3 size={15} /></button>
-                  <button aria-label="check" title="Check" onClick={() => onCheck(source)}><Activity size={15} /></button>
-                  <button aria-label="fetch" title="Fetch" onClick={() => onFetch(source)}><RefreshCw size={15} /></button>
-                  <button aria-label="toggle pause" title="Pause or resume" onClick={() => onStatus(source, source.status === "active" ? "paused" : "active")}>
-                    {source.status === "active" ? <Pause size={15} /> : <Play size={15} />}
+                  <button aria-label="view" title="View" onClick={() => onOpen(source)}><Eye size={15} aria-hidden="true" /></button>
+                  <button aria-label="edit" title="Edit" onClick={() => onEdit(source)}><Edit3 size={15} aria-hidden="true" /></button>
+                  <button aria-label="check" title="Check" disabled={!!running} onClick={() => onCheck(source)}>
+                    <Activity size={15} aria-hidden="true" className={running === "check" ? "spin" : undefined} />
                   </button>
-                  <button aria-label="disable" title="Disable" onClick={() => onDelete(source)}><Trash2 size={15} /></button>
+                  <button aria-label="fetch" title="Fetch" disabled={!!running} onClick={() => onFetch(source)}>
+                    <RefreshCw size={15} aria-hidden="true" className={running === "fetch" ? "spin" : undefined} />
+                  </button>
+                  <button aria-label="toggle pause" title="Pause or resume" onClick={() => onStatus(source, source.status === "active" ? "paused" : "active")}>
+                    {source.status === "active" ? <Pause size={15} aria-hidden="true" /> : <Play size={15} aria-hidden="true" />}
+                  </button>
+                  <button aria-label="disable" title="Disable" onClick={() => onDelete(source)}><Trash2 size={15} aria-hidden="true" /></button>
                 </div>
               </td>
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
     </div>
   );
 }
-

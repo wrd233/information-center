@@ -1,5 +1,8 @@
 export type SourceType = "rsshub" | "wechat" | "native";
 export type SourceStatus = "active" | "paused" | "broken" | "disabled";
+export type BatchAction = "check" | "fetch";
+export type BatchRunStatus = "pending" | "running" | "cancelling" | "succeeded" | "partial_success" | "failed" | "cancelled";
+export type BatchRunItemStatus = "pending" | "running" | "succeeded" | "failed" | "skipped" | "cancelled";
 
 export interface Source {
   source_id: string;
@@ -78,3 +81,56 @@ export interface SettingsPayload {
   docs_url: string;
 }
 
+export interface BatchFilter {
+  source_types?: SourceType[];
+  statuses?: SourceStatus[];
+  category?: string | null;
+  search?: string | null;
+}
+
+export interface BatchPayload {
+  source_ids?: string[];
+  filter?: BatchFilter;
+  max_concurrent_sources?: number;
+  include_raw?: boolean;
+}
+
+export interface BatchRunCreate {
+  batch_run_id: string;
+  status: BatchRunStatus;
+  status_url: string;
+  items_url: string;
+  poll_interval_ms: number;
+}
+
+export interface BatchRun {
+  batch_run_id: string;
+  action: BatchAction;
+  status: BatchRunStatus;
+  total_count: number;
+  pending_count: number;
+  running_count: number;
+  success_count: number;
+  failed_count: number;
+  skipped_count: number;
+  cancelled_count: number;
+  started_at?: string | null;
+  finished_at?: string | null;
+  elapsed_ms?: number | null;
+}
+
+export interface BatchRunItem {
+  batch_run_id: string;
+  source_id: string;
+  display_name?: string | null;
+  source_type?: SourceType | null;
+  status: BatchRunItemStatus;
+  elapsed_ms?: number | null;
+  error_type?: string | null;
+  error_message?: string | null;
+  failure_stage?: string | null;
+  entries_found: number;
+  entries_new: number;
+  entries_existing: number;
+  stopped_reason?: string | null;
+}

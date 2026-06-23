@@ -127,11 +127,58 @@ def ensure_schema(db_path: Path) -> None:
                 actor TEXT
             );
 
+            CREATE TABLE IF NOT EXISTS batch_runs (
+                id INTEGER PRIMARY KEY,
+                batch_run_id TEXT UNIQUE NOT NULL,
+                action TEXT NOT NULL,
+                status TEXT NOT NULL,
+                total_count INTEGER DEFAULT 0,
+                pending_count INTEGER DEFAULT 0,
+                running_count INTEGER DEFAULT 0,
+                success_count INTEGER DEFAULT 0,
+                failed_count INTEGER DEFAULT 0,
+                skipped_count INTEGER DEFAULT 0,
+                cancelled_count INTEGER DEFAULT 0,
+                started_at TEXT,
+                finished_at TEXT,
+                elapsed_ms INTEGER,
+                options_json TEXT,
+                created_by TEXT,
+                created_at TEXT,
+                updated_at TEXT
+            );
+
+            CREATE TABLE IF NOT EXISTS batch_run_items (
+                id INTEGER PRIMARY KEY,
+                batch_run_id TEXT NOT NULL,
+                source_id TEXT NOT NULL,
+                display_name TEXT,
+                source_type TEXT,
+                status TEXT NOT NULL,
+                started_at TEXT,
+                finished_at TEXT,
+                elapsed_ms INTEGER,
+                http_status INTEGER,
+                content_type TEXT,
+                error_type TEXT,
+                error_message TEXT,
+                failure_stage TEXT,
+                entries_found INTEGER DEFAULT 0,
+                entries_new INTEGER DEFAULT 0,
+                entries_existing INTEGER DEFAULT 0,
+                stopped_reason TEXT,
+                result_json TEXT,
+                created_at TEXT,
+                updated_at TEXT,
+                UNIQUE(batch_run_id, source_id)
+            );
+
             CREATE INDEX IF NOT EXISTS idx_sources_type_status ON sources(source_type, status);
             CREATE INDEX IF NOT EXISTS idx_sources_category ON sources(category);
             CREATE INDEX IF NOT EXISTS idx_entries_source_seen ON entries(source_id, last_seen_at);
             CREATE INDEX IF NOT EXISTS idx_fetch_runs_source_started ON fetch_runs(source_id, started_at);
             CREATE INDEX IF NOT EXISTS idx_fetch_run_entries_run ON fetch_run_entries(fetch_run_id);
+            CREATE INDEX IF NOT EXISTS idx_batch_runs_status ON batch_runs(status, created_at);
+            CREATE INDEX IF NOT EXISTS idx_batch_run_items_run ON batch_run_items(batch_run_id, status);
             """
         )
-

@@ -53,11 +53,35 @@ class AppConfig:
 
     @property
     def default_max_concurrent_sources(self) -> int:
-        return int(self.raw.get("batch_fetch", {}).get("default_max_concurrent_sources", 7))
+        return int(
+            self.raw.get("concurrency", {}).get(
+                "default_max_concurrent_sources",
+                self.raw.get("batch_fetch", {}).get("default_max_concurrent_sources", 7),
+            )
+        )
 
     @property
     def hard_concurrency_limit(self) -> int:
-        return int(self.raw.get("batch_fetch", {}).get("hard_limit", 10))
+        return int(
+            self.raw.get("concurrency", {}).get("hard_limit", self.raw.get("batch_fetch", {}).get("hard_limit", 10))
+        )
+
+    def adapter_max_concurrent_sources(self, source_type: str) -> int:
+        configured = self.raw.get("concurrency", {}).get("adapters", {}).get(source_type)
+        if configured is not None:
+            return int(configured)
+        for adapter in self.adapters.values():
+            if adapter.get("type") == source_type and adapter.get("max_concurrent_sources") is not None:
+                return int(adapter["max_concurrent_sources"])
+        return self.default_max_concurrent_sources
+
+    def timeout_config(self, source_type: str | None = None) -> dict[str, float]:
+        defaults = {"connect_seconds": 3.0, "read_seconds": 8.0, "total_seconds": 12.0}
+        configured = self.raw.get("timeouts", {})
+        values = {**defaults, **(configured.get("default") or {})}
+        if source_type and configured.get(source_type):
+            values.update(configured[source_type])
+        return {key: float(value) for key, value in values.items()}
 
 
 def load_config(config_path: Path | None = None) -> AppConfig:
@@ -73,4 +97,3 @@ def load_config(config_path: Path | None = None) -> AppConfig:
 
 
 settings = load_config()
-

@@ -1,4 +1,15 @@
-import type { SettingsPayload, Source, SourceDetail, SourceList, SourceStatus, SourceType } from "./types";
+import type {
+  BatchPayload,
+  BatchRun,
+  BatchRunCreate,
+  BatchRunItem,
+  SettingsPayload,
+  Source,
+  SourceDetail,
+  SourceList,
+  SourceStatus,
+  SourceType
+} from "./types";
 
 const API = "/api/v1";
 
@@ -52,11 +63,20 @@ export const api = {
   fetch(id: string) {
     return request(`/sources/${id}/fetch`, { method: "POST", body: JSON.stringify({ include_raw: false }) });
   },
-  batchCheck(sourceIds: string[]) {
-    return request("/sources/check-batch", { method: "POST", body: JSON.stringify({ source_ids: sourceIds }) });
+  batchCheck(payload: BatchPayload) {
+    return request<BatchRunCreate>("/sources/check-batch", { method: "POST", body: JSON.stringify(payload) });
   },
-  batchFetch(sourceIds: string[]) {
-    return request("/sources/fetch-batch", { method: "POST", body: JSON.stringify({ source_ids: sourceIds }) });
+  batchFetch(payload: BatchPayload) {
+    return request<BatchRunCreate>("/sources/fetch-batch", { method: "POST", body: JSON.stringify(payload) });
+  },
+  batchRun(id: string) {
+    return request<BatchRun>(`/batch-runs/${id}`);
+  },
+  batchRunItems(id: string) {
+    return request<BatchRunItem[]>(`/batch-runs/${id}/items`);
+  },
+  cancelBatchRun(id: string) {
+    return request<BatchRun>(`/batch-runs/${id}/cancel`, { method: "POST", body: "{}" });
   },
   batchUpdate(sourceIds: string[], payload: Partial<Pick<Source, "category" | "tags" | "rating" | "status">>) {
     return request<Source[]>("/sources/batch", { method: "PATCH", body: JSON.stringify({ source_ids: sourceIds, ...payload }) });
@@ -78,4 +98,3 @@ export const api = {
 export function downloadUrl(path: string) {
   window.location.href = `${API}${path}`;
 }
-

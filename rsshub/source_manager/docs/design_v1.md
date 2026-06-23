@@ -1,5 +1,7 @@
 # RSS Source Manager Design v1
 
+v2 batch_run / performance / acceptance test changes are documented in [docs/design_v2.md](design_v2.md).
+
 ## 1. Context / 背景
 
 The repository already has local RSSHub deployment files, an OPML/CSV workspace, a separate `wechat-rss` service, and a larger `content_inbox` ingestion system. RSS Source Manager sits near `rsshub/` as a focused source registry and health ledger.
@@ -199,4 +201,3 @@ The file is created if absent, reused if present, and never cleared at startup. 
 - D013: React + FastAPI is used for a small independent management UI.
 - D014: Schema management uses `ensure_schema`, not Alembic.
 - D015: Backend core tests cover IDs, schema, status flow, entry identity, import/export, and rating.
-

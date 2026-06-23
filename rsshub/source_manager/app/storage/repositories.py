@@ -5,7 +5,7 @@ import sqlite3
 from typing import Any
 
 from app.storage.db import Database
-from app.utils.ids import new_entry_id, new_fetch_run_id, new_import_run_id, new_source_id
+from app.utils.ids import new_batch_run_id, new_entry_id, new_fetch_run_id, new_import_run_id, new_source_id
 from app.utils.time import utc_now
 
 
@@ -358,6 +358,220 @@ class RunRepository:
         return [row_to_dict(row) or {} for row in rows]
 
 
+def batch_run_from_row(row: sqlite3.Row | dict[str, Any] | None) -> dict[str, Any] | None:
+    data = row_to_dict(row) if isinstance(row, sqlite3.Row) else (dict(row) if row else None)
+    if data is None:
+        return None
+    data["options"] = json.loads(data.pop("options_json") or "{}")
+    return data
+
+
+def batch_item_from_row(row: sqlite3.Row | dict[str, Any] | None) -> dict[str, Any] | None:
+    data = row_to_dict(row) if isinstance(row, sqlite3.Row) else (dict(row) if row else None)
+    if data is None:
+        return None
+    data["result"] = json.loads(data.pop("result_json") or "null")
+    return data
+
+
+class BatchRunRepository:
+    def __init__(self, db: Database):
+        self.db = db
+
+    def create(self, *, action: str, sources: list[dict[str, Any]], options: dict[str, Any]) -> dict[str, Any]:
+        now = utc_now()
+        batch_run_id = new_batch_run_id()
+        with self.db.connect() as conn:
+            conn.execute(
+                """
+                INSERT INTO batch_runs
+                  (batch_run_id, action, status, total_count, pending_count, options_json, created_by, created_at, updated_at)
+                VALUES (?, ?, 'pending', ?, ?, ?, 'local', ?, ?)
+                """,
+                (batch_run_id, action, len(sources), len(sources), json.dumps(options, ensure_ascii=False), now, now),
+            )
+            for source in sources:
+                conn.execute(
+                    """
+                    INSERT INTO batch_run_items
+                      (batch_run_id, source_id, display_name, source_type, status, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, 'pending', ?, ?)
+                    """,
+                    (
+                        batch_run_id,
+                        source["source_id"],
+                        source.get("display_name"),
+                        source.get("source_type"),
+                        now,
+                        now,
+                    ),
+                )
+        return self.get(batch_run_id) or {}
+
+    def get(self, batch_run_id: str) -> dict[str, Any] | None:
+        with self.db.connect() as conn:
+            row = conn.execute("SELECT * FROM batch_runs WHERE batch_run_id = ?", (batch_run_id,)).fetchone()
+        return batch_run_from_row(row)
+
+    def list_items(self, batch_run_id: str) -> list[dict[str, Any]]:
+        with self.db.connect() as conn:
+            rows = conn.execute(
+                "SELECT * FROM batch_run_items WHERE batch_run_id = ? ORDER BY id ASC", (batch_run_id,)
+            ).fetchall()
+        return [batch_item_from_row(row) or {} for row in rows]
+
+    def pending_items(self, batch_run_id: str) -> list[dict[str, Any]]:
+        with self.db.connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT * FROM batch_run_items
+                WHERE batch_run_id = ? AND status = 'pending'
+                ORDER BY id ASC
+                """,
+                (batch_run_id,),
+            ).fetchall()
+        return [batch_item_from_row(row) or {} for row in rows]
+
+    def set_run_status(self, batch_run_id: str, status: str, *, started_at: str | None = None, finished_at: str | None = None, elapsed_ms: int | None = None) -> None:
+        updates: dict[str, Any] = {"status": status, "updated_at": utc_now()}
+        if started_at is not None:
+            updates["started_at"] = started_at
+        if finished_at is not None:
+            updates["finished_at"] = finished_at
+        if elapsed_ms is not None:
+            updates["elapsed_ms"] = elapsed_ms
+        assignments = ", ".join(f"{key} = ?" for key in updates)
+        with self.db.connect() as conn:
+            conn.execute(f"UPDATE batch_runs SET {assignments} WHERE batch_run_id = ?", [*updates.values(), batch_run_id])
+
+    def mark_item_running(self, batch_run_id: str, source_id: str) -> None:
+        now = utc_now()
+        with self.db.connect() as conn:
+            conn.execute(
+                """
+                UPDATE batch_run_items
+                SET status = 'running', started_at = ?, updated_at = ?
+                WHERE batch_run_id = ? AND source_id = ? AND status = 'pending'
+                """,
+                (now, now, batch_run_id, source_id),
+            )
+        self.refresh_counts(batch_run_id)
+
+    def finish_item(self, batch_run_id: str, source_id: str, *, status: str, updates: dict[str, Any]) -> None:
+        now = utc_now()
+        values = {**updates, "status": status, "finished_at": now, "updated_at": now}
+        if "result" in values:
+            values["result_json"] = json.dumps(values.pop("result"), ensure_ascii=False)
+        assignments = ", ".join(f"{key} = ?" for key in values)
+        with self.db.connect() as conn:
+            conn.execute(
+                f"UPDATE batch_run_items SET {assignments} WHERE batch_run_id = ? AND source_id = ?",
+                [*values.values(), batch_run_id, source_id],
+            )
+        self.refresh_counts(batch_run_id)
+
+    def request_cancel(self, batch_run_id: str) -> dict[str, Any] | None:
+        now = utc_now()
+        with self.db.connect() as conn:
+            existing = conn.execute("SELECT * FROM batch_runs WHERE batch_run_id = ?", (batch_run_id,)).fetchone()
+            if not existing:
+                return None
+            if existing["status"] in {"pending", "running"}:
+                conn.execute(
+                    "UPDATE batch_runs SET status = 'cancelling', updated_at = ? WHERE batch_run_id = ?",
+                    (now, batch_run_id),
+                )
+                conn.execute(
+                    """
+                    UPDATE batch_run_items
+                    SET status = 'cancelled', finished_at = ?, error_type = NULL, error_message = NULL,
+                        failure_stage = NULL, updated_at = ?
+                    WHERE batch_run_id = ? AND status = 'pending'
+                    """,
+                    (now, now, batch_run_id),
+                )
+        self.refresh_counts(batch_run_id)
+        return self.get(batch_run_id)
+
+    def is_cancelling(self, batch_run_id: str) -> bool:
+        run = self.get(batch_run_id)
+        return bool(run and run.get("status") == "cancelling")
+
+    def refresh_counts(self, batch_run_id: str) -> dict[str, Any] | None:
+        with self.db.connect() as conn:
+            row = conn.execute(
+                """
+                SELECT
+                  COUNT(*) AS total_count,
+                  SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS pending_count,
+                  SUM(CASE WHEN status = 'running' THEN 1 ELSE 0 END) AS running_count,
+                  SUM(CASE WHEN status = 'succeeded' THEN 1 ELSE 0 END) AS success_count,
+                  SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) AS failed_count,
+                  SUM(CASE WHEN status = 'skipped' THEN 1 ELSE 0 END) AS skipped_count,
+                  SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) AS cancelled_count
+                FROM batch_run_items
+                WHERE batch_run_id = ?
+                """,
+                (batch_run_id,),
+            ).fetchone()
+            counts = {key: int(row[key] or 0) for key in row.keys()} if row else {}
+            if counts:
+                conn.execute(
+                    """
+                    UPDATE batch_runs
+                    SET total_count = ?, pending_count = ?, running_count = ?, success_count = ?,
+                        failed_count = ?, skipped_count = ?, cancelled_count = ?, updated_at = ?
+                    WHERE batch_run_id = ?
+                    """,
+                    (
+                        counts["total_count"],
+                        counts["pending_count"],
+                        counts["running_count"],
+                        counts["success_count"],
+                        counts["failed_count"],
+                        counts["skipped_count"],
+                        counts["cancelled_count"],
+                        utc_now(),
+                        batch_run_id,
+                    ),
+                )
+        return self.get(batch_run_id)
+
+    def recover_incomplete(self) -> None:
+        now = utc_now()
+        recovered: list[str] = []
+        with self.db.connect() as conn:
+            rows = conn.execute(
+                "SELECT batch_run_id, status FROM batch_runs WHERE status IN ('pending', 'running', 'cancelling')"
+            ).fetchall()
+            for row in rows:
+                final_status = "cancelled" if row["status"] == "cancelling" else "failed"
+                conn.execute(
+                    """
+                    UPDATE batch_run_items
+                    SET status = CASE WHEN status = 'pending' THEN ? WHEN status = 'running' THEN 'failed' ELSE status END,
+                        finished_at = COALESCE(finished_at, ?),
+                        error_type = COALESCE(error_type, 'process_restarted'),
+                        error_message = COALESCE(error_message, 'process restarted before batch run completed'),
+                        failure_stage = COALESCE(failure_stage, 'unknown'),
+                        updated_at = ?
+                    WHERE batch_run_id = ? AND status IN ('pending', 'running')
+                    """,
+                    (final_status, now, now, row["batch_run_id"]),
+                )
+                conn.execute(
+                    """
+                    UPDATE batch_runs
+                    SET status = ?, finished_at = COALESCE(finished_at, ?), updated_at = ?
+                    WHERE batch_run_id = ?
+                    """,
+                    (final_status, now, now, row["batch_run_id"]),
+                )
+                recovered.append(row["batch_run_id"])
+        for batch_run_id in recovered:
+            self.refresh_counts(batch_run_id)
+
+
 class RatingRepository:
     def __init__(self, db: Database):
         self.db = db
@@ -372,4 +586,3 @@ class RatingRepository:
                 """,
                 (source_id, old_rating, delta, new_rating, reason, utc_now(), actor),
             )
-

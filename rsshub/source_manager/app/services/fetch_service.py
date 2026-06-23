@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from hashlib import sha256
 from typing import Any
@@ -8,6 +7,7 @@ from typing import Any
 from app.adapters.base import FeedEntry
 from app.config import AppConfig, settings
 from app.models.schemas import FetchRunResponse
+from app.services.result_envelope import error_from_exception, finish_timing, source_summary, start_timing
 from app.services.source_service import SourceService
 from app.utils.text import excerpt, normalize_title, sha256_text
 from app.utils.url_normalize import normalize_url
@@ -17,13 +17,6 @@ class FetchService:
     def __init__(self, source_service: SourceService, config: AppConfig | None = None):
         self.source_service = source_service
         self.config = config or settings
-        self._locks: dict[str, threading.Lock] = {}
-        self._locks_guard = threading.Lock()
-
-    def _lock_for(self, source_id: str) -> threading.Lock:
-        with self._locks_guard:
-            self._locks.setdefault(source_id, threading.Lock())
-            return self._locks[source_id]
 
     def identity_key(self, source_id: str, entry: FeedEntry) -> str:
         normalized_url = normalize_url(entry.url)
@@ -54,9 +47,27 @@ class FetchService:
         source = self.source_service.sources.get(source_id)
         if not source:
             return None
-        lock = self._lock_for(source_id)
-        if not lock.acquire(blocking=False):
-            raise RuntimeError(f"fetch already running for {source_id}")
+        started_at, started_perf = start_timing()
+        operation = self.source_service.source_operation(source_id)
+        acquired = operation.__enter__()
+        if not acquired:
+            operation.__exit__(None, None, None)
+            timing = finish_timing(started_at, started_perf)
+            error = {
+                "error_type": "source_busy",
+                "message": f"check/fetch already running for {source_id}",
+                "http_status": None,
+                "retryable": True,
+                "failure_stage": "unknown",
+            }
+            return {
+                "ok": False,
+                "source": source_summary(source),
+                "timing": timing,
+                "counts": {"scanned": 0, "new": 0, "existing": 0, "failed": 1},
+                "result": None,
+                "error": error,
+            }
         run_id = self.source_service.runs.start_fetch_run(source_id, include_raw)
         try:
             result = self.source_service.adapter_for(source).fetch(source, include_raw=include_raw)
@@ -102,12 +113,26 @@ class FetchService:
                     "error_message": None,
                 },
             )
-            response: dict[str, Any] = {"ok": True, "fetch_run": FetchRunResponse(**run).model_dump()}
+            timing = finish_timing(started_at, started_perf)
+            fetch_run = FetchRunResponse(**run).model_dump()
+            response: dict[str, Any] = {
+                "ok": True,
+                "source": source_summary(source),
+                "timing": timing,
+                "counts": {"scanned": scanned, "new": new_count, "existing": existing_count, "failed": 0},
+                "result": {"fetch_run": fetch_run, "entries": []},
+                "error": None,
+                "fetch_run": fetch_run,
+                "http_status": result.http_status,
+                "content_type": result.content_type,
+                "entries_found": len(result.entries),
+            }
             if include_raw:
                 response["raw_entries"] = raw_entries
             return response
         except Exception as exc:
             error = str(exc)
+            error_envelope = error_from_exception(exc)
             self.source_service.sources.update_fetch_failure(source_id, error=error, threshold=self.config.health_threshold)
             run = self.source_service.runs.finish_fetch_run(
                 run_id,
@@ -121,9 +146,19 @@ class FetchService:
                     "error_message": error,
                 },
             )
-            return {"ok": False, "fetch_run": FetchRunResponse(**run).model_dump(), "error": error}
+            timing = finish_timing(started_at, started_perf)
+            fetch_run = FetchRunResponse(**run).model_dump()
+            return {
+                "ok": False,
+                "source": source_summary(source),
+                "timing": timing,
+                "counts": {"scanned": 0, "new": 0, "existing": 0, "failed": 1},
+                "result": None,
+                "error": error_envelope,
+                "fetch_run": fetch_run,
+            }
         finally:
-            lock.release()
+            operation.__exit__(None, None, None)
 
     def fetch_batch(
         self,
@@ -153,4 +188,3 @@ class FetchService:
                 if result:
                     results.append(result)
         return {"ok": all(item.get("ok") for item in results), "total": len(results), "results": results}
-

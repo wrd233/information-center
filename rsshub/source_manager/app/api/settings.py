@@ -27,6 +27,7 @@ def get_settings(request: Request) -> dict:
             "default_max_concurrent_sources": config.default_max_concurrent_sources,
             "hard_limit": config.hard_concurrency_limit,
         },
+        "concurrency": config.raw.get("concurrency", {}),
+        "timeouts": config.raw.get("timeouts", {}),
         "docs_url": "/docs",
     }
-

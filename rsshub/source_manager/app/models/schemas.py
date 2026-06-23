@@ -17,6 +17,8 @@ RatingReason = Literal[
     "recovered_quality",
 ]
 ImportStrategy = Literal["skip", "fill_empty", "overwrite_metadata", "overwrite_all"]
+BatchRunStatus = Literal["pending", "running", "cancelling", "succeeded", "partial_success", "failed", "cancelled"]
+BatchRunItemStatus = Literal["pending", "running", "succeeded", "failed", "skipped", "cancelled"]
 
 
 class SourceBase(BaseModel):
@@ -145,13 +147,78 @@ class FetchRequest(BaseModel):
     include_raw: bool = False
 
 
+class BatchSourceFilter(BaseModel):
+    source_types: list[SourceType] | None = None
+    statuses: list[SourceStatus] | None = None
+    category: str | None = None
+    search: str | None = None
+
+
 class BatchRunRequest(BaseModel):
     source_ids: list[str] | None = None
+    filter: BatchSourceFilter | None = None
     statuses: list[SourceStatus] | None = None
     include_paused: bool = False
     include_broken: bool = False
     max_concurrent_sources: int | None = None
     include_raw: bool = False
+
+
+class ErrorEnvelope(BaseModel):
+    error_type: str
+    message: str
+    http_status: int | None = None
+    retryable: bool = False
+    failure_stage: str = "unknown"
+
+
+class BatchRunCreateResponse(BaseModel):
+    batch_run_id: str
+    status: BatchRunStatus
+    status_url: str
+    items_url: str
+    poll_interval_ms: int = 1000
+
+
+class BatchRunResponse(BaseModel):
+    batch_run_id: str
+    action: Literal["check", "fetch"]
+    status: BatchRunStatus
+    total_count: int = 0
+    pending_count: int = 0
+    running_count: int = 0
+    success_count: int = 0
+    failed_count: int = 0
+    skipped_count: int = 0
+    cancelled_count: int = 0
+    started_at: str | None = None
+    finished_at: str | None = None
+    elapsed_ms: int | None = None
+    options: dict[str, Any] = Field(default_factory=dict)
+    created_by: str | None = None
+    created_at: str | None = None
+    updated_at: str | None = None
+
+
+class BatchRunItemResponse(BaseModel):
+    batch_run_id: str
+    source_id: str
+    display_name: str | None = None
+    source_type: SourceType | None = None
+    status: BatchRunItemStatus
+    started_at: str | None = None
+    finished_at: str | None = None
+    elapsed_ms: int | None = None
+    http_status: int | None = None
+    content_type: str | None = None
+    error_type: str | None = None
+    error_message: str | None = None
+    failure_stage: str | None = None
+    entries_found: int = 0
+    entries_new: int = 0
+    entries_existing: int = 0
+    stopped_reason: str | None = None
+    result: dict[str, Any] | None = None
 
 
 class EntryResponse(BaseModel):

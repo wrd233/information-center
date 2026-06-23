@@ -7,11 +7,13 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from app.api.batch_runs import router as batch_runs_router
 from app.api.exports import router as exports_router
 from app.api.imports import router as imports_router
 from app.api.settings import router as settings_router
 from app.api.sources import router as sources_router
 from app.config import AppConfig, settings
+from app.services.batch_run_service import BatchRunService
 from app.services.check_service import CheckService
 from app.services.export_service import ExportService
 from app.services.fetch_service import FetchService
@@ -31,12 +33,20 @@ def create_app(config: AppConfig | None = None) -> FastAPI:
     app.state.source_service = source_service
     app.state.check_service = CheckService(source_service)
     app.state.fetch_service = FetchService(source_service, config)
+    app.state.batch_run_service = BatchRunService(
+        source_service,
+        app.state.check_service,
+        app.state.fetch_service,
+        config,
+    )
+    app.state.batch_run_service.recover_incomplete()
     app.state.import_service = ImportService(source_service, config)
     app.state.export_service = ExportService(source_service, config)
     app.state.rating_service = RatingService(source_service)
 
     api_prefix = "/api/v1"
     app.include_router(sources_router, prefix=api_prefix)
+    app.include_router(batch_runs_router, prefix=api_prefix)
     app.include_router(imports_router, prefix=api_prefix)
     app.include_router(exports_router, prefix=api_prefix)
     app.include_router(settings_router, prefix=api_prefix)
@@ -62,4 +72,3 @@ def create_app(config: AppConfig | None = None) -> FastAPI:
 
 
 app = create_app()
-

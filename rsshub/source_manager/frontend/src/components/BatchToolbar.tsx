@@ -1,16 +1,18 @@
-import { Activity, Download, RefreshCw, Save } from "lucide-react";
+import { Activity, Download, RefreshCw, Save, Square } from "lucide-react";
 import { useState } from "react";
 import type { SourceStatus } from "../api/types";
 
 interface Props {
   selectedCount: number;
+  isBatchRunning: boolean;
   onCheck: () => void;
   onFetch: () => void;
+  onCancel: () => void;
   onApply: (updates: { category?: string; tags?: string[]; rating?: number; status?: SourceStatus }) => void;
 }
 
-export function BatchToolbar({ selectedCount, onCheck, onFetch, onApply }: Props) {
-  const disabled = selectedCount === 0;
+export function BatchToolbar({ selectedCount, isBatchRunning, onCheck, onFetch, onCancel, onApply }: Props) {
+  const disabled = selectedCount === 0 || isBatchRunning;
   const [status, setStatus] = useState("");
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState("");
@@ -31,6 +33,9 @@ export function BatchToolbar({ selectedCount, onCheck, onFetch, onApply }: Props
       </button>
       <button disabled={disabled} onClick={onFetch} title="Batch fetch">
         <RefreshCw size={16} aria-hidden="true" />Fetch
+      </button>
+      <button disabled={!isBatchRunning} onClick={onCancel} title="Soft cancel current batch run">
+        <Square size={16} aria-hidden="true" />Stop
       </button>
       <select aria-label="Batch status" value={status} disabled={disabled} onChange={(event) => setStatus(event.target.value)}>
         <option value="">status</option>

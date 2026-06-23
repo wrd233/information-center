@@ -26,3 +26,6 @@ def new_fetch_run_id() -> str:
 def new_import_run_id() -> str:
     return short_id("imp_")
 
+
+def new_batch_run_id() -> str:
+    return short_id("batch_")
