@@ -1,0 +1,7 @@
+data/source_manager.sqlite3
+data/source_manager.sqlite3-*
+frontend/dist/
+frontend/node_modules/
+__pycache__/
+.pytest_cache/
+

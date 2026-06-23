@@ -1,0 +1,55 @@
+server:
+  host: 127.0.0.1
+  port: 8010
+
+database:
+  path: data/source_manager.sqlite3
+
+health:
+  consecutive_failure_threshold: 3
+
+fetch:
+  scan_limit: 50
+  stop_after_existing_streak: 10
+  summary_excerpt_max_chars: 500
+
+batch_fetch:
+  default_max_concurrent_sources: 7
+  hard_limit: 10
+
+adapters:
+  rsshub_local:
+    type: rsshub
+    base_url: http://127.0.0.1:1200
+    max_concurrent_sources: 7
+  wechat_local:
+    type: wechat
+    base_url: http://127.0.0.1:8003
+    max_concurrent_sources: 2
+  native_default:
+    type: native
+    max_concurrent_sources: 7
+
+export_profiles:
+  local:
+    rsshub_base_url: http://127.0.0.1:1200
+    wechat_base_url: http://127.0.0.1:8003
+  lan:
+    rsshub_base_url: http://127.0.0.1:1200
+    wechat_base_url: http://127.0.0.1:8003
+  tailscale:
+    rsshub_base_url: http://127.0.0.1:1200
+    wechat_base_url: http://127.0.0.1:8003
+  original:
+    prefer_original_feed_url: true
+
+categories:
+  - AI
+  - 技术
+  - 资讯
+  - 博客
+  - 微信公众号
+  - B站
+  - GitHub
+  - 其他
+
