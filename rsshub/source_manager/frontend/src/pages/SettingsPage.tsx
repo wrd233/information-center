@@ -19,8 +19,13 @@ export function SettingsPage() {
       <section className="panel">
         <h2>设置</h2>
         <dl>
+          <dt>app_name</dt><dd>{settings.app_name || "-"}</dd>
+          <dt>app_version</dt><dd>{settings.app_version || "-"}</dd>
+          <dt>started_at</dt><dd>{settings.started_at || "-"}</dd>
+          <dt>git_commit</dt><dd>{settings.git_commit || "-"}</dd>
           <dt>database_path</dt><dd>{settings.database_path}</dd>
           <dt>config_path</dt><dd>{settings.config_path}</dd>
+          <dt>frontend_static_dir</dt><dd>{settings.frontend_static_dir || "-"}</dd>
           <dt>server</dt><dd>{JSON.stringify(settings.server)}</dd>
           <dt>health</dt><dd>{JSON.stringify(settings.health)}</dd>
           <dt>fetch</dt><dd>{JSON.stringify(settings.fetch)}</dd>
@@ -35,4 +40,3 @@ export function SettingsPage() {
     </div>
   );
 }
-

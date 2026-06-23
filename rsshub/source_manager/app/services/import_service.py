@@ -31,6 +31,7 @@ class ImportService:
         feed_url = row.get("feed_url") or row.get("xml_url") or row.get("xmlurl") or row.get("rss_url") or ""
         local_url = row.get("local_xml_url") or ""
         preferred_url = local_url or feed_url
+        explicit_source_type = (row.get("source_type") or "").strip().lower()
         tags = row.get("tags") or ""
         tags_list = [item.strip() for item in tags.replace("、", ",").split(",") if item.strip()]
         category = row.get("category") or row.get("category_path") or row.get("top_category") or "未分类"
@@ -41,7 +42,22 @@ class ImportService:
             if adapter.get("type") == "rsshub" and adapter.get("base_url")
         ]
         route_path = route_from_rsshub_url(preferred_url, rsshub_bases)
-        if route_path:
+        if explicit_source_type == "rsshub":
+            source_type = "rsshub"
+            adapter_id = row.get("adapter_id") or "rsshub_local"
+            route_path = row.get("route_path") or route_path
+            feed_value = None
+        elif explicit_source_type == "native":
+            source_type = "native"
+            adapter_id = row.get("adapter_id") or "native_default"
+            feed_value = normalize_url(feed_url or preferred_url)
+            route_path = None
+        elif explicit_source_type == "wechat":
+            source_type = "wechat"
+            adapter_id = row.get("adapter_id") or "wechat_local"
+            feed_value = preferred_url
+            route_path = None
+        elif route_path:
             source_type = "rsshub"
             adapter_id = "rsshub_local"
             feed_value = None
@@ -171,4 +187,3 @@ class ImportService:
         if strategy == "overwrite_all":
             return {key: value for key, value in clean.items() if value is not None}
         return {}
-

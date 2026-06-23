@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pathlib import Path
+import subprocess
 from typing import Any
 
 from fastapi import FastAPI
@@ -21,15 +21,43 @@ from app.services.import_service import ImportService
 from app.services.rating_service import RatingService
 from app.services.source_service import SourceService
 from app.storage.db import Database
+from app.utils.time import utc_now
+
+
+APP_NAME = "RSS Source Manager"
+APP_VERSION = "0.2.1"
+
+
+def git_commit(root_dir) -> str | None:
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=root_dir,
+            capture_output=True,
+            check=True,
+            text=True,
+            timeout=2,
+        )
+        return result.stdout.strip() or None
+    except Exception:
+        return None
 
 
 def create_app(config: AppConfig | None = None) -> FastAPI:
     config = config or settings
     database = Database(config.database_path)
     source_service = SourceService(database, config)
-    app = FastAPI(title="RSS Source Manager", version="0.1.0")
+    app = FastAPI(title=APP_NAME, version=APP_VERSION)
+    dist = config.root_dir / "frontend" / "dist"
     app.state.config = config
     app.state.database = database
+    app.state.app_metadata = {
+        "app_name": APP_NAME,
+        "app_version": APP_VERSION,
+        "started_at": utc_now(),
+        "git_commit": git_commit(config.root_dir),
+        "frontend_static_dir": str(dist),
+    }
     app.state.source_service = source_service
     app.state.check_service = CheckService(source_service)
     app.state.fetch_service = FetchService(source_service, config)
@@ -53,9 +81,15 @@ def create_app(config: AppConfig | None = None) -> FastAPI:
 
     @app.get("/health")
     def health() -> dict[str, Any]:
-        return {"ok": True, "database_path": str(config.database_path), "api": "/api/v1"}
+        return {
+            "ok": True,
+            **app.state.app_metadata,
+            "db_path": str(config.database_path),
+            "database_path": str(config.database_path),
+            "config_path": str(config.config_path),
+            "api": "/api/v1",
+        }
 
-    dist = config.root_dir / "frontend" / "dist"
     if dist.exists():
         assets = dist / "assets"
         if assets.exists():

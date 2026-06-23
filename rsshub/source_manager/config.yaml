@@ -13,6 +13,8 @@ fetch:
   stop_after_existing_streak: 10
   summary_excerpt_max_chars: 500
 
+# Legacy fallback for v1-era code paths. v2 batch_run execution reads
+# concurrency.* below first, then falls back to this section if needed.
 batch_fetch:
   default_max_concurrent_sources: 7
   hard_limit: 10
@@ -35,6 +37,8 @@ timeouts:
     read_seconds: 15
     total_seconds: 20
 
+# v2 batch_run concurrency. These values are the conservative best from
+# real-source testing; do not increase without a new acceptance matrix.
 concurrency:
   default_max_concurrent_sources: 10
   hard_limit: 20

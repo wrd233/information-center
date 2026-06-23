@@ -70,11 +70,20 @@ Docs:    http://127.0.0.1:8010/docs
 - Source CRUD: `/api/v1/sources`
 - Check: `POST /api/v1/sources/{source_id}/check`
 - Fetch: `POST /api/v1/sources/{source_id}/fetch`
-- Batch check/fetch: `/api/v1/sources/check-batch`, `/api/v1/sources/fetch-batch`
+- Batch check/fetch: `POST /api/v1/sources/check-batch`, `POST /api/v1/sources/fetch-batch`
+- Batch run status: `GET /api/v1/batch-runs/{batch_run_id}`
+- Batch run items: `GET /api/v1/batch-runs/{batch_run_id}/items`
+- Batch run cancel: `POST /api/v1/batch-runs/{batch_run_id}/cancel`
 - Rating adjustments: `/api/v1/sources/{source_id}/rating-adjustments`
 - CSV import/export: `/api/v1/imports/csv/*`, `/api/v1/exports/csv`
 - OPML import/export: `/api/v1/imports/opml/*`, `/api/v1/exports/opml`
 - Read-only settings: `/api/v1/settings`
+
+v2 batch check/fetch returns `batch_run_id` immediately. Progress should be polled through the batch run APIs. The old synchronous batch behavior is replaced by v2 async `batch_run` behavior.
+
+v2 adds persisted async batch_run, polling-based progress, soft cancel, concurrency/timeout controls, API contract improvements, and real source acceptance testing.
+
+If you suspect `8010` is serving an old app process, first check `/health` or `/api/v1/settings` for `app_name`, `app_version`, `started_at`, `git_commit`, database path, config path, and frontend static directory.
 
 ## Import
 
@@ -89,5 +98,4 @@ CSV import uses clean fields only. Existing sources are skipped by default.
 
 ## Design
 
-See [docs/design_v1.md](docs/design_v1.md) for guardrails, schema, API boundaries, and the phase-one validation matrix.
-
+See [docs/design_v1.md](docs/design_v1.md) for phase-one guardrails, schema, API boundaries, and validation matrix. See [docs/design_v2.md](docs/design_v2.md) for v2 batch_run, performance, frontend interaction, and real source acceptance details.

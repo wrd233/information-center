@@ -69,6 +69,12 @@ export interface SourceDetail {
 
 export interface SettingsPayload {
   ok: boolean;
+  app_name?: string;
+  app_version?: string;
+  started_at?: string;
+  git_commit?: string | null;
+  frontend_static_dir?: string;
+  db_path?: string;
   database_path: string;
   config_path: string;
   server: Record<string, unknown>;

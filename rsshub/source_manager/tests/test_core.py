@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sqlite3
 import time
 from dataclasses import replace
 from pathlib import Path
@@ -77,6 +78,19 @@ def test_ensure_schema_preserves_existing_rows(tmp_path: Path) -> None:
     created = create_native(svc)
     ensure_schema(db_path)
     assert SourceService(Database(db_path), load_config()).get(created.source_id)
+
+
+def test_schema_does_not_persist_raw_payload_columns(tmp_path: Path) -> None:
+    db_path = tmp_path / "source_manager.sqlite3"
+    ensure_schema(db_path)
+    raw_payload_columns = []
+    with sqlite3.connect(db_path) as conn:
+        for table in ["entries", "fetch_runs", "fetch_run_entries", "batch_run_items"]:
+            for row in conn.execute(f"PRAGMA table_info({table})"):
+                column = str(row[1]).lower()
+                if "raw" in column and column != "include_raw":
+                    raw_payload_columns.append(f"{table}.{row[1]}")
+    assert raw_payload_columns == []
 
 
 def test_single_database_path_config() -> None:
@@ -165,6 +179,30 @@ def test_csv_opml_preview_duplicate_and_export(tmp_path: Path) -> None:
     assert "last_fetch_scanned_count" in full
 
 
+def test_import_clean_csv_respects_explicit_source_type_and_skips_duplicates(tmp_path: Path) -> None:
+    svc = service(tmp_path)
+    imports = ImportService(svc)
+    csv_text = "\n".join(
+        [
+            "display_name,source_type,category,tags,rating,status,adapter_id,route_path,feed_url,original_feed_url,notes",
+            "RSSHub Route,rsshub,Videos,video,75,active,rsshub_local,/bilibili/user/video/123,,https://remote.example/bilibili/user/video/123,note",
+            "Native Feed,native,Blogs,blog,50,broken,native_default,,https://native.example/feed.xml,https://native.example/feed.xml,",
+        ]
+    )
+    preview = imports.preview("csv", csv_text, "clean.csv")
+    assert preview["summary"]["new"] == 2
+    assert preview["items"][0]["source"]["source_type"] == "rsshub"
+    assert preview["items"][0]["source"]["route_path"] == "/bilibili/user/video/123"
+    assert preview["items"][1]["source"]["source_type"] == "native"
+    assert preview["items"][1]["source"]["status"] == "paused"
+
+    commit = imports.commit("csv", csv_text, filename="clean.csv")
+    assert commit["summary"]["created"] == 2
+    duplicate = imports.commit("csv", csv_text, filename="clean.csv")
+    assert duplicate["summary"]["created"] == 0
+    assert duplicate["summary"]["duplicate"] == 2
+
+
 def wait_for_batch(batch_service: BatchRunService, batch_run_id: str, timeout: float = 2.0) -> dict:
     deadline = time.time() + timeout
     while time.time() < deadline:
@@ -196,6 +234,26 @@ def test_batch_run_source_ids_snapshot_and_async_api(tmp_path: Path) -> None:
     assert items[0]["source_id"] == source.source_id
     assert items[0]["status"] == "succeeded"
     assert items[0]["entries_new"] == 1
+
+
+def test_health_and_settings_expose_runtime_identity(tmp_path: Path) -> None:
+    config = replace(load_config(), database_path=tmp_path / "source_manager.sqlite3")
+    app = create_app(config)
+    client = TestClient(app)
+
+    health = client.get("/health").json()
+    assert health["app_name"] == "RSS Source Manager"
+    assert health["app_version"]
+    assert health["started_at"]
+    assert health["db_path"].endswith("source_manager.sqlite3")
+    assert health["config_path"].endswith("config.yaml")
+    assert "frontend_static_dir" in health
+    assert "git_commit" in health
+
+    settings = client.get("/api/v1/settings").json()
+    assert settings["app_name"] == health["app_name"]
+    assert settings["app_version"] == health["app_version"]
+    assert settings["started_at"] == health["started_at"]
 
 
 def test_batch_run_filter_snapshot_and_progress_counts(tmp_path: Path) -> None:

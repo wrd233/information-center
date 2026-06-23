@@ -11,6 +11,8 @@ def get_settings(request: Request) -> dict:
     config = request.app.state.config
     return {
         "ok": True,
+        **request.app.state.app_metadata,
+        "db_path": str(config.database_path),
         "database_path": str(config.database_path),
         "config_path": str(config.config_path),
         "server": config.server,

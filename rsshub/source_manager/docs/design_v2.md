@@ -137,6 +137,7 @@ batch 运行时可以点击取消
 点击后选中全部筛选结果源
 批量操作前显示将影响的源数量
 失败源在列表中能看见失败状态或错误入口
+settings/health 能看到 db_path/config/app started_at/version 信息
 ```
 
 当前状态：planned。已通过 frontend build/typecheck，但未进行人工浏览器验收。
