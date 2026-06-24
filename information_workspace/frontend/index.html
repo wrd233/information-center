@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>information_workspace</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>information_workspace</h1>
+        <p id="statusLine">Loading status...</p>
+      </div>
+      <nav aria-label="Workspace sections">
+        <button data-view="dashboard" class="nav active">Dashboard</button>
+        <button data-view="upload" class="nav">Upload</button>
+        <button data-view="materials" class="nav">Materials</button>
+        <button data-view="runs" class="nav">Runs</button>
+        <button data-view="events" class="nav">Events</button>
+        <button data-view="topics" class="nav">Topics</button>
+        <button data-view="reports" class="nav">Reports</button>
+      </nav>
+    </header>
+
+    <main>
+      <section id="dashboard" class="view active" aria-labelledby="dashboardTitle">
+        <div class="section-head">
+          <h2 id="dashboardTitle">Dashboard</h2>
+          <button id="refreshDashboard">Refresh</button>
+        </div>
+        <div class="metrics" id="metrics"></div>
+        <div class="split">
+          <section>
+            <h3>Recent Runs</h3>
+            <div id="recentRuns" class="stack"></div>
+          </section>
+          <section>
+            <h3>Recent Materials</h3>
+            <div id="recentMaterials" class="stack"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="upload" class="view" aria-labelledby="uploadTitle">
+        <div class="section-head">
+          <h2 id="uploadTitle">Upload</h2>
+          <label class="toggle"><input type="checkbox" id="uploadAutoProcess" /> Auto process</label>
+          <label class="toggle"><input type="checkbox" id="uploadMockLlm" /> Test mock LLM</label>
+        </div>
+        <form id="singleUploadForm" class="form-grid">
+          <label>Title<input id="singleTitle" required /></label>
+          <label>Source name<input id="singleSourceName" required value="Manual upload" /></label>
+          <label>Source type
+            <select id="singleSourceType">
+              <option>upload</option>
+              <option>agent</option>
+              <option>api</option>
+              <option>rss</option>
+              <option>web</option>
+              <option>wechat</option>
+              <option>document</option>
+              <option>unknown</option>
+            </select>
+          </label>
+          <label>URL<input id="singleUrl" /></label>
+          <label class="wide">Content<textarea id="singleContent" required></textarea></label>
+          <button type="submit">Upload Single</button>
+        </form>
+
+        <form id="batchUploadForm" class="form-grid">
+          <label class="wide">JSONL batch<textarea id="batchJsonl" placeholder='{"title":"...","content_text":"...","source_name":"...","source_type":"upload","metadata":{"synthetic":true}}'></textarea></label>
+          <button type="submit">Upload JSONL Batch</button>
+        </form>
+        <pre id="uploadResult" class="output"></pre>
+      </section>
+
+      <section id="materials" class="view" aria-labelledby="materialsTitle">
+        <div class="section-head">
+          <h2 id="materialsTitle">Materials</h2>
+          <div class="toolbar">
+            <input id="materialQuery" placeholder="Search keywords" />
+            <select id="materialSourceType">
+              <option value="">Any source</option>
+              <option>rss</option>
+              <option>web</option>
+              <option>wechat</option>
+              <option>upload</option>
+              <option>document</option>
+              <option>agent</option>
+              <option>api</option>
+              <option>unknown</option>
+            </select>
+            <label class="toggle"><input type="checkbox" id="includeNoise" /> Noise</label>
+            <label class="toggle"><input type="checkbox" id="includeIgnored" /> Ignored</label>
+            <label class="toggle"><input type="checkbox" id="onlySynthetic" /> Synthetic</label>
+            <button id="searchMaterials">Search</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <button id="createTopicFromSelected">New Topic From Selected</button>
+          <button id="createEventFromSelected">Create Event From Selected</button>
+          <button id="exportSelectedMaterials">Export Selected</button>
+          <span id="selectedCount">0 selected</span>
+        </div>
+        <div class="split wide-left">
+          <div id="materialResults" class="stack"></div>
+          <article id="materialDetail" class="detail" aria-live="polite"></article>
+        </div>
+      </section>
+
+      <section id="runs" class="view" aria-labelledby="runsTitle">
+        <div class="section-head">
+          <h2 id="runsTitle">Runs</h2>
+          <button id="refreshRuns">Refresh</button>
+        </div>
+        <div class="split wide-left">
+          <div id="runList" class="stack"></div>
+          <article id="runDetail" class="detail"></article>
+        </div>
+      </section>
+
+      <section id="events" class="view" aria-labelledby="eventsTitle">
+        <div class="section-head">
+          <h2 id="eventsTitle">Events</h2>
+          <label class="toggle"><input type="checkbox" id="includeSleepingEvents" /> Sleeping</label>
+          <button id="refreshEvents">Refresh</button>
+        </div>
+        <div class="split">
+          <section>
+            <h3>Candidate Events</h3>
+            <div id="candidateEvents" class="stack"></div>
+          </section>
+          <section>
+            <h3>Official Events</h3>
+            <div id="officialEvents" class="stack"></div>
+          </section>
+        </div>
+        <article id="eventDetail" class="detail"></article>
+      </section>
+
+      <section id="topics" class="view" aria-labelledby="topicsTitle">
+        <div class="section-head">
+          <h2 id="topicsTitle">Topics</h2>
+          <button id="refreshTopics">Refresh</button>
+        </div>
+        <form id="topicForm" class="form-grid">
+          <label>Title<input id="topicTitle" required /></label>
+          <label>Goal<input id="topicGoal" required /></label>
+          <label class="wide">Organization requirements<textarea id="topicOrganization"></textarea></label>
+          <button type="submit">Create Topic</button>
+        </form>
+        <div class="split wide-left">
+          <div id="topicList" class="stack"></div>
+          <article id="topicDetail" class="detail"></article>
+        </div>
+      </section>
+
+      <section id="reports" class="view" aria-labelledby="reportsTitle">
+        <div class="section-head">
+          <h2 id="reportsTitle">Reports</h2>
+          <button id="refreshReports">Refresh</button>
+        </div>
+        <div class="report-links">
+          <a href="/files/STATUS.md">STATUS.md</a>
+          <a href="/files/README.md">README.md</a>
+          <a href="/files/docs/testing.md">Testing docs</a>
+          <a href="/files/fixtures/synthetic_materials/REPORT.md">Synthetic corpus report</a>
+        </div>
+        <pre id="reportStatus" class="output"></pre>
+      </section>
+    </main>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script src="/assets/app.js"></script>
+  </body>
+</html>
